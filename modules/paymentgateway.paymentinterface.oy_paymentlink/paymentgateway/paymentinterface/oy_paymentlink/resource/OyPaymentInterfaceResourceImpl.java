@@ -29,18 +29,8 @@ public class OyPaymentInterfaceResourceImpl extends PaymentInterfaceResourceImpl
 		this.apiEndpoint = "https://api-stg.oyindonesia.com/api/payment-checkout/create-v2";
 	}
 	
-	public PaymentInterface createTransaction(String apiKey, int amount, String idTransaction, String apiEndpoint) {
-		return createTransaction(amount, idTransaction);
-	}
-	
-	public PaymentInterface createTransaction(int amount, String idTransaction) {
-		PaymentInterface transaction = record.createTransaction(apiKey, amount, idTransaction, apiEndpoint);
-		String paymentLink = sendTransactionAPICall(amount, idTransaction);
-		PaymentInterface paymentLinkTransaction = PaymentInterfaceFactory.createPaymentInterface("paymentgateway.paymentinterface.paymentlink.PaymentInterfaceImpl", transaction, paymentLink);
-		return paymentLinkTransaction;
-	}
-	
-	private String sendTransactionAPICall(int amount, String idTransaction) {
+	@Override
+	protected String sendTransactionPaymentLink(int amount, String idTransaction) {
 		Gson gson = new Gson();
 		Map<String,Object> requestMap = new HashMap<String,Object>();
 		requestMap.put("partner_tx_id", idTransaction);
@@ -73,7 +63,8 @@ public class OyPaymentInterfaceResourceImpl extends PaymentInterfaceResourceImpl
 	@Route(url="test/call/oy/paymentlink")
 	public HashMap<String,Object> oyPaymentLink(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("OPTIONS")) return null;
-		PaymentInterface result = this.createTransaction("random", 36000, "test-paymentlink-1", "random");
+		int randomId = Math.abs((new Random()).nextInt());
+		PaymentInterface result = this.createTransaction(36000, "test-oy-paymentlink-" + randomId);
 		return result.toHashMap();
 	}
 }

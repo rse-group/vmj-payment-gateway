@@ -15,23 +15,23 @@ public class PaymentInterfaceResourceImpl extends PaymentInterfaceResourceDecora
         super(record);
     }
 
-	public PaymentInterface createTransaction(String apiKey, int amount, String idTransaction, String apiEndpoint) {
-		PaymentInterface transaction = record.createTransaction(apiKey, amount, idTransaction, apiEndpoint);
-		String paymentLink = sendTransactionPaymentLink();
+	public PaymentInterface createTransaction(int amount, String idTransaction) {
+		PaymentInterface transaction = record.createTransaction(amount, idTransaction);
+		String paymentLink = sendTransactionPaymentLink(amount, idTransaction);
 		PaymentInterface paymentLinkTransaction = PaymentInterfaceFactory.createPaymentInterface("paymentgateway.paymentinterface.paymentlink.PaymentInterfaceImpl", transaction, paymentLink);
 		return paymentLinkTransaction;
 	}
 	
-	private String sendTransactionPaymentLink() {
+	protected String sendTransactionPaymentLink(int amount, String idTransaction) {
 		// to do implement transaction as paymentlink,
 		System.out.println("Transaction send from payment link");
 		return "";
 	}
 	
-	@Route(url="test/call/paymentlink")
-	public HashMap<String,Object> paymentLinkEndpoint(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("OPTIONS")) return null;
-		PaymentInterface result = this.createTransaction("api-key", 58000, "id-transaction-123", "api-endpoint-paymentlink");
-		return result.toHashMap();
-	}
+	//@Route(url="test/call/paymentlink")
+	//public HashMap<String,Object> paymentLinkEndpoint(VMJExchange vmjExchange) {
+	//	if (vmjExchange.getHttpMethod().equals("OPTIONS")) return null;
+	//	PaymentInterface result = this.createTransaction("api-key", 58000, "id-transaction-123", "api-endpoint-paymentlink");
+	//	return result.toHashMap();
+	//}
 }

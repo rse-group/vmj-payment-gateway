@@ -16,13 +16,20 @@ public abstract class PaymentInterfaceDecorator extends PaymentInterfaceComponen
 	public PaymentInterfaceDecorator (PaymentInterfaceComponent record) {
 		this.record = record;
 	}
-
-	public String getApiKey() {
-		return record.getApiKey();
-	}
-	public void setApiKey(String apiKey) {
-		record.setApiKey(apiKey);
-	}
+	// since implementation of API varies types of auth required,
+	// it will be handled on API's delta
+	//public String getApiKey() {
+	//	return record.getApiKey();
+	//}
+	//public void setApiKey(String apiKey) {
+	//	record.setApiKey(apiKey);
+	//}
+	//public String getApiEndpoint() {
+	//	return record.getApiEndpoint();
+	//}
+	//public void setApiEndpoint(String apiEndpoint) {
+	//	record.setApiEndpoint(apiEndpoint);
+	//}
 	public int getAmount() {
 		return record.getAmount();
 	}
@@ -35,11 +42,6 @@ public abstract class PaymentInterfaceDecorator extends PaymentInterfaceComponen
 	public void setIdTransaction(String idTransaction) {
 		record.setIdTransaction(idTransaction);
 	}
-	public String getApiEndpoint() {
-		return record.getApiEndpoint();
-	}
-	public void setApiEndpoint(String apiEndpoint) {
-		record.setApiEndpoint(apiEndpoint);
-	}
+	
 }
 

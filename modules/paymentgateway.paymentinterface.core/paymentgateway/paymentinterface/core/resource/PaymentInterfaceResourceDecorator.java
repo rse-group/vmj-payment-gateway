@@ -11,7 +11,7 @@ public abstract class PaymentInterfaceResourceDecorator extends PaymentInterface
         this.record = record;
     }
 
-    public PaymentInterface createTransaction(String apiKey, int amount, String idTransaction, String apiEndpoint) {
-    	return record.createTransaction(apiKey, amount, idTransaction, apiEndpoint);
+    public PaymentInterface createTransaction(int amount, String idTransaction) {
+    	return record.createTransaction(amount, idTransaction);
     }
 }

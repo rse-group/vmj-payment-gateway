@@ -10,9 +10,9 @@ import prices.auth.vmj.annotations.Restricted;
 public class PaymentInterfaceResourceImpl extends PaymentInterfaceResourceComponent{
 	protected PaymentInterfaceResourceComponent record;
 
-	public PaymentInterface createTransaction(String apiKey, int amount, String idTransaction, String apiEndpoint) {
+	public PaymentInterface createTransaction(int amount, String idTransaction) {
 		PaymentInterface transaction = 
-				PaymentInterfaceFactory.createPaymentInterface("paymentgateway.paymentinterface.core.PaymentInterfaceImpl", apiKey, amount, idTransaction, apiEndpoint);
+				PaymentInterfaceFactory.createPaymentInterface("paymentgateway.paymentinterface.core.PaymentInterfaceImpl", amount, idTransaction);
 		sendTransaction();
 		return transaction;
 	}

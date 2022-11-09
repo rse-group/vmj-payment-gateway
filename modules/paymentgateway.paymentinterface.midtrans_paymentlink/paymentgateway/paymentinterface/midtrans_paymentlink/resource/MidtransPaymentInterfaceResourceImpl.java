@@ -27,18 +27,8 @@ public class MidtransPaymentInterfaceResourceImpl extends PaymentInterfaceResour
 		this.apiEndpoint = "https://api.sandbox.midtrans.com/v1/payment-links";
 	}
 	
-	public PaymentInterface createTransaction(String apiKey, int amount, String idTransaction, String apiEndpoint) {
-		return createTransaction(amount, idTransaction);
-	}
-	
-	public PaymentInterface createTransaction(int amount, String idTransaction) {
-		PaymentInterface transaction = record.createTransaction(apiKey, amount, idTransaction, apiEndpoint);
-		String paymentLink = sendTransactionAPICall(amount, idTransaction);
-		PaymentInterface paymentLinkTransaction = PaymentInterfaceFactory.createPaymentInterface("paymentgateway.paymentinterface.paymentlink.PaymentInterfaceImpl", transaction, paymentLink);
-		return paymentLinkTransaction;
-	}
-	
-	private String sendTransactionAPICall(int amount, String idTransaction) {
+	@Override
+	protected String sendTransactionPaymentLink(int amount, String idTransaction) {
 		Gson gson = new Gson();
 		Map<String,Object> transaction_details = new HashMap<String,Object>();
 		transaction_details.put("order_id", idTransaction);
@@ -76,7 +66,8 @@ public class MidtransPaymentInterfaceResourceImpl extends PaymentInterfaceResour
 	@Route(url="test/call/midtrans/paymentlink")
 	public HashMap<String,Object> midtransPaymentLink(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("OPTIONS")) return null;
-		PaymentInterface result = this.createTransaction(12000, "test-midtrans-paymentlink-64");
+		int randomId = Math.abs((new Random()).nextInt());
+		PaymentInterface result = this.createTransaction(12000, "test-midtrans-paymentlink-" + randomId);
 		return result.toHashMap();
 	}
 }

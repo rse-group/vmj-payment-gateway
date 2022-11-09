@@ -18,24 +18,27 @@ import javax.persistence.OneToMany;
 @Entity(name="paymentinterface_impl")
 @Table(name="paymentinterface_impl")
 public class PaymentInterfaceImpl extends PaymentInterfaceComponent {
-	protected String apiKey;
+	// since implementation of API varies types of auth required,
+	// it will be handled on API's delta
+	//protected String apiKey;
+	//protected String apiEndpoint;
 	protected int amount;
-	protected String apiEndpoint;
+	
 
-	public PaymentInterfaceImpl(String apiKey, int amount, String idTransaction, String apiEndpoint) {
-		this.apiKey = apiKey;
+	public PaymentInterfaceImpl(int amount, String idTransaction) {
+		//this.apiKey = apiKey;
 		this.amount = amount;
 		this.idTransaction = idTransaction;
-		this.apiEndpoint = apiEndpoint;
+		//this.apiEndpoint = apiEndpoint;
 	}
 
-	public String getApiKey() {
-		return this.apiKey;
-	}
+	//public String getApiKey() {
+	//	return this.apiKey;
+	//}
 
-	public void setApiKey(String apiKey) {
-		this.apiKey = apiKey;
-	}
+	//public void setApiKey(String apiKey) {
+	//	this.apiKey = apiKey;
+	//}
 	public int getAmount() {
 		return this.amount;
 	}
@@ -43,13 +46,13 @@ public class PaymentInterfaceImpl extends PaymentInterfaceComponent {
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
-	public String getApiEndpoint() {
-		return this.apiEndpoint;
-	}
+	//public String getApiEndpoint() {
+	//	return this.apiEndpoint;
+	//}
 
-	public void setApiEndpoint(String apiEndpoint) {
-		this.apiEndpoint = apiEndpoint;
-	}
+	//public void setApiEndpoint(String apiEndpoint) {
+	//	this.apiEndpoint = apiEndpoint;
+	//}
 
 }
 
