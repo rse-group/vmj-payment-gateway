@@ -17,9 +17,24 @@ public class PaymentInterfaceResourceFactory{
     	PaymentInterfaceResource record = null;
         try {
             Class<?> clz = Class.forName(fullyQualifiedName);
-            Constructor<?> constructor = clz.getDeclaredConstructors()[0];
-            record = (PaymentInterfaceResource) constructor.newInstance(base);
-        } 
+            Constructor<?>[] constructorList = clz.getDeclaredConstructors();
+            Constructor<?> constructor = null;
+            for (int i = 0; i < constructorList.length; i++) {
+                try {
+                    constructor = constructorList[i];
+                    System.out.println(constructor.toString());
+                    record = (PaymentInterfaceResource) constructor.newInstance(base);
+                    break;
+                } catch (IllegalArgumentException e) {
+                    if (i < constructorList.length - 1) {
+                        System.out.println("Trying other constructor");
+                        continue;
+                    } else {
+                        throw e;
+                    }
+                }
+            }
+        }
         catch (IllegalArgumentException e)
         {
             LOGGER.severe("Failed to create instance of PaymentInterface.");
