@@ -20,6 +20,7 @@ Untuk Product Generation seluruh langkah dilakukan dalam Eclipse. Clone reposito
 ![Payment Gateway](docs/PaymentGateway.PNG)
 
 1. Feature Selection  
+
 Pemilihan fitur yang akan dinginkan dalam product diatur oleh file config dalam direktori configs dengan format .XML. Tiap product memiliki file config masing-masing.
 Pilih product yang ingin digenerate dengan klik kanan pada file config > FeatureIDE > Set as Current Configuration.
 
@@ -30,6 +31,7 @@ Jika ingin membuat product baru dapat dilakukan dengan meng-copy sebuah file con
 ![Feature Selection 2](docs/FeatureSelection-2.PNG)
 
 2. Compile  
+
 Setelah memilih file config dengan Set as Current Configuration, FeatureIDE akan mulai meng-copy modul-modul yang dibutuhkan ke direktori src. Jika tidak hapus seluruh isi src dan Set as Current Configuration ulang. Setelah selesai meng-copy klik kanan pada direktori src > FeatureIDE > WinVMJ > Compile.
 
 ![Compile 1](docs/compile-1.PNG)
