@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature name="PaymentGateway"/>
+	<feature name="Payment"/>
+	<feature name="PaymentInterface"/>
+	<feature name="Invoice"/>
+	<feature name="PaymentLink"/>
+	<feature name="PaymentRouting"/>
+	<feature name="PaymentChannel"/>
+	<feature name="VirtualAccount"/>
+	<feature name="Ewallet"/>
+	<feature name="DebitCard"/>
+	<feature name="CreditCard"/>
+	<feature name="RetailOutlet"/>
+</configuration>

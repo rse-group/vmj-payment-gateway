@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature automatic="selected" name="PaymentGateway"/>
+	<feature automatic="selected" name="Payment"/>
+	<feature automatic="selected" name="PaymentInterface"/>
+	<feature name="Invoice"/>
+	<feature name="PaymentLink"/>
+	<feature name="PaymentRouting"/>
+	<feature name="PaymentChannel"/>
+	<feature name="VirtualAccount"/>
+	<feature name="Ewallet"/>
+	<feature name="DebitCard"/>
+	<feature name="CreditCard"/>
+	<feature name="RetailOutlet"/>
+	<feature name="ExternalLibrary"/>
+	<feature name="Midtrans"/>
+</configuration>

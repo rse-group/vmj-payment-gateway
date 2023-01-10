@@ -1,0 +1,132 @@
+namespace Root
+
+features
+	PaymentGatewayFeature {abstract, extended__}	
+		mandatory
+			Simulation {abstract}	
+				or
+					OnDemand
+					ByBooking
+			Authorization {abstract}	
+				mandatory
+					AccountAuthorization {abstract}	
+						optional
+							TwofactorAuthentication
+
+						mandatory
+							Email
+
+						optional
+							OneTimePassword
+							SingleSignOn
+							IPWhitelistingAccess
+							Captcha
+
+				optional
+					APIAuthorization {abstract}	
+						or
+							IPWhitelisting
+							APIKey
+							Signature
+							IdempotencyKey
+							BasicAuth
+							JWT
+
+		optional
+			Reconciliation {abstract}	
+				mandatory
+					FilterTransactionHistory
+					CheckBalance
+					ViewTransactionHistory
+					ExportTransactionHistory {abstract}	
+						mandatory
+							ExportMethod {abstract}	
+								or
+									SentViaEmail
+									DirectDownload
+							Format {abstract}	
+								optional
+									CSV
+									XLSX
+							Frequency {abstract}	
+								optional
+									OneTime
+									Periodically
+			UserManagement {abstract}	
+				mandatory
+					AddUser
+
+				optional
+					ChooseRole
+					DeleteUser
+					ChangeRole
+					ViewUserActivity
+			DeveloperManagement {abstract}	
+				optional
+					SetURLCallback
+					GenerateDeveloperCredential
+					RemoveCredentials
+
+				mandatory
+					ViewCredential
+			FundTransfer {abstract}	
+				mandatory
+					BusinessModel {abstract}	
+						optional
+							Facilitator
+							Aggregator
+					QuantityPerRequest {abstract}	
+						optional
+							Multiple
+
+						mandatory
+							Single
+					TimeOfExecution {abstract}	
+						mandatory
+							immediate
+
+						optional
+							Scheduled
+
+				optional
+					ApprovalSystem {abstract}	
+						or
+							WithApprovalSystem
+							WithoutApprovalSystem
+
+				mandatory
+					AccountDestinationInfo {abstract}	
+						optional
+							WithoutKnowingDestinationAccount
+
+						mandatory
+							KnowingDestinationAccount
+
+		mandatory
+			Payment {abstract}	
+				optional
+					PaymentChannel {abstract}	
+						optional
+							DirectDebit
+							Ewallet
+							RetailOutlet
+							CreditCard
+							VirtualAccount
+
+				mandatory
+					PaymentInterface {abstract}	
+						optional
+							invoice
+							PaymentLink
+							PaymentRouting
+							API
+
+constraints
+	OnDemand => Reconciliation
+	OnDemand => UserManagement
+	OnDemand => DeveloperManagement
+	Periodically => SentViaEmail
+	RemoveCredentials => GenerateDeveloperCredential
+	ViewCredential => OnDemand
+	ApprovalSystem => ChooseRole
+	ApprovalSystem => ChangeRole

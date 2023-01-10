@@ -1,0 +1,21 @@
+namespace PaymentGateway
+
+features
+	PaymentGateway {abstract}	
+		mandatory
+			Payment {abstract}	
+				mandatory
+					PaymentInterface {abstract}	
+						optional
+							Invoice
+							PaymentLink
+							PaymentRouting
+
+				optional
+					PaymentChannel {abstract}	
+						optional
+							VirtualAccount
+							Ewallet
+							DebitCard
+							CreditCard
+							RetailOutlet

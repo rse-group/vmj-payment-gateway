@@ -1,0 +1,11 @@
+{
+	"Payment": ["paymentgateway.payment.core"],
+	"Invoice": ["paymentgateway.payment.invoice"],
+	"PaymentLink": ["paymentgateway.payment.paymentlink"],
+	"PaymentRouting": ["paymentgateway.payment.paymentrouting"],
+	"VirtualAccount": ["paymentgateway.payment.virtualaccount"],
+	"Ewallet": ["paymentgateway.payment.ewallet"],
+	"DebitCard": ["paymentgateway.payment.debitcard"],
+	"CreditCard": ["paymentgateway.payment.creditcard"],
+	"RetailOutlet": ["paymentgateway.payment.retailoutlet"]
+}

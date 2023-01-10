@@ -1,0 +1,2 @@
+echo SELECT 'CREATE DATABASE paymentgateway_product_noapi' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'paymentgateway_product_noapi') \gexec | psql "postgresql://postgres:postgres@localhost"
+java -cp paymentgateway.product.noapi --module-path paymentgateway.product.noapi -m paymentgateway.product.noapi
