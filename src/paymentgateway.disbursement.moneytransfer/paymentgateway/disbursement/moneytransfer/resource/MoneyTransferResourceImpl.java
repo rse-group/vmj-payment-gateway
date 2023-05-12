@@ -1,0 +1,189 @@
+package paymentgateway.disbursement.moneytransfer;
+
+import com.google.gson.Gson;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URLEncoder;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+import java.nio.charset.StandardCharsets;
+
+import vmj.routing.route.Route;
+import vmj.routing.route.VMJExchange;
+
+import paymentgateway.disbursement.DisbursementFactory;
+import paymentgateway.disbursement.core.Disbursement;
+import paymentgateway.disbursement.core.DisbursementResourceDecorator;
+import paymentgateway.disbursement.core.DisbursementImpl;
+import paymentgateway.disbursement.core.DisbursementResourceComponent;
+
+public class MoneyTransferResourceImpl extends DisbursementResourceDecorator {
+	// implement this to work with authorization module
+	protected String apiKey;
+	protected String apiEndpoint;
+
+	public MoneyTransferResourceImpl(DisbursementResourceComponent record) {
+		super(record);
+	}
+
+	public Disbursement createDisbursement(VMJExchange vmjExchange) {
+		//testExchange just temporary should be deleted
+		MoneyTransferResponse response = sendTransaction(vmjExchange);
+
+		System.out.println("before");
+		String userId = response.getUser_id();
+		String status = response.getStatus();;
+//		vmjExchange.getPayload().put("id",id);
+//		vmjExchange.getPayload().put("user_id",user_id);
+//		vmjExchange.getPayload().put("status",status);
+
+		Disbursement transaction = record.createDisbursement(vmjExchange,userId);
+		System.out.println("after");
+		System.out.println("11");
+		Disbursement moneyTransferTransaction = DisbursementFactory.createDisbursement(
+				"paymentgateway.disbursement.moneytransfer.MoneyTransferImpl",
+				transaction, status);
+		Repository.saveObject(moneyTransferTransaction);
+		System.out.println("22");
+		return moneyTransferTransaction;
+	}
+
+	protected MoneyTransferResponse sendTransaction(VMJExchange vmjExchange) {
+//		String id = (String) vmjExchange.get("id");
+//		String user_id = (String) vmjExchange.get("user_id");
+		int amount = ((Double) vmjExchange.getRequestBodyForm("amount")).intValue();
+		String bank_code = (String) vmjExchange.getRequestBodyForm("bank_code");
+		String account_number = (String) vmjExchange.getRequestBodyForm("account_number");
+
+		Gson gson = new Gson();
+		Map<String, Object> requestMap = new HashMap<String, Object>();
+
+		// midtrans
+		// transaction_details.put("order_id", idTransaction);
+		// transaction_details.put("gross_amount", amount);
+		// Map<String, Object> requestMap = new HashMap<String, Object>();
+		// requestMap.put("transaction_details", transaction_details);
+
+		// String requestString = gson.toJson(requestMap);
+		// System.out.println("this is request String: " + requestString);
+		// HttpClient client = HttpClient.newHttpClient();
+		// HttpRequest request = HttpRequest.newBuilder()
+		// .header("Authorization", getBasicAuthenticationHeader(apiKey, ""))
+		// .header("Content-Type", "application/json")
+		// .header("Accept", "application/json")
+		// .uri(URI.create(apiEndpoint))
+		// .POST(HttpRequest.BodyPublishers.ofString(requestString))
+		// .build();
+		String paymentLink = "";
+
+		HttpClient client = HttpClient.newHttpClient();
+		String body = "account_number=" + account_number + "&";
+		body += "bank_code=" + bank_code + "&";
+		body += "amount=" + String.valueOf(amount) + "&";
+		HttpRequest request = HttpRequest.newBuilder()
+				.header("Content-Type", "application/x-www-form-urlencoded")
+				.header("idempotency-key", "8anU9saqIU798wOo")
+				.header("X-TIMESTAMP", "")
+				.header("Authorization",
+						"Basic SkRKNUpERXpKR3A0YlU5WVppNU9kRGRuU0VoU2JYbFBibXhEVVM1VVJGaHRTM0pEZFZwc2NWVTFMemgxUldwSVVqVldielpMYkhOMkwybDE=")
+				.header("Cookie", "_csrf=I_hH_U80Wpc07Yx-pV_HBDI4KO64F3ES")
+				.uri(URI.create("https://bigflip.id/big_sandbox_api/v2/disbursement"))
+				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(vmjExchange)))
+				.build();
+
+		String status = "";
+		MoneyTransferResponse responseObj = null;
+
+		try {
+			 HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			 String rawResponse = response.body().toString();
+			 System.out.println("rawResponse: " + rawResponse);
+			 responseObj = gson.fromJson(rawResponse,
+			 MoneyTransferResponse.class);
+			 status += responseObj.getStatus();
+			 System.out.println("this is status: " + status);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return responseObj;
+	}
+
+	private static final String getBasicAuthenticationHeader(String username, String password) {
+		String valueToEncode = username + ":" + password;
+		return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
+	}
+
+	private static String getParamsUrlEncoded(VMJExchange vmjExchange) {
+		ArrayList<String> paramList = new ArrayList<>();
+		for (Map.Entry<String, Object> entry : vmjExchange.getPayload().entrySet()) {
+			String key = entry.getKey();
+			Object val = entry.getValue();
+			if (val instanceof String) {
+				System.out.println(val.toString() + ": this is string");
+				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
+			} else if (val instanceof Integer) {
+				System.out.println(val.toString() + ": this is int");
+				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
+			} else if (val instanceof Double) {
+				System.out.println(val.toString() + ": this is int Double");
+				int temp = ((Double) val).intValue();
+				paramList.add(key + "=" + URLEncoder.encode(Integer.toString(temp), StandardCharsets.UTF_8));
+			}
+
+		}
+		String encodedURL = String.join("&",paramList);
+//		String encodedURL = vmjExchange.entrySet()
+//				.stream()
+//				.map(e -> e.getKey() + "=" + URLEncoder.encode(e.getValue().toString(), StandardCharsets.UTF_8))
+//				.collect(Collectors.joining("&"));
+		System.out.println("encodedURL: " + encodedURL);
+		return encodedURL;
+	}
+
+
+
+	@Route(url = "test/call/moneytransfer")
+	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
+		 if (vmjExchange.getHttpMethod().equals("OPTIONS"))
+		 return null;
+
+		Map<String, Object> objects = vmjExchange.getPayload();
+		HashMap<String, Object> testExchange = new HashMap<>();
+//		System.out.println("postBodyString VMJExchange:" + vmjExchange.postBodyString);
+
+		System.out.println("before");
+		for (Map.Entry<String, Object> entry : objects.entrySet()) {
+			String key = entry.getKey();
+			Object val = entry.getValue();
+			testExchange.put(key, val);
+			System.out.println("key:" + key);
+		}
+		System.out.println("after");
+//		String[] values = body.split("&");
+//		System.out.println(body);
+//		for (String v : values) {
+//			System.out.println("value" + v);
+//		}
+
+		// int amount = ((Double) vmjExchange.getRequestBodyForm("amount")).intValue();
+		// String idTransaction = (String)
+		// vmjExchange.getRequestBodyForm("idTransaction");
+
+//		int amount = 12000;
+//		String idTransaction = "123asd";
+//
+//		testExchange.put("idTransaction", idTransaction);
+//		testExchange.put("amount", amount);
+		Disbursement result = this.createDisbursement(vmjExchange);
+		return result.toHashMap();
+	}
+}

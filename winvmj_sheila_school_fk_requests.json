@@ -1,0 +1,1160 @@
+{
+	"info": {
+		"_postman_id": "198b47c8-c994-4f99-8e1e-b8db0247f59e",
+		"name": "VMJ AISCO Requests - SheilaSchool",
+		"description": "Frequency sudah di revert namun belum ada entry dalam database, jadi untuk sementara bisa di-ignore dahulu.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ChartOfAccount",
+			"item": [
+				{
+					"name": "CoA - DETAIL",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7776/call/chart-of-account/detail?id=11100",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7776",
+							"path": [
+								"call",
+								"chart-of-account",
+								"detail"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "11100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CoA - LIST",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7776/call/chart-of-account/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7776",
+							"path": [
+								"call",
+								"chart-of-account",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CoA - SAVE",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\" : \"100000\",\r\n    \"name\" : \"Emergency Funds\",\r\n    \"description\" : \"Create/Save CoA Test\",\r\n    \"reference\" : \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7776/call/chart-of-account/save?token=",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7776",
+							"path": [
+								"call",
+								"chart-of-account",
+								"save"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CoA - UPDATE",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : \"\",\r\n    \"code\" : \"100000\",\r\n    \"name\" : \"Emergency Funds + 1\",\r\n    \"description\" : \"Create/Save CoA Test 1\",\r\n    \"reference\" : \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7776/call/chart-of-account/update?token=",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7776",
+							"path": [
+								"call",
+								"chart-of-account",
+								"update"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CoA - DELETE",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7776/call/chart-of-account/delete?token=",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7776",
+							"path": [
+								"call",
+								"chart-of-account",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FinancialReport",
+			"item": [
+				{
+					"name": "Core",
+					"item": [
+						{
+							"name": "FinancialReport - DETAIL",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/financialreport/detail?id=136797084",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"financialreport",
+										"detail"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "136797084"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FinancialReport - LIST",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/financialreport/list",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"financialreport",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FinancialReport - SAVE",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"datestamp\" : \"2022-04-01\",\r\n    \"amount\" : \"123450\",\r\n    \"description\" : \"Create/Save Test\",\r\n    \"idProgram\" : \"1\",\r\n    \"idCoa\" : \"43010\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/financialreport/save?token=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"financialreport",
+										"save"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FinancialReport - UPDATE",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\" : \"\",\r\n    \"datestamp\" : \"2022-04-01\",\r\n    \"amount\" : \"123450\",\r\n    \"description\" : \"Create/Save Test Edited\",\r\n    \"idProgram\" : \"2\",\r\n    \"idCoa\" : \"43010\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/financialreport/update?token=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"financialreport",
+										"update"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FinancialReport - DELETE",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\" : \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/financialreport/delete?token=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"financialreport",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Expense",
+					"item": [
+						{
+							"name": "Expense - DETAIL",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/expense/detail?id=881540967",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"expense",
+										"detail"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "881540967"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Expense - LIST",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/expense/list",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"expense",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Expense - SAVE",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"datestamp\" : \"2022-04-01\",\r\n    \"amount\" : \"123450\",\r\n    \"description\" : \"Create/Save Test\",\r\n    \"idProgram\" : \"1\",\r\n    \"idCoa\" : \"43010\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/expense/save?token=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"expense",
+										"save"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Expense - UPDATE",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\" : \"\",\r\n    \"datestamp\" : \"2022-04-01\",\r\n    \"amount\" : \"123450\",\r\n    \"description\" : \"Create/Save Test Edited\",\r\n    \"idProgram\" : \"3\",\r\n    \"idCoa\" : \"43010\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/expense/update?token=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"expense",
+										"update"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Expense - DELETE",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\" : \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/income/delete?token=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"income",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Frequency",
+					"item": [
+						{
+							"name": "Frequency - DETAIL",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/income-with-frequency/detail?id=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"income-with-frequency",
+										"detail"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Frequency - LIST",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/income-with-frequency/list",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"income-with-frequency",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Frequency - SAVE",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"datestamp\" : \"2022-04-01\",\r\n    \"amount\" : \"123450\",\r\n    \"description\" : \"Create/Save Test\",\r\n    \"programName\" : \"Pilar Belanja\",\r\n    \"idCoa\" : \"43010\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/financialreport/save?token=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"financialreport",
+										"save"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Frequency - UPDATE",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\" : \"\",\r\n    \"datestamp\" : \"2022-04-01\",\r\n    \"amount\" : \"123450\",\r\n    \"description\" : \"Create/Save Test\",\r\n    \"programName\" : \"Pilar Belanja\",\r\n    \"idCoa\" : \"43010\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/income-with-frequency/update?token=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"income-with-frequency",
+										"update"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Frequency - DELETE",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\" : \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/income-with-frequency/delete?token=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"income-with-frequency",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Income",
+					"item": [
+						{
+							"name": "Income - DETAIL",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/income/detail?id=1388483275",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"income",
+										"detail"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "1388483275"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Income - LIST",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/income/list",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"income",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Income - SAVE",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"datestamp\" : \"2022-04-01\",\r\n    \"amount\" : \"123450\",\r\n    \"description\" : \"Create/Save Test\",\r\n    \"idProgram\" : \"1\",\r\n    \"idCoa\" : \"43010\",\r\n    \"paymentMethod\" : \"invoice\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/income/save?token=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"income",
+										"save"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Income - UPDATE",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\" : \"\",\r\n    \"datestamp\" : \"2022-04-01\",\r\n    \"amount\" : \"123450\",\r\n    \"description\" : \"Create/Save Test\",\r\n    \"idProgram\" : \"2\",\r\n    \"idCoa\" : \"43010\",\r\n    \"paymentMethod\" : \"invoice\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/income/update?token=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"income",
+										"update"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Income - DELETE",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\" : \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7776/call/income/delete?token=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7776",
+									"path": [
+										"call",
+										"income",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Program",
+			"item": [
+				{
+					"name": "Program - DETAIL",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7776/call/program/detail?id=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7776",
+							"path": [
+								"call",
+								"program",
+								"detail"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Program - LIST",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7776/call/program/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7776",
+							"path": [
+								"call",
+								"program",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Program - SAVE",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"Program Test\",\r\n    \"description\" : \"Test for Program creation\",\r\n    \"target\" : \"Sekolah\",\r\n    \"partner\" : \"Sekolah Asal\",\r\n    \"logoUrl\" : \"http://localhost:8000/fake-image.png\",\r\n    \"executionDate\" : null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7776/call/program/save?token=",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7776",
+							"path": [
+								"call",
+								"program",
+								"save"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Program - UPDATE",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : \"\",\r\n    \"name\" : \"Program Test\",\r\n    \"description\" : \"Test for Program creation\",\r\n    \"target\" : \"Sekolah\",\r\n    \"partner\" : \"Sekolah Asal\",\r\n    \"logoUrl\" : \"http://localhost:8000/fake-image.png\",\r\n    \"executionDate\" : null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7776/call/program/update?token=",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7776",
+							"path": [
+								"call",
+								"program",
+								"update"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Program - DELETE",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7776/call/program/delete?token=",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7776",
+							"path": [
+								"call",
+								"program",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "christopher.samuel@ui.ac.id",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:7776/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7776",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
