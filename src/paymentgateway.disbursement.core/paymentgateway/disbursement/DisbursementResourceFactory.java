@@ -19,21 +19,25 @@ public class DisbursementResourceFactory {
             Constructor<?> constructor = clz.getDeclaredConstructors()[0];
             record = (DisbursementResource) constructor.newInstance(base);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             LOGGER.severe("Failed to create instance of Disbursement.");
             LOGGER.severe("Given FQN: " + fullyQualifiedName);
             LOGGER.severe("Failed to run: Check your constructor argument");
             System.exit(20);
         } catch (ClassCastException e) {
+            e.printStackTrace();
             LOGGER.severe("Failed to create instance of Disbursement.");
             LOGGER.severe("Given FQN: " + fullyQualifiedName);
             LOGGER.severe("Failed to cast the object");
             System.exit(30);
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
             LOGGER.severe("Failed to create instance of Disbursement.");
             LOGGER.severe("Given FQN: " + fullyQualifiedName);
             LOGGER.severe("Decorator can't be applied to the object");
             System.exit(40);
         } catch (Exception e) {
+            e.printStackTrace();
             LOGGER.severe("Failed to create instance of Disbursement.");
             LOGGER.severe("Given FQN: " + fullyQualifiedName);
             System.exit(50);
@@ -41,4 +45,25 @@ public class DisbursementResourceFactory {
         return record;
     }
 
+
+    public static boolean checkConfig(String fqn, Object base)
+    {
+        boolean a = true;
+        if (fqn.equals("paymentgateway.disbursement.specialmoneytransfer.SpecialMoneyTransferResourceImpl"))
+        {
+            String baseku = base.getClass().getCanonicalName();
+            a = baseku.equals("paymentgateway.disbursement.special.SpecialResourceImpl");
+        }
+        else if (fqn.equals("paymentgateway.disbursement.agentmoneytransfer.AgentMoneyTransferResourceImpl"))
+        {
+            String baseku = base.getClass().getCanonicalName();
+            a = baseku.equals("paymentgateway.disbursement.agent.AgentResourceImpl");
+        }
+        else if (fqn.equals("paymentgateway.disbursement.internationalmoneytransfer.InternationalMoneyTransferResourceImpl"))
+        {
+            String baseku = base.getClass().getCanonicalName();
+            a = baseku.equals("paymentgateway.disbursement.international.InternationalResourceImpl");
+        }
+        return a;
+    }
 }

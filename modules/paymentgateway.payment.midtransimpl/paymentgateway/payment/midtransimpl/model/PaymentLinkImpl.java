@@ -1,11 +1,9 @@
 package paymentgateway.payment.midtransimpl;
 
 import paymentgateway.payment.core.PaymentDecorator;
-import paymentgateway.payment.paymentlink.PaymentImpl;
 
 import java.util.HashMap;
 
-import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentComponent;
 
 public class PaymentLinkImpl extends PaymentDecorator {

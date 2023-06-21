@@ -16,6 +16,7 @@ module paymentgateway.product.midtrans {
     requires paymentgateway.payment.debitcard;
     requires paymentgateway.payment.creditcard;
     requires paymentgateway.payment.retailoutlet;
+    requires paymentgateway.payment.paymentrouting;
 
     requires prices.auth.vmj;
     requires prices.auth.vmj.model;

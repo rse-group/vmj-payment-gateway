@@ -9,10 +9,18 @@ import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentComponent;
 import paymentgateway.payment.core.PaymentDecorator;
 
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.ElementCollection;
+
+@Entity(name = "paymentrouting_impl")
+@Table(name = "paymentrouting_impl")
 public class PaymentImpl extends PaymentDecorator {
 
 	protected String paymentMethods;
 	protected String sourceOfFunds;
+	@ElementCollection
 	protected List<PaymentRoutingRecipient> routings;
 	protected String paymentCheckoutUrl;
 	public PaymentImpl(
@@ -25,6 +33,10 @@ public class PaymentImpl extends PaymentDecorator {
 		this.sourceOfFunds = sourceOfFunds;
 		this.routings = routings;
 		this.paymentCheckoutUrl = paymentCheckoutUrl;
+	}
+
+	public PaymentImpl(){
+		super();
 	}
 
 	public String getPaymentMethods() {

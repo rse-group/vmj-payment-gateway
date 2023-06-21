@@ -1,6 +1,7 @@
 package paymentgateway.payment.paymentrouting;
 
 public class PaymentRoutingResponse {
+	private int id;
 	private PaymentRoutingStatus status;
 	private String trx_id;
 	private String partner_user_id;
@@ -33,12 +34,15 @@ public class PaymentRoutingResponse {
 		return this.partner_user_id;
 	}
 	
-	public void setPartner_trx_id(String partner_trx_id) {
-		this.partner_trx_id = partner_trx_id;
+	public void setId(int partner_trx_id) {
+		this.id = partner_trx_id;
 	}
 	
-	public String getPartner_trx_id() {
-		return this.partner_trx_id;
+	public int getId() {
+		if (partner_trx_id == null){
+			return id;
+		}
+		return Integer.parseInt(partner_trx_id);
 	}
 	
 	public void setReceive_amount(int receive_amount) {

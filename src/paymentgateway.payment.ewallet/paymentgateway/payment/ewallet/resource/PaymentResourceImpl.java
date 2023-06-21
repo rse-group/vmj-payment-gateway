@@ -35,109 +35,70 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
     }
 
 	
-	public Payment createPayment(HashMap<String,Object> vmjExchange) {
-		String eWalletType = (String) vmjExchange.get("eWalletType");
-		Payment transaction = record.createPayment(vmjExchange);
-		String eWalletUrl = sendTransaction(vmjExchange);
+	public Payment createPayment(VMJExchange vmjExchange, String productName, String serviceName) {
+		EWalletResponse response = sendTransaction(vmjExchange, productName, serviceName);
+		String url = response.getUrl();
+		String type = response.getPayment_type();
+		int id = response.getId();
+		String phoneNumber = (String) vmjExchange.getRequestBodyForm("phone_number");
+		System.out.println(id);
+		Payment transaction = record.createPayment(vmjExchange, id, productName);
 		Payment ewalletTransaction =
 			PaymentFactory.createPayment(
-					"paymentgateway.payment.ewallet.PaymentImpl",
+					"paymentgateway.payment.ewallet.EWalletImpl",
 					transaction,
-					eWalletType,
-					eWalletUrl
+					phoneNumber,
+					type,
+					url
 					);
+		PaymentRepository.saveObject(ewalletTransaction);
 		return ewalletTransaction;
 	}
 
-	protected String sendTransaction(HashMap<String,Object> vmjExchange) {
-		HashMap<String,Object> prodEnv = PaymentConfiguration.getProductEnv();
-		String apiKey = prodEnv.get("MidtransApiKey").toString();
-		String apiEndpoint = prodEnv.get("MidtransApiEndpoint").toString();
-		
-		System.out.println("apikey: " + apiKey);
-		System.out.println("apiEndpoint: " + apiEndpoint);
-		String idTransaction = (String) vmjExchange.get("idTransaction");
-		int amount = (int) vmjExchange.get("amount");
-		String eWalletType = (String) vmjExchange.get("eWalletType");
-		
-		if (vmjExchange.get("idTransaction") instanceof String) {
-			System.out.println("this is string");
-		}
-		
-		if (vmjExchange.get("idTransaction") instanceof Integer) {
-			System.out.println("this is int id");
-		}
-		
-		if (vmjExchange.get("amount") instanceof Integer) {
-			System.out.println("this is int");
-		}
+	protected EWalletResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
 		
 		Gson gson = new Gson();
-		Map<String,Object> requestMap = new HashMap<String,Object>();
-		requestMap.put("payment_type", eWalletType);
-		Map<String,Object> transaction_details = new HashMap<String,Object>();
-		transaction_details.put("order_id", idTransaction);
-		transaction_details.put("gross_amount", amount);
-		requestMap.put("transaction_details", transaction_details);
-		
+		Map<String, Object> requestMap = PaymentConfiguration.processRequestMap(vmjExchange,productName,serviceName);
+		int id = ((Integer) requestMap.get("id")).intValue();
+		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);
+		String configUrl = PaymentConfiguration.getProductEnv(productName, serviceName);
+		HashMap<String, String> headerParams = PaymentConfiguration.getHeaderParams(productName);
+		System.out.println("configUrl: " + configUrl);
+		System.out.println(configUrl);
+//		Gson gson = new Gson();
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder()
-				.header("Authorization", getBasicAuthenticationHeader(apiKey, ""))
-		 		.header("Content-Type", "application/json")
-				.header("Accept", "application/json")
-				.uri(URI.create(apiEndpoint))
+		HttpRequest request = (PaymentConfiguration.getBuilder(HttpRequest.newBuilder(),headerParams))
+				.uri(URI.create(configUrl))
 				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
-		String eWalletUrl = "";
+
+		EWalletResponse responseObj = null;
 		
 		try {
-			System.out.println("a");
 			System.out.println(request.toString());
-			System.out.println("aa");
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			System.out.println(response.toString());
-			System.out.println("bb");
-			System.out.println("b");
 			String rawResponse = response.body().toString();
 			System.out.println("raw: " + rawResponse);
-			System.out.println("c");
-			EWalletResponse responseObj = gson.fromJson(rawResponse, EWalletResponse.class);
-			System.out.println("e");
-			for(EWalletAction x : responseObj.getActions()) {
-				if("generate-qr-code".equals(x.getName())) {
-					eWalletUrl = eWalletUrl + x.getUrl();
-				}
-			}
-			System.out.println("f");
+			responseObj = gson.fromJson(rawResponse, EWalletResponse.class);
 			
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		responseObj.setId(id);
 		
-		return eWalletUrl;
+		return responseObj;
 	}
+
 	
-	private static final String getBasicAuthenticationHeader(String username, String password) {
-		String valueToEncode = username + ":" + password;
-		return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
-	}
-	
-	@Route(url="test/call/ewallet")
-	public HashMap<String,Object> testEwallet(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("OPTIONS")) return null;
-		
-		int amount = ((Double) vmjExchange.getRequestBodyForm("amount")).intValue();
-		String idTransaction = (String) vmjExchange.getRequestBodyForm("idTransaction");
-		String eWalletType = (String) vmjExchange.getRequestBodyForm("eWalletType");
-		
-		HashMap<String,Object> request = new HashMap<String,Object>();
-		request.put("amount", amount);
-		request.put("idTransaction", idTransaction);
-		request.put("eWalletType", eWalletType);
-		System.out.println("sebelum");
-		Payment result = this.createPayment(request);
-		System.out.println("setelah");
+	@Route(url="call/ewallet")
+	public HashMap<String,Object> Ewallet(VMJExchange vmjExchange) {
+		if (vmjExchange.getHttpMethod().equals("OPTIONS"))
+			return null;
+
+		System.out.println("masuk call");
+		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
+		Payment result = this.createPayment(vmjExchange, productName,"EWallet");
 		return result.toHashMap();
 	}
 }

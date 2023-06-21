@@ -1,7 +1,9 @@
 package paymentgateway.product.oy;
 
-import java.util.ArrayList;
-
+import paymentgateway.payment.ewallet.EWalletImpl;
+import paymentgateway.payment.paymentlink.PaymentLinkImpl;
+import paymentgateway.payment.retailoutlet.RetailOutletImpl;
+import paymentgateway.payment.virtualaccount.VirtualAccountImpl;
 import vmj.routing.route.VMJServer;
 import vmj.routing.route.Router;
 import vmj.hibernate.integrator.HibernateUtil;
@@ -26,11 +28,11 @@ public class Oy {
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentDecorator.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.invoice.PaymentImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.payment.paymentlink.PaymentImpl.class);
+		configuration.addAnnotatedClass(PaymentLinkImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.paymentrouting.PaymentImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.payment.virtualaccount.PaymentImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.payment.ewallet.PaymentImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.payment.retailoutlet.PaymentImpl.class);
+		configuration.addAnnotatedClass(VirtualAccountImpl.class);
+		configuration.addAnnotatedClass(EWalletImpl.class);
+		configuration.addAnnotatedClass(RetailOutletImpl.class);
 		
 		configuration.addAnnotatedClass(prices.auth.vmj.model.core.Role.class);
         configuration.addAnnotatedClass(prices.auth.vmj.model.core.RoleComponent.class);

@@ -1,31 +1,24 @@
 package paymentgateway.disbursement.core;
 
-import java.lang.Math;
+import java.math.BigInteger;
 import java.util.*;
-import vmj.routing.route.Route;
+
 import vmj.routing.route.VMJExchange;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.ForeignKey;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+
 
 @Entity(name = "disbursement_impl")
 @Table(name = "disbursement_impl")
 public class DisbursementImpl extends DisbursementComponent {
-//	@Id
-//	protected String id;
-//	protected String userId;
+
 	protected String accountNumber;
 	protected String bankCode;
-	protected int amount;
+	protected double amount;
 
-	public DisbursementImpl(String id, String userId, String accountNumber, int amount, String bankCode) {
-//		super(id,userId);
+	public DisbursementImpl(int id, int userId, String accountNumber, double amount, String bankCode) {
 		this.id = id;
 		this.userId = userId;
 		this.accountNumber = accountNumber;
@@ -34,18 +27,12 @@ public class DisbursementImpl extends DisbursementComponent {
 		System.out.println(amount);
 		this.bankCode = bankCode;
 	}
+	// read this for more information why default constructor needed
+	// https://stackoverflow.com/questions/44088360/org-hibernate-instantiationexception-no-default-constructor-for-entity-princ
+	// https://stackoverflow.com/questions/25452018/hibernate-annotations-no-default-constructor-for-entity?rq=1
+	public DisbursementImpl() {
+	}
 
-//	public String getId() {
-//		return id;
-//	}
-//
-//	public String getUserId() {
-//		return userId;
-//	}
-//
-//	public void setUserId(String userId) {
-//		this.userId = userId;
-//	}
 
 	public String getAccountNumber() {
 		return accountNumber;
@@ -55,11 +42,11 @@ public class DisbursementImpl extends DisbursementComponent {
 		this.accountNumber = accountNumber;
 	}
 
-	public int getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 
@@ -71,19 +58,14 @@ public class DisbursementImpl extends DisbursementComponent {
 		this.bankCode = bankCode;
 	}
 
-	// public void sendDisbursement(String reference, String description, String
-	// destinationCode,
-	// String destinationHolderName,
-	// String destinationAccountNumber, String email, Real amount) {
-	// // TODO: implement this method
-	// }
-
-	// public void getDisbursementByReference(String reference) {
-	// // TODO: implement this method
-	// }
-
-	// public void getDisbursementByID(String id) {
-	// // TODO: implement this method
-	// }
+	public HashMap<String, Object> toHashMap() {
+		HashMap<String, Object> disbursementHashMap = new HashMap<>();
+		disbursementHashMap.put("id", getId());
+//		disbursementHashMap.put("user_id",getUserId());
+		disbursementHashMap.put("bank_code",getBankCode());
+		disbursementHashMap.put("account_number", getAccountNumber());
+		disbursementHashMap.put("amount", getAmount());
+		return disbursementHashMap;
+	}
 
 }

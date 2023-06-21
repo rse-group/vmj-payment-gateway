@@ -2,6 +2,7 @@ package paymentgateway.payment.debitcard;
 
 import com.google.gson.Gson;
 
+import paymentgateway.payment.PaymentConfiguration;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 
@@ -26,15 +27,15 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	protected String apiEndpoint;
     public PaymentResourceImpl (PaymentResourceComponent record) {
     	super(record);
-		this.apiKey = "SB-Mid-server-NVYFqUidEQUTaozWjW77fFWW";
-		this.apiEndpoint = "https://api.sandbox.midtrans.com/v2/charge";
     }
 
-	public Payment createPayment(HashMap<String,Object> vmjExchange) {
-		String bankCode = (String) vmjExchange.get("bankCode");
-		
-		Payment transaction = record.createPayment(vmjExchange);
-		String directDebitUrl = sendTransaction(vmjExchange);
+	public Payment createPayment(VMJExchange vmjExchange, String productName, String serviceName) {
+		DebitCardResponse response = sendTransaction(vmjExchange, productName, serviceName);
+		String bankCode = (String) vmjExchange.getRequestBodyForm("payment_type");
+		int id = response.getId();
+		String directDebitUrl = response.getRedirect_url();
+		Payment transaction = record.createPayment(vmjExchange, id, productName);
+
 		Payment directDebitTransaction = 
 				PaymentFactory.createPayment(
 						"paymentgateway.payment.debitcard.PaymentImpl",
@@ -42,68 +43,70 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 						bankCode,
 						directDebitUrl
 						);
-		
+		PaymentRepository.saveObject(directDebitTransaction);
 		return directDebitTransaction;
 	}
 	
-	protected String sendTransaction(HashMap<String,Object> vmjExchange) {
-		String idTransaction = (String) vmjExchange.get("idTransaction");
-		int amount = (int) vmjExchange.get("amount");
-		String bankCode = (String) vmjExchange.get("bankCode");
-		
+	protected DebitCardResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
+//		String idTransaction = (String) vmjExchange.get("idTransaction");
+//		int amount = (int) vmjExchange.get("amount");
+//		String bankCode = (String) vmjExchange.get("bankCode");
+//
+//		Gson gson = new Gson();
+//		Map<String,Object> requestMap = new HashMap<String,Object>();
+//		requestMap.put("payment_type", bankCode);
+//		Map<String,Object> transaction_details = new HashMap<String,Object>();
+//		transaction_details.put("order_id", idTransaction);
+//		transaction_details.put("gross_amount", amount);
+//		requestMap.put("transaction_details", transaction_details);
+//		//Map<String,Object> bank_transfer = new HashMap<String,Object>();
+//		//bank_transfer.put("bank", bankCode);
+//		//requestMap.put("bank_transfer", bank_transfer);
+//
+//		String requestString = gson.toJson(requestMap);
+//		HttpClient client = HttpClient.newHttpClient();
+//		HttpRequest request = HttpRequest.newBuilder()
+//				.header("Authorization", getBasicAuthenticationHeader(apiKey, ""))
+//				.header("Content-Type", "application/json")
+//				.header("Accept", "application/json")
+//				.uri(URI.create(apiEndpoint))
+//				.POST(HttpRequest.BodyPublishers.ofString(requestString))
+//				.build();
+
 		Gson gson = new Gson();
-		Map<String,Object> requestMap = new HashMap<String,Object>();
-		requestMap.put("payment_type", bankCode);
-		Map<String,Object> transaction_details = new HashMap<String,Object>();
-		transaction_details.put("order_id", idTransaction);
-		transaction_details.put("gross_amount", amount);
-		requestMap.put("transaction_details", transaction_details);
-		//Map<String,Object> bank_transfer = new HashMap<String,Object>();
-		//bank_transfer.put("bank", bankCode);
-		//requestMap.put("bank_transfer", bank_transfer);
-		
+		Map<String, Object> requestMap = PaymentConfiguration.processRequestMap(vmjExchange,productName,serviceName);
+		int id = ((Integer) requestMap.get("id")).intValue();
+		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);
+		String configUrl = PaymentConfiguration.getProductEnv(productName, serviceName);
+		HashMap<String, String> headerParams = PaymentConfiguration.getHeaderParams(productName);
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder()
-				.header("Authorization", getBasicAuthenticationHeader(apiKey, ""))
-				.header("Content-Type", "application/json")
-				.header("Accept", "application/json")
-				.uri(URI.create(apiEndpoint))
+		HttpRequest request = (PaymentConfiguration.getBuilder(HttpRequest.newBuilder(),headerParams))
+				.uri(URI.create(configUrl))
 				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
-		String redirect_url = "";
+
+		DebitCardResponse responseObj = null;
 		
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			DebitCardResponse responseObj = gson.fromJson(rawResponse, DebitCardResponse.class);
-			redirect_url = redirect_url + responseObj.getRedirect_url();
+			System.out.println(rawResponse);
+			responseObj = gson.fromJson(rawResponse, DebitCardResponse.class);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		
-		return redirect_url;
+		responseObj.setId(id);
+		return responseObj;
 	}
+
 	
-	private static final String getBasicAuthenticationHeader(String username, String password) {
-		String valueToEncode = username + ":" + password;
-		return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
-	}
-	
-	@Route(url="test/call/debitcard")
+	@Route(url="call/debitcard")
 	public HashMap<String,Object> testDebitCard(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("OPTIONS")) return null;
-		
-		int amount = ((Double) vmjExchange.getRequestBodyForm("amount")).intValue();
-		String idTransaction = (String) vmjExchange.getRequestBodyForm("idTransaction");
-		String paymentMethods = (String) vmjExchange.getRequestBodyForm("paymentMethods");
-		String bankCode = (String) vmjExchange.getRequestBodyForm("bankCode");
-		
-		HashMap<String,Object> request = new HashMap<String,Object>();
-		request.put("amount", amount);
-		request.put("idTransaction", idTransaction);
-		request.put("bankCode", bankCode);
-		Payment result = this.createPayment(request);
+
+		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
+		Payment result = this.createPayment(vmjExchange, productName, "DebitCard");
 		return result.toHashMap();
 	}
 }

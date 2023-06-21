@@ -19,8 +19,7 @@ import java.nio.charset.StandardCharsets;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 
 import paymentgateway.disbursement.DisbursementFactory;
 import paymentgateway.disbursement.core.Disbursement;
@@ -42,22 +41,21 @@ public class ScheduledResourceImpl extends DisbursementResourceDecorator {
 		String inputDate = (String) vmjExchange.getRequestBodyForm("date");
 		Disbursement transaction = record.createDisbursement(vmjExchange,userId);
 		System.out.println("11a");
+		System.out.println("transaction id" + transaction.getId());
 		Disbursement moneyTransferTransaction = DisbursementFactory.createDisbursement(
 				"paymentgateway.disbursement.moneytransfer.MoneyTransferImpl",
 				transaction, status);
+		System.out.println(moneyTransferTransaction.getId());
+		Repository.saveObject(moneyTransferTransaction);
+		System.out.println(moneyTransferTransaction == null);
 		System.out.println("11b");
 		Date date = null;
-		try{
-			SimpleDateFormat formatter=new SimpleDateFormat("dd-MM-yyyy HH:mm");
-			date = formatter.parse(inputDate);
-		}
-		catch(Exception e) {
-			System.out.println(e);
-		}
+
 
 		Disbursement scheduledTransaction = DisbursementFactory.createDisbursement(
 				"paymentgateway.disbursement.scheduled.ScheduledImpl",
 				moneyTransferTransaction, date);
+		Repository.saveObject(scheduledTransaction);
 		System.out.println("22");
 		return scheduledTransaction;
 	}
@@ -154,8 +152,6 @@ public class ScheduledResourceImpl extends DisbursementResourceDecorator {
 		System.out.println("encodedURL: " + encodedURL);
 		return encodedURL;
 	}
-
-
 
 	@Route(url = "test/call/scheduledTransfer")
 	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {

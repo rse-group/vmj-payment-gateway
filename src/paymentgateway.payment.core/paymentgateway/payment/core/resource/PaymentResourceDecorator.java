@@ -11,7 +11,14 @@ public abstract class PaymentResourceDecorator extends PaymentResourceComponent{
         this.record = record;
     }
 
-    public Payment createPayment(HashMap<String,Object> vmjExchange){
-		return record.createPayment(vmjExchange);
+    public Payment createPayment(VMJExchange vmjExchange, int id, String productName){
+		return record.createPayment(vmjExchange, id, productName);
 	}
+
+    public  List<HashMap<String,Object>> getAll(VMJExchange vmjExchange){
+        return record.getAll(vmjExchange);
+    }
+    public void deletePayment(VMJExchange vmjExchange){
+        record.deletePayment(vmjExchange);
+    }
 }

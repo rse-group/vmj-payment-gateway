@@ -1,80 +1,65 @@
 package paymentgateway.disbursement.core;
 
 import java.util.*;
-import vmj.routing.route.Route;
-import vmj.routing.route.VMJExchange;
+import java.math.BigInteger;
 
 import javax.persistence.OneToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.CascadeType;
-//add other required packages
 
 @MappedSuperclass
 public abstract class DisbursementDecorator extends DisbursementComponent {
-//	@OneToOne(mappedBy = "disbursement_comp")
-	protected DisbursementComponent record;
+    //https://stackoverflow.com/questions/9116630/one-to-one-delete-on-cascade
+    @OneToOne(cascade=CascadeType.REMOVE, optional=true)
+    protected DisbursementComponent record;
 
-	public DisbursementDecorator(DisbursementComponent record) {
-		this.record = record;
-	}
+    public DisbursementDecorator(DisbursementComponent record) {
+        String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
+        String unique_no = generateUUIDNo.substring(0,5);
+        this.id = Integer.parseInt(unique_no);
+        this.record = record;
+    }
 
+    public DisbursementDecorator() {
+    }
 
-	public String getId() {
-		return record.getId();
-	}
+    public int getId() {
+        return record.getId();
+    }
+    public void setId(int id){
+        record.setId(id);
+    }
+    public int getUserId() {
 
-	public String getUserId() {
-		return record.getUserId();
-	}
+        return record.getUserId();
+    }
+    public void setUserId(int userId) {
 
-	public void setUserId(String userId) {
-		record.setUserId(userId);
-	}
+        record.setUserId(userId);
+    }
+    public String getAccountNumber() {
 
-	public String getAccountNumber() {
-		return record.getAccountNumber();
-	}
+        return record.getAccountNumber();
+    }
+    public void setAccountNumber(String accountNumber) {
 
-	public void setAccountNumber(String accountNumber) {
-		record.setAccountNumber(accountNumber);
-	}
+        record.setAccountNumber(accountNumber);
+    }
+    public String getBankCode() {
 
-	public String getBankCode() {
-		return record.getBankCode();
-	}
+        return record.getBankCode();
+    }
+    public void setBankCode(String bankCode) {
 
-	public void setBankCode(String bankCode) {
-		record.setBankCode(bankCode);
-	}
+        record.setBankCode(bankCode);
+    }
+    public double getAmount() {
 
-	 public int getAmount() {
-	 return record.getAmount();
-	 }
-	 public void setAmount(int amount) {
-	 record.setAmount(amount);
-	 }
-	 public String getDestinationAccountNumber() {
-		return record.getAccountNumber();
-	}
-	 public void setDestinationAccountNumber(String destinationAccountNumber) {
-		record.setAccountNumber(destinationAccountNumber);
-	}
+        return record.getAmount();
+    }
+    public void setAmount(double amount) {
 
-	// public void sendDisbursement(String reference, String description, String
-	// destinationCode,
-	// String destinationHolderName,
-	// String destinationAccountNumber, String email, Real amount) {
-	// return record.sendDisbursement(reference, description, destinationCode,
-	// destinationHolderName,
-	// destinationAccountNumber, email, amount);
-	// }
-
-	// public void getDisbursementByReference(String reference) {
-	// return record.getDisbursementByReference(reference);
-	// }
-
-	// public void getDisbursementByID(String id) {
-	// return record.getDisbursementByID(id);
-	// }
+        record.setAmount(amount);
+    }
 
 }

@@ -42,10 +42,12 @@ public class ApprovalResourceImpl extends DisbursementResourceDecorator {
 		Disbursement moneyTransferTransaction = DisbursementFactory.createDisbursement(
 				"paymentgateway.disbursement.moneytransfer.MoneyTransferImpl",
 				transaction, status);
+		Repository.saveObject(moneyTransferTransaction);
 		System.out.println("11b");
 		Disbursement approvalTransaction = DisbursementFactory.createDisbursement(
 				"paymentgateway.disbursement.approval.ApprovalImpl",
 				moneyTransferTransaction, approvalID);
+		Repository.saveObject(approvalTransaction);
 		System.out.println("22");
 		return approvalTransaction;
 	}

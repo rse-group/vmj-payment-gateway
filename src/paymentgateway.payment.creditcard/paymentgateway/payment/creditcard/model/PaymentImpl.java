@@ -7,6 +7,10 @@ import java.util.HashMap;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentComponent;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+@Entity(name = "creditcard_impl")
+@Table(name = "creditcard_impl")
 public class PaymentImpl extends PaymentDecorator {
 
 	protected String idToken;
@@ -15,6 +19,10 @@ public class PaymentImpl extends PaymentDecorator {
 		super(record);
 		this.idToken = idToken;
 		this.creditCardUrl = creditCardUrl;
+	}
+
+	public PaymentImpl(){
+		super();
 	}
 
 	public String getIdToken() {

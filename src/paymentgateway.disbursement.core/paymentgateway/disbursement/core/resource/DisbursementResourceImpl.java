@@ -1,28 +1,39 @@
 package paymentgateway.disbursement.core;
 
+import com.google.gson.Gson;
 import java.util.*;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
+import paymentgateway.disbursement.core.MoneyTransferResponse;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import paymentgateway.disbursement.DisbursementFactory;
-import prices.auth.vmj.annotations.Restricted;
+import paymentgateway.disbursement.DisbursementConfiguration;
 //add other required packages
 
 public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	protected DisbursementResourceComponent record;
 
-	public Disbursement createDisbursement(VMJExchange vmjExchange, String userId) {
-		System.out.println("111");
-		String id = UUID.randomUUID().toString();
-		System.out.println("222");
-//		String user_id = (String) vmjExchange.get("user_id");
-		String bank_code = (String) vmjExchange.getRequestBodyForm("bank_code");
-		String account_number = (String) vmjExchange.getRequestBodyForm("account_number");
-		System.out.println("account_number: " + account_number);
-		System.out.println("1");
-		int amount = ((Double) vmjExchange.getRequestBodyForm("amount")).intValue();
-		System.out.println(amount);
-		System.out.println("2");
+	public Disbursement createDisbursement(VMJExchange vmjExchange,int id, int userId) {
+		String bank_code = "";
+		String account_number = "";
+		try{
+			bank_code = (String) vmjExchange.getRequestBodyForm("bank_code");
+			account_number = (String) vmjExchange.getRequestBodyForm("account_number");
+		}catch (Exception e){
+			bank_code = (String) vmjExchange.getRequestBodyForm("beneficiary_bank_name");
+			account_number = (String) vmjExchange.getRequestBodyForm("beneficiary_account_number");
+		}
+		//for FE
+		double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
+		//for BE test
+//		double amount = (Double) vmjExchange.getRequestBodyForm("amount");
 
 		Disbursement disbursement = DisbursementFactory.createDisbursement(
 				"paymentgateway.disbursement.core.DisbursementImpl",
@@ -31,18 +42,166 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 				account_number,
 				amount,
 				bank_code);
-		save(disbursement);
+		Repository.saveObject(disbursement);
 		return disbursement;
 	}
 
-	public void save(Disbursement disbursement){
-		System.out.println("save 1");
-		Repository.saveObject(disbursement);
-		System.out.println("save 2");;
-	}
+	public MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String serviceName) {
+		System.out.println("1s");
+		String configUrl = DisbursementConfiguration.getProductEnv(serviceName);
+		System.out.println("2");
+		HashMap<String, String> headerParams = DisbursementConfiguration.getHeaderParams("Flip");
+		System.out.println("configUrl: " + configUrl);
+		Gson gson = new Gson();
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = (DisbursementConfiguration.getBuilder(HttpRequest.newBuilder(),headerParams))
+				.uri(URI.create(configUrl))
+				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(vmjExchange)))
+				.build();
+//		HttpRequest request = HttpRequest.newBuilder()
+//				.header("Content-Type", "application/x-www-form-urlencoded")
+//				.header("idempotency-key", UUID.randomUUID().toString())
+//				.header("X-TIMESTAMP", "")
+//				.header("Authorization",
+//						"Basic SkRKNUpERXpKR3A0YlU5WVppNU9kRGRuU0VoU2JYbFBibXhEVVM1VVJGaHRTM0pEZFZwc2NWVTFMemgxUldwSVVqVldielpMYkhOMkwybDE=")
+//				.header("Cookie", "_csrf=I_hH_U80Wpc07Yx-pV_HBDI4KO64F3ES")
+//				.uri(URI.create(configUrl))
+//				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(vmjExchange)))
+//				.build();
+
+		MoneyTransferResponse responseObj = null;
 
 
-	public void getDisbursementByID(String id) {
-		// TODO: implement this method
+		try {
+			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			String rawResponse = response.body().toString();
+			System.out.println("rawResponse:" + rawResponse);
+			responseObj = gson.fromJson(rawResponse,
+					MoneyTransferResponse.class);
+		} catch (Exception e) {
+			System.out.println("masuk error");
+			System.out.println(e);
+		}
+
+		return responseObj;
 	}
+
+	@Route(url="call/disbursement/detail")
+	public HashMap<String, Object> getDisbursement(VMJExchange vmjExchange){
+		int id = ((Double) vmjExchange.getRequestBodyForm("id")).intValue();
+		Disbursement disbursementImpl = Repository.getObject(id);
+		HashMap<String,Object> disbursementDataMap = disbursementImpl.toHashMap();
+		return disbursementDataMap;
+	}
+
+	public HashMap<String, Object> getDisbursementById(int id){
+		List<HashMap<String,Object>> disbursementList = getAllDisbursement("moneytransfer_impl");
+		for (HashMap<String,Object> disbursement : disbursementList){
+			int record_id = ((Double) disbursement.get("record_id")).intValue();
+			if(record_id == id){
+				return disbursement;
+			}
+
+		}
+
+		return null;
+	}
+
+	@Route(url="call/disbursement/list")
+	public List<HashMap<String,Object>> getAllDisbursement(VMJExchange vmjExchange){
+		String table = (String) vmjExchange.getRequestBodyForm("table_name");
+		List<Disbursement> List = Repository.getAllObject(table);
+		return transformListToHashMap(List);
+	}
+
+	public List<HashMap<String,Object>> getAllDisbursement(String tableName){
+		List<Disbursement> List = Repository.getAllObject(tableName);
+		return transformListToHashMap(List);
+	}
+
+	public GetAllDisbursementResponse getAllDataFromAPI(String name){
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder()
+					.header("Content-Type", "application/x-www-form-urlencoded")
+					.header("Authorization",
+							"Basic SkRKNUpERXpKR3A0YlU5WVppNU9kRGRuU0VoU2JYbFBibXhEVVM1VVJGaHRTM0pEZFZwc2NWVTFMemgxUldwSVVqVldielpMYkhOMkwybDE=")
+					.header("Cookie", "_csrf=I_hH_U80Wpc07Yx-pV_HBDI4KO64F3ES")
+					.uri(URI.create("https://bigflip.id/big_sandbox_api/v2/" + name + "?pagination=1000&page=1"))
+					.GET()
+					.build();
+
+
+		Gson gson = new Gson();
+		GetAllDisbursementResponse responseObj = null;
+		try {
+			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			String rawResponse = response.body().toString();
+			responseObj = gson.fromJson(rawResponse,
+					GetAllDisbursementResponse.class);
+			System.out.println("this is page" + responseObj.getPage());
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return responseObj;
+	}
+
+	public String getParamsUrlEncoded(VMJExchange vmjExchange) {
+		ArrayList<String> paramList = new ArrayList<>();
+		for (Map.Entry<String, Object> entry : vmjExchange.getPayload().entrySet()) {
+			String key = entry.getKey();
+			Object val = entry.getValue();
+			if (val instanceof String) {
+				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
+			} else if (val instanceof Integer) {
+				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
+			} else if (val instanceof Double) {
+				int temp = ((Double) val).intValue();
+				paramList.add(key + "=" + URLEncoder.encode(Integer.toString(temp), StandardCharsets.UTF_8));
+			}
+
+		}
+		String encodedURL = String.join("&",paramList);
+		return encodedURL;
+	}
+
+	public List<HashMap<String,Object>> transformListToHashMap(List<Disbursement> List){
+		List<HashMap<String,Object>> resultList = new ArrayList<HashMap<String,Object>>();
+		for(int i = 0; i < List.size(); i++) {
+			resultList.add(List.get(i).toHashMap());
+		}
+		return resultList;
+	}
+
+	@Route(url="call/disbursement/delete")
+	public List<HashMap<String,Object>> deleteDisbursement(VMJExchange vmjExchange) {
+		if (vmjExchange.getHttpMethod().equals("OPTIONS")) {
+			return null;
+		}
+		int id = ((Double) vmjExchange.getRequestBodyForm("id")).intValue();
+		Disbursement disbursement = Repository.getObject(id);
+		Repository.deleteObject(id);
+		return getAllDisbursement(vmjExchange);
+	}
+
+	@Route(url="call/disbursement/update")
+	public HashMap<String, Object> updateDisbursement(VMJExchange vmjExchange){
+		if (vmjExchange.getHttpMethod().equals("OPTIONS")) {
+			return null;
+		}
+		int id = ((Double) vmjExchange.getRequestBodyForm("id")).intValue();
+		Disbursement disbursement = Repository.getObject(id);
+		try{
+			disbursement.setAmount((Double) vmjExchange.getRequestBodyForm("amount"));
+			disbursement.setAccountNumber((String) vmjExchange.getRequestBodyForm("account_number"));
+			disbursement.setBankCode((String) vmjExchange.getRequestBodyForm("bank_code"));
+
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+
+		Repository.updateObject(disbursement);
+		return disbursement.toHashMap();
+	}
+
 }

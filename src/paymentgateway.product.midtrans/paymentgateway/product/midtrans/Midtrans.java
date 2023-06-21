@@ -1,7 +1,8 @@
 package paymentgateway.product.midtrans;
 
-import java.util.ArrayList;
-
+import paymentgateway.payment.ewallet.EWalletImpl;
+import paymentgateway.payment.paymentlink.PaymentLinkImpl;
+import paymentgateway.payment.retailoutlet.RetailOutletImpl;
 import vmj.routing.route.VMJServer;
 import vmj.routing.route.Router;
 import vmj.hibernate.integrator.HibernateUtil;
@@ -26,12 +27,13 @@ public class Midtrans {
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentDecorator.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.invoice.PaymentImpl.class);
-//		configuration.addAnnotatedClass(paymentgateway.payment.paymentlinkmidtrans.PaymentImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.payment.virtualaccount.PaymentImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.payment.ewallet.PaymentImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.payment.paymentrouting.PaymentImpl.class);
+		configuration.addAnnotatedClass(PaymentLinkImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.payment.virtualaccount.VirtualAccountImpl.class);
+		configuration.addAnnotatedClass(EWalletImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.debitcard.PaymentImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.creditcard.PaymentImpl.class);
-//		configuration.addAnnotatedClass(paymentgateway.payment.retailoutlet.PaymentImpl.class);
+		configuration.addAnnotatedClass(RetailOutletImpl.class);
 		
 		configuration.addAnnotatedClass(prices.auth.vmj.model.core.Role.class);
         configuration.addAnnotatedClass(prices.auth.vmj.model.core.RoleComponent.class);
@@ -119,12 +121,19 @@ public class Midtrans {
 			,
 			PaymentResourceFactory.createPaymentResource(
 			"paymentgateway.payment.core.PaymentResourceImpl"));
-//		PaymentResource retailoutlet = PaymentResourceFactory
-//			.createPaymentResource(
-//			"paymentgateway.payment.retailoutlet.PaymentResourceImpl"
-//			,
-//			PaymentResourceFactory.createPaymentResource(
-//			"paymentgateway.payment.core.PaymentResourceImpl"));
+		PaymentResource retailoutlet = PaymentResourceFactory
+			.createPaymentResource(
+			"paymentgateway.payment.retailoutlet.PaymentResourceImpl"
+			,
+			PaymentResourceFactory.createPaymentResource(
+			"paymentgateway.payment.core.PaymentResourceImpl"));
+
+		PaymentResource paymentrouting = PaymentResourceFactory
+				.createPaymentResource(
+						"paymentgateway.payment.paymentrouting.PaymentResourceImpl"
+						,
+						PaymentResourceFactory.createPaymentResource(
+								"paymentgateway.payment.core.PaymentResourceImpl"));
 		
 		UserResource userCore = UserResourceFactory
                 .createUserResource("prices.auth.vmj.model.core.UserResourceImpl");
@@ -138,23 +147,26 @@ public class Midtrans {
         RoleResource role = RoleResourceFactory
         	.createRoleResource("prices.auth.vmj.model.core.RoleResourceImpl");
 
-//		System.out.println("retailoutlet endpoints binding");
-//		Router.route(retailoutlet);
+		System.out.println("retailoutlet endpoints binding");
+		Router.route(retailoutlet);
 		
 		System.out.println("creditcard endpoints binding");
 		Router.route(creditcard);
-		
+//
 		System.out.println("debitcard endpoints binding");
 		Router.route(debitcard);
-		
+//
 		System.out.println("ewallet endpoints binding");
 		Router.route(ewallet);
-		
+
 		System.out.println("virtualaccount endpoints binding");
 		Router.route(virtualaccount);
-		
-//		System.out.println("paymentlinkmidtrans endpoints binding");
-//		Router.route(paymentlinkmidtrans);
+//
+		System.out.println("paymentlink endpoints binding");
+		Router.route(paymentlink);
+
+		System.out.println("paymentrouting endpoints binding");
+		Router.route(paymentrouting);
 		
 		System.out.println("invoice endpoints binding");
 		Router.route(invoice);

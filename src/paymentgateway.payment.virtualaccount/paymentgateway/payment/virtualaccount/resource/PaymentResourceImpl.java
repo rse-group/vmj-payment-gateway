@@ -2,6 +2,7 @@ package paymentgateway.payment.virtualaccount;
 
 import com.google.gson.Gson;
 
+import paymentgateway.payment.PaymentConfiguration;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 
@@ -23,84 +24,94 @@ import paymentgateway.payment.core.PaymentResourceComponent;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	// implement this to work with authorization module
-	protected String apiKey;
-	protected String apiEndpoint;
     public PaymentResourceImpl (PaymentResourceComponent record) {
         super(record);
-        this.apiKey = "SB-Mid-server-NVYFqUidEQUTaozWjW77fFWW";
-		this.apiEndpoint = "https://api.sandbox.midtrans.com/v2/charge";
     }
     
-	public Payment createPayment(HashMap<String,Object> vmjExchange) {
-		String bankCode = (String) vmjExchange.get("bankCode");
-		boolean isOpenVA = (boolean) vmjExchange.get("isOpenVA");
+	public Payment createPayment(VMJExchange vmjExchange, String productName, String serviceName) {
+		VirtualAccountResponse response = sendTransaction(vmjExchange, productName, serviceName);
+		System.out.println(response.getVirtual_account_number());
+		String vaAccountNumber = response.getVirtual_account_number();
+		String bankCode = (String) vmjExchange.getRequestBodyForm("bank");
+		int id = response.getIdDB();
 		
-		Payment transaction = record.createPayment(vmjExchange);
-		String vaAccountNumber = sendTransaction(vmjExchange);
+		Payment transaction = record.createPayment(vmjExchange, id, productName);
 		Payment virtualAccountTransaction = PaymentFactory.createPayment(
-				"paymentgateway.payment.virtualaccount.PaymentImpl", transaction, bankCode, isOpenVA, vaAccountNumber);
+				"paymentgateway.payment.virtualaccount.VirtualAccountImpl",
+				transaction,
+				bankCode,
+				vaAccountNumber);
+		PaymentRepository.saveObject(virtualAccountTransaction);
 		return virtualAccountTransaction;
 	}
 	
-	protected String sendTransaction(HashMap<String,Object> vmjExchange) {
-		String idTransaction = (String) vmjExchange.get("idTransaction");
-		int amount = (int) vmjExchange.get("amount");
-		String bankCode = (String) vmjExchange.get("bankCode");
-		
+	protected VirtualAccountResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
+//		String idTransaction = (String) vmjExchange.get("idTransaction");
+//		int amount = (int) vmjExchange.get("amount");
+//		String bankCode = (String) vmjExchange.get("bankCode");
+//
+//		Gson gson = new Gson();
+//		Map<String,Object> requestMap = new HashMap<String,Object>();
+//		requestMap.put("payment_type", "bank_transfer");
+//		Map<String,Object> transaction_details = new HashMap<String,Object>();
+//		transaction_details.put("order_id", idTransaction);
+//		transaction_details.put("gross_amount", amount);
+//		requestMap.put("transaction_details", transaction_details);
+//		Map<String,Object> bank_transfer = new HashMap<String,Object>();
+//		bank_transfer.put("bank", bankCode);
+//		requestMap.put("bank_transfer", bank_transfer);
+//
+//		String requestString = gson.toJson(requestMap);
+//		HttpClient client = HttpClient.newHttpClient();
+//		HttpRequest request = HttpRequest.newBuilder()
+//				.header("Authorization", getBasicAuthenticationHeader(apiKey, ""))
+//				.header("Content-Type", "application/json")
+//				.header("Accept", "application/json")
+//				.uri(URI.create(apiEndpoint))
+//				.POST(HttpRequest.BodyPublishers.ofString(requestString))
+//				.build();
+
 		Gson gson = new Gson();
-		Map<String,Object> requestMap = new HashMap<String,Object>();
-		requestMap.put("payment_type", "bank_transfer");
-		Map<String,Object> transaction_details = new HashMap<String,Object>();
-		transaction_details.put("order_id", idTransaction);
-		transaction_details.put("gross_amount", amount);
-		requestMap.put("transaction_details", transaction_details);
-		Map<String,Object> bank_transfer = new HashMap<String,Object>();
-		bank_transfer.put("bank", bankCode);
-		requestMap.put("bank_transfer", bank_transfer);
-		
+		Map<String, Object> requestMap = PaymentConfiguration.processRequestMap(vmjExchange,productName,serviceName);
+		int id = ((Integer) requestMap.get("id")).intValue();
+		System.out.println("id:" + Integer.toString(id));
+		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);
+		String configUrl = PaymentConfiguration.getProductEnv(productName, serviceName);
+		HashMap<String, String> headerParams = PaymentConfiguration.getHeaderParams(productName);
+		System.out.println("configUrl: " + configUrl);
+		System.out.println(configUrl);
+//		Gson gson = new Gson();
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder()
-				.header("Authorization", getBasicAuthenticationHeader(apiKey, ""))
-				.header("Content-Type", "application/json")
-				.header("Accept", "application/json")
-				.uri(URI.create(apiEndpoint))
+		HttpRequest request = (PaymentConfiguration.getBuilder(HttpRequest.newBuilder(),headerParams))
+				.uri(URI.create(configUrl))
 				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
-		String vaAccountNumber = "";
+
+
+		VirtualAccountResponse responseObj = null;
 		
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			VirtualAccountResponse responseObj = gson.fromJson(rawResponse, VirtualAccountResponse.class);
-			vaAccountNumber = vaAccountNumber + ((responseObj.getVa_numbers()).get(0)).getVa_number();
+			System.out.println("raw: " + rawResponse);
+			responseObj = gson.fromJson(rawResponse, VirtualAccountResponse.class);
+//			vaAccountNumber = vaAccountNumber + ((responseObj.getVa_numbers()).get(0)).getVa_number();
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		responseObj.setIdDB(id);
 		
-		return vaAccountNumber;
+		return responseObj;
 	}
+
 	
-	private static final String getBasicAuthenticationHeader(String username, String password) {
-		String valueToEncode = username + ":" + password;
-		return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
-	}
-	
-	@Route(url="test/call/virtualaccount")
+	@Route(url="call/virtualaccount")
 	public HashMap<String,Object> testVirtualAccount(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("OPTIONS")) return null;
-		
-		int amount = ((Double) vmjExchange.getRequestBodyForm("amount")).intValue();
-		String idTransaction = (String) vmjExchange.getRequestBodyForm("idTransaction");
-		String bankCode = (String) vmjExchange.getRequestBodyForm("bankCode");
-		boolean isOpenVA = (boolean) vmjExchange.getRequestBodyForm("isOpenVA");
-		
-		HashMap<String,Object> pgExchange = new HashMap<String,Object>();
-		pgExchange.put("idTransaction", idTransaction);
-		pgExchange.put("amount", amount);
-		pgExchange.put("bankCode", bankCode);
-		pgExchange.put("isOpenVA", isOpenVA);
-		Payment result = this.createPayment(pgExchange);
+
+		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
+		Payment result = this.createPayment(vmjExchange, productName, "VirtualAccount");
 		return result.toHashMap();
 	}
 }

@@ -2,20 +2,26 @@ package paymentgateway.disbursement.approval;
 
 import paymentgateway.disbursement.core.DisbursementDecorator;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import java.util.HashMap;
 import java.util.Date;
 
 import paymentgateway.disbursement.core.Disbursement;
 import paymentgateway.disbursement.core.DisbursementComponent;
 
-//@Entity(name = "scheduled_impl")
-//@Table(name = "scheduled_impl")
+@Entity(name = "approval_impl")
+@Table(name = "approval_impl")
 public class ApprovalImpl extends DisbursementDecorator {
 
 	protected String approvalId;
 	public ApprovalImpl(DisbursementComponent record, String approvalId) {
 		super(record);
 		this.approvalId = approvalId;
+	}
+
+	public ApprovalImpl() {
 	}
 
 	public String getApprovalId() {

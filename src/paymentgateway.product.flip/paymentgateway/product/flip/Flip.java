@@ -25,8 +25,14 @@ public class Flip {
 		configuration.addAnnotatedClass(paymentgateway.disbursement.core.DisbursementDecorator.class);
 		configuration.addAnnotatedClass(paymentgateway.disbursement.core.DisbursementImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.disbursement.moneytransfer.MoneyTransferImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.disbursement.scheduledtransfer.ScheduledTransferImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.disbursement.approvaltransfer.ApprovalTransferImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.disbursement.special.SpecialImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.disbursement.agent.AgentImpl.class);
+//		configuration.addAnnotatedClass(paymentgateway.disbursement.scheduled.ScheduledImpl.class);
+//		configuration.addAnnotatedClass(paymentgateway.disbursement.approval.ApprovalImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.disbursement.international.InternationalImpl.class);
+//		configuration.addAnnotatedClass(paymentgateway.disbursement.internationaltransfer.InternationalTransferImpl.class);
+//		configuration.addAnnotatedClass(paymentgateway.disbursement.scheduledtransfer.ScheduledTransferImpl.class);
+//		configuration.addAnnotatedClass(paymentgateway.disbursement.approvaltransfer.ApprovalTransferImpl.class);
 
 		configuration.addAnnotatedClass(prices.auth.vmj.model.core.Role.class);
 		configuration.addAnnotatedClass(prices.auth.vmj.model.core.RoleComponent.class);
@@ -71,15 +77,21 @@ public class Flip {
 						DisbursementResourceFactory.createDisbursementResource(
 								"paymentgateway.disbursement.core.DisbursementResourceImpl"));
 
-		DisbursementResource scheduledtransfer = DisbursementResourceFactory
+		DisbursementResource specialmoneytransfer = DisbursementResourceFactory
 				.createDisbursementResource(
-						"paymentgateway.disbursement.scheduledtransfer.ScheduledTransferResourceImpl",
+						"paymentgateway.disbursement.specialmoneytransfer.SpecialMoneyTransferResourceImpl",
 						moneytransfer);
 
-		DisbursementResource approvaltransfer = DisbursementResourceFactory
+		DisbursementResource agentmoneytransfer = DisbursementResourceFactory
 				.createDisbursementResource(
-						"paymentgateway.disbursement.approvaltransfer.ApprovalTransferResourceImpl",
+						"paymentgateway.disbursement.agentmoneytransfer.AgentMoneyTransferResourceImpl",
 						moneytransfer);
+
+		DisbursementResource internationalmoneytransfer = DisbursementResourceFactory
+				.createDisbursementResource(
+						"paymentgateway.disbursement.internationalmoneytransfer.InternationalMoneyTransferResourceImpl",
+						moneytransfer);
+
 
 		System.out.println("================================");
 
@@ -98,11 +110,23 @@ public class Flip {
 		System.out.println("moneytransfer endpoints binding");
 		Router.route(moneytransfer);
 
-		System.out.println("scheduledtransfer endpoints binding");
-		Router.route(scheduledtransfer);
+		System.out.println("specialmoneytransfer endpoints binding");
+		Router.route(specialmoneytransfer);
 
-		System.out.println("approvaltransfer endpoints binding");
-		Router.route(approvaltransfer);
+		System.out.println("agentmoneytransfer endpoints binding");
+		Router.route(agentmoneytransfer);
+
+		System.out.println("internationaltransfer endpoints binding");
+		Router.route(internationalmoneytransfer);
+
+//		System.out.println("multiplemoneytransfer endpoints binding");
+//		Router.route(multipletransfer);
+
+//		System.out.println("scheduledtransfer endpoints binding");
+//		Router.route(scheduledtransfer);
+//
+//		System.out.println("approvaltransfer endpoints binding");
+//		Router.route(approvaltransfer);
 
 		System.out.println("disbursement endpoints binding");
 		Router.route(disbursement);

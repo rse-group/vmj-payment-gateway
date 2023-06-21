@@ -4,7 +4,6 @@ import java.util.*;
 
 import vmj.hibernate.integrator.RepositoryUtil;
 import vmj.routing.route.VMJExchange;
-//add other required packages
 
 import paymentgateway.disbursement.core.Disbursement;
 
@@ -16,36 +15,15 @@ public abstract class DisbursementResourceComponent implements DisbursementResou
                 paymentgateway.disbursement.core.DisbursementComponent.class);
     }
 
-    public abstract Disbursement createDisbursement(VMJExchange vmjExchange, String userId);
-//    public abstract void save(Disbursement disbursement){
-//
-//    };
+    public abstract Disbursement createDisbursement(VMJExchange vmjExchange,int id, int userId);
+    public abstract HashMap<String, Object> getDisbursement(VMJExchange vmjExchange);
+    public abstract List<HashMap<String,Object>> getAllDisbursement(VMJExchange vmjExchange);
+    public abstract List<HashMap<String,Object>> transformListToHashMap(List<Disbursement> List);
+    public abstract List<HashMap<String,Object>> deleteDisbursement(VMJExchange vmjExchange);
+    public abstract HashMap<String, Object> updateDisbursement(VMJExchange vmjExchange);
+    public abstract GetAllDisbursementResponse getAllDataFromAPI(String name);
+    public abstract MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String serviceName);
+    public abstract String getParamsUrlEncoded(VMJExchange vmjExchange);
+    public abstract HashMap<String, Object> getDisbursementById(int id);
 
-    public void save(Disbursement disbursement){
-        System.out.println("save 1 di component");
-        Repository.saveObject(disbursement);
-        System.out.println("save 2 di component");
-    }
-
-    // public abstract HashMap<String, Object> update(VMJExchange vmjExchange);
-
-    // public abstract HashMap<String, Object> get(VMJExchange vmjExchange);
-
-    // public abstract List<HashMap<String, Object>> getAll(VMJExchange
-    // vmjExchange);
-
-    // public abstract List<HashMap<String, Object>> transformListToHashMap(List<>
-    // List);
-
-    // public abstract List<HashMap<String, Object>> delete(VMJExchange
-    // vmjExchange);
-
-    // public abstract void sendDisbursement(String reference, String description,
-    // String destinationCode,
-    // String destinationHolderName, String destinationAccountNumber, String email,
-    // Real amount);
-
-    // public abstract void getDisbursementByReference(String reference);
-
-    // public abstract void getDisbursementByID(String id);
 }

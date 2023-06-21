@@ -20,21 +20,25 @@ public class DisbursementFactory {
             Constructor<?> constructor = clz.getDeclaredConstructors()[0];
             record = (Disbursement) constructor.newInstance(base);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             LOGGER.severe("Failed to create instance of Disbursement.");
             LOGGER.severe("Given FQN: " + fullyQualifiedName);
             LOGGER.severe("Failed to run: Check your constructor argument");
             System.exit(20);
         } catch (ClassCastException e) {
+            e.printStackTrace();
             LOGGER.severe("Failed to create instance of Disbursement.");
             LOGGER.severe("Given FQN: " + fullyQualifiedName);
             LOGGER.severe("Failed to cast the object");
             System.exit(30);
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
             LOGGER.severe("Failed to create instance of Disbursement.");
             LOGGER.severe("Given FQN: " + fullyQualifiedName);
             LOGGER.severe("Decorator can't be applied to the object");
             System.exit(40);
         } catch (Exception e) {
+            e.printStackTrace();
             LOGGER.severe("Failed to create instance of Disbursement.");
             LOGGER.severe("Given FQN: " + fullyQualifiedName);
             System.exit(50);

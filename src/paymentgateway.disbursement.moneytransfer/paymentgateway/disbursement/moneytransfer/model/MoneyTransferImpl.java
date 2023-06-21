@@ -1,17 +1,16 @@
 package paymentgateway.disbursement.moneytransfer;
 
-import paymentgateway.disbursement.core.DisbursementDecorator;
-
 import java.util.HashMap;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import paymentgateway.disbursement.core.Disbursement;
+import paymentgateway.disbursement.core.DisbursementDecorator;
 import paymentgateway.disbursement.core.DisbursementComponent;
 
-@Entity(name = "moneyTransfer_impl")
-@Table(name = "moneyTransfer_impl")
+@Entity(name = "moneytransfer_impl")
+@Table(name = "moneytransfer_impl")
 public class MoneyTransferImpl extends DisbursementDecorator {
 	protected String status;
 
@@ -19,7 +18,18 @@ public class MoneyTransferImpl extends DisbursementDecorator {
 		super(record);
 		this.status = status;
 	}
+	public MoneyTransferImpl() {
+		super();
+	}
 
+	@Override
+	public int getId() {
+		return super.getId();
+	}
+	@Override
+	public void setUserId(int userId) {
+		super.setUserId(userId);
+	}
 	public String getStatus() {
 		return this.status;
 	}
