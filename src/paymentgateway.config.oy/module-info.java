@@ -1,11 +1,7 @@
-module paymentgateway.payment.ewallet {
-	requires paymentgateway.payment.core;
-    exports paymentgateway.payment.ewallet;
-
-	requires vmj.routing.route;
+module paymentgateway.config.oy {
+    exports paymentgateway.config.oy;
 	requires paymentgateway.config.core;
-	requires paymentgateway.config.midtrans;
-	requires paymentgateway.config.oy;
+	requires vmj.routing.route;
 	requires vmj.hibernate.integrator;
 	requires prices.auth.vmj;
 	requires java.logging;
@@ -13,5 +9,5 @@ module paymentgateway.payment.ewallet {
 	requires java.naming;
 	requires java.net.http;
 
-	opens paymentgateway.payment.ewallet to org.hibernate.orm.core, gson;
+	opens paymentgateway.config.oy to org.hibernate.orm.core, gson;
 }

@@ -5,6 +5,7 @@ module paymentgateway.payment.paymentlink {
 	requires vmj.routing.route;
 	requires paymentgateway.config.core;
 	requires paymentgateway.config.midtrans;
+	requires paymentgateway.config.oy;
 	requires vmj.hibernate.integrator;
 	requires prices.auth.vmj;
 	requires java.logging;
