@@ -17,7 +17,6 @@ import paymentgateway.payment.PaymentResourceFactory;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import vmj.hibernate.integrator.RepositoryUtil;
-import paymentgateway.payment.PaymentConfiguration;
 import paymentgateway.payment.core.PaymentResourceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
@@ -63,7 +62,7 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		HashMap<String, String> headerParams = config.getHeaderParams(productName);
 		System.out.println("configUrl: " + configUrl);
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = (PaymentConfiguration.getBuilder(HttpRequest.newBuilder(),headerParams))
+		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
 				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();

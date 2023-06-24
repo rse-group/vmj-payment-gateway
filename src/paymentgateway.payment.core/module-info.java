@@ -10,5 +10,4 @@ module paymentgateway.payment.core {
 	requires java.net.http;
 
 	opens paymentgateway.payment.core to org.hibernate.orm.core, gson;
-    exports paymentgateway.payment.core.util;
 }

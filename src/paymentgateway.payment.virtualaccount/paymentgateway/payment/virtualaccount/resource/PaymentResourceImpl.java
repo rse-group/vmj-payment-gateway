@@ -2,7 +2,6 @@ package paymentgateway.payment.virtualaccount;
 
 import com.google.gson.Gson;
 
-import paymentgateway.payment.PaymentConfiguration;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 
@@ -62,11 +61,11 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		System.out.println("id:" + Integer.toString(id));
 		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);
-		String configUrl = PaymentConfiguration.getProductEnv(productName, serviceName);
-		HashMap<String, String> headerParams = PaymentConfiguration.getHeaderParams(productName);
+		String configUrl = config.getProductEnv(productName, serviceName);
+		HashMap<String, String> headerParams = config.getHeaderParams(productName);
 		System.out.println("configUrl: " + configUrl);
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = (PaymentConfiguration.getBuilder(HttpRequest.newBuilder(),headerParams))
+		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
 				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
