@@ -101,28 +101,28 @@ public class PaymentConfiguration {
 		return headerParams;
 	}
 
-	public static HashMap<String, String> getBodyKeyParams(String productName){
-		HashMap<String, String> keyParams = new HashMap<>();
-		Object prop = getPropertiesReader();
-
-		try {
-			Method method = prop.getClass().getMethod("get" + productName + "BodyKey");
-			keyParams = (HashMap<String, String>) method.invoke(prop);
-
-		}
-		catch (IllegalArgumentException e){
-			e.printStackTrace();
-		}
-		catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
-
-		return keyParams;
-	}
+//	public static HashMap<String, String> getBodyKeyParams(String productName){
+//		HashMap<String, String> keyParams = new HashMap<>();
+//		Object prop = getPropertiesReader();
+//
+//		try {
+//			Method method = prop.getClass().getMethod("get" + productName + "BodyKey");
+//			keyParams = (HashMap<String, String>) method.invoke(prop);
+//
+//		}
+//		catch (IllegalArgumentException e){
+//			e.printStackTrace();
+//		}
+//		catch (NoSuchMethodException e) {
+//			e.printStackTrace();
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//
+//		return keyParams;
+//	}
 
 
 	public static Map<String, String> getOyBankCode(){

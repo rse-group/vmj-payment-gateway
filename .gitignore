@@ -6,6 +6,7 @@ javaFiles.txt
 *.product.*/*.jar
 .idea
 *.db
+*.iml
 .vscode
 aisco.product.*
 .classpath

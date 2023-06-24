@@ -13,13 +13,16 @@ import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 
 import paymentgateway.payment.PaymentFactory;
+import paymentgateway.payment.PaymentResourceFactory;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
-import paymentgateway.payment.core.PaymentImpl;
 import vmj.hibernate.integrator.RepositoryUtil;
 import paymentgateway.payment.PaymentConfiguration;
 import paymentgateway.payment.core.PaymentResourceComponent;
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
 
+//import paymentgateway.config.core.ConfigImpl;
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	RepositoryUtil<PaymentLinkImpl> paymentLinkRepository;
 
@@ -43,13 +46,21 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	protected PaymentLinkResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
 		PaymentLinkResponse responseObj = null;
 
+		Config config = ConfigFactory
+				.createConfig(
+						"paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration"
+						,
+						ConfigFactory.createConfig(
+								"paymentgateway.config.core.ConfigImpl"));
+
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = PaymentConfiguration.processRequestMap(vmjExchange,productName,serviceName);
+		Map<String, Object> requestMap = config.processRequestMap(vmjExchange,productName,serviceName);
+		System.out.println("sebelum id");
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);
-		String configUrl = PaymentConfiguration.getProductEnv(productName, serviceName);
-		HashMap<String, String> headerParams = PaymentConfiguration.getHeaderParams(productName);
+		String configUrl = config.getProductEnv(productName, serviceName);
+		HashMap<String, String> headerParams = config.getHeaderParams(productName);
 		System.out.println("configUrl: " + configUrl);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (PaymentConfiguration.getBuilder(HttpRequest.newBuilder(),headerParams))

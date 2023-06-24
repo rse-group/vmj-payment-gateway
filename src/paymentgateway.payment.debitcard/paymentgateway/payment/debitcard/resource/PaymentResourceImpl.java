@@ -20,6 +20,8 @@ import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentResourceComponent;
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	
@@ -48,33 +50,16 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	}
 	
 	protected DebitCardResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
-//		String idTransaction = (String) vmjExchange.get("idTransaction");
-//		int amount = (int) vmjExchange.get("amount");
-//		String bankCode = (String) vmjExchange.get("bankCode");
-//
-//		Gson gson = new Gson();
-//		Map<String,Object> requestMap = new HashMap<String,Object>();
-//		requestMap.put("payment_type", bankCode);
-//		Map<String,Object> transaction_details = new HashMap<String,Object>();
-//		transaction_details.put("order_id", idTransaction);
-//		transaction_details.put("gross_amount", amount);
-//		requestMap.put("transaction_details", transaction_details);
-//		//Map<String,Object> bank_transfer = new HashMap<String,Object>();
-//		//bank_transfer.put("bank", bankCode);
-//		//requestMap.put("bank_transfer", bank_transfer);
-//
-//		String requestString = gson.toJson(requestMap);
-//		HttpClient client = HttpClient.newHttpClient();
-//		HttpRequest request = HttpRequest.newBuilder()
-//				.header("Authorization", getBasicAuthenticationHeader(apiKey, ""))
-//				.header("Content-Type", "application/json")
-//				.header("Accept", "application/json")
-//				.uri(URI.create(apiEndpoint))
-//				.POST(HttpRequest.BodyPublishers.ofString(requestString))
-//				.build();
-
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = PaymentConfiguration.processRequestMap(vmjExchange,productName,serviceName);
+
+		Config config = ConfigFactory
+				.createConfig(
+						"paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration"
+						,
+						ConfigFactory.createConfig(
+								"paymentgateway.config.core.ConfigImpl"));
+
+		Map<String, Object> requestMap = config.processRequestMap(vmjExchange,productName,serviceName);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);

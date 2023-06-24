@@ -24,6 +24,8 @@ import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentResourceComponent;
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	
@@ -61,43 +63,16 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	}
 	
 	protected PaymentRoutingResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
-//		String idTransaction = (String) vmjExchange.getRequestBodyForm("partner_user_id");
-//		int amount = (int) (Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount")));
-//		String paymentMethods = (String) vmjExchange.getRequestBodyForm("list_enable_payment_method");
-//		String sourceOfFunds = (String) vmjExchange.getRequestBodyForm("list_enable_sof");
-//		List<PaymentRoutingRecipient> routings = (List<PaymentRoutingRecipient>) vmjExchange.getRequestBodyForm("routings");
-//		System.out.println((vmjExchange.getRequestBodyForm("routings")).toString());
-//		Gson gson = new Gson();
-//
-//		System.out.println((String) result.get(0).get("recipient_email"));
-//
-//		Map<String,Object> requestMap = new HashMap<String,Object>();
-//		requestMap.put("partner_trx_id", idTransaction);
-//		requestMap.put("need_frontend", true);
-//		requestMap.put("receive_amount", amount);
-//		requestMap.put("list_enable_payment_method", paymentMethods);
-//		requestMap.put("list_enable_sof",sourceOfFunds);
-//		List<Map<String,Object>> payment_routing = new ArrayList();
-////		for(PaymentRoutingRecipient x : routings) {
-////			payment_routing.add(x.toHashMap());
-////		}
-//		requestMap.put("payment_routing", payment_routing);
-//
-//		String requestString = gson.toJson(requestMap);
-//
-//		HttpClient client = HttpClient.newHttpClient();
-//		HttpRequest request = HttpRequest.newBuilder()
-//				.header("X-Api-Key", apiKey)
-//				.header("X-Oy-Username", apiUsername)
-//				.header("Content-Type", "application/json")
-//				.header("Accept", "application/json")
-//				.uri(URI.create(apiEndpoint))
-//				.POST(HttpRequest.BodyPublishers.ofString(requestString))
-//				.build();
-//		String payment_checkout_url = "";
-
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = PaymentConfiguration.processRequestMap(vmjExchange,productName,serviceName);
+
+		Config config = ConfigFactory
+				.createConfig(
+						"paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration"
+						,
+						ConfigFactory.createConfig(
+								"paymentgateway.config.core.ConfigImpl"));
+
+		Map<String, Object> requestMap = config.processRequestMap(vmjExchange,productName,serviceName);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);

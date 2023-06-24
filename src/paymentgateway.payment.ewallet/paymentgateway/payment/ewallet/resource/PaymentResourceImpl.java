@@ -22,6 +22,8 @@ import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentResourceComponent;
 import paymentgateway.payment.PaymentConfiguration;
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	// implement this with author
@@ -30,8 +32,6 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	protected String apiEndpoint;
     public PaymentResourceImpl (PaymentResourceComponent record) {
         super(record);
-//        this.apiKey = "SB-Mid-server-NVYFqUidEQUTaozWjW77fFWW";
-//		this.apiEndpoint = "https://api.sandbox.midtrans.com/v2/charge";
     }
 
 	
@@ -56,9 +56,16 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	}
 
 	protected EWalletResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
-		
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = PaymentConfiguration.processRequestMap(vmjExchange,productName,serviceName);
+
+		Config config = ConfigFactory
+				.createConfig(
+						"paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration"
+						,
+						ConfigFactory.createConfig(
+								"paymentgateway.config.core.ConfigImpl"));
+
+		Map<String, Object> requestMap = config.processRequestMap(vmjExchange,productName,serviceName);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);

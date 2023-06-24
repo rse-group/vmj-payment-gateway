@@ -20,16 +20,14 @@ import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentResourceComponent;
-
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	// implement this with authorization module
 	protected String apiKey;
 	protected String apiEndpoint;
-	protected final String payment_type = "cstore";
     public PaymentResourceImpl (PaymentResourceComponent record) {
     	super(record);
-//    	this.apiKey = "SB-Mid-server-NVYFqUidEQUTaozWjW77fFWW";
-//    	this.apiEndpoint = "https://api.sandbox.midtrans.com/v2/charge";
     }
 
 	public Payment createPayment(VMJExchange vmjExchange, String productName, String serviceName) {
@@ -53,7 +51,15 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	
 	protected RetailOutletResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = PaymentConfiguration.processRequestMap(vmjExchange,productName,serviceName);
+
+		Config config = ConfigFactory
+				.createConfig(
+						"paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration"
+						,
+						ConfigFactory.createConfig(
+								"paymentgateway.config.core.ConfigImpl"));
+
+		Map<String, Object> requestMap = config.processRequestMap(vmjExchange,productName,serviceName);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);

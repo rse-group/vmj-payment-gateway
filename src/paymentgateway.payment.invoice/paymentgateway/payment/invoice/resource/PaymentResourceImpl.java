@@ -24,6 +24,8 @@ import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentResourceComponent;
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
 
 import com.midtrans.Midtrans;
 import com.midtrans.httpclient.SnapApi;
@@ -35,8 +37,6 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	protected String apiEndpoint;
     public PaymentResourceImpl (PaymentResourceComponent record) {
         super(record);
-        this.apiKey = "SB-Mid-server-NVYFqUidEQUTaozWjW77fFWW";
-		this.apiEndpoint = "https://api.sandbox.midtrans.com/v2/charge";
     }
 
 	public Payment createPayment(VMJExchange vmjExchange, String productName, String serviceName) {
@@ -51,28 +51,16 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	}
 	
 	protected InvoiceResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
-//		String idTransaction = (String) vmjExchange.get("idTransaction");
-//		int amount = (int) vmjExchange.get("amount");
-//
-//		Gson gson = new Gson();
-//		Map<String,Object> transactionDetails = new HashMap<String,Object>();
-//		transactionDetails.put("order_id", idTransaction);
-//		transactionDetails.put("gross_amount", amount);
-//		Map<String,Object> params = new HashMap<String,Object>();
-//		params.put("transaction_details", transactionDetails);
-//
-//		String token = "";
-//		Midtrans.serverKey = apiKey;
-//		Midtrans.isProduction = false;
-
-//		try {
-//			String apiCallResult = SnapApi.createTransactionToken(params);
-//			token = token + apiCallResult;
-//		} catch (Exception e) {
-//			System.out.println(e);
-//		}
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = PaymentConfiguration.processRequestMap(vmjExchange,productName,serviceName);
+
+		Config config = ConfigFactory
+				.createConfig(
+						"paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration"
+						,
+						ConfigFactory.createConfig(
+								"paymentgateway.config.core.ConfigImpl"));
+
+		Map<String, Object> requestMap = config.processRequestMap(vmjExchange,productName,serviceName);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);

@@ -3,6 +3,8 @@ module paymentgateway.payment.ewallet {
     exports paymentgateway.payment.ewallet;
 
 	requires vmj.routing.route;
+	requires paymentgateway.config.core;
+	requires paymentgateway.config.midtrans;
 	requires vmj.hibernate.integrator;
 	requires prices.auth.vmj;
 	requires java.logging;
