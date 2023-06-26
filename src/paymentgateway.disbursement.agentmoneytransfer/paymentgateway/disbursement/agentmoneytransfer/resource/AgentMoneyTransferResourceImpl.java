@@ -34,9 +34,9 @@ public class AgentMoneyTransferResourceImpl extends AgentResourceImpl {
 	public AgentMoneyTransferResourceImpl(DisbursementResourceComponent record) {
 		super(record);
 	}
-	public Disbursement createDisbursement(VMJExchange vmjExchange) {
+	public Disbursement createDisbursement(VMJExchange vmjExchange, String productName, String serviceName) {
 		System.out.println("masuk agent transfer");
-		MoneyTransferResponse response = super.sendTransaction(vmjExchange,"FlipAgentMoneyTransfer");
+		MoneyTransferResponse response = super.sendTransaction(vmjExchange, productName, serviceName);
 		System.out.println("1");
 		String status = response.getStatus();
 		System.out.println("2");
@@ -69,7 +69,8 @@ public class AgentMoneyTransferResourceImpl extends AgentResourceImpl {
 	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("OPTIONS"))
 			return null;
-		Disbursement result = this.createDisbursement(vmjExchange);
+		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
+		Disbursement result = this.createDisbursement(vmjExchange, productName, "AgentMoneyTransfer");
 		return result.toHashMap();
 	}
 

@@ -21,7 +21,6 @@ import paymentgateway.payment.core.PaymentResourceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
-//import paymentgateway.config.core.ConfigImpl;
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	RepositoryUtil<PaymentLinkImpl> paymentLinkRepository;
 
@@ -54,7 +53,6 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 
 		Gson gson = new Gson();
 		Map<String, Object> requestMap = config.processRequestMap(vmjExchange,productName,serviceName);
-		System.out.println("sebelum id");
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);

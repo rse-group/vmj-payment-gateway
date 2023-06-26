@@ -34,8 +34,8 @@ public class SpecialMoneyTransferResourceImpl extends SpecialResourceImpl {
 		super(record);
 	}
 
-	public Disbursement createDisbursement(VMJExchange vmjExchange) {
-		MoneyTransferResponse response = super.sendTransaction(vmjExchange,"FlipSpecialMoneyTransfer");
+	public Disbursement createDisbursement(VMJExchange vmjExchange, String productName, String serviceName) {
+		MoneyTransferResponse response = super.sendTransaction(vmjExchange,productName, serviceName);
 		String status = response.getStatus();
 		int id = response.getId();
 		int userId = response.getUser_id();
@@ -66,8 +66,8 @@ public class SpecialMoneyTransferResourceImpl extends SpecialResourceImpl {
 	public HashMap<String, Object> specialMoneyTransfer(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("OPTIONS"))
 			return null;
-
-		Disbursement result = this.createDisbursement(vmjExchange);
+		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
+		Disbursement result = this.createDisbursement(vmjExchange, productName, "SpecialMoneyTransfer");
 		return result.toHashMap();
 	}
 }

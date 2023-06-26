@@ -15,7 +15,8 @@ import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import paymentgateway.disbursement.DisbursementFactory;
 import paymentgateway.disbursement.DisbursementConfiguration;
-//add other required packages
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
 
 public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	protected DisbursementResourceComponent record;
@@ -46,29 +47,28 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 		return disbursement;
 	}
 
-	public MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String serviceName) {
-		System.out.println("1s");
-		String configUrl = DisbursementConfiguration.getProductEnv(serviceName);
+
+
+	public MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
+
+		Config config = ConfigFactory
+				.createConfig(
+						"paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration"
+						,
+						ConfigFactory.createConfig(
+								"paymentgateway.config.core.ConfigImpl"));
+		Map<String, Object> body = config.processRequestMap(vmjExchange,productName,serviceName);
+		System.out.println(body == null);
+		String configUrl = config.getProductEnv(productName, serviceName);
 		System.out.println("2");
-		HashMap<String, String> headerParams = DisbursementConfiguration.getHeaderParams("Flip");
+		HashMap<String, String> headerParams = config.getHeaderParams(productName);
 		System.out.println("configUrl: " + configUrl);
 		Gson gson = new Gson();
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = (DisbursementConfiguration.getBuilder(HttpRequest.newBuilder(),headerParams))
+		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(vmjExchange)))
+				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(body)))
 				.build();
-//		HttpRequest request = HttpRequest.newBuilder()
-//				.header("Content-Type", "application/x-www-form-urlencoded")
-//				.header("idempotency-key", UUID.randomUUID().toString())
-//				.header("X-TIMESTAMP", "")
-//				.header("Authorization",
-//						"Basic SkRKNUpERXpKR3A0YlU5WVppNU9kRGRuU0VoU2JYbFBibXhEVVM1VVJGaHRTM0pEZFZwc2NWVTFMemgxUldwSVVqVldielpMYkhOMkwybDE=")
-//				.header("Cookie", "_csrf=I_hH_U80Wpc07Yx-pV_HBDI4KO64F3ES")
-//				.uri(URI.create(configUrl))
-//				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(vmjExchange)))
-//				.build();
-
 		MoneyTransferResponse responseObj = null;
 
 
@@ -79,13 +79,30 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 			responseObj = gson.fromJson(rawResponse,
 					MoneyTransferResponse.class);
 		} catch (Exception e) {
-			System.out.println("masuk error");
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return responseObj;
 	}
 
+	public String getParamsUrlEncoded(Map<String, Object> vmjExchange) {
+		ArrayList<String> paramList = new ArrayList<>();
+		for (Map.Entry<String, Object> entry : vmjExchange.entrySet()) {
+			String key = entry.getKey();
+			Object val = entry.getValue();
+			if (val instanceof String) {
+				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
+			} else if (val instanceof Integer) {
+				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
+			} else if (val instanceof Double) {
+				int temp = ((Double) val).intValue();
+				paramList.add(key + "=" + URLEncoder.encode(Integer.toString(temp), StandardCharsets.UTF_8));
+			}
+
+		}
+		String encodedURL = String.join("&",paramList);
+		return encodedURL;
+	}
 	@Route(url="call/disbursement/detail")
 	public HashMap<String, Object> getDisbursement(VMJExchange vmjExchange){
 		int id = ((Double) vmjExchange.getRequestBodyForm("id")).intValue();

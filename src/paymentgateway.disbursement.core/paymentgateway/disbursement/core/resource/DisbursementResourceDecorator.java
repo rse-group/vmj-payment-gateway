@@ -33,8 +33,8 @@ public abstract class DisbursementResourceDecorator extends DisbursementResource
     public GetAllDisbursementResponse getAllDataFromAPI(String name){
         return record.getAllDataFromAPI(name);
     }
-    public MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String serviceName){
-        return record.sendTransaction(vmjExchange,serviceName);
+    public MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName){
+        return record.sendTransaction(vmjExchange, productName, serviceName);
     }
 
     public String getParamsUrlEncoded(VMJExchange vmjExchange){

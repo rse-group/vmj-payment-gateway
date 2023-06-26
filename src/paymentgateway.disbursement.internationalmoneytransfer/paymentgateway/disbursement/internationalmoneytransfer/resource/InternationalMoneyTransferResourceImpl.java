@@ -28,8 +28,8 @@ public class InternationalMoneyTransferResourceImpl extends InternationalResourc
 		super(record);
 	}
 
-	public Disbursement createDisbursement(VMJExchange vmjExchange) {
-		MoneyTransferResponse response = super.sendTransaction(vmjExchange,"FlipInternationalMoneyTransfer");
+	public Disbursement createDisbursement(VMJExchange vmjExchange, String productName, String serviceName) {
+		MoneyTransferResponse response = super.sendTransaction(vmjExchange, productName, serviceName);
 		int id = response.getId();
 		int user_id = response.getUser_id();
 		String status = response.getStatus();
@@ -61,8 +61,8 @@ public class InternationalMoneyTransferResourceImpl extends InternationalResourc
 	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("OPTIONS"))
 			return null;
-
-		Disbursement result = this.createDisbursement(vmjExchange);
+		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
+		Disbursement result = this.createDisbursement(vmjExchange, productName, "InternationalMoneyTransfer");
 		return result.toHashMap();
 	}
 }

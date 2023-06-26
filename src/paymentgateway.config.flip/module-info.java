@@ -1,9 +1,6 @@
-module paymentgateway.disbursement.core {
-	exports paymentgateway.disbursement;
-	exports paymentgateway.disbursement.core;
-
+module paymentgateway.config.flip {
+    exports paymentgateway.config.flip;
 	requires paymentgateway.config.core;
-	requires paymentgateway.config.flip;
 	requires vmj.routing.route;
 	requires vmj.hibernate.integrator;
 	requires prices.auth.vmj;
@@ -12,5 +9,5 @@ module paymentgateway.disbursement.core {
 	requires java.naming;
 	requires java.net.http;
 
-	opens paymentgateway.disbursement.core to org.hibernate.orm.core, gson;
+	opens paymentgateway.config.flip to org.hibernate.orm.core, gson;
 }

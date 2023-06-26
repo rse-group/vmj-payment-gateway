@@ -31,9 +31,9 @@ public class MoneyTransferResourceImpl extends DisbursementResourceDecorator {
 		this.moneyTransferRepository = new RepositoryUtil<MoneyTransferImpl>(paymentgateway.disbursement.moneytransfer.MoneyTransferImpl.class);
 	}
 
-	public Disbursement createDisbursement(VMJExchange vmjExchange) {
+	public Disbursement createDisbursement(VMJExchange vmjExchange, String productName, String serviceName) {
 		System.out.println("1");
-		MoneyTransferResponse response = record.sendTransaction(vmjExchange, "FlipMoneyTransfer");
+		MoneyTransferResponse response = record.sendTransaction(vmjExchange, productName, serviceName);
 		System.out.println("2");
 		int id = response.getId();
 		int userId = response.getUser_id();
@@ -56,38 +56,6 @@ public class MoneyTransferResourceImpl extends DisbursementResourceDecorator {
 		List<MoneyTransferResponse> dosmesticTransferData = dosmmesticData.getData();
 		List<MoneyTransferResponse> internationalTransferData = internationalData.getData();
 		List<MoneyTransferImpl> moneyTransfers = getPendingStatus();
-		System.out.println(internationalTransferData == null);
-
-//		if(dosmesticTransferData != null) {
-//			for(MoneyTransferResponse response :  dosmesticTransferData){
-//				int id = response.getId();
-//				try {
-//					MoneyTransferImpl moneyTransfer = getMoneyTransferById(id);
-//					if(moneyTransfer == null){
-//						continue;
-//					}
-//					moneyTransfer.setStatus(response.getStatus());
-//					moneyTransferRepository.updateObject(moneyTransfer);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
-//		if(internationalTransferData != null){
-//			for(MoneyTransferResponse response :  internationalTransferData){
-//				int id = response.getId();
-//				try {
-//					MoneyTransferImpl moneyTransfer = getMoneyTransferById(id);
-//					if(moneyTransfer == null){
-//						continue;
-//					}
-//					moneyTransfer.setStatus(response.getStatus());
-//					moneyTransferRepository.updateObject(moneyTransfer);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
 
 		if(moneyTransfers.size() != 0){
 			for(MoneyTransferResponse response :  dosmesticTransferData){
@@ -146,7 +114,8 @@ public class MoneyTransferResourceImpl extends DisbursementResourceDecorator {
 		 if (vmjExchange.getHttpMethod().equals("OPTIONS"))
 		 return null;
 		System.out.println("routing method");
-		Disbursement result = this.createDisbursement(vmjExchange);
+		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
+		Disbursement result = this.createDisbursement(vmjExchange, productName, "MoneyTransfer");
 		return result.toHashMap();
 	}
 

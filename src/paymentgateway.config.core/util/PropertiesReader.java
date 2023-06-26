@@ -122,6 +122,25 @@ public class PropertiesReader {
     }
 
 
+    public String getFlipBaseUrl() {
+        return this.getEnvThenProp(Constants.FLIP_BASE_URL_TEST_ENV, Constants.FLIP_BASE_URL_TEST_PROP);
+    }
+
+    public String getFlipMoneyTransfer() {
+        return this.getEnvThenProp(Constants.FLIP_MONEY_TRANSFER_ENV, Constants.FLIP_MONEY_TRANSFER_PROP);
+    }
+
+    public String getFlipSpecialMoneyTransfer() {
+        return this.getEnvThenProp(Constants.FLIP_SPECIAL_MONEY_TRANSFER_ENV, Constants.FLIP_SPECIAL_MONEY_TRANSFER_PROP);
+    }
+
+    public String getFlipAgentMoneyTransfer() {
+        return this.getEnvThenProp(Constants.FLIP_AGENT_MONEY_TRANSFER_ENV, Constants.FLIP_AGENT_MONEY_TRANSFER_PROP);
+    }
+
+    public String getFlipInternationalMoneyTransfer() {
+        return this.getEnvThenProp(Constants.FLIP_INTERNATIONAL_MONEY_TRANSFER_ENV, Constants.FLIP_INTERNATIONAL_MONEY_TRANSFER_PROP);
+    }
 
 
     public HashMap<String, String> getMidtransHeaderParams() {
@@ -157,14 +176,17 @@ public class PropertiesReader {
         return headerParams;
     }
 
-
-    public HashMap<String, String> getMidtransBodyKey() {
-        HashMap<String, String> keyParams = new HashMap<>();
-        String id = this.getEnvThenProp(Constants.MIDTRANS_ID_ENV,Constants.MIDTRANS_ID_PROP);
-        String amount = this.getEnvThenProp(Constants.MIDTRANS_AMOUNT_ENV,Constants.MIDTRANS_AMOUNT_PROP);
-//        String auth = this.getEnvThenProp(Constants.MIDTRANS_APIKEY_ENV, Constants.MIDTRANS_APIKEY_PROP);
-        keyParams.put("id",id);
-        keyParams.put("amount", amount);
-        return keyParams;
+    public HashMap<String, String> getFlipHeaderParams() {
+        HashMap<String, String> flipHeaderParams = new HashMap<>();
+        String contentType = this.getEnvThenProp(Constants.FLIP_CONTENT_TYPE_ENV,Constants.FLIP_CONTENT_TYPE_PROP);
+        String authorization = this.getEnvThenProp(Constants.FLIP_AUTHORIZATION_ENV,Constants.FLIP_AUTHORIZATION_PROP);
+        String cookie = this.getEnvThenProp(Constants.FLIP_COOKIE_ENV,Constants.FLIP_COOKIE_PROP);
+//        String xTimestamp = this.getEnvThenProp(Constants.FLIP_X_TIMESTAMP_ENV,Constants.FLIP_X_TIMESTAMP_ENV);
+        flipHeaderParams.put("Content-Type",contentType);
+        flipHeaderParams.put("idempotency-key", UUID.randomUUID().toString());
+        flipHeaderParams.put("X-TIMESTAMP","");
+        flipHeaderParams.put("Authorization",authorization);
+        flipHeaderParams.put("Cookie",cookie);
+        return flipHeaderParams;
     }
 }

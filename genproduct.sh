@@ -24,7 +24,7 @@ function copy_databaseproperties() {
 # }
 
 function validate_product() {
-    if [ $1 == "$plname.payment.core" ];then
+    if [ $1 == "$plname.disbursement.core" ];then
       account=true
     fi
 }

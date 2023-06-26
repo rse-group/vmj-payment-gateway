@@ -8,6 +8,9 @@ module paymentgateway.product.flip {
     requires com.fasterxml.classmate;
     requires jdk.unsupported;
 
+    requires paymentgateway.config.core;
+    requires paymentgateway.config.flip;
+
     requires paymentgateway.disbursement.core;
     requires paymentgateway.disbursement.moneytransfer;
     requires paymentgateway.disbursement.special;
