@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature automatic="selected" name="PaymentGateway"/>
+	<feature automatic="selected" name="APIAuthorization"/>
+	<feature manual="selected" name="APIKey"/>
+	<feature name="Signature"/>
+	<feature manual="selected" name="BasicAuth"/>
+	<feature name="OAuth"/>
+	<feature automatic="selected" manual="selected" name="FundTransfer"/>
+	<feature manual="selected" name="Facilitator"/>
+	<feature name="Scheduled"/>
+	<feature name="Multiple"/>
+	<feature name="WithApprovalSystem"/>
+	<feature name="Beneficiary"/>
+</configuration>

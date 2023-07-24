@@ -1,0 +1,20 @@
+namespace PaymentGateway
+
+features
+	PaymentGateway {abstract true}
+		mandatory
+			APIAuthorization {abstract true}
+				or
+					APIKey
+					Signature
+					BasicAuth
+					OAuth
+		optional
+			FundTransfer
+				optional
+					Facilitator
+					Scheduled
+					Multiple
+					WithApprovalSystem
+					Beneficiary
+

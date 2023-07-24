@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<featuremap>
+    <feature
+        menulabel="FundTransfer"
+        menupath="/fundtransfer"
+        routename="fundTransferRoutes"
+        routefilepath="fundTransfer/routes.js"
+        name="FundTransfer"
+    />
+</featuremap>

@@ -1,0 +1,13 @@
+{
+	"APIAuthorization": ["paymentgateway.apiauth.core"],
+	"BasicAuth": ["paymentgateway.apiauth.basicauth"],
+	"APIKey": ["paymentgateway.apiauth.apikey"],
+	"Signature": [ "paymentgateway.apiauth.signature"],
+	"OAuth": ["paymentgateway.apiauth.oauth"],
+	"FundTransfer": ["paymentgateway.fundtransfer.core"],
+	"Facilitator": ["paymentgateway.fundtransfer.withuseraccount"],
+	"Multiple": ["paymentgateway.fundtransfer.inbatch"],
+	"Scheduled": ["paymentgateway.fundtransfer.scheduled"],
+	"WithApprovalSystem": ["paymentgateway.fundtransfer.withapproval"],
+	"Beneficiary": ["paymentgateway.fundtransfer.infofrombenef"]
+}
