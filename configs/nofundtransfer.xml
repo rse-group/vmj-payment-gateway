@@ -6,6 +6,10 @@
 	<feature name="Signature"/>
 	<feature name="BasicAuth"/>
 	<feature name="OAuth"/>
+	<feature name="Client"/>
+	<feature name="Oy"/>
+	<feature name="Brankas"/>
+	<feature name="Xendit"/>
 	<feature name="FundTransfer"/>
 	<feature name="Facilitator"/>
 	<feature name="Scheduled"/>

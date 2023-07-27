@@ -9,6 +9,8 @@ import org.hibernate.cfg.Configuration;
 
 import paymentgateway.apiauth.APIAuthResourceFactory;
 import paymentgateway.apiauth.core.APIAuthResource;
+import paymentgateway.client.ClientResourceFactory;
+import paymentgateway.client.core.ClientResource;
 import paymentgateway.fundtransfer.FundTransferResourceFactory;
 import paymentgateway.fundtransfer.core.FundTransferResource;
 
@@ -29,6 +31,12 @@ public class BrankasWithUserAccount {
 		configuration.addAnnotatedClass(paymentgateway.apiauth.core.APIAuthImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.apiauth.basicauth.basicAuthImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.apiauth.apikey.APIKeyImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.client.core.Client.class);
+		configuration.addAnnotatedClass(paymentgateway.client.core.ClientComponent.class);
+		configuration.addAnnotatedClass(paymentgateway.client.core.ClientDecorator.class);
+		configuration.addAnnotatedClass(paymentgateway.client.core.ClientImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.client.oy.OyImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.client.brankas.BrankasImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.fundtransfer.core.FundTransfer.class);
 		configuration.addAnnotatedClass(paymentgateway.fundtransfer.core.FundTransferComponent.class);
 		configuration.addAnnotatedClass(paymentgateway.fundtransfer.core.FundTransferDecorator.class);
@@ -84,6 +92,22 @@ public class BrankasWithUserAccount {
 			,
 			APIAuthResourceFactory.createAPIAuthResource(
 			"paymentgateway.apiauth.core.APIAuthResourceImpl"));
+		ClientResource client = ClientResourceFactory
+			.createClientResource(
+			"paymentgateway.client.core.ClientResourceImpl"
+			);
+		ClientResource oy = ClientResourceFactory
+			.createClientResource(
+			"paymentgateway.client.oy.OyResourceImpl"
+			,
+			ClientResourceFactory.createClientResource(
+			"paymentgateway.client.core.ClientResourceImpl"));
+		ClientResource brankas = ClientResourceFactory
+			.createClientResource(
+			"paymentgateway.client.brankas.BrankasResourceImpl"
+			,
+			ClientResourceFactory.createClientResource(
+			"paymentgateway.client.core.ClientResourceImpl"));
 		FundTransferResource fundtransfer = FundTransferResourceFactory
 			.createFundTransferResource(
 			"paymentgateway.fundtransfer.core.FundTransferResourceImpl"
@@ -112,6 +136,15 @@ public class BrankasWithUserAccount {
 		
 		System.out.println("fundtransfer endpoints binding");
 		Router.route(fundtransfer);
+		
+		System.out.println("brankas endpoints binding");
+		Router.route(brankas);
+		
+		System.out.println("oy endpoints binding");
+		Router.route(oy);
+		
+		System.out.println("client endpoints binding");
+		Router.route(client);
 		
 		System.out.println("apikey endpoints binding");
 		Router.route(apikey);

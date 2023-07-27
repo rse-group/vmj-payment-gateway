@@ -20,5 +20,4 @@ public abstract class APIAuthDecorator extends APIAuthComponent{
 	public String generateCredential() {
 		return this.credential;
 	}
-
 }

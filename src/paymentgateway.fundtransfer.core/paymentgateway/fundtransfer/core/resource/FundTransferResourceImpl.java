@@ -20,15 +20,23 @@ import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import paymentgateway.fundtransfer.FundTransferFactory;
 import prices.auth.vmj.annotations.Restricted;
+import paymentgateway.client.oy.OyImpl;
 
 //add other required packages
 
 public class FundTransferResourceImpl extends FundTransferResourceComponent{
 	protected APIKeyImpl APIKey;
+	protected OyImpl paymentGateway;
+	
+	public FundTransferResourceImpl () {
+    	this.APIKey = new APIKeyImpl();
+    	this.APIKey.setAPIKey("c017a92d-286f-4665-ad34-fee920174aaa");
+    	this.APIKey.setAPIPassword("joanlamrack");
+    	this.paymentGateway = new OyImpl(this.APIKey);
+	}
 	
     @Route(url="call/fundtransfer/save")
     public List<HashMap<String,Object>> saveFundTransfer(VMJExchange vmjExchange){
-		System.out.println("saveFundTransfer");
 		FundTransfer fundTransferReport = createFundTransfer(vmjExchange);
 		FundTransferRepository.saveObject(fundTransferReport);
 		return getAllFundTransfer(vmjExchange);
@@ -66,8 +74,6 @@ public class FundTransferResourceImpl extends FundTransferResourceComponent{
 	}
     
     public FundTransfer createFundTransfer(VMJExchange vmjExchange, int id){
-    	System.out.println("Extract All Fields");
-    	
 		String status = (String) vmjExchange.getRequestBodyForm("status");
 		String statusDescription = (String) vmjExchange.getRequestBodyForm("statusDescription");
 		String reference = (String) vmjExchange.getRequestBodyForm("reference");
@@ -95,8 +101,6 @@ public class FundTransferResourceImpl extends FundTransferResourceComponent{
 				created,
 				destinationAccountNumber
 				);
-		System.out.println("CREATED FUNDTRANSFER RESOURCE");
-		System.out.println(transaction);
 		return transaction;
 	}
     
@@ -134,7 +138,6 @@ public class FundTransferResourceImpl extends FundTransferResourceComponent{
     
     @Route(url="call/fundtransfer/list")
     public List<HashMap<String,Object>> getAllFundTransfer(VMJExchange vmjExchange){
-    	System.out.println("getAllFundTransfer");
 		List<FundTransfer> FundTransferList = FundTransferRepository.getAllObject("fundtransfer_impl");
 		return transformFundTransferListToHashMap(FundTransferList);
 	}
@@ -144,7 +147,6 @@ public class FundTransferResourceImpl extends FundTransferResourceComponent{
         String idStr = vmjExchange.getGETParam("id");
         int id = Integer.parseInt(idStr);
         FundTransfer fundTransfer = FundTransferRepository.getObject(id);
-        System.out.println(fundTransfer);
         return fundTransfer.toHashMap();
     }
     
@@ -166,73 +168,14 @@ public class FundTransferResourceImpl extends FundTransferResourceComponent{
         return getAllFundTransfer(vmjExchange);
     }
     
-    public void sendTransfer(VMJExchange vmjExchange) {
-    	String URL = "https://api-stg.oyindonesia.com/api/remit";
-    	
-		String reference = (String) vmjExchange.getRequestBodyForm("reference");
-		String description = (String) vmjExchange.getRequestBodyForm("description");
-		String amount = (String) vmjExchange.getRequestBodyForm("amount");
-		String destinationCode = (String) vmjExchange.getRequestBodyForm("destinationCode");
-		String email = (String) vmjExchange.getRequestBodyForm("email");
-		String destinationAccountNumber = (String) vmjExchange.getRequestBodyForm("destinationAccountNumber");
-    	
-    	
-    	Map<String,Object> requestMap = new HashMap<String,Object>();
-    	requestMap.put("recipient_bank", destinationCode);
-    	requestMap.put("recipient_account", destinationAccountNumber);
-    	requestMap.put("amount", amount);
-    	requestMap.put("note", description);
-    	requestMap.put("partner_trx_id", reference);
-    	requestMap.put("email", email);
-
-    	Gson gson = new Gson();
-    	
-    	System.out.println(this.APIKey.getAPIKey());
-    	
-    	String requestString = gson.toJson(requestMap);
-    	HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(URL))
-                .headers(
-                    "X-OY-Username", this.APIKey.getAPIPassword(),
-                    "X-Api-Key",  this.APIKey.getAPIKey(),
-                    "Content-type", "application/json", 
-                    "Accept", "application/json")
-                .POST(BodyPublishers.ofString(requestString))
-                .build();
-        
-		try {
-			System.out.println("SendTransfer");
-			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			String rawResponse = response.body().toString();
-			System.out.println(rawResponse);
-			FundTransferResponse responseObj = gson.fromJson(rawResponse, FundTransferResponse.class);
-			System.out.println(responseObj);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
-    
-    @Route(url="call/fundtransfer/core")
-    public List<HashMap<String,Object>> fundTransferController(VMJExchange vmjexchange) {
-    	this.APIKey = new APIKeyImpl();
-    	this.APIKey.setAPIKey("c017a92d-286f-4665-ad34-fee920174aaa");
-    	this.APIKey.setAPIPassword("joanlamrack");
-    	
+    @Route(url="call/fundtransfer/sendtransfer")
+    public List<HashMap<String,Object>> sendTransfer(VMJExchange vmjexchange) {
     	if (vmjexchange.getHttpMethod().equals("OPTIONS")) return null;
     	
-    	this.sendTransfer(vmjexchange);
+    	this.paymentGateway.sendTransfer(vmjexchange);
+    	
     	List<HashMap<String,Object>> result = this.saveFundTransfer(vmjexchange);
 		
 		return result;
     }
-
-	public void getTransferByReference(String reference) {
-		System.out.println("sendTransfer");
-	}
-
-    
-	public void getTransferByID(String id) {
-		System.out.println("sendTransfer");
-	}
 }

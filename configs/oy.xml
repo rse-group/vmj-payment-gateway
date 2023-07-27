@@ -6,6 +6,10 @@
 	<feature name="Signature"/>
 	<feature manual="selected" name="BasicAuth"/>
 	<feature name="OAuth"/>
+	<feature automatic="selected" name="Client"/>
+	<feature automatic="selected" name="Oy"/>
+	<feature name="Brankas"/>
+	<feature name="Xendit"/>
 	<feature manual="selected" name="FundTransfer"/>
 	<feature name="Facilitator"/>
 	<feature name="Scheduled"/>

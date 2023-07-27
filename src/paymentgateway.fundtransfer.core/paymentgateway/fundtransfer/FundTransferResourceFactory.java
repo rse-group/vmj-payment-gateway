@@ -63,5 +63,4 @@ public class FundTransferResourceFactory{
         }
         return record;
     }
-
 }

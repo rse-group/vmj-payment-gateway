@@ -18,5 +18,4 @@ public class APIAuthImpl extends APIAuthComponent {
 	public String generateCredential() {
 		return this.credential;
 	}
-
 }

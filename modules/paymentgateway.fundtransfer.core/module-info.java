@@ -9,6 +9,7 @@ module paymentgateway.fundtransfer.core {
 	requires java.naming;
 	requires paymentgateway.apiauth.apikey;
 	requires paymentgateway.apiauth.basicauth;
+	requires paymentgateway.client.oy;
 	requires java.net.http;
 
 	opens paymentgateway.fundtransfer.core to org.hibernate.orm.core, gson;

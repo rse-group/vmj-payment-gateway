@@ -9,6 +9,12 @@ features
 					Signature
 					BasicAuth
 					OAuth
+			Client
+				mandatory
+					Oy
+				optional
+					Brankas
+					Xendit
 		optional
 			FundTransfer
 				optional

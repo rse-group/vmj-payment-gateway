@@ -7,10 +7,7 @@ import java.util.logging.Logger;
 public class APIAuthFactory{
     private static final Logger LOGGER = Logger.getLogger(APIAuthFactory.class.getName());
 
-    public APIAuthFactory()
-    {
-
-    }
+    public APIAuthFactory() {}
 
     public static APIAuth createAPIAuth(String fullyQualifiedName, Object ... base)
     {
@@ -48,5 +45,4 @@ public class APIAuthFactory{
         }
         return record;
     }
-
 }

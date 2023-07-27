@@ -6,7 +6,6 @@ import paymentgateway.apiauth.core.APIAuthComponent;
 import paymentgateway.apiauth.core.APIAuthDecorator;
 
 public class APIKeyImpl extends APIAuthDecorator {
-
 	protected String APIKey;
 	protected String APIPassword;
 	

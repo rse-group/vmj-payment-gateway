@@ -11,6 +11,9 @@ module paymentgateway.product.brankaswithuseraccount {
     requires paymentgateway.apiauth.core;
     requires paymentgateway.apiauth.basicauth;
     requires paymentgateway.apiauth.apikey;
+    requires paymentgateway.client.core;
+    requires paymentgateway.client.oy;
+    requires paymentgateway.client.brankas;
     requires paymentgateway.fundtransfer.core;
     requires paymentgateway.fundtransfer.withuseraccount;
 	
