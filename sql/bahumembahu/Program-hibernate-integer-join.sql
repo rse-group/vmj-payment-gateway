@@ -1,0 +1,11 @@
+INSERT INTO program_comp (idprogram) VALUES(458134636);
+INSERT INTO program_comp (idprogram) VALUES(1349531118);
+INSERT INTO program_comp (idprogram) VALUES(1343279926);
+INSERT INTO program_comp (idprogram) VALUES(1270189464);
+INSERT INTO program_comp (idprogram) VALUES(1843226349);
+
+INSERT INTO program_impl (idprogram, name, description, target, partner, logoUrl, executionDate) VALUES(458134636,'Kita Bahu Membahu','Program dari INICEF yang bertujuan untuk dapat membantu warga sekitar dalam mendapatkan sayur dan daging berkualitas','Warga Tebet','INICEF','https://images.freeimages.com/images/large-previews/13e/my-cat-1363423.jpg',NULL);
+INSERT INTO program_impl (idprogram, name, description, target, partner, logoUrl, executionDate) VALUES(1349531118,'Indonesia Bergizi','Indonesia Bergizi adalah program untuk makanan sehat dan bergizi untuk penderita kurang gizi',' penderita kurang gizi','Organisasi Feeding Indonesia','https://images.freeimages.com/images/large-previews/aff/winter-in-holland-1396288.jpg',NULL);
+INSERT INTO program_impl (idprogram, name, description, target, partner, logoUrl, executionDate) VALUES(1343279926,'Kita Kita Khitanan','Kita Kita Khitanan adalah program dari DKM Masjid An-Nur yang menggratiskan khitanan untuk 100 orang warga. Bekerjasama dengan dokter bedah dari Rumah Sakit Umum Koja. Sebelum proses khitanan terdapat games dan nonton film anak-anak muslim muslimah.',' Usia 4 - 12 tahun','Pengurus Masjid An-Nur','https://images.freeimages.com/images/large-previews/03b/abstract-series-13-1529920.jpg',NULL);
+INSERT INTO program_impl (idprogram, name, description, target, partner, logoUrl, executionDate) VALUES(1270189464,'Air Untuk Sidomungkur','Program untuk mendirikan sumur baru di desa sidomungkur untuk warga desa','warga desa sidomungkur','INICEF','https://images.freeimages.com/images/large-previews/315/a-kayak-rider-passing-by-1641874.jpg',NULL);
+INSERT INTO program_impl (idprogram, name, description, target, partner, logoUrl, executionDate) VALUES(1843226349,'Menuju Indonesia 20 20','Program periksa mata, penyediaan kacamata dan penyembuhan katarak untuk Warga Agromulyo', 'Warga Agromulyo', 'PERDAMI','https://images.freeimages.com/images/large-previews/655/colorful-architecture-1-1216925.jpg',NULL);
