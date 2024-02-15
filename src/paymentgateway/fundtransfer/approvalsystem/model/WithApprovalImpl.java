@@ -23,11 +23,11 @@ public class WithApprovalImpl extends FundTransferDecorator {
 	}
 
 	public void approveTransfer(String transactionId) {
-		// TODO: implement this method
+		// TODO: 
 	}
 
 	public void rejectTransfer(String transactionId) {
-		// TODO: implement this method
+		// TODO:
 	}
 
 }
