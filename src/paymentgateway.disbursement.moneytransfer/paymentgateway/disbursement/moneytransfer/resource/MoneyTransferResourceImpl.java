@@ -32,23 +32,19 @@ public class MoneyTransferResourceImpl extends DisbursementResourceDecorator {
 	}
 
 	public Disbursement createDisbursement(VMJExchange vmjExchange, String productName, String serviceName) {
-		System.out.println("1");
 		MoneyTransferResponse response = record.sendTransaction(vmjExchange, productName, serviceName);
-		System.out.println("2");
 		int id = response.getId();
 		int userId = response.getUser_id();
 		String status = response.getStatus();
-		System.out.println("status: " + status);
 		Disbursement transaction = record.createDisbursement(vmjExchange,id,userId);
-		System.out.println("3");
 		Disbursement moneyTransferTransaction = DisbursementFactory.createDisbursement(
 				"paymentgateway.disbursement.moneytransfer.MoneyTransferImpl",
 				transaction, status);
-		System.out.println("4");
 		Repository.saveObject(moneyTransferTransaction);
 		return moneyTransferTransaction;
 	}
 
+	// KEPAKE
 	@Route(url = "call/money-transfer/update-status")
 	public void updateStatus(VMJExchange vmjExchange){
 		GetAllDisbursementResponse dosmmesticData = record.getAllDataFromAPI("disbursement");
@@ -56,7 +52,6 @@ public class MoneyTransferResourceImpl extends DisbursementResourceDecorator {
 		List<MoneyTransferResponse> dosmesticTransferData = dosmmesticData.getData();
 		List<MoneyTransferResponse> internationalTransferData = internationalData.getData();
 		List<MoneyTransferImpl> moneyTransfers = getPendingStatus();
-
 		if(moneyTransfers.size() != 0){
 			for(MoneyTransferResponse response :  dosmesticTransferData){
 				int id = response.getId();
@@ -101,7 +96,7 @@ public class MoneyTransferResourceImpl extends DisbursementResourceDecorator {
 		List<MoneyTransferImpl> result = new ArrayList<>();
 		List<MoneyTransferImpl> moneyTransfers = moneyTransferRepository.getAllObject("moneytransfer_impl");
 		for(MoneyTransferImpl moneyTransfer : moneyTransfers){
-			if(moneyTransfer.getStatus() == "PENDING"){
+			if(moneyTransfer.getStatus().equals("PENDING")){
 				result.add(moneyTransfer);
 			}
 		}
@@ -111,9 +106,8 @@ public class MoneyTransferResourceImpl extends DisbursementResourceDecorator {
 
 	@Route(url = "call/money-transfer")
 	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
-		 if (vmjExchange.getHttpMethod().equals("OPTIONS"))
-		 return null;
-		System.out.println("routing method");
+		if (vmjExchange.getHttpMethod().equals("OPTIONS"))
+			return null;
 		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
 		Disbursement result = this.createDisbursement(vmjExchange, productName, "MoneyTransfer");
 		return result.toHashMap();
