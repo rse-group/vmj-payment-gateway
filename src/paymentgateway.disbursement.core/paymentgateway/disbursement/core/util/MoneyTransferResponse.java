@@ -4,6 +4,9 @@ public class MoneyTransferResponse {
 	private int id;
 	private int user_id;
 	private int agent_id;
+	//tes
+	private int approver_id;
+
 	private int amount;
 	private double exchange_rate;
 
@@ -28,6 +31,7 @@ public class MoneyTransferResponse {
 	private Sender sender;
 	private Beneficiary beneficiary;
 	private int fee;
+	
 
 	public void setId(int id) {
 		this.id = id;
@@ -51,6 +55,14 @@ public class MoneyTransferResponse {
 
 	public void setAgent_id(int agent_id) {
 		this.agent_id = agent_id;
+	}
+
+	public int getApprover_id(){
+		return approver_id;
+	}
+
+	public void setApprover_id(int approver_id){
+		this.approver_id = approver_id;
 	}
 
 	public void setAmount(int amount) {
