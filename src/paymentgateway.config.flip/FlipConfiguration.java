@@ -134,6 +134,21 @@ public class FlipConfiguration extends ConfigDecorator{
         return vmjExchange.getPayload();
     }
 
+    public Map<String, Object> getFlipApprovalTransferRequestBody(VMJExchange vmjExchange){
+        Map<String, Object> requestMap = new HashMap<>();
+
+        String number = (String) vmjExchange.getRequestBodyForm("account_number");
+        String code = (String) vmjExchange.getRequestBodyForm("bank_code");
+        String amount = (String) vmjExchange.getRequestBodyForm("amount");
+        String approverId = (String) vmjExchange.getRequestBodyForm("approver_id");
+
+        requestMap.put("account_number", number);
+        requestMap.put("bank_code", code);
+        requestMap.put("amount", amount);
+        requestMap.put("approver_id",approverId);
+        return vmjExchange.getPayload();
+    }
+
     public String getParamsUrlEncoded(VMJExchange vmjExchange) {
         ArrayList<String> paramList = new ArrayList<>();
         for (Map.Entry<String, Object> entry : vmjExchange.getPayload().entrySet()) {

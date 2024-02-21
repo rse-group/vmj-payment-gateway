@@ -6,6 +6,7 @@ public class MoneyTransferResponse {
 	private int agent_id;
 	//tes
 	private int approver_id;
+	private String approvalStatus;
 
 	private int amount;
 	private double exchange_rate;
@@ -63,6 +64,14 @@ public class MoneyTransferResponse {
 
 	public void setApprover_id(int approver_id){
 		this.approver_id = approver_id;
+	}
+
+	public String getApprovalStatus() {
+		return this.approvalStatus;
+	}
+
+	public void setApprovalStatus(String approvalStatus) {
+		this.approvalStatus = approvalStatus;
 	}
 
 	public void setAmount(int amount) {

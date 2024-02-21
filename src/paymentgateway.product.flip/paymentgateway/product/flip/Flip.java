@@ -32,7 +32,7 @@ public class Flip {
 		configuration.addAnnotatedClass(paymentgateway.disbursement.international.InternationalImpl.class);
 //		configuration.addAnnotatedClass(paymentgateway.disbursement.internationaltransfer.InternationalTransferImpl.class);
 //		configuration.addAnnotatedClass(paymentgateway.disbursement.scheduledtransfer.ScheduledTransferImpl.class);
-//		configuration.addAnnotatedClass(paymentgateway.disbursement.approvaltransfer.ApprovalTransferImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.disbursement.approvalsystem.ApprovalSystemImpl.class);
 
 		configuration.addAnnotatedClass(prices.auth.vmj.model.core.Role.class);
 		configuration.addAnnotatedClass(prices.auth.vmj.model.core.RoleComponent.class);
@@ -87,6 +87,11 @@ public class Flip {
 						"paymentgateway.disbursement.agentmoneytransfer.AgentMoneyTransferResourceImpl",
 						moneytransfer);
 
+		DisbursementResource approvaltransfer = DisbursementResourceFactory
+				.createDisbursementResource(
+						"paymentgateway.disbursement.approvalsystem.ApprovalSystemResourceImpl",
+						moneytransfer);
+
 		DisbursementResource internationalmoneytransfer = DisbursementResourceFactory
 				.createDisbursementResource(
 						"paymentgateway.disbursement.internationalmoneytransfer.InternationalMoneyTransferResourceImpl",
@@ -125,8 +130,8 @@ public class Flip {
 //		System.out.println("scheduledtransfer endpoints binding");
 //		Router.route(scheduledtransfer);
 //
-//		System.out.println("approvaltransfer endpoints binding");
-//		Router.route(approvaltransfer);
+		System.out.println("approvaltransfer endpoints binding");
+		Router.route(approvaltransfer);
 
 		System.out.println("disbursement endpoints binding");
 		Router.route(disbursement);

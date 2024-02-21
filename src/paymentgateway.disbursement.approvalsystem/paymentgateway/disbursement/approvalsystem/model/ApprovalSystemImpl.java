@@ -1,4 +1,4 @@
-package paymentgateway.disbursement.moneytransfer;
+package paymentgateway.disbursement.approvalsystem;
 
 import java.util.HashMap;
 
@@ -13,17 +13,18 @@ import paymentgateway.disbursement.core.DisbursementComponent;
 @Table(name = "approvalsystem_impl")
 public class ApprovalSystemImpl extends DisbursementDecorator {
 	protected int approverId;
+	protected String approvalStatus;
 
-	public ApprovalSystemImpl(DisbursementComponent record, int approverId, String status) {
+	public ApprovalSystemImpl(DisbursementComponent record, int approverId, String approvalStatus) {
 		super(record);
 		this.approverId = approverId;
-		this.status = status;
+		this.approvalStatus = approvalStatus;
 	}
 	public ApprovalSystemImpl() {
 		super();
 	}
 
-	public String getApproverId() {
+	public int getApproverId() {
 		return this.approverId;
 	}
 
@@ -31,9 +32,18 @@ public class ApprovalSystemImpl extends DisbursementDecorator {
 		this.approverId = approverId;
 	}
 
+	public String getApprovalStatus() {
+		return this.approvalStatus;
+	}
+
+	public void setApprovalStatus(String approvalStatus) {
+		this.approvalStatus = approvalStatus;
+	}
+
 	public HashMap<String, Object> toHashMap() {
 		HashMap<String, Object> ApprovalSystemMap = record.toHashMap();
-		ApprovalSystemMap.put("approvedId", getApproverId());
+		ApprovalSystemMap.put("approverId", getApproverId());
+		ApprovalSystemMap.put("approvalStatus", getApprovalStatus());
 		return ApprovalSystemMap;
 	}
 
