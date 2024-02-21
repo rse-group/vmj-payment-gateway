@@ -75,6 +75,10 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
+			int statusCode = response.statusCode();
+			if(statusCode != 200) {
+				throw new Exception("Request Failed with status code: "+ statusCode);
+			}
 			System.out.println("rawResponse:" + rawResponse);
 			responseObj = gson.fromJson(rawResponse,
 					MoneyTransferResponse.class);
