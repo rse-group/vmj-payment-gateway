@@ -27,6 +27,7 @@ public class Flip {
 		configuration.addAnnotatedClass(paymentgateway.disbursement.moneytransfer.MoneyTransferImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.disbursement.special.SpecialImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.disbursement.agent.AgentImpl.class);
+//		configuration.addAnnotatedClass(paymentgateway.disbursement.aggregator);
 //		configuration.addAnnotatedClass(paymentgateway.disbursement.scheduled.ScheduledImpl.class);
 //		configuration.addAnnotatedClass(paymentgateway.disbursement.approval.ApprovalImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.disbursement.international.InternationalImpl.class);
@@ -86,6 +87,12 @@ public class Flip {
 				.createDisbursementResource(
 						"paymentgateway.disbursement.agentmoneytransfer.AgentMoneyTransferResourceImpl",
 						moneytransfer);
+		
+		DisbursementResource aggregator = DisbursementResourceFactory
+				.createDisbursementResource(
+						"paymentgateway.disbursement.aggregator.AggregatorResourceImpl",
+						moneytransfer);
+		
 
 		DisbursementResource internationalmoneytransfer = DisbursementResourceFactory
 				.createDisbursementResource(
@@ -118,6 +125,10 @@ public class Flip {
 
 		System.out.println("internationaltransfer endpoints binding");
 		Router.route(internationalmoneytransfer);
+		
+		System.out.println("Aggregator endpoints binding");
+		Router.route(aggregator);
+		
 
 //		System.out.println("multiplemoneytransfer endpoints binding");
 //		Router.route(multipletransfer);

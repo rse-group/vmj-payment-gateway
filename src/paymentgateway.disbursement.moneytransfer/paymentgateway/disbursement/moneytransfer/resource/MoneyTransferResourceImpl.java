@@ -32,8 +32,11 @@ public class MoneyTransferResourceImpl extends DisbursementResourceDecorator {
 	}
 
 	public Disbursement createDisbursement(VMJExchange vmjExchange, String productName, String serviceName) {
-		System.out.println("1");
+		System.out.println("1-Bram");
+		System.out.println("+++Bram++++++");
+//		TODO: Add exception untuk deteksi credential flip, cek response
 		MoneyTransferResponse response = record.sendTransaction(vmjExchange, productName, serviceName);
+		System.out.println(response);
 		System.out.println("2");
 		int id = response.getId();
 		int userId = response.getUser_id();
