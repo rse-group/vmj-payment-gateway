@@ -7,6 +7,7 @@ module paymentgateway.product.flip {
     requires com.sun.xml.bind;
     requires com.fasterxml.classmate;
     requires jdk.unsupported;
+    requires java.logging;
 
     requires paymentgateway.config.core;
     requires paymentgateway.config.flip;
