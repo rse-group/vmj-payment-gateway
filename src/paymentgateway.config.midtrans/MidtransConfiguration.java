@@ -152,4 +152,12 @@ public class MidtransConfiguration extends ConfigDecorator{
         requestMap.put("id",id);
         return requestMap;
     }
+
+    public Map<String, Object> getMidtransPayoutRequestBody(VMJExchange vmjExchange){
+        Map<String, Object> requestMap = new HashMap<>();
+
+        int id = generateId();
+        double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
+        
+    }
 }

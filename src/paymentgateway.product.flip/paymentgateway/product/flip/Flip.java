@@ -92,6 +92,11 @@ public class Flip {
 				.createDisbursementResource(
 						"paymentgateway.disbursement.aggregator.AggregatorResourceImpl",
 						moneytransfer);
+
+		DisbursementResource facilitator = DisbursementResourceFactory
+				.createDisbursementResource(
+						"paymentgateway.disbursement.facilitator.FacilitatorResourceImpl",
+						moneytransfer);
 		
 
 		DisbursementResource internationalmoneytransfer = DisbursementResourceFactory
@@ -129,6 +134,8 @@ public class Flip {
 		System.out.println("Aggregator endpoints binding");
 		Router.route(aggregator);
 		
+		System.out.println("Facilitator endpoints binding");
+		Router.route(facilitator);
 
 //		System.out.println("multiplemoneytransfer endpoints binding");
 //		Router.route(multipletransfer);

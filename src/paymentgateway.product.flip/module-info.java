@@ -20,6 +20,7 @@ module paymentgateway.product.flip {
     requires paymentgateway.disbursement.specialmoneytransfer;
     requires paymentgateway.disbursement.agentmoneytransfer;
     requires paymentgateway.disbursement.aggregator;
+    requires paymentgateway.disbursement.facilitator;
 	
 	requires prices.auth.vmj;
     requires prices.auth.vmj.model;
