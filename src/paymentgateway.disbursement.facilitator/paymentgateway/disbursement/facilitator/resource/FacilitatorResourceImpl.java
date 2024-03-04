@@ -1,4 +1,4 @@
-package paymentgateway.disbursement.specialmoneytransfer;
+package paymentgateway.disbursement.facilitator;
 
 import com.google.gson.Gson;
 
@@ -26,11 +26,11 @@ import paymentgateway.disbursement.core.DisbursementImpl;
 import paymentgateway.disbursement.core.DisbursementResourceComponent;
 import paymentgateway.disbursement.DisbursementFactory;
 import paymentgateway.disbursement.core.MoneyTransferResponse;
-import paymentgateway.disbursement.special.SpecialResourceImpl;
+import paymentgateway.disbursement.special.*;
 
-public class SpecialMoneyTransferResourceImpl extends SpecialResourceImpl {
+public class FacilitatorResourceImpl extends SpecialResourceImpl {
 
-	public SpecialMoneyTransferResourceImpl(DisbursementResourceComponent record) {
+	public FacilitatorResourceImpl(DisbursementResourceComponent record) {
 		super(record);
 	}
 
@@ -69,8 +69,8 @@ public class SpecialMoneyTransferResourceImpl extends SpecialResourceImpl {
 		return approvalTransaction;
 	}
 
-	@Route(url = "call/special-money-transfer")
-	public HashMap<String, Object> specialMoneyTransfer(VMJExchange vmjExchange) {
+	@Route(url = "call/facilitator-transfer")
+	public HashMap<String, Object> facilitatortransfer(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("OPTIONS"))
 			return null;
 		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
