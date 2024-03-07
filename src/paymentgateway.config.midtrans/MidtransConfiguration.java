@@ -158,6 +158,6 @@ public class MidtransConfiguration extends ConfigDecorator{
 
         int id = generateId();
         double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
-        
+        return requestMap;
     }
 }
