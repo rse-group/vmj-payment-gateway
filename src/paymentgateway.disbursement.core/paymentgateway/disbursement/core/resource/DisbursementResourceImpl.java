@@ -2,6 +2,7 @@ package paymentgateway.disbursement.core;
 
 import com.google.gson.Gson;
 import java.util.*;
+import java.util.logging.Logger;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -20,6 +21,7 @@ import paymentgateway.config.ConfigFactory;
 
 public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	protected DisbursementResourceComponent record;
+	private static final Logger LOGGER = Logger.getLogger(DisbursementResourceImpl.class.getName());
 
 	public Disbursement createDisbursement(VMJExchange vmjExchange,int id, int userId) {
 		String bank_code = "";
@@ -49,20 +51,15 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 
 
 
-	public MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
+	public MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String serviceName) {
 
 		Config config = ConfigFactory
-				.createConfig(
-						"paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration"
-						,
-						ConfigFactory.createConfig(
-								"paymentgateway.config.core.ConfigImpl"));
-		Map<String, Object> body = config.processRequestMap(vmjExchange,productName,serviceName);
-		System.out.println(body == null);
-		String configUrl = config.getProductEnv(productName, serviceName);
-		System.out.println("2");
-		HashMap<String, String> headerParams = config.getHeaderParams(productName);
-		System.out.println("configUrl: " + configUrl);
+				.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+		Map<String, Object> body = config.processRequestMap(vmjExchange,serviceName);
+		String configUrl = config.getProductEnv(serviceName);
+		HashMap<String, String> headerParams = config.getHeaderParams();
+		LOGGER.info("header: " + headerParams);
+		LOGGER.info("configUrl: " + configUrl);
 		Gson gson = new Gson();
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
@@ -75,7 +72,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			System.out.println("rawResponse:" + rawResponse);
+			LOGGER.info("rawResponse:" + rawResponse);
 			responseObj = gson.fromJson(rawResponse,
 					MoneyTransferResponse.class);
 		} catch (Exception e) {
@@ -155,7 +152,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 			String rawResponse = response.body().toString();
 			responseObj = gson.fromJson(rawResponse,
 					GetAllDisbursementResponse.class);
-			System.out.println("this is page" + responseObj.getPage());
+			LOGGER.info("Raw Response: " + responseObj);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
