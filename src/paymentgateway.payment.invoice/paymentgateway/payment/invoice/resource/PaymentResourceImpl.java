@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -40,8 +42,11 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 
 	public Payment createPayment(VMJExchange vmjExchange, String productName, String serviceName) {
 		InvoiceResponse response = sendTransaction(vmjExchange, productName, serviceName);
-		int id = response.getId();
+		int id = response.getLinkId();
 		String transactionToken = response.getPayment_link_id();
+		System.out.println("INI");
+		System.out.println(id);
+		System.out.println(transactionToken);
 		Payment transaction = record.createPayment(vmjExchange, id, productName);
 		Payment invoiceTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.invoice.PaymentImpl", transaction, transactionToken);
@@ -59,18 +64,20 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 						ConfigFactory.createConfig(
 								"paymentgateway.config.core.ConfigImpl"));
 
-		Map<String, Object> requestMap = config.processRequestMap(vmjExchange,productName,serviceName);
-		int id = ((Integer) requestMap.get("id")).intValue();
-		requestMap.remove("id");
-		String requestString = gson.toJson(requestMap);
+		Map<String, Object> body = config.processRequestMap(vmjExchange,productName,serviceName);
+		// int id = ((Integer) requestMap.get("id")).intValue();
+		// requestMap.remove("id");
+		// String requestString = gson.toJson(requestMap);
+		
 		String configUrl = config.getProductEnv(productName, serviceName);
 		HashMap<String, String> headerParams = config.getHeaderParams(productName);
 		System.out.println("configUrl: " + configUrl);
 		System.out.println(configUrl);
+		System.out.println(body);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(requestString))
+				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(body)))
 				.build();
 
 		InvoiceResponse responseObj = null;
@@ -84,8 +91,27 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 			System.out.println(e);
 		}
 
-		responseObj.setId(id);
+		// responseObj.setId(id);
 		return responseObj;
+	}
+
+	public String getParamsUrlEncoded(Map<String, Object> vmjExchange) {
+		ArrayList<String> paramList = new ArrayList<>();
+		for (Map.Entry<String, Object> entry : vmjExchange.entrySet()) {
+			String key = entry.getKey();
+			Object val = entry.getValue();
+			if (val instanceof String) {
+				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
+			} else if (val instanceof Integer) {
+				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
+			} else if (val instanceof Double) {
+				int temp = ((Double) val).intValue();
+				paramList.add(key + "=" + URLEncoder.encode(Integer.toString(temp), StandardCharsets.UTF_8));
+			}
+
+		}
+		String encodedURL = String.join("&",paramList);
+		return encodedURL;
 	}
 	
 	@Route(url="call/invoice")

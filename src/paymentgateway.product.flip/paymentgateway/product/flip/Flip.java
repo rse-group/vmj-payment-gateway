@@ -9,6 +9,10 @@ import org.hibernate.cfg.Configuration;
 
 import paymentgateway.disbursement.DisbursementResourceFactory;
 import paymentgateway.disbursement.core.DisbursementResource;
+import paymentgateway.payment.PaymentResourceFactory;
+import paymentgateway.payment.core.PaymentResource;
+import paymentgateway.payment.invoice.PaymentImpl;
+import paymentgateway.payment.paymentlink.PaymentLinkImpl;
 
 import prices.auth.vmj.model.UserResourceFactory;
 import prices.auth.vmj.model.RoleResourceFactory;
@@ -28,7 +32,13 @@ public class Flip {
 		configuration.addAnnotatedClass(paymentgateway.disbursement.special.SpecialImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.disbursement.agent.AgentImpl.class);
 //		configuration.addAnnotatedClass(paymentgateway.disbursement.scheduled.ScheduledImpl.class);
-//		configuration.addAnnotatedClass(paymentgateway.disbursement.approval.ApprovalImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.payment.core.Payment.class);
+		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentComponent.class);
+		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentDecorator.class);
+		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.payment.invoice.PaymentImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.payment.paymentlink.PaymentLinkImpl.class);
+		// configuration.addAnnotatedClass(paymentgateway.payment.flipimpl.PaymentLinkImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.disbursement.international.InternationalImpl.class);
 //		configuration.addAnnotatedClass(paymentgateway.disbursement.internationaltransfer.InternationalTransferImpl.class);
 //		configuration.addAnnotatedClass(paymentgateway.disbursement.scheduledtransfer.ScheduledTransferImpl.class);
@@ -71,6 +81,35 @@ public class Flip {
 				.createDisbursementResource(
 						"paymentgateway.disbursement.core.DisbursementResourceImpl");
 		System.out.println("================================");
+
+		PaymentResource payment = PaymentResourceFactory
+			.createPaymentResource(
+			"paymentgateway.payment.core.PaymentResourceImpl"
+			);
+
+		PaymentResource bill = PaymentResourceFactory
+			.createPaymentResource(
+			"paymentgateway.payment.invoice.PaymentResourceImpl"
+			,
+			PaymentResourceFactory.createPaymentResource(
+			"paymentgateway.payment.core.PaymentResourceImpl"));
+		
+		PaymentResource paymentlink = PaymentResourceFactory
+				.createPaymentResource(
+				"paymentgateway.payment.paymentlink.PaymentResourceImpl"
+				,
+				PaymentResourceFactory.createPaymentResource(
+				"paymentgateway.payment.core.PaymentResourceImpl"));
+
+
+
+		// PaymentResource flippayment = PaymentResourceFactory
+		// 	.createPaymentResource(
+		// 	"paymentgateway.payment.flipimpl.PaymentLinkResourceImpl",
+		// 	PaymentResourceFactory.createPaymentResource(
+		// 						"paymentgateway.payment.core.PaymentResourceImpl"));
+		
+
 		DisbursementResource moneytransfer = DisbursementResourceFactory
 				.createDisbursementResource(
 						"paymentgateway.disbursement.moneytransfer.MoneyTransferResourceImpl",
@@ -96,6 +135,8 @@ public class Flip {
 				.createDisbursementResource(
 						"paymentgateway.disbursement.internationalmoneytransfer.InternationalMoneyTransferResourceImpl",
 						moneytransfer);
+
+		
 
 
 		System.out.println("================================");
@@ -135,6 +176,15 @@ public class Flip {
 
 		System.out.println("disbursement endpoints binding");
 		Router.route(disbursement);
+
+		System.out.println("payment endpoints binding");
+		Router.route(payment);
+
+		System.out.println("bill endpoints binding");
+		Router.route(bill);
+
+		System.out.println("paymentlink endpoints binding");
+		Router.route(paymentlink);
 
 		System.out.println("auth endpoints binding");
 		Router.route(userCore);

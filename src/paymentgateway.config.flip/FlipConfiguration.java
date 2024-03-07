@@ -134,6 +134,65 @@ public class FlipConfiguration extends ConfigDecorator{
         return vmjExchange.getPayload();
     }
 
+    // "agent_id=1" \
+    // -d "account_number=1122333301" \
+    // -d "amount=10000" \
+    // -d "bank_code=bni" \
+    // -d "direction=DOMESTIC_SPECIAL_TRANSFER" \
+    // -d "remark=some remark" \
+    // -d "beneficiary_email=example@mail.com"
+
+    // getFlipInvoiceRequestBody
+
+    public Map<String, Object> getFlipInvoiceRequestBody(VMJExchange vmjExchange){
+        Map<String, Object> requestMap = new HashMap<>();
+        // int id = generateId();
+//         {
+//   "title": "bayarapa",
+//   "type": "SINGLE",
+//   "amount": "150000",
+//   "sender_name": "DAFIN",
+//   "sender_email": "muhammaddhafin65@gmail.com",
+//   "sender_bank":"bca",
+//   "sender_bank_type":"virtual_account",
+//   "product_name" : "Flip"
+// }
+        String title = (String) vmjExchange.getRequestBodyForm("title");
+        String type = (String) vmjExchange.getRequestBodyForm("type");
+        int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
+        String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
+        String senderEmail = (String) vmjExchange.getRequestBodyForm("sender_email");
+        String senderBank = (String) vmjExchange.getRequestBodyForm("sender_bank");
+        String senderBankType = (String) vmjExchange.getRequestBodyForm("sender_bank_type");
+
+        requestMap.put("title", title);
+        requestMap.put("type", type);
+        requestMap.put("amount",amount);
+        requestMap.put("sender_name",senderName);
+        requestMap.put("sender_email",senderEmail);
+        requestMap.put("sender_bank",senderBank);
+        requestMap.put("sender_bank_type",senderBankType);
+        requestMap.put("step", 3);
+        return vmjExchange.getPayload();
+    }
+
+    public Map<String, Object> getOyInvoiceRequestBody(VMJExchange vmjExchange){
+        Map<String, Object> requestMap = new HashMap<>();
+
+        int id = generateId();
+        int amount = (int) (Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount")));
+
+        requestMap.put("partner_tx_id", String.valueOf(id));
+        requestMap.put("amount", amount);
+
+        List<Map<String, Object>> items = toListMap(vmjExchange, "invoice_items");
+        requestMap.put("invoice_items",items);
+
+        requestMap.put("id",id);
+        return requestMap;
+    }
+    // getFlipPaymentLinkRequestBody
+
     public Map<String, Object> getFlipApprovalTransferRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
 
@@ -148,6 +207,10 @@ public class FlipConfiguration extends ConfigDecorator{
         requestMap.put("approver_id",approverId);
         return vmjExchange.getPayload();
     }
+
+    
+
+    
 
     public String getParamsUrlEncoded(VMJExchange vmjExchange) {
         ArrayList<String> paramList = new ArrayList<>();

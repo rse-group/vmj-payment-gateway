@@ -10,6 +10,8 @@ module paymentgateway.product.flip {
 
     requires paymentgateway.config.core;
     requires paymentgateway.config.flip;
+    requires paymentgateway.config.midtrans;
+    requires paymentgateway.config.oy;
 
     requires paymentgateway.disbursement.core;
     requires paymentgateway.disbursement.moneytransfer;
@@ -20,6 +22,9 @@ module paymentgateway.product.flip {
     requires paymentgateway.disbursement.specialmoneytransfer;
     requires paymentgateway.disbursement.agentmoneytransfer;
     requires paymentgateway.disbursement.approvalsystem;
+    requires paymentgateway.payment.core;
+    requires paymentgateway.payment.invoice;
+    requires paymentgateway.payment.paymentlink;
 	
 	requires prices.auth.vmj;
     requires prices.auth.vmj.model;
