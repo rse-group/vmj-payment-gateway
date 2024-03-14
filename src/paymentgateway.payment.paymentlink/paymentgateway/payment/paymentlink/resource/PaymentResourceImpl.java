@@ -33,12 +33,8 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 
 	public Payment createPayment(VMJExchange vmjExchange, String productName , String serviceName) {
 		PaymentLinkResponse response = sendTransaction(vmjExchange, productName, serviceName);
-		System.out.println("AKU");
 		String paymentLink = response.getUrl();
 		int id = response.getLinkId();
-		System.out.println(3434247);
-		System.out.println(paymentLink);
-		System.out.println(id);
 		Payment transaction = record.createPayment(vmjExchange, id, productName);
 		Payment paymentLinkTransaction =
 			PaymentFactory.createPayment("paymentgateway.payment.paymentlink.PaymentLinkImpl",
@@ -60,10 +56,8 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 
 		Gson gson = new Gson();
 		Map<String, Object> body = config.processRequestMap(vmjExchange,productName,serviceName);
-		System.out.println("AKUL");
 		// int id = ((Integer) requestMap.get("id")).intValue();
 		// requestMap.remove("id");
-		System.out.println("AKUAL");
 		// String requestString = gson.toJson(requestMap);
 		String configUrl = config.getProductEnv(productName, serviceName);
 		HashMap<String, String> headerParams = config.getHeaderParams(productName);
