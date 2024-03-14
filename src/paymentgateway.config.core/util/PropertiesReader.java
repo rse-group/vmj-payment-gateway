@@ -146,6 +146,10 @@ public class PropertiesReader {
         return this.getEnvThenProp(Constants.FLIP_ACCEPT_PAYMENT_ENV, Constants.FLIP_ACCEPT_PAYMENT_PROP);
     }
 
+    public String getFlipPaymentLink(){
+        return this.getEnvThenProp(Constants.FLIP_ACCEPT_PAYMENT_ENV, Constants.FLIP_ACCEPT_PAYMENT_PROP);
+    }
+
 
     public HashMap<String, String> getMidtransHeaderParams() {
         HashMap<String, String> headerParams = new HashMap<>();
