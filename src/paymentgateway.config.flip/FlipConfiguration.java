@@ -5,8 +5,11 @@ import paymentgateway.config.core.ConfigComponent;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.lang.reflect.*;
 
 import vmj.routing.route.VMJExchange;
+
+import paymentgateway.config.core.PropertiesReader;
 
 public class FlipConfiguration extends ConfigDecorator{
 
@@ -14,7 +17,7 @@ public class FlipConfiguration extends ConfigDecorator{
         super(record);
     }
 
-    public Map<String, Object> getFlipMoneyTransferRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getMoneyTransferRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
 
         String number = (String) vmjExchange.getRequestBodyForm("account_number");
@@ -27,7 +30,7 @@ public class FlipConfiguration extends ConfigDecorator{
         return vmjExchange.getPayload();
     }
 
-    public Map<String, Object> getFlipSpecialMoneyTransferRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getSpecialMoneyTransferRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
 
         String number = (String) vmjExchange.getRequestBodyForm("account_number");
@@ -50,7 +53,7 @@ public class FlipConfiguration extends ConfigDecorator{
         return vmjExchange.getPayload();
     }
 
-    public Map<String, Object> getFlipInternationalMoneyTransferRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
 
         String amount = (String) vmjExchange.getRequestBodyForm("amount");
@@ -117,7 +120,7 @@ public class FlipConfiguration extends ConfigDecorator{
         return vmjExchange.getPayload();
     }
 
-    public Map<String, Object> getFlipAgentMoneyTransferRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getAgentMoneyTransferRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
 
         String id = (String) vmjExchange.getRequestBodyForm("agent_id");
@@ -230,6 +233,42 @@ public class FlipConfiguration extends ConfigDecorator{
         }
         String encodedURL = String.join("&",paramList);
         return encodedURL;
+    }
+
+    @Override
+    public HashMap<String, String> getHeaderParams() {
+        HashMap<String, String> flipHeaderParams = new HashMap<>();
+        String contentType = PropertiesReader.getProp("content_type");
+        String authorization = PropertiesReader.getProp("authorization");
+        String cookie = PropertiesReader.getProp("cookie");
+//        String xTimestamp = this.getEnvThenProp(Constants.FLIP_X_TIMESTAMP_ENV,Constants.FLIP_X_TIMESTAMP_ENV);
+        flipHeaderParams.put("Content-Type",contentType);
+        flipHeaderParams.put("idempotency-key", UUID.randomUUID().toString());
+        flipHeaderParams.put("X-TIMESTAMP","");
+        flipHeaderParams.put("Authorization",authorization);
+        flipHeaderParams.put("Cookie",cookie);
+        return flipHeaderParams;
+    }
+
+    @Override
+    public Map<String, Object>  processRequestMap(VMJExchange vmjExchange, String serviceName){
+
+        Map<String, Object> result = null;
+        try {
+            // lebih baik ini atau if else?
+            Method m = this.getClass().getMethod("get" + serviceName + "RequestBody", VMJExchange.class);
+            result = (Map<String, Object>) m.invoke(this, vmjExchange);
+        }
+        catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }
+        catch (InvocationTargetException e){
+            e.printStackTrace();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 }

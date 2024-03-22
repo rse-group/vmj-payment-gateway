@@ -1,6 +1,7 @@
 package paymentgateway.product.flip;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import vmj.routing.route.VMJServer;
 import vmj.routing.route.Router;
@@ -20,6 +21,7 @@ import prices.auth.vmj.model.core.UserResource;
 import prices.auth.vmj.model.core.RoleResource;
 
 public class Flip {
+	private static final Logger LOGGER = Logger.getLogger(Flip.class.getName());
 
 	public static void main(String[] args) {
 		activateServer("localhost", 7776);
@@ -76,40 +78,11 @@ public class Flip {
 	}
 
 	public static void createObjectsAndBindEndPoints() {
-		System.out.println("== CREATING OBJECTS AND BINDING ENDPOINTS ==");
+		LOGGER.info("== CREATING OBJECTS AND BINDING ENDPOINTS ==");
 		DisbursementResource disbursement = DisbursementResourceFactory
 				.createDisbursementResource(
 						"paymentgateway.disbursement.core.DisbursementResourceImpl");
-		System.out.println("================================");
-
-		PaymentResource payment = PaymentResourceFactory
-			.createPaymentResource(
-			"paymentgateway.payment.core.PaymentResourceImpl"
-			);
-
-		PaymentResource bill = PaymentResourceFactory
-			.createPaymentResource(
-			"paymentgateway.payment.invoice.PaymentResourceImpl"
-			,
-			PaymentResourceFactory.createPaymentResource(
-			"paymentgateway.payment.core.PaymentResourceImpl"));
-		
-		PaymentResource paymentlink = PaymentResourceFactory
-				.createPaymentResource(
-				"paymentgateway.payment.paymentlink.PaymentResourceImpl"
-				,
-				PaymentResourceFactory.createPaymentResource(
-				"paymentgateway.payment.core.PaymentResourceImpl"));
-
-
-
-		// PaymentResource flippayment = PaymentResourceFactory
-		// 	.createPaymentResource(
-		// 	"paymentgateway.payment.flipimpl.PaymentLinkResourceImpl",
-		// 	PaymentResourceFactory.createPaymentResource(
-		// 						"paymentgateway.payment.core.PaymentResourceImpl"));
-		
-
+		LOGGER.info("================================");
 		DisbursementResource moneytransfer = DisbursementResourceFactory
 				.createDisbursementResource(
 						"paymentgateway.disbursement.moneytransfer.MoneyTransferResourceImpl",
@@ -139,7 +112,7 @@ public class Flip {
 		
 
 
-		System.out.println("================================");
+		LOGGER.info("================================");
 
 		UserResource userCore = UserResourceFactory
 				.createUserResource("prices.auth.vmj.model.core.UserResourceImpl");
@@ -153,16 +126,16 @@ public class Flip {
 		RoleResource role = RoleResourceFactory
 				.createRoleResource("prices.auth.vmj.model.core.RoleResourceImpl");
 
-		System.out.println("moneytransfer endpoints binding");
+		LOGGER.info("Binding MoneyTransfer endpoints");
 		Router.route(moneytransfer);
 
-		System.out.println("specialmoneytransfer endpoints binding");
+		LOGGER.info("Binding SpecialMoneyTransfer endpoints");
 		Router.route(specialmoneytransfer);
 
-		System.out.println("agentmoneytransfer endpoints binding");
+		LOGGER.info("Binding AgentMoneyTransfer endpoints");
 		Router.route(agentmoneytransfer);
 
-		System.out.println("internationaltransfer endpoints binding");
+		LOGGER.info("Binding InternationalMoneyTransfer endpoints");
 		Router.route(internationalmoneytransfer);
 
 //		System.out.println("multiplemoneytransfer endpoints binding");
@@ -174,23 +147,13 @@ public class Flip {
 		System.out.println("approvaltransfer endpoints binding");
 		Router.route(approvaltransfer);
 
-		System.out.println("disbursement endpoints binding");
+		LOGGER.info("Binding Disbursement endpoints");
 		Router.route(disbursement);
 
-		System.out.println("payment endpoints binding");
-		Router.route(payment);
-
-		System.out.println("bill endpoints binding");
-		Router.route(bill);
-
-		System.out.println("paymentlink endpoints binding");
-		Router.route(paymentlink);
-
-		System.out.println("auth endpoints binding");
+		LOGGER.info("Binding Authorization endpoints");
 		Router.route(userCore);
 		Router.route(userPassworded);
 		Router.route(userSocial);
 		Router.route(role);
-		System.out.println();
 	}
 }

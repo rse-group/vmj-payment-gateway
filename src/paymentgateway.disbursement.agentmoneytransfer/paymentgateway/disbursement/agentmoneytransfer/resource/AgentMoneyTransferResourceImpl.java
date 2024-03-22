@@ -36,7 +36,7 @@ public class AgentMoneyTransferResourceImpl extends AgentResourceImpl {
 	}
 	public Disbursement createDisbursement(VMJExchange vmjExchange, String productName, String serviceName) {
 		System.out.println("masuk agent transfer");
-		MoneyTransferResponse response = super.sendTransaction(vmjExchange, productName, serviceName);
+		MoneyTransferResponse response = super.sendTransaction(vmjExchange, serviceName);
 		System.out.println("1");
 		String status = response.getStatus();
 		System.out.println("2");

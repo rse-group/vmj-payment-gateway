@@ -22,7 +22,7 @@ public abstract class DisbursementResourceComponent implements DisbursementResou
     public abstract List<HashMap<String,Object>> deleteDisbursement(VMJExchange vmjExchange);
     public abstract HashMap<String, Object> updateDisbursement(VMJExchange vmjExchange);
     public abstract GetAllDisbursementResponse getAllDataFromAPI(String name);
-    public abstract MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName);
+    public abstract MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String serviceName);
     public abstract String getParamsUrlEncoded(VMJExchange vmjExchange);
     public abstract HashMap<String, Object> getDisbursementById(int id);
 

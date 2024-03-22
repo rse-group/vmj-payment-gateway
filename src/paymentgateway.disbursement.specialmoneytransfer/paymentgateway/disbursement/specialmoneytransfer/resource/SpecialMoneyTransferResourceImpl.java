@@ -35,7 +35,7 @@ public class SpecialMoneyTransferResourceImpl extends SpecialResourceImpl {
 	}
 
 	public Disbursement createDisbursement(VMJExchange vmjExchange, String productName, String serviceName) {
-		MoneyTransferResponse response = super.sendTransaction(vmjExchange,productName, serviceName);
+		MoneyTransferResponse response = super.sendTransaction(vmjExchange, serviceName);
 		String status = response.getStatus();
 		int id = response.getId();
 		int userId = response.getUser_id();

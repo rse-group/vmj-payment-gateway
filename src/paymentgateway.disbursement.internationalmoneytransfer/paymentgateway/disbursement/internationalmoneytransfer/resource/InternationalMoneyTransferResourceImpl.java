@@ -29,7 +29,7 @@ public class InternationalMoneyTransferResourceImpl extends InternationalResourc
 	}
 
 	public Disbursement createDisbursement(VMJExchange vmjExchange, String productName, String serviceName) {
-		MoneyTransferResponse response = super.sendTransaction(vmjExchange, productName, serviceName);
+		MoneyTransferResponse response = super.sendTransaction(vmjExchange, serviceName);
 		int id = response.getId();
 		int user_id = response.getUser_id();
 		String status = response.getStatus();
