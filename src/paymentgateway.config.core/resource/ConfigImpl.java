@@ -24,6 +24,10 @@ public class ConfigImpl extends ConfigComponent {
 //
 //    }
 
+    public String getProductName(){
+        return "";
+    }
+
     public String getProductEnv(String serviceName){
         String url = "";
         String baseUrl = (String) PropertiesReader.getProp("base_url");
@@ -117,7 +121,7 @@ public class ConfigImpl extends ConfigComponent {
     }
 
     public Map<String, Object>  processRequestMap(VMJExchange vmjExchange, String serviceName){
-        Map<String, Object> result = new HashMap<>();
+        // Map<String, Object> result = new HashMap<>();
         // Map<String, Object> result = null;
         // Object prop = null;
         // String className = "paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration";
@@ -137,7 +141,103 @@ public class ConfigImpl extends ConfigComponent {
         // catch (Exception e) {
         //     e.printStackTrace();
         // }
-        return result;
+        // return result;
+        return vmjExchange.getPayload();
     }
 
+    public Map<String, Object> getMoneyTransferRequestBody(VMJExchange vmjExchange){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getSpecialMoneyTransferRequestBody(VMJExchange vmjExchange){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getAgentMoneyTransferRequestBody(VMJExchange vmjExchange){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getRetailOutletRequestBody(VMJExchange vmjExchange){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getVirtualAccountRequestBody(VMJExchange vmjExchange){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getEWalletRequestBody(VMJExchange vmjExchange){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getDebitCardRequestBody(VMJExchange vmjExchange){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getCreditCardRequestBody(VMJExchange vmjExchange){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getInvoiceRequestBody(VMJExchange vmjExchange){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getPaymentRoutingRequestBody(VMJExchange vmjExchange){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getDebitCardResponse(String rawResponse, int id){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getCreditCardResponse(String rawResponse, int id){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getInvoiceResponse(String rawResponse, int id){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getEWalletResponse(String rawResponse, int id){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getPaymentRoutingResponse(String rawResponse, int id){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getRetailOutletResponse(String rawResponse, int id){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getMoneyTransferResponse(String rawResponse){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getSpecialMoneyTransferResponse(String rawResponse){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getInternationalMoneyTransferResponse(String rawResponse){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getAgentMoneyTransferResponse(String rawResponse){
+        throw new UnsupportedOperationException();
+    }
 }

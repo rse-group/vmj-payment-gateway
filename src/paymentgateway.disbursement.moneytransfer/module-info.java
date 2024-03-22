@@ -3,6 +3,7 @@ module paymentgateway.disbursement.moneytransfer {
 
 	exports paymentgateway.disbursement.moneytransfer;
 
+	requires paymentgateway.config.core;
 	requires vmj.routing.route;
 	requires vmj.hibernate.integrator;
 	requires prices.auth.vmj;

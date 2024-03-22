@@ -13,7 +13,7 @@ public interface DisbursementResource {
     List<HashMap<String,Object>> transformListToHashMap(List<Disbursement> List);
     GetAllDisbursementResponse getAllDataFromAPI(String name);
     MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String serviceName);
-    String getParamsUrlEncoded(VMJExchange vmjExchange);
+    String getParamsUrlEncoded(Map<String, Object> vmjExchange);
     HashMap<String, Object> getDisbursementById(int id);
 
 }

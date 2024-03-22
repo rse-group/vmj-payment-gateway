@@ -4,6 +4,7 @@ module paymentgateway.disbursement.specialmoneytransfer {
 	requires paymentgateway.disbursement.special;
 	exports paymentgateway.disbursement.specialmoneytransfer;
 
+	requires paymentgateway.config.core;
 	requires vmj.routing.route;
 	requires vmj.hibernate.integrator;
 	requires prices.auth.vmj;

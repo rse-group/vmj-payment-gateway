@@ -17,6 +17,7 @@ import java.lang.reflect.Type;
 
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
+import vmj.routing.route.exceptions.*;
 
 import paymentgateway.payment.PaymentFactory;
 import paymentgateway.payment.core.Payment;
@@ -35,19 +36,20 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
         super(record);
     }
 
-	public Payment createPayment(VMJExchange vmjExchange, String productName, String serviceName) {
-		PaymentRoutingResponse response = sendTransaction(vmjExchange, productName, serviceName);
-		int id = response.getId();
-		String paymentCheckoutUrl = response.getPayment_info().getPayment_checkout_url();
+	public Payment createPayment(VMJExchange vmjExchange) {
+		Map<String, Object> response = sendTransaction(vmjExchange);
+
+		int id = (int) response.get("id");
+		String paymentCheckoutUrl = (String) response.get("payment_checkout_url");
+
 		String paymentMethods = (String) vmjExchange.getRequestBodyForm("list_enable_payment_method");
 		String sourceOfFunds = (String) vmjExchange.getRequestBodyForm("list_enable_sof");
-
 		Gson gson = new Gson();
 		Type resultType = new TypeToken<List<PaymentRoutingRecipient>>(){}.getType();
 		List<PaymentRoutingRecipient> routings = gson.fromJson(gson.toJson(vmjExchange.getRequestBodyForm("routings")), resultType);
 //		List<PaymentRoutingRecipient> routings = (List<PaymentRoutingRecipient>) vmjExchange.getRequestBodyForm("routings");
 
-		Payment transaction = record.createPayment(vmjExchange, id, productName);
+		Payment transaction = record.createPayment(vmjExchange, id);
 		Payment paymentRoutingTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.paymentrouting.PaymentImpl",
 				transaction,
@@ -61,22 +63,17 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		return paymentRoutingTransaction;
 	}
 	
-	protected PaymentRoutingResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
+	protected Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
 		Gson gson = new Gson();
 
-		Config config = ConfigFactory
-				.createConfig(
-						"paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration"
-						,
-						ConfigFactory.createConfig(
-								"paymentgateway.config.core.ConfigImpl"));
+		Config config = ConfigFactory.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
-		Map<String, Object> requestMap = config.processRequestMap(vmjExchange,productName,serviceName);
+		Map<String, Object> requestMap = config.getPaymentRoutingRequestBody(vmjExchange);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);
-		String configUrl = config.getProductEnv(productName, serviceName);
-		HashMap<String, String> headerParams = config.getHeaderParams(productName);
+		String configUrl = config.getProductEnv("PaymentRouting");
+		HashMap<String, String> headerParams = config.getHeaderParams();
 		System.out.println("configUrl: " + configUrl);
 		System.out.println(configUrl);
 		HttpClient client = HttpClient.newHttpClient();
@@ -85,50 +82,27 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
 
-		PaymentRoutingResponse responseObj = null;
+		Map<String, Object> responseMap = new HashMap<>();
 		
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			System.out.println(rawResponse);
-			responseObj = gson.fromJson(rawResponse, PaymentRoutingResponse.class);
+			System.out.println("rawResponse " + rawResponse);
+			responseMap = config.getPaymentRoutingResponse(rawResponse, id);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 
-		responseObj.setId(id);
-		return responseObj;
+		return responseMap;
 	}
 	
 	@Route(url="call/paymentrouting")
 	public HashMap<String,Object> paymentLinkEndpoint(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("OPTIONS")) return null;
-//		int amount = ((Double) vmjExchange.getRequestBodyForm("amount")).intValue();
-//		String idTransaction = (String) vmjExchange.getRequestBodyForm("idTransaction");
-//		String paymentMethods = (String) vmjExchange.getRequestBodyForm("paymentMethods");
-//		String sourceOfFunds = (String) vmjExchange.getRequestBodyForm("sourceOfFunds");
-//		List<PaymentRoutingRecipient> routings = new ArrayList<PaymentRoutingRecipient>();
-//		List<Map<String,Object>> recipient = (List<Map<String,Object>>) vmjExchange.getRequestBodyForm("routings");
-//		for(Map<String,Object> x : recipient) {
-//			PaymentRoutingRecipient temp = new PaymentRoutingRecipient();
-//			temp.setRecipient_account((String) x.get("recipient_account"));
-//			temp.setRecipient_bank((String) x.get("recipient_bank"));
-//			temp.setRecipient_amount(((Double) x.get("recipient_amount")).intValue());
-//			temp.setRecipient_email((String) x.get("recipient_email"));
-//			temp.setRecipient_note((String) x.get("recipient_note"));
-//			routings.add(temp);
-//		}
-//
-//		HashMap<String,Object> testVMJExchange = new HashMap<String,Object>();
-//		testVMJExchange.put("idTransaction", idTransaction);
-//		testVMJExchange.put("amount", amount);
-//		testVMJExchange.put("paymentMethods", paymentMethods);
-//		testVMJExchange.put("sourceOfFunds", sourceOfFunds);
-//		testVMJExchange.put("routings", routings);
-		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
-		Payment result = this.createPayment(vmjExchange,productName,"PaymentRouting");
-//		Payment result = this.createPayment(vmjExchange, "Oy", );
-		return result.toHashMap();
+		if (vmjExchange.getHttpMethod().equals("POST")){
+			Payment result = this.createPayment(vmjExchange);
+			return result.toHashMap();
+		}
+		throw new NotFoundException("Route tidak ditemukan");
 	}
 
 }

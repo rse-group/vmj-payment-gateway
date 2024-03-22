@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
+import vmj.routing.route.exceptions.*;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -30,62 +31,57 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		super(record);
 	}
 
-	public Payment createPayment(VMJExchange vmjExchange, String productName, String serviceName) {
-		CreditCardResponse response = sendTransaction(vmjExchange, productName, serviceName);
+	public Payment createPayment(VMJExchange vmjExchange) {
+		Map<String, Object> response = sendTransaction(vmjExchange);
 		String idToken = (String) vmjExchange.getRequestBodyForm("token_id");
-		String creditCardUrl = response.getRedirect_url();
-		int id = response.getId();
 
-		Payment transaction = record.createPayment(vmjExchange, id, productName);
+		String creditCardUrl = (String) response.get("redirect_url");
+		int id = (int) response.get("id");
+
+		Payment transaction = record.createPayment(vmjExchange, id);
 		Payment creditCardTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.creditcard.PaymentImpl", transaction, idToken, creditCardUrl);
 		PaymentRepository.saveObject(creditCardTransaction);
 		return creditCardTransaction;
 	}
 
-	protected CreditCardResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
+	protected Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
 		Gson gson = new Gson();
 
-		Config config = ConfigFactory
-				.createConfig(
-						"paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration"
-						,
-						ConfigFactory.createConfig(
-								"paymentgateway.config.core.ConfigImpl"));
+		Config config = ConfigFactory.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
-		Map<String, Object> requestMap = config.processRequestMap(vmjExchange,productName,serviceName);
+		Map<String, Object> requestMap = config.getCreditCardRequestBody(vmjExchange);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);
-		String configUrl = config.getProductEnv(productName, serviceName);
-		HashMap<String, String> headerParams = config.getHeaderParams(productName);
+		String configUrl = config.getProductEnv("CreditCard");
+		HashMap<String, String> headerParams = config.getHeaderParams();
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
 				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
 
-		CreditCardResponse responseObj = null;
+		Map<String, Object> responseMap = new HashMap<>();
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			System.out.println(rawResponse);
-			responseObj = gson.fromJson(rawResponse, CreditCardResponse.class);
+			System.out.println("rawResponse " + rawResponse);
+			responseMap = config.getCreditCardResponse(rawResponse, id);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		responseObj.setId(id);
-		return responseObj;
+
+		return responseMap;
 	}
 
 
 	@Route(url = "test/call/creditcard")
 	public HashMap<String, Object> testDebitCard(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("OPTIONS"))
-			return null;
-
-		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
-		Payment result = this.createPayment(vmjExchange, productName, "CreditCard");
-		return result.toHashMap();
+		if (vmjExchange.getHttpMethod().equals("POST")){
+			Payment result = this.createPayment(vmjExchange);
+			return result.toHashMap();
+		}
+		throw new NotFoundException("Route tidak ditemukan");
 	}
 }

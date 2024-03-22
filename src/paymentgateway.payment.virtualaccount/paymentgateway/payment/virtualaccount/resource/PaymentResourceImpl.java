@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
+import vmj.routing.route.exceptions.*;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -29,14 +30,14 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
         super(record);
     }
     
-	public Payment createPayment(VMJExchange vmjExchange, String productName, String serviceName) {
-		VirtualAccountResponse response = sendTransaction(vmjExchange, productName, serviceName);
-		System.out.println(response.getVirtual_account_number());
-		String vaAccountNumber = response.getVirtual_account_number();
+	public Payment createPayment(VMJExchange vmjExchange) {
+		Map<String, Object> response = sendTransaction(vmjExchange);
+
+		String vaAccountNumber = (String) response.get("va_number");
+		int id = (int) response.get("id");
+
 		String bankCode = (String) vmjExchange.getRequestBodyForm("bank");
-		int id = response.getIdDB();
-		
-		Payment transaction = record.createPayment(vmjExchange, id, productName);
+		Payment transaction = record.createPayment(vmjExchange, id);
 		Payment virtualAccountTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.virtualaccount.VirtualAccountImpl",
 				transaction,
@@ -46,23 +47,18 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		return virtualAccountTransaction;
 	}
 	
-	protected VirtualAccountResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
+	protected Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
 		Gson gson = new Gson();
 
-		Config config = ConfigFactory
-				.createConfig(
-						"paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration"
-						,
-						ConfigFactory.createConfig(
-								"paymentgateway.config.core.ConfigImpl"));
+		Config config = ConfigFactory.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
-		Map<String, Object> requestMap = config.processRequestMap(vmjExchange,productName,serviceName);
+		Map<String, Object> requestMap = config.getVirtualAccountRequestBody(vmjExchange);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		System.out.println("id:" + Integer.toString(id));
 		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);
-		String configUrl = config.getProductEnv(productName, serviceName);
-		HashMap<String, String> headerParams = config.getHeaderParams(productName);
+		String configUrl = config.getProductEnv("VirtualAccount");
+		HashMap<String, String> headerParams = config.getHeaderParams();
 		System.out.println("configUrl: " + configUrl);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
@@ -71,29 +67,28 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 				.build();
 
 
-		VirtualAccountResponse responseObj = null;
+		Map<String, Object> responseMap = new HashMap<>();
 		
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			System.out.println("raw: " + rawResponse);
-			responseObj = gson.fromJson(rawResponse, VirtualAccountResponse.class);
+			System.out.println("rawResponse " + rawResponse);
+			responseMap = config.getVirtualAccountResponse(rawResponse, id);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		responseObj.setIdDB(id);
 		
-		return responseObj;
+		return responseMap;
 	}
 
 	
 	@Route(url="call/virtualaccount")
 	public HashMap<String,Object> testVirtualAccount(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("OPTIONS")) return null;
-
-		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
-		Payment result = this.createPayment(vmjExchange, productName, "VirtualAccount");
-		return result.toHashMap();
+		if (vmjExchange.getHttpMethod().equals("POST")){
+			Payment result = this.createPayment(vmjExchange);
+			return result.toHashMap();
+		}
+		throw new NotFoundException("Route tidak ditemukan");
 	}
 }
 

@@ -53,9 +53,8 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 
 	public MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String serviceName) {
 
-		Config config = ConfigFactory
-				.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-		Map<String, Object> body = config.processRequestMap(vmjExchange,serviceName);
+		Config config = ConfigFactory.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+		Map<String, Object> body = vmjExchange.getPayload();
 		String configUrl = config.getProductEnv(serviceName);
 		HashMap<String, String> headerParams = config.getHeaderParams();
 		LOGGER.info("header: " + headerParams);
@@ -73,8 +72,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
 			LOGGER.info("rawResponse:" + rawResponse);
-			responseObj = gson.fromJson(rawResponse,
-					MoneyTransferResponse.class);
+			responseObj = gson.fromJson(rawResponse, MoneyTransferResponse.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
