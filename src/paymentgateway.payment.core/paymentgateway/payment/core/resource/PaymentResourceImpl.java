@@ -9,10 +9,15 @@ import paymentgateway.payment.PaymentFactory;
 import prices.auth.vmj.annotations.Restricted;
 //add other required packages
 
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
+
 public class PaymentResourceImpl extends PaymentResourceComponent {
 	protected PaymentResourceComponent record;
 
-	public Payment createPayment(VMJExchange vmjExchange,  int id, String productName) {
+	public Payment createPayment(VMJExchange vmjExchange, int id) {
+		Config config = ConfigFactory.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+		String productName = config.getProductName();
 //		String id = (String) vmjExchange.getRequestBodyForm(bodyKeys.get("id"));
 //		int amount = (int) vmjExchange.getRequestBodyForm(bodyKeys.get("amount"));
 		double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));

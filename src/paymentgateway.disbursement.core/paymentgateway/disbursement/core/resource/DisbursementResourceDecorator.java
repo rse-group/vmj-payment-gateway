@@ -37,7 +37,7 @@ public abstract class DisbursementResourceDecorator extends DisbursementResource
         return record.sendTransaction(vmjExchange, serviceName);
     }
 
-    public String getParamsUrlEncoded(VMJExchange vmjExchange){
+    public String getParamsUrlEncoded(Map<String, Object> vmjExchange){
         return record.getParamsUrlEncoded(vmjExchange);
     }
     public HashMap<String, Object> getDisbursementById(int id){

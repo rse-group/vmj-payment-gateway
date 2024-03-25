@@ -5,10 +5,39 @@ import java.net.http.HttpRequest;
 import vmj.routing.route.VMJExchange;
 
 public abstract class ConfigComponent implements Config {
+    public abstract String getProductName();
     public abstract String getProductEnv(String serviceName);
     public abstract HttpRequest.Builder getBuilder(HttpRequest.Builder builder, HashMap<String, String> headerParams);
     public abstract HashMap<String, String> getHeaderParams();
     public abstract Map<String, Object> processRequestMap(VMJExchange vmjExchange, String serviceName);
     public abstract List<Map<String,Object>> toListMap(VMJExchange vmjExchange, String name);
     public abstract int generateId();
+
+    public abstract Map<String, Object> getMoneyTransferRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getSpecialMoneyTransferRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getAgentMoneyTransferRequestBody(VMJExchange vmjExchange);
+
+    public abstract Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getRetailOutletRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getVirtualAccountRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getEWalletRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getDebitCardRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getCreditCardRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getInvoiceRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getPaymentRoutingRequestBody(VMJExchange vmjExchange);
+    
+    public abstract Map<String, Object> getPaymentLinkResponse(String rawResponse, int id);
+    public abstract Map<String, Object> getDebitCardResponse(String rawResponse, int id);
+    public abstract Map<String, Object> getCreditCardResponse(String rawResponse, int id);
+    public abstract Map<String, Object> getInvoiceResponse(String rawResponse, int id);
+    public abstract Map<String, Object> getEWalletResponse(String rawResponse, int id);
+    public abstract Map<String, Object> getPaymentRoutingResponse(String rawResponse, int id);
+    public abstract Map<String, Object> getRetailOutletResponse(String rawResponse, int id);
+    public abstract Map<String, Object> getVirtualAccountResponse(String rawResponse, int id);
+
+    public abstract Map<String, Object> getMoneyTransferResponse(String rawResponse);
+    public abstract Map<String, Object> getSpecialMoneyTransferResponse(String rawResponse);
+    public abstract Map<String, Object> getInternationalMoneyTransferResponse(String rawResponse);
+    public abstract Map<String, Object> getAgentMoneyTransferResponse(String rawResponse);
 }

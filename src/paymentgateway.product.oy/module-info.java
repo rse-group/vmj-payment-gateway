@@ -8,6 +8,9 @@ module paymentgateway.product.oy {
     requires com.fasterxml.classmate;
     requires jdk.unsupported;
 
+    requires paymentgateway.config.core;
+    requires paymentgateway.config.oy;
+
     requires paymentgateway.payment.core;
     requires paymentgateway.payment.invoice;
     requires paymentgateway.payment.paymentlink;

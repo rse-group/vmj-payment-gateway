@@ -13,7 +13,7 @@ public abstract class PaymentResourceComponent implements PaymentResource{
         this.PaymentRepository = new RepositoryUtil<Payment>(paymentgateway.payment.core.PaymentComponent.class);
     }
     
-    public abstract Payment createPayment(VMJExchange vmjExchange, int id, String productName);
+    public abstract Payment createPayment(VMJExchange vmjExchange, int id);
     public abstract List<HashMap<String,Object>> getAll(VMJExchange vmjExchange);
 //    public abstract Map<String, Object>  processRequestMap(VMJExchange vmjExchange, String productName, String serviceName);
     public abstract void deletePayment(VMJExchange vmjExchange);

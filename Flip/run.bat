@@ -1,2 +1,2 @@
-echo SELECT 'CREATE DATABASE paymentgateway_product_flip' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'paymentgateway_product_flip') \gexec | psql "postgresql://postgres:postgres@localhost"
+echo SELECT 'CREATE DATABASE paymentgateway_product_flip' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'paymentgateway_product_flip') \gexec | psql "postgresql://postgres:crown123@localhost"
 java -cp paymentgateway.product.flip --module-path paymentgateway.product.flip -m paymentgateway.product.flip

@@ -3,7 +3,6 @@ module paymentgateway.disbursement.core {
 	exports paymentgateway.disbursement.core;
 
 	requires paymentgateway.config.core;
-	requires paymentgateway.config.flip;
 	requires vmj.routing.route;
 	requires vmj.hibernate.integrator;
 	requires prices.auth.vmj;

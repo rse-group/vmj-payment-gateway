@@ -2,10 +2,10 @@ package paymentgateway.payment.paymentlink;
 
 public class PaymentLinkResponse {
 	private int id;
-	private BillPayment bill_payment;
-	private int link_id;
+	// Midtrans
 	private String order_id;
 	private String payment_url;
+	
 	// Oy
 	private boolean status;
 	private String url;

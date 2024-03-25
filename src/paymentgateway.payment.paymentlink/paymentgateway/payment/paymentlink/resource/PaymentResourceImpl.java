@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
+import vmj.routing.route.exceptions.*;
 
 import paymentgateway.payment.PaymentFactory;
 import paymentgateway.payment.PaymentResourceFactory;
@@ -20,6 +21,7 @@ import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import vmj.hibernate.integrator.RepositoryUtil;
 import paymentgateway.payment.core.PaymentResourceComponent;
+
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
@@ -31,11 +33,11 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		this.paymentLinkRepository = new RepositoryUtil<PaymentLinkImpl>(paymentgateway.payment.paymentlink.PaymentLinkImpl.class);
 	}
 
-	public Payment createPayment(VMJExchange vmjExchange, String productName , String serviceName) {
-		PaymentLinkResponse response = sendTransaction(vmjExchange, productName, serviceName);
-		String paymentLink = response.getUrl();
-		int id = response.getLinkId();
-		Payment transaction = record.createPayment(vmjExchange, id, productName);
+	public Payment createPayment(VMJExchange vmjExchange) {
+		Map<String, Object> response = sendTransaction(vmjExchange);
+		String paymentLink = (String) response.get("url");
+		int id = (int) response.get("id");
+		Payment transaction = record.createPayment(vmjExchange, id);
 		Payment paymentLinkTransaction =
 			PaymentFactory.createPayment("paymentgateway.payment.paymentlink.PaymentLinkImpl",
 			transaction,id, paymentLink);
@@ -43,24 +45,16 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		return paymentLinkTransaction;
 	}
 
-
-	protected PaymentLinkResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
-		PaymentLinkResponse responseObj = null;
-
-		Config config = ConfigFactory
-				.createConfig(
-						"paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration"
-						,
-						ConfigFactory.createConfig(
-								"paymentgateway.config.core.ConfigImpl"));
+	protected Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
+		Config config = ConfigFactory.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
 		Gson gson = new Gson();
-		Map<String, Object> body = config.processRequestMap(vmjExchange,productName,serviceName);
-		// int id = ((Integer) requestMap.get("id")).intValue();
-		// requestMap.remove("id");
-		// String requestString = gson.toJson(requestMap);
-		String configUrl = config.getProductEnv(productName, serviceName);
-		HashMap<String, String> headerParams = config.getHeaderParams(productName);
+		Map<String, Object> requestMap = config.getPaymentLinkRequestBody(vmjExchange);
+		int id = ((Integer) requestMap.get("id")).intValue();
+		requestMap.remove("id");
+		String requestString = gson.toJson(requestMap);
+		String configUrl = config.getProductEnv("PaymentLink");
+		HashMap<String, String> headerParams = config.getHeaderParams();
 		System.out.println("configUrl: " + configUrl);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
@@ -68,49 +62,29 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(body)))
 				.build();
 
+		Map<String, Object> responseMap = new HashMap<>();
+
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			System.out.println("rawResponse" + rawResponse);
-			responseObj = gson.fromJson(rawResponse, PaymentLinkResponse.class);
+			System.out.println("rawResponse " + rawResponse);
+			responseMap = config.getPaymentLinkResponse(rawResponse, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// responseObj.setId(id);
 
-		return responseObj;
-	}
-
-	public String getParamsUrlEncoded(Map<String, Object> vmjExchange) {
-		ArrayList<String> paramList = new ArrayList<>();
-		for (Map.Entry<String, Object> entry : vmjExchange.entrySet()) {
-			String key = entry.getKey();
-			Object val = entry.getValue();
-			if (val instanceof String) {
-				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
-			} else if (val instanceof Integer) {
-				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
-			} else if (val instanceof Double) {
-				int temp = ((Double) val).intValue();
-				paramList.add(key + "=" + URLEncoder.encode(Integer.toString(temp), StandardCharsets.UTF_8));
-			}
-
-		}
-		String encodedURL = String.join("&",paramList);
-		return encodedURL;
+		return responseMap;
 	}
 
 
 	@Route(url = "call/paymentlink")
 	public HashMap<String, Object> paymentLink(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("OPTIONS"))
-			return null;
-
-		System.out.println("masuk call");
-		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
-		Payment result = this.createPayment(vmjExchange, productName,"PaymentLink");
-		return result.toHashMap();
+		if (vmjExchange.getHttpMethod().equals("POST")){
+			Payment result = this.createPayment(vmjExchange);
+			return result.toHashMap();
 		}
+		throw new NotFoundException("Route tidak ditemukan");
+	}
 
 
 	@Route(url = "call/paymentlink/productname")
