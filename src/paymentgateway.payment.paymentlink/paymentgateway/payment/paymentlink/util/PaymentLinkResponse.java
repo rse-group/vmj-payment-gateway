@@ -15,22 +15,6 @@ public class PaymentLinkResponse {
 	private String email;
 	private String message;
 
-	public int getLinkId(){
-		return this.link_id;
-	}
-
-	public void setLinkId(int link_id){
-		this.link_id = link_id;
-	}
-
-	public BillPayment getBillPayment(){
-		return this.bill_payment;
-	}
-
-	public void setBillPayment(BillPayment bill_payment){
-		this.bill_payment = bill_payment;
-	}
-
 	public boolean getStatus() {
 		return status;
 	}

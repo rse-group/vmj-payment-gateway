@@ -237,6 +237,44 @@ public class FlipConfiguration extends ConfigDecorator{
         return response;
     }
 
+    public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
+        int id = generateId();
+
+        Map<String, Object> requestMap = new HashMap<>();
+        String title = (String) vmjExchange.getRequestBodyForm("title");
+        String type = (String) vmjExchange.getRequestBodyForm("type");
+        int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
+        String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
+        String senderEmail = (String) vmjExchange.getRequestBodyForm("sender_email");
+        String senderBank = (String) vmjExchange.getRequestBodyForm("sender_bank");
+        String senderBankType = (String) vmjExchange.getRequestBodyForm("sender_bank_type");
+        
+
+        requestMap.put("id",id);
+        requestMap.put("title", title);
+        requestMap.put("type", type);
+        requestMap.put("amount",amount);
+        requestMap.put("sender_name",senderName);
+        requestMap.put("sender_email",senderEmail);
+        requestMap.put("sender_bank",senderBank);
+        requestMap.put("sender_bank_type",senderBankType);
+        requestMap.put("step", 3);
+
+        return requestMap;
+    }
+
+    @Override
+    public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String url = (String) rawResponseMap.get("payment_url");
+        response.put("url", url);
+        response.put("id", id);
+        return response;
+    }
+
     @Override
     public HashMap<String, String> getHeaderParams() {
         HashMap<String, String> flipHeaderParams = new HashMap<>();

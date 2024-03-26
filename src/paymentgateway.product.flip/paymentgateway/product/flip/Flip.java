@@ -12,7 +12,7 @@ import paymentgateway.disbursement.DisbursementResourceFactory;
 import paymentgateway.disbursement.core.DisbursementResource;
 import paymentgateway.payment.PaymentResourceFactory;
 import paymentgateway.payment.core.PaymentResource;
-import paymentgateway.payment.invoice.PaymentImpl;
+// import paymentgateway.payment.invoice.PaymentImpl;
 import paymentgateway.payment.paymentlink.PaymentLinkImpl;
 
 import prices.auth.vmj.model.UserResourceFactory;
@@ -38,13 +38,12 @@ public class Flip {
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentComponent.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentDecorator.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.payment.invoice.PaymentImpl.class);
+		// configuration.addAnnotatedClass(paymentgateway.payment.invoice.PaymentImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.paymentlink.PaymentLinkImpl.class);
-		// configuration.addAnnotatedClass(paymentgateway.payment.flipimpl.PaymentLinkImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.disbursement.international.InternationalImpl.class);
 //		configuration.addAnnotatedClass(paymentgateway.disbursement.internationaltransfer.InternationalTransferImpl.class);
-//		configuration.addAnnotatedClass(paymentgateway.disbursement.scheduledtransfer.ScheduledTransferImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.disbursement.approvalsystem.ApprovalSystemImpl.class);
+
+		// configuration.addAnnotatedClass(paymentgateway.disbursement.approvalsystem.ApprovalSystemImpl.class);
 
 		configuration.addAnnotatedClass(prices.auth.vmj.model.core.Role.class);
 		configuration.addAnnotatedClass(prices.auth.vmj.model.core.RoleComponent.class);
@@ -79,6 +78,18 @@ public class Flip {
 
 	public static void createObjectsAndBindEndPoints() {
 		LOGGER.info("== CREATING OBJECTS AND BINDING ENDPOINTS ==");
+
+		PaymentResource payment = PaymentResourceFactory
+				.createPaymentResource(
+					"paymentgateway.payment.core.PaymentResourceImpl");
+
+		PaymentResource paymentlink = PaymentResourceFactory
+				.createPaymentResource(
+					"paymentgateway.payment.paymentlink.PaymentResourceImpl",
+					PaymentResourceFactory.createPaymentResource(
+						"paymentgateway.payment.core.PaymentResourceImpl"
+					));
+
 		DisbursementResource disbursement = DisbursementResourceFactory
 				.createDisbursementResource(
 						"paymentgateway.disbursement.core.DisbursementResourceImpl");
@@ -99,10 +110,10 @@ public class Flip {
 						"paymentgateway.disbursement.agentmoneytransfer.AgentMoneyTransferResourceImpl",
 						moneytransfer);
 
-		DisbursementResource approvaltransfer = DisbursementResourceFactory
-				.createDisbursementResource(
-						"paymentgateway.disbursement.approvalsystem.ApprovalSystemResourceImpl",
-						moneytransfer);
+		// DisbursementResource approvaltransfer = DisbursementResourceFactory
+		// 		.createDisbursementResource(
+		// 				"paymentgateway.disbursement.approvalsystem.ApprovalSystemResourceImpl",
+		// 				moneytransfer);
 
 		DisbursementResource internationalmoneytransfer = DisbursementResourceFactory
 				.createDisbursementResource(
@@ -138,14 +149,20 @@ public class Flip {
 		LOGGER.info("Binding InternationalMoneyTransfer endpoints");
 		Router.route(internationalmoneytransfer);
 
+		LOGGER.info("Binding Payment endpoints");
+		Router.route(payment);
+
+		LOGGER.info("Binding PaymentLink endpoints");
+		Router.route(paymentlink);
+
 //		System.out.println("multiplemoneytransfer endpoints binding");
 //		Router.route(multipletransfer);
 
 //		System.out.println("scheduledtransfer endpoints binding");
 //		Router.route(scheduledtransfer);
 //
-		System.out.println("approvaltransfer endpoints binding");
-		Router.route(approvaltransfer);
+		// System.out.println("approvaltransfer endpoints binding");
+		// Router.route(approvaltransfer);
 
 		LOGGER.info("Binding Disbursement endpoints");
 		Router.route(disbursement);

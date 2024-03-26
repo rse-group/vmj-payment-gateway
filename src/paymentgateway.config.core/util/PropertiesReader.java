@@ -139,13 +139,13 @@ public class PropertiesReader {
     //     return this.getEnvThenProp(Constants.FLIP_INTERNATIONAL_MONEY_TRANSFER_ENV, Constants.FLIP_INTERNATIONAL_MONEY_TRANSFER_PROP);
     // }
 
-    public String getFlipInvoice(){
-        return this.getEnvThenProp(Constants.FLIP_ACCEPT_PAYMENT_ENV, Constants.FLIP_ACCEPT_PAYMENT_PROP);
-    }
+    // public String getFlipInvoice(){
+    //     return this.getEnvThenProp(Constants.FLIP_ACCEPT_PAYMENT_ENV, Constants.FLIP_ACCEPT_PAYMENT_PROP);
+    // }
 
-    public String getFlipPaymentLink(){
-        return this.getEnvThenProp(Constants.FLIP_ACCEPT_PAYMENT_ENV, Constants.FLIP_ACCEPT_PAYMENT_PROP);
-    }
+    // public String getFlipPaymentLink(){
+    //     return this.getEnvThenProp(Constants.FLIP_ACCEPT_PAYMENT_ENV, Constants.FLIP_ACCEPT_PAYMENT_PROP);
+    // }
 
 
     // public HashMap<String, String> getMidtransHeaderParams() {
