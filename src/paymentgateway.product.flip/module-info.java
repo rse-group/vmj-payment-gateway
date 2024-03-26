@@ -26,6 +26,8 @@ module paymentgateway.product.flip {
     requires paymentgateway.payment.core;
     // requires paymentgateway.payment.invoice;
     requires paymentgateway.payment.paymentlink;
+    requires paymentgateway.disbursement.aggregator;
+    requires paymentgateway.disbursement.facilitator;
 	
 	requires prices.auth.vmj;
     requires prices.auth.vmj.model;

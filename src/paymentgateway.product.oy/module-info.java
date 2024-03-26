@@ -10,6 +10,7 @@ module paymentgateway.product.oy {
 
     requires paymentgateway.config.core;
     requires paymentgateway.config.oy;
+    requires paymentgateway.config.midtrans;
 
     requires paymentgateway.payment.core;
     requires paymentgateway.payment.invoice;
