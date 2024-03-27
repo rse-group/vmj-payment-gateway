@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
+import vmj.routing.route.exceptions.*;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -30,68 +31,64 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
     	super(record);
     }
 
-	public Payment createPayment(VMJExchange vmjExchange, String productName, String serviceName) {
-		DebitCardResponse response = sendTransaction(vmjExchange, productName, serviceName);
-		String bankCode = (String) vmjExchange.getRequestBodyForm("payment_type");
-		int id = response.getId();
-		String directDebitUrl = response.getRedirect_url();
-		Payment transaction = record.createPayment(vmjExchange, id, productName);
+	public Payment createPayment(VMJExchange vmjExchange) {
+		Map<String, Object> response = sendTransaction(vmjExchange);
+
+		String bankCode = (String) response.get("payment_type");
+		int id = (int) response.get("id");
+		String directDebitUrl = (String) response.get("redirect_url");
+
+		Payment transaction = record.createPayment(vmjExchange, id);
 
 		Payment directDebitTransaction = 
 				PaymentFactory.createPayment(
-						"paymentgateway.payment.debitcard.PaymentImpl",
-						transaction,
-						bankCode,
-						directDebitUrl
-						);
+					"paymentgateway.payment.debitcard.PaymentImpl",
+					transaction,
+					bankCode,
+					directDebitUrl
+				);
 		PaymentRepository.saveObject(directDebitTransaction);
 		return directDebitTransaction;
 	}
 	
-	protected DebitCardResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName) {
+	protected Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
 		Gson gson = new Gson();
 
-		Config config = ConfigFactory
-				.createConfig(
-						"paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration"
-						,
-						ConfigFactory.createConfig(
-								"paymentgateway.config.core.ConfigImpl"));
+		Config config = ConfigFactory.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
-		Map<String, Object> requestMap = config.processRequestMap(vmjExchange,productName,serviceName);
+		Map<String, Object> requestMap = config.getDebitCardRequestBody(vmjExchange);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String requestString = gson.toJson(requestMap);
-		String configUrl = config.getProductEnv(productName, serviceName);
-		HashMap<String, String> headerParams = config.getHeaderParams(productName);
+		String configUrl = config.getProductEnv("DebitCard");
+		HashMap<String, String> headerParams = config.getHeaderParams();
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
 				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
 
-		DebitCardResponse responseObj = null;
+		Map<String, Object> responseMap = new HashMap<>();;
 		
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			System.out.println(rawResponse);
-			responseObj = gson.fromJson(rawResponse, DebitCardResponse.class);
+			System.out.println("rawResponse " + rawResponse);
+			responseMap = config.getDebitCardResponse(rawResponse, id);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		responseObj.setId(id);
-		return responseObj;
+		return responseMap;
 	}
 
 	
 	@Route(url="call/debitcard")
 	public HashMap<String,Object> testDebitCard(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("OPTIONS")) return null;
-
-		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
-		Payment result = this.createPayment(vmjExchange, productName, "DebitCard");
-		return result.toHashMap();
+		if (vmjExchange.getHttpMethod().equals("POST")){
+			Payment result = this.createPayment(vmjExchange);
+			return result.toHashMap();
+		}
+		throw new NotFoundException("Route tidak ditemukan");
 	}
 }
 

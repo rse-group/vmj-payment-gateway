@@ -1,6 +1,7 @@
 module paymentgateway.payment.core {
 	exports paymentgateway.payment;
     exports paymentgateway.payment.core;
+	requires paymentgateway.config.core;
 	requires vmj.routing.route;
 	requires vmj.hibernate.integrator;
 	requires prices.auth.vmj;

@@ -2,9 +2,15 @@ package paymentgateway.config.midtrans;
 
 import paymentgateway.config.core.ConfigDecorator;
 import paymentgateway.config.core.ConfigComponent;
+import paymentgateway.config.core.PropertiesReader;
+
 import java.util.*;
+import java.lang.reflect.Type;
 
 import vmj.routing.route.VMJExchange;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class MidtransConfiguration extends ConfigDecorator{
 
@@ -12,8 +18,13 @@ public class MidtransConfiguration extends ConfigDecorator{
         super(record);
     }
 
+    @Override
+    public String getProductName(){
+        return "Midtrans";
+    }
 
-    public Map<String, Object> getMidtransPaymentLinkRequestBody(VMJExchange vmjExchange){
+    @Override
+    public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> customer_details = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
@@ -40,7 +51,8 @@ public class MidtransConfiguration extends ConfigDecorator{
         return requestMap;
     }
 
-    public Map<String, Object> getMidtransRetailOutletRequestBody(VMJExchange vmjExchange){
+    @Override
+    public Map<String, Object> getRetailOutletRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> cstore = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
@@ -62,7 +74,8 @@ public class MidtransConfiguration extends ConfigDecorator{
         return requestMap;
     }
 
-    public Map<String, Object> getMidtransVirtualAccountRequestBody(VMJExchange vmjExchange){
+    @Override
+    public Map<String, Object> getVirtualAccountRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> bank_transfer = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
@@ -84,7 +97,8 @@ public class MidtransConfiguration extends ConfigDecorator{
         return requestMap;
     }
 
-    public Map<String, Object> getMidtransEWalletRequestBody(VMJExchange vmjExchange){
+    @Override
+    public Map<String, Object> getEWalletRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> customer_details = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
@@ -107,7 +121,8 @@ public class MidtransConfiguration extends ConfigDecorator{
         return requestMap;
     }
 
-    public Map<String, Object> getMidtransDebitCardRequestBody(VMJExchange vmjExchange){
+    @Override
+    public Map<String, Object> getDebitCardRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> item_details = new HashMap<>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
@@ -131,7 +146,8 @@ public class MidtransConfiguration extends ConfigDecorator{
         return requestMap;
     }
 
-    public Map<String, Object> getMidtransCreditCardRequestBody(VMJExchange vmjExchange){
+    @Override
+    public Map<String, Object> getCreditCardRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> credit_card = new HashMap<>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
@@ -159,5 +175,116 @@ public class MidtransConfiguration extends ConfigDecorator{
         int id = generateId();
         double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
         return requestMap;
+    }
+    
+    @Override
+    public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String url = (String) rawResponseMap.get("payment_url");
+        response.put("url", url);
+        response.put("id", id);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getDebitCardResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String url = (String) rawResponseMap.get("redirect_url");
+        String paymentType = (String) rawResponseMap.get("payment_type");
+        response.put("payment_type", paymentType);
+        response.put("redirect_url", url);
+        response.put("id", id);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getCreditCardResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String url = (String) rawResponseMap.get("redirect_url");
+        response.put("redirect_url", url);
+        response.put("id", id);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getRetailOutletResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String retailPaymentCode = (String) rawResponseMap.get("payment_code");
+        response.put("retail_payment_code", retailPaymentCode);
+        response.put("id", id);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getEWalletResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String paymentType = (String) rawResponseMap.get("payment_type");
+        List<Map<String, Object>> actions = (List<Map<String, Object>>) rawResponseMap.get("actions");
+        String url = (String) actions.get(0).get("url");
+
+        response.put("payment_type", paymentType);
+        response.put("url", url);
+        response.put("id", id);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String vaNumber = (String) rawResponseMap.get("permata_va_number");
+        if (vaNumber == null) {
+            List<Map<String, Object>> vaNums = (List<Map<String, Object>>) rawResponseMap.get("va_numbers");
+            vaNumber = (String) vaNums.get(0).get("va_number");
+        }
+        response.put("va_number", vaNumber);
+        response.put("id", id);
+        return response;
+    }
+
+    @Override
+    public String getProductEnv(String serviceName){
+        String url = "";
+        String baseUrl = (String) PropertiesReader.getProp("base_url");
+        String apiEndpoint = "";
+        if (serviceName.equals("PaymentLink")){
+            apiEndpoint = (String) PropertiesReader.getProp("paymentlink");
+        } else {
+            apiEndpoint = (String) PropertiesReader.getProp("apiendpoint");
+        }
+        
+        url = baseUrl + apiEndpoint;
+        System.out.println("url: " + url);
+
+        return url;
+    }
+
+    @Override
+    public HashMap<String, String> getHeaderParams() {
+        HashMap<String, String> headerParams = new HashMap<>();
+        String contentType = PropertiesReader.getProp("content_type");
+        String accept = PropertiesReader.getProp("accept");
+        String auth = PropertiesReader.getProp("authorization");
+        headerParams.put("authorization",auth);
+        headerParams.put("content-type",contentType);
+        headerParams.put("accept", accept);
+        return headerParams;
     }
 }

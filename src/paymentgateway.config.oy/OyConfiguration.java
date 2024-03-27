@@ -2,14 +2,25 @@ package paymentgateway.config.oy;
 
 import paymentgateway.config.core.ConfigDecorator;
 import paymentgateway.config.core.ConfigComponent;
+import paymentgateway.config.core.PropertiesReader;
+
 import java.util.*;
+import java.lang.reflect.*;
 
 import vmj.routing.route.VMJExchange;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class OyConfiguration extends ConfigDecorator{
 
     public OyConfiguration(ConfigComponent record) {
         super(record);
+    }
+
+    @Override
+    public String getProductName(){
+        return "Oy";
     }
 
     public Map<String, String> getOyBankCode(){
@@ -30,7 +41,8 @@ public class OyConfiguration extends ConfigDecorator{
         return bankCodes;
     }
 
-    public Map<String, Object> getOyPaymentLinkRequestBody(VMJExchange vmjExchange){
+    @Override
+    public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
 
         int id = generateId();
@@ -45,7 +57,8 @@ public class OyConfiguration extends ConfigDecorator{
         return requestMap;
     }
 
-    public Map<String, Object> getOyRetailOutletRequestBody(VMJExchange vmjExchange){
+    @Override
+    public Map<String, Object> getRetailOutletRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
 
 
@@ -63,7 +76,8 @@ public class OyConfiguration extends ConfigDecorator{
         return requestMap;
     }
 
-    public Map<String, Object> getOyVirtualAccountRequestBody(VMJExchange vmjExchange){
+    @Override
+    public Map<String, Object> getVirtualAccountRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
 
 
@@ -79,7 +93,8 @@ public class OyConfiguration extends ConfigDecorator{
         return requestMap;
     }
 
-    public Map<String, Object> getOyEWalletRequestBody(VMJExchange vmjExchange){
+    @Override
+    public Map<String, Object> getEWalletRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
 
 
@@ -99,7 +114,8 @@ public class OyConfiguration extends ConfigDecorator{
         return requestMap;
     }
 
-    public Map<String, Object> getOyInvoiceRequestBody(VMJExchange vmjExchange){
+    @Override
+    public Map<String, Object> getInvoiceRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
 
         int id = generateId();
@@ -115,7 +131,8 @@ public class OyConfiguration extends ConfigDecorator{
         return requestMap;
     }
 
-    public Map<String, Object> getOyPaymentRoutingRequestBody(VMJExchange vmjExchange){
+    @Override
+    public Map<String, Object> getPaymentRoutingRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
 
         int id = generateId();
@@ -134,5 +151,92 @@ public class OyConfiguration extends ConfigDecorator{
 
         requestMap.put("id",id);
         return requestMap;
+    }
+
+    @Override
+    public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String url = (String) rawResponseMap.get("url");
+        response.put("url", url);
+        response.put("id", id);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getInvoiceResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String transactionToken = (String) rawResponseMap.get("payment_link_id");
+        response.put("transaction_token", transactionToken);
+        response.put("id", id);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getPaymentRoutingResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        Map<String, Object> paymentMap = (Map<String, Object>) rawResponseMap.get("payment_info");
+        String url = (String) paymentMap.get("payment_checkout_url");
+        response.put("payment_checkout_url", url);
+        response.put("id", id);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getRetailOutletResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String retailPaymentCode = (String) rawResponseMap.get("code");
+        response.put("retail_payment_code", retailPaymentCode);
+        response.put("id", id);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getEWalletResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String paymentType = (String) rawResponseMap.get("ewallet_code");
+        String url = (String) rawResponseMap.get("ewallet_url");
+        response.put("payment_type", paymentType);
+        response.put("url", url);
+        response.put("id", id);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String vaNumber = (String) rawResponseMap.get("va_number");
+        response.put("va_number", vaNumber);
+        response.put("id", id);
+        return response;
+    }
+
+    @Override
+    public HashMap<String, String> getHeaderParams() {
+        HashMap<String, String> headerParams = new HashMap<>();
+        String contentType = PropertiesReader.getProp("content_type");
+        String username = PropertiesReader.getProp("api_username");
+        String apikey = PropertiesReader.getProp("authorization");
+        headerParams.put("x-oy-username",username);
+        headerParams.put("content-type",contentType);
+        headerParams.put("x-api-key", apikey);
+        return headerParams;
     }
 }

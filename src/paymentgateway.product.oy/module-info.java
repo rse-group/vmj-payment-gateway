@@ -10,7 +10,10 @@ module paymentgateway.product.oy {
 
     requires paymentgateway.config.core;
     requires paymentgateway.config.oy;
+<<<<<<< HEAD
     requires paymentgateway.config.midtrans;
+=======
+>>>>>>> serima/dev
 
     requires paymentgateway.payment.core;
     requires paymentgateway.payment.invoice;

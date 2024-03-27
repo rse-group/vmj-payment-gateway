@@ -12,8 +12,8 @@ public interface DisbursementResource {
     HashMap<String, Object> updateDisbursement(VMJExchange vmjExchange);
     List<HashMap<String,Object>> transformListToHashMap(List<Disbursement> List);
     GetAllDisbursementResponse getAllDataFromAPI(String name);
-    MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String productName, String serviceName);
-    String getParamsUrlEncoded(VMJExchange vmjExchange);
+    MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String serviceName);
+    String getParamsUrlEncoded(Map<String, Object> vmjExchange);
     HashMap<String, Object> getDisbursementById(int id);
 
 }
