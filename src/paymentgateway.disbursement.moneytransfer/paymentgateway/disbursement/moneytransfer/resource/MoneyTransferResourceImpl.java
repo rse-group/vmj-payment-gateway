@@ -39,6 +39,19 @@ public class MoneyTransferResourceImpl extends DisbursementResourceDecorator {
 		this.moneyTransferRepository = new RepositoryUtil<MoneyTransferImpl>(paymentgateway.disbursement.moneytransfer.MoneyTransferImpl.class);
 	}
 
+<<<<<<< HEAD
+	public Disbursement createDisbursement(VMJExchange vmjExchange, String productName, String serviceName) {
+		System.out.println("1-Bram");
+		System.out.println("+++Bram++++++");
+//		TODO: Add exception untuk deteksi credential flip, cek response
+		MoneyTransferResponse response = record.sendTransaction(vmjExchange, productName, serviceName);
+		System.out.println(response);
+		System.out.println("2");
+		int id = response.getId();
+		int userId = response.getUser_id();
+		String status = response.getStatus();
+		System.out.println("status: " + status);
+=======
 	public Disbursement createDisbursement(VMJExchange vmjExchange) {
 		Map<String, Object> response = sendTransaction(vmjExchange);
 
@@ -47,6 +60,7 @@ public class MoneyTransferResourceImpl extends DisbursementResourceDecorator {
 		String status = (String) response.get("status");
 
 		LOGGER.info("Response Status: " + status);
+>>>>>>> serima/dev
 		Disbursement transaction = record.createDisbursement(vmjExchange,id,userId);
 		Disbursement moneyTransferTransaction = DisbursementFactory.createDisbursement(
 				"paymentgateway.disbursement.moneytransfer.MoneyTransferImpl",

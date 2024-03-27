@@ -40,6 +40,25 @@ public class SpecialMoneyTransferResourceImpl extends SpecialResourceImpl {
 		super(record);
 	}
 
+<<<<<<< HEAD
+	public Disbursement createDisbursement(VMJExchange vmjExchange, String productName, String serviceName) {
+		MoneyTransferResponse response = super.sendTransaction(vmjExchange,productName, serviceName);
+		String status = response.getStatus();
+		
+		Gson gson = new Gson();
+		String jsonResponse = gson.toJson(response);
+		
+		System.out.println("----- Response ----- Special -----");
+		System.out.println(jsonResponse);
+		
+		int id = response.getId();
+		int userId = response.getUser_id();
+		int sender_country = response.getSender().getSender_country();
+		String sender_name = response.getSender().getSender_name();
+		String sender_address = response.getSender().getSender_address();
+		String sender_job = response.getSender().getSender_job();
+		String direction = response.getDirection();
+=======
 	public Disbursement createDisbursement(VMJExchange vmjExchange) {
 		Map<String, Object> response = sendTransaction(vmjExchange);
 
@@ -52,6 +71,7 @@ public class SpecialMoneyTransferResourceImpl extends SpecialResourceImpl {
 		String sender_address = (String) response.get("address");
 		String sender_job = (String) response.get("job");
 		String direction = (String) response.get("direction");
+>>>>>>> serima/dev
 
 		Disbursement transaction = record.createDisbursement(vmjExchange,id,userId);
 		Disbursement moneyTransferTransaction = DisbursementFactory.createDisbursement(

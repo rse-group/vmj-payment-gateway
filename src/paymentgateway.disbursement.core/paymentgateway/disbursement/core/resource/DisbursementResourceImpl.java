@@ -71,8 +71,18 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
+<<<<<<< HEAD
+			int statusCode = response.statusCode();
+			if(statusCode != 200) {
+				throw new Exception("Request Failed with status code: "+ statusCode);
+			}
+			System.out.println("rawResponse:" + rawResponse);
+			responseObj = gson.fromJson(rawResponse,
+					MoneyTransferResponse.class);
+=======
 			LOGGER.info("rawResponse:" + rawResponse);
 			responseObj = gson.fromJson(rawResponse, MoneyTransferResponse.class);
+>>>>>>> serima/dev
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

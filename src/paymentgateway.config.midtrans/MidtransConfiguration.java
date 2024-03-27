@@ -169,6 +169,14 @@ public class MidtransConfiguration extends ConfigDecorator{
         return requestMap;
     }
 
+    public Map<String, Object> getMidtransPayoutRequestBody(VMJExchange vmjExchange){
+        Map<String, Object> requestMap = new HashMap<>();
+
+        int id = generateId();
+        double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
+        return requestMap;
+    }
+    
     @Override
     public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
         Map<String, Object> response = new HashMap<>();
@@ -278,13 +286,5 @@ public class MidtransConfiguration extends ConfigDecorator{
         headerParams.put("content-type",contentType);
         headerParams.put("accept", accept);
         return headerParams;
-    }
-
-    public Map<String, Object> getMidtransPayoutRequestBody(VMJExchange vmjExchange){
-        Map<String, Object> requestMap = new HashMap<>();
-
-        int id = generateId();
-        double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
-        return requestMap;
     }
 }
