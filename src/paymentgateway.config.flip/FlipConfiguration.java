@@ -3,6 +3,8 @@ package paymentgateway.config.flip;
 import paymentgateway.config.core.ConfigDecorator;
 import paymentgateway.config.core.ConfigComponent;
 import paymentgateway.config.core.PropertiesReader;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -237,18 +239,16 @@ public class FlipConfiguration extends ConfigDecorator{
         return response;
     }
 
-    public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
+    @Override
+    public Map<String, Object> getVirtualAccountRequestBody(VMJExchange vmjExchange){
         int id = generateId();
-
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) vmjExchange.getRequestBodyForm("title");
         String type = (String) vmjExchange.getRequestBodyForm("type");
         int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
         String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
         String senderEmail = (String) vmjExchange.getRequestBodyForm("sender_email");
-        String senderBank = (String) vmjExchange.getRequestBodyForm("sender_bank");
-        String senderBankType = (String) vmjExchange.getRequestBodyForm("sender_bank_type");
-        
+        String senderBank = (String) vmjExchange.getRequestBodyForm("bank");
 
         requestMap.put("id",id);
         requestMap.put("title", title);
@@ -257,8 +257,93 @@ public class FlipConfiguration extends ConfigDecorator{
         requestMap.put("sender_name",senderName);
         requestMap.put("sender_email",senderEmail);
         requestMap.put("sender_bank",senderBank);
-        requestMap.put("sender_bank_type",senderBankType);
-        requestMap.put("step", 3);
+        requestMap.put("sender_bank_type",SenderBankType.VIRTUALACCOUNT.getValue());
+        requestMap.put("step", PaymentFlow.THIRD.getValue());
+
+        return requestMap;
+    }
+
+    @Override
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String va_number = (String) rawResponseMap.get("account_number");
+        // Map<String, Object> billPayment = (Map<String, Object>) rawResponseMap.get("bill_payment");
+        // Map<String, Object> receiverBankAccount = (Map<String, Object>) billPayment.get("receiver_bank_account");
+        // String bankCode = (String) receiverBankAccount.get("bank_code");
+
+        response.put("va_number",va_number);
+        response.put("id", id);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getEWalletRequestBody(VMJExchange vmjExchange){
+        int id = generateId();
+        Map<String, Object> requestMap = new HashMap<>();
+        String title = (String) vmjExchange.getRequestBodyForm("title");
+        String type = (String) vmjExchange.getRequestBodyForm("type");
+        int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
+        String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
+        String senderEmail = (String) vmjExchange.getRequestBodyForm("sender_email");
+        String senderBank = (String) vmjExchange.getRequestBodyForm("payment_type");
+        String senderPhoneNumber = (String) vmjExchange.getRequestBodyForm("phone_number");
+
+        requestMap.put("id",id);
+        requestMap.put("title", title);
+        requestMap.put("type", type);
+        requestMap.put("amount",amount);
+        requestMap.put("sender_name",senderName);
+        requestMap.put("sender_email",senderEmail);
+        requestMap.put("sender_bank",senderBank);
+        requestMap.put("is_phone_number_required",PhoneNumberRequired.TRUE.getValue());
+        requestMap.put("sender_phone_number", senderPhoneNumber);
+        requestMap.put("sender_bank_type",SenderBankType.EWALLET.getValue());
+        requestMap.put("step", PaymentFlow.THIRD.getValue());
+
+        return requestMap;
+    }
+
+    	// String url = (String) response.get("url");
+		// String type = (String) response.get("payment_type");
+		// int id = (int) response.get("id");
+
+		// String phoneNumber = (String) vmjExchange.getRequestBodyForm("phone_number");
+
+    @Override
+    public Map<String, Object> getEWalletResponse(String rawResponse, int id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String url = (String) rawResponseMap.get("payment_url");
+        String paymentType = (String) rawResponseMap.get("bank_code");
+        String phoneNumber = (String) rawResponseMap.get("user_phone");
+        response.put("phone_number",phoneNumber);
+        response.put("url", url);
+        response.put("payment_type",paymentType);
+        response.put("id", id);
+        return response;
+    }
+
+
+    @Override
+    public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
+        int id = generateId();
+        Map<String, Object> requestMap = new HashMap<>();
+        String title = (String) vmjExchange.getRequestBodyForm("title");
+        String type = (String) vmjExchange.getRequestBodyForm("type");
+        int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
+        String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
+        
+        requestMap.put("id",id);
+        requestMap.put("title", title);
+        requestMap.put("type", type);
+        requestMap.put("sender_name", senderName);
+        requestMap.put("amount",amount);
+        requestMap.put("step", PaymentFlow.FIRST.getValue() );
 
         return requestMap;
     }
@@ -269,7 +354,7 @@ public class FlipConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
-        String url = (String) rawResponseMap.get("payment_url");
+        String url = (String) rawResponseMap.get("link_url");
         response.put("url", url);
         response.put("id", id);
         return response;
