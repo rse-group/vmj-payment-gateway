@@ -26,9 +26,9 @@ public interface Config {
 
     // Disbursement Request
     Map<String, Object> getMoneyTransferRequestBody(VMJExchange vmjExchange);
-    Map<String, Object> getSpecialMoneyTransferRequestBody(VMJExchange vmjExchange);
+    Map<String, Object> getFacilitatorMoneyTransferRequestBody(VMJExchange vmjExchange);
     Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange);
-    Map<String, Object> getAgentMoneyTransferRequestBody(VMJExchange vmjExchange);
+    Map<String, Object> getAggregatorMoneyTransferRequestBody(VMJExchange vmjExchange);
 
     // Payment Request
     Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange);
@@ -52,7 +52,7 @@ public interface Config {
 
     // Disbursement Response
     Map<String, Object> getMoneyTransferResponse(String rawResponse);
-    Map<String, Object> getSpecialMoneyTransferResponse(String rawResponse);
+    Map<String, Object> getFacilitatorMoneyTransferResponse(String rawResponse);
     Map<String, Object> getInternationalMoneyTransferResponse(String rawResponse);
-    Map<String, Object> getAgentMoneyTransferResponse(String rawResponse);
+    Map<String, Object> getAggregatorMoneyTransferResponse(String rawResponse);
 }

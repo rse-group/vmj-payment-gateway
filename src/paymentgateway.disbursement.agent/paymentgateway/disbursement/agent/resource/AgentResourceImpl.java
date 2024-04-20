@@ -22,8 +22,6 @@ import paymentgateway.disbursement.core.Disbursement;
 import paymentgateway.disbursement.core.DisbursementResourceDecorator;
 import paymentgateway.disbursement.core.DisbursementImpl;
 import paymentgateway.disbursement.core.DisbursementResourceComponent;
-import paymentgateway.disbursement.core.MoneyTransferResponse;
-import paymentgateway.disbursement.core.Sender;
 
 
 public class AgentResourceImpl extends DisbursementResourceDecorator {
@@ -32,36 +30,36 @@ public class AgentResourceImpl extends DisbursementResourceDecorator {
 		super(record);
 	}
 
-	protected MoneyTransferResponse sendTransaction(VMJExchange vmjExchange) {
-
-		Gson gson = new Gson();
-		Map<String, Object> requestMap = new HashMap<String, Object>();
-
-		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder()
-				.header("Content-Type", "application/x-www-form-urlencoded")
-				.header("idempotency-key", UUID.randomUUID().toString())
-				.header("X-TIMESTAMP","")
-				.header("Authorization",
-						"Basic SkRKNUpERXpKR3A0YlU5WVppNU9kRGRuU0VoU2JYbFBibXhEVVM1VVJGaHRTM0pEZFZwc2NWVTFMemgxUldwSVVqVldielpMYkhOMkwybDE=")
-				.header("Cookie", "_csrf=I_hH_U80Wpc07Yx-pV_HBDI4KO64F3ES")
-				.uri(URI.create("https://bigflip.id/big_sandbox_api/v2/agent-disbursements"))
-				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(vmjExchange)))
-				.build();
-
-		MoneyTransferResponse responseObj = null;
-
-		try {
-			 HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			 String rawResponse = response.body().toString();
-			 responseObj = gson.fromJson(rawResponse,
-			 MoneyTransferResponse.class);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-
-		return responseObj;
-	}
+//	protected MoneyTransferResponse sendTransaction(VMJExchange vmjExchange) {
+//
+//		Gson gson = new Gson();
+//		Map<String, Object> requestMap = new HashMap<String, Object>();
+//
+//		HttpClient client = HttpClient.newHttpClient();
+//		HttpRequest request = HttpRequest.newBuilder()
+//				.header("Content-Type", "application/x-www-form-urlencoded")
+//				.header("idempotency-key", UUID.randomUUID().toString())
+//				.header("X-TIMESTAMP","")
+//				.header("Authorization",
+//						"Basic SkRKNUpERXpKR3A0YlU5WVppNU9kRGRuU0VoU2JYbFBibXhEVVM1VVJGaHRTM0pEZFZwc2NWVTFMemgxUldwSVVqVldielpMYkhOMkwybDE=")
+//				.header("Cookie", "_csrf=I_hH_U80Wpc07Yx-pV_HBDI4KO64F3ES")
+//				.uri(URI.create("https://bigflip.id/big_sandbox_api/v2/agent-disbursements"))
+//				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(vmjExchange)))
+//				.build();
+//
+//		MoneyTransferResponse responseObj = null;
+//
+//		try {
+//			 HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+//			 String rawResponse = response.body().toString();
+//			 responseObj = gson.fromJson(rawResponse,
+//			 MoneyTransferResponse.class);
+//		} catch (Exception e) {
+//			System.out.println(e);
+//		}
+//
+//		return responseObj;
+//	}
 //
 //	private static String getParamsUrlEncoded(VMJExchange vmjExchange) {
 //		ArrayList<String> paramList = new ArrayList<>();

@@ -12,7 +12,6 @@ import paymentgateway.disbursement.DisbursementResourceFactory;
 import paymentgateway.disbursement.core.DisbursementResource;
 import paymentgateway.payment.PaymentResourceFactory;
 import paymentgateway.payment.core.PaymentResource;
-// import paymentgateway.payment.invoice.PaymentImpl;
 import paymentgateway.payment.paymentlink.PaymentLinkImpl;
 
 import prices.auth.vmj.model.UserResourceFactory;
@@ -47,9 +46,10 @@ public class Flip {
 		configuration.addAnnotatedClass(paymentgateway.disbursement.core.DisbursementDecorator.class);
 		configuration.addAnnotatedClass(paymentgateway.disbursement.core.DisbursementImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.disbursement.moneytransfer.MoneyTransferImpl.class);
-		// configuration.addAnnotatedClass(paymentgateway.disbursement.special.SpecialImpl.class);
-		// configuration.addAnnotatedClass(paymentgateway.disbursement.agent.AgentImpl.class);
-//		configuration.addAnnotatedClass(paymentgateway.disbursement.aggregator);
+		configuration.addAnnotatedClass(paymentgateway.disbursement.special.SpecialImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.disbursement.agent.AgentImpl.class);
+		// configuration.addAnnotatedClass(paymentgateway.disbursement.aggregatormoneytransfer.class);
+		// configuration.addAnnotatedClass(paymentgateway.disbursement.facilitatormoneytransfer.class);
 //		configuration.addAnnotatedClass(paymentgateway.disbursement.scheduled.ScheduledImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.Payment.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentComponent.class);
@@ -133,37 +133,21 @@ public class Flip {
 						"paymentgateway.disbursement.moneytransfer.MoneyTransferResourceImpl",
 						DisbursementResourceFactory.createDisbursementResource(
 								"paymentgateway.disbursement.core.DisbursementResourceImpl"));
-
-		// DisbursementResource specialmoneytransfer = DisbursementResourceFactory
-		// 		.createDisbursementResource(
-		// 				"paymentgateway.disbursement.specialmoneytransfer.SpecialMoneyTransferResourceImpl",
-		// 				moneytransfer);
-
-		// DisbursementResource agentmoneytransfer = DisbursementResourceFactory
-		// 		.createDisbursementResource(
-		// 				"paymentgateway.disbursement.agentmoneytransfer.AgentMoneyTransferResourceImpl",
-		// 				moneytransfer);
 		
-		// DisbursementResource aggregator = DisbursementResourceFactory
-		// 		.createDisbursementResource(
-		// 				"paymentgateway.disbursement.aggregator.AggregatorResourceImpl",
-		// 				moneytransfer);
+		DisbursementResource aggregator = DisbursementResourceFactory
+				.createDisbursementResource(
+						"paymentgateway.disbursement.aggregatormoneytransfer.AggregatorMoneyTransferResourceImpl",
+						moneytransfer);
 
-		// DisbursementResource facilitator = DisbursementResourceFactory
-		// 		.createDisbursementResource(
-		// 				"paymentgateway.disbursement.facilitator.FacilitatorResourceImpl",
-		// 				moneytransfer);
-		
+		DisbursementResource facilitator = DisbursementResourceFactory
+				.createDisbursementResource(
+						"paymentgateway.disbursement.facilitatormoneytransfer.FacilitatorMoneyTransferResourceImpl",
+						moneytransfer);
 
-		// DisbursementResource approvaltransfer = DisbursementResourceFactory
-		// 		.createDisbursementResource(
-		// 				"paymentgateway.disbursement.approvalsystem.ApprovalSystemResourceImpl",
-		// 				moneytransfer);
-
-		// DisbursementResource internationalmoneytransfer = DisbursementResourceFactory
-		// 		.createDisbursementResource(
-		// 				"paymentgateway.disbursement.internationalmoneytransfer.InternationalMoneyTransferResourceImpl",
-		// 				moneytransfer);
+		DisbursementResource internationalmoneytransfer = DisbursementResourceFactory
+				.createDisbursementResource(
+						"paymentgateway.disbursement.internationalmoneytransfer.InternationalMoneyTransferResourceImpl",
+						moneytransfer);
 
 		
 
@@ -185,20 +169,14 @@ public class Flip {
 		LOGGER.info("Binding MoneyTransfer endpoints");
 		Router.route(moneytransfer);
 
-		// LOGGER.info("Binding SpecialMoneyTransfer endpoints");
-		// Router.route(specialmoneytransfer);
-
-		// LOGGER.info("Binding AgentMoneyTransfer endpoints");
-		// Router.route(agentmoneytransfer);
-
-		// LOGGER.info("Binding InternationalMoneyTransfer endpoints");
-		// Router.route(internationalmoneytransfer);
+		LOGGER.info("Binding InternationalMoneyTransfer endpoints");
+		Router.route(internationalmoneytransfer);
 		
-		// System.out.println("Aggregator endpoints binding");
-		// Router.route(aggregator);
+		System.out.println("Aggregator endpoints binding");
+		Router.route(aggregator);
 		
-		// System.out.println("Facilitator endpoints binding");
-		// Router.route(facilitator);
+		System.out.println("Facilitator endpoints binding");
+		Router.route(facilitator);
 
 		LOGGER.info("Binding Payment endpoints");
 		Router.route(payment);

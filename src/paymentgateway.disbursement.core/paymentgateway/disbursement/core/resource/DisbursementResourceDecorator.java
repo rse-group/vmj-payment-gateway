@@ -30,10 +30,7 @@ public abstract class DisbursementResourceDecorator extends DisbursementResource
     public HashMap<String, Object> updateDisbursement(VMJExchange vmjExchange){
         return record.updateDisbursement(vmjExchange);
     }
-    public GetAllDisbursementResponse getAllDataFromAPI(String name){
-        return record.getAllDataFromAPI(name);
-    }
-    public MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String serviceName){
+    public HashMap<String, Object> sendTransaction(VMJExchange vmjExchange, String serviceName){
         return record.sendTransaction(vmjExchange, serviceName);
     }
 

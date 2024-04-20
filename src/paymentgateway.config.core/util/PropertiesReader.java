@@ -10,6 +10,7 @@ public class PropertiesReader {
     private static String fileName = Constants.DEFAULT_PRODUCT_FILE;
 
     private static Properties loadProperties() {
+        //nambah argumen disini
         FileInputStream input = null;
         Properties prop = new Properties();
 
