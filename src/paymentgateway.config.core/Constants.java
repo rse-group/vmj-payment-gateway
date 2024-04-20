@@ -61,12 +61,14 @@ public class Constants {
     public static final String FLIP_SPECIAL_MONEY_TRANSFER_PROP = "flip_special_money_transfer";
     public static final String FLIP_AGENT_MONEY_TRANSFER_PROP = "flip_agent_money_transfer";
     public static final String FLIP_INTERNATIONAL_MONEY_TRANSFER_PROP = "flip_international_money_transfer";
+    public static final String FLIP_ACCEPT_PAYMENT_PROP = "flip_accept_payment";
 
     public static final String FLIP_BASE_URL_TEST_ENV = "FLIP_BASE_URL_TEST";
     public static final String FLIP_MONEY_TRANSFER_ENV = "FLIP_MONEY_TRANSFER";
     public static final String FLIP_SPECIAL_MONEY_TRANSFER_ENV = "FLIP_SPECIAL_MONEY_TRANSFER";
     public static final String FLIP_AGENT_MONEY_TRANSFER_ENV = "FLIP_AGENT_MONEY_TRANSFER_TRANSFER";
     public static final String FLIP_INTERNATIONAL_MONEY_TRANSFER_ENV = "FLIP_INTERNATIONAL_MONEY_TRANSFER_TRANSFER";
+    public static final String FLIP_ACCEPT_PAYMENT_ENV = "FLIP_ACCEPT_PAYMENT";
 
     // Flip Header Params
 

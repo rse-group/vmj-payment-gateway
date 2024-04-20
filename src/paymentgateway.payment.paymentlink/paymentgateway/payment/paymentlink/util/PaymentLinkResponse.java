@@ -15,7 +15,6 @@ public class PaymentLinkResponse {
 	private String email;
 	private String message;
 
-
 	public boolean getStatus() {
 		return status;
 	}

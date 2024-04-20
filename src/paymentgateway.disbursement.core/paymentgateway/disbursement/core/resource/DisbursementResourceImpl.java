@@ -11,7 +11,6 @@ import java.net.http.HttpResponse;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import paymentgateway.disbursement.core.MoneyTransferResponse;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import paymentgateway.disbursement.DisbursementFactory;
@@ -33,10 +32,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 			bank_code = (String) vmjExchange.getRequestBodyForm("beneficiary_bank_name");
 			account_number = (String) vmjExchange.getRequestBodyForm("beneficiary_account_number");
 		}
-		//for FE
 		double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
-		//for BE test
-//		double amount = (Double) vmjExchange.getRequestBodyForm("amount");
 
 		Disbursement disbursement = DisbursementFactory.createDisbursement(
 				"paymentgateway.disbursement.core.DisbursementImpl",
@@ -51,32 +47,8 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 
 
 
-	public MoneyTransferResponse sendTransaction(VMJExchange vmjExchange, String serviceName) {
-
-		Config config = ConfigFactory.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-		Map<String, Object> body = vmjExchange.getPayload();
-		String configUrl = config.getProductEnv(serviceName);
-		HashMap<String, String> headerParams = config.getHeaderParams();
-		LOGGER.info("header: " + headerParams);
-		LOGGER.info("configUrl: " + configUrl);
-		Gson gson = new Gson();
-		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
-				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(body)))
-				.build();
-		MoneyTransferResponse responseObj = null;
-
-
-		try {
-			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			String rawResponse = response.body().toString();
-			LOGGER.info("rawResponse:" + rawResponse);
-			responseObj = gson.fromJson(rawResponse, MoneyTransferResponse.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+	public HashMap<String, Object> sendTransaction(VMJExchange vmjExchange, String serviceName) {
+		HashMap<String, Object> responseObj = null;
 		return responseObj;
 	}
 
@@ -129,32 +101,6 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	public List<HashMap<String,Object>> getAllDisbursement(String tableName){
 		List<Disbursement> List = Repository.getAllObject(tableName);
 		return transformListToHashMap(List);
-	}
-
-	public GetAllDisbursementResponse getAllDataFromAPI(String name){
-		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder()
-					.header("Content-Type", "application/x-www-form-urlencoded")
-					.header("Authorization",
-							"Basic SkRKNUpERXpKR3A0YlU5WVppNU9kRGRuU0VoU2JYbFBibXhEVVM1VVJGaHRTM0pEZFZwc2NWVTFMemgxUldwSVVqVldielpMYkhOMkwybDE=")
-					.header("Cookie", "_csrf=I_hH_U80Wpc07Yx-pV_HBDI4KO64F3ES")
-					.uri(URI.create("https://bigflip.id/big_sandbox_api/v2/" + name + "?pagination=1000&page=1"))
-					.GET()
-					.build();
-
-
-		Gson gson = new Gson();
-		GetAllDisbursementResponse responseObj = null;
-		try {
-			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			String rawResponse = response.body().toString();
-			responseObj = gson.fromJson(rawResponse,
-					GetAllDisbursementResponse.class);
-			LOGGER.info("Raw Response: " + responseObj);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		return responseObj;
 	}
 
 	public String getParamsUrlEncoded(VMJExchange vmjExchange) {

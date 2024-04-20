@@ -10,8 +10,6 @@ public class DisbursementFactory {
     public DisbursementFactory() {
 
     }
-    // handling urutan delta
-    //cek di repo bu maya
 
     public static Disbursement createDisbursement(String fullyQualifiedName, Object... base) {
         Disbursement record = null;

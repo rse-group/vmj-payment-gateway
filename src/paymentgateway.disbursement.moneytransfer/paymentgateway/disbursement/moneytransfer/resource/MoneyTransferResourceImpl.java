@@ -17,8 +17,6 @@ import paymentgateway.disbursement.core.Disbursement;
 import paymentgateway.disbursement.core.DisbursementImpl;
 import paymentgateway.disbursement.core.DisbursementResourceComponent;
 import paymentgateway.disbursement.core.DisbursementResourceDecorator;
-import paymentgateway.disbursement.core.GetAllDisbursementResponse;
-import paymentgateway.disbursement.core.MoneyTransferResponse;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
@@ -84,64 +82,64 @@ public class MoneyTransferResourceImpl extends DisbursementResourceDecorator {
 		return requestMap;
 	}
 
-	@Route(url = "call/money-transfer/update-status")
-	public void updateStatus(VMJExchange vmjExchange){
-		GetAllDisbursementResponse dosmmesticData = record.getAllDataFromAPI("disbursement");
-		GetAllDisbursementResponse internationalData = record.getAllDataFromAPI("international-disbursement");
-		List<MoneyTransferResponse> dosmesticTransferData = dosmmesticData.getData();
-		List<MoneyTransferResponse> internationalTransferData = internationalData.getData();
-		List<MoneyTransferImpl> moneyTransfers = getPendingStatus();
+	// @Route(url = "call/money-transfer/update-status")
+	// public void updateStatus(VMJExchange vmjExchange){
+	// 	GetAllDisbursementResponse dosmmesticData = record.getAllDataFromAPI("disbursement");
+	// 	GetAllDisbursementResponse internationalData = record.getAllDataFromAPI("international-disbursement");
+	// 	List<MoneyTransferResponse> dosmesticTransferData = dosmmesticData.getData();
+	// 	List<MoneyTransferResponse> internationalTransferData = internationalData.getData();
+	// 	List<MoneyTransferImpl> moneyTransfers = getPendingStatus();
 
-		if(moneyTransfers.size() != 0){
-			for(MoneyTransferResponse response :  dosmesticTransferData){
-				int id = response.getId();
-				try {
-					MoneyTransferImpl moneyTransfer = getPendingMoneyTransferById(moneyTransfers,id);
-					if(moneyTransfer == null){
-						continue;
-					}
-					moneyTransfer.setStatus(response.getStatus());
-					moneyTransferRepository.updateObject(moneyTransfer);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			for(MoneyTransferResponse response :  internationalTransferData){
-				int id = response.getId();
-				try {
-					MoneyTransferImpl moneyTransfer = getPendingMoneyTransferById(moneyTransfers,id);
-					if(moneyTransfer == null){
-						continue;
-					}
-					moneyTransfer.setStatus(response.getStatus());
-					moneyTransferRepository.updateObject(moneyTransfer);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+	// 	if(moneyTransfers.size() != 0){
+	// 		for(MoneyTransferResponse response :  dosmesticTransferData){
+	// 			int id = response.getId();
+	// 			try {
+	// 				MoneyTransferImpl moneyTransfer = getPendingMoneyTransferById(moneyTransfers,id);
+	// 				if(moneyTransfer == null){
+	// 					continue;
+	// 				}
+	// 				moneyTransfer.setStatus(response.getStatus());
+	// 				moneyTransferRepository.updateObject(moneyTransfer);
+	// 			} catch (Exception e) {
+	// 				e.printStackTrace();
+	// 			}
+	// 		}
+	// 		for(MoneyTransferResponse response :  internationalTransferData){
+	// 			int id = response.getId();
+	// 			try {
+	// 				MoneyTransferImpl moneyTransfer = getPendingMoneyTransferById(moneyTransfers,id);
+	// 				if(moneyTransfer == null){
+	// 					continue;
+	// 				}
+	// 				moneyTransfer.setStatus(response.getStatus());
+	// 				moneyTransferRepository.updateObject(moneyTransfer);
+	// 			} catch (Exception e) {
+	// 				e.printStackTrace();
+	// 			}
+	// 		}
 
-		}
-	}
+	// 	}
+	// }
 
-	public MoneyTransferImpl getPendingMoneyTransferById(List<MoneyTransferImpl> moneyTransfers, int id){
-		for(MoneyTransferImpl moneyTransfer : moneyTransfers){
-			if(moneyTransfer.getId() == id){
-				return moneyTransfer;
-			}
-		}
-		return null;
-	}
+	// public MoneyTransferImpl getPendingMoneyTransferById(List<MoneyTransferImpl> moneyTransfers, int id){
+	// 	for(MoneyTransferImpl moneyTransfer : moneyTransfers){
+	// 		if(moneyTransfer.getId() == id){
+	// 			return moneyTransfer;
+	// 		}
+	// 	}
+	// 	return null;
+	// }
 
-	public List<MoneyTransferImpl> getPendingStatus(){
-		List<MoneyTransferImpl> result = new ArrayList<>();
-		List<MoneyTransferImpl> moneyTransfers = moneyTransferRepository.getAllObject("moneytransfer_impl");
-		for(MoneyTransferImpl moneyTransfer : moneyTransfers){
-			if(moneyTransfer.getStatus().equals("PENDING")){
-				result.add(moneyTransfer);
-			}
-		}
-		return result;
-	}
+	// public List<MoneyTransferImpl> getPendingStatus(){
+	// 	List<MoneyTransferImpl> result = new ArrayList<>();
+	// 	List<MoneyTransferImpl> moneyTransfers = moneyTransferRepository.getAllObject("moneytransfer_impl");
+	// 	for(MoneyTransferImpl moneyTransfer : moneyTransfers){
+	// 		if(moneyTransfer.getStatus().equals("PENDING")){
+	// 			result.add(moneyTransfer);
+	// 		}
+	// 	}
+	// 	return result;
+	// }
 
 
 	@Route(url = "call/money-transfer")

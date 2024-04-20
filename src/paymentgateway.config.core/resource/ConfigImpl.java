@@ -149,7 +149,7 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getSpecialMoneyTransferRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getFacilitatorMoneyTransferRequestBody(VMJExchange vmjExchange){
         throw new UnsupportedOperationException();
     }
 
@@ -157,7 +157,7 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getAgentMoneyTransferRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getAggregatorMoneyTransferRequestBody(VMJExchange vmjExchange){
         throw new UnsupportedOperationException();
     }
 
@@ -229,7 +229,7 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getSpecialMoneyTransferResponse(String rawResponse){
+    public Map<String, Object> getFacilitatorMoneyTransferResponse(String rawResponse){
         throw new UnsupportedOperationException();
     }
 
@@ -237,7 +237,7 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getAgentMoneyTransferResponse(String rawResponse){
+    public Map<String, Object> getAggregatorMoneyTransferResponse(String rawResponse){
         throw new UnsupportedOperationException();
     }
 }
