@@ -21,8 +21,6 @@ import paymentgateway.disbursement.DisbursementFactory;
 import paymentgateway.disbursement.core.DisbursementImpl;
 import paymentgateway.disbursement.core.DisbursementResourceComponent;
 import paymentgateway.disbursement.international.InternationalResourceImpl;
-import paymentgateway.disbursement.core.MoneyTransferResponse;
-import paymentgateway.disbursement.core.Sender;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;

@@ -14,9 +14,9 @@ public abstract class ConfigComponent implements Config {
     public abstract int generateId();
 
     public abstract Map<String, Object> getMoneyTransferRequestBody(VMJExchange vmjExchange);
-    public abstract Map<String, Object> getSpecialMoneyTransferRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getFacilitatorMoneyTransferRequestBody(VMJExchange vmjExchange);
     public abstract Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange);
-    public abstract Map<String, Object> getAgentMoneyTransferRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getAggregatorMoneyTransferRequestBody(VMJExchange vmjExchange);
 
     public abstract Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange);
     public abstract Map<String, Object> getRetailOutletRequestBody(VMJExchange vmjExchange);
@@ -37,7 +37,7 @@ public abstract class ConfigComponent implements Config {
     public abstract Map<String, Object> getVirtualAccountResponse(String rawResponse, int id);
 
     public abstract Map<String, Object> getMoneyTransferResponse(String rawResponse);
-    public abstract Map<String, Object> getSpecialMoneyTransferResponse(String rawResponse);
+    public abstract Map<String, Object> getFacilitatorMoneyTransferResponse(String rawResponse);
     public abstract Map<String, Object> getInternationalMoneyTransferResponse(String rawResponse);
-    public abstract Map<String, Object> getAgentMoneyTransferResponse(String rawResponse);
+    public abstract Map<String, Object> getAggregatorMoneyTransferResponse(String rawResponse);
 }

@@ -10,6 +10,7 @@ public class PropertiesReader {
     private static String fileName = Constants.DEFAULT_PRODUCT_FILE;
 
     private static Properties loadProperties() {
+        //nambah argumen disini
         FileInputStream input = null;
         Properties prop = new Properties();
 
@@ -137,6 +138,14 @@ public class PropertiesReader {
 
     // public String getFlipInternationalMoneyTransfer() {
     //     return this.getEnvThenProp(Constants.FLIP_INTERNATIONAL_MONEY_TRANSFER_ENV, Constants.FLIP_INTERNATIONAL_MONEY_TRANSFER_PROP);
+    // }
+
+    // public String getFlipInvoice(){
+    //     return this.getEnvThenProp(Constants.FLIP_ACCEPT_PAYMENT_ENV, Constants.FLIP_ACCEPT_PAYMENT_PROP);
+    // }
+
+    // public String getFlipPaymentLink(){
+    //     return this.getEnvThenProp(Constants.FLIP_ACCEPT_PAYMENT_ENV, Constants.FLIP_ACCEPT_PAYMENT_PROP);
     // }
 
 

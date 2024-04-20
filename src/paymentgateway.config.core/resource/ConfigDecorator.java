@@ -47,16 +47,16 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getMoneyTransferRequestBody(vmjExchange);
     }
 
-    public Map<String, Object> getSpecialMoneyTransferRequestBody(VMJExchange vmjExchange){
-        return record.getSpecialMoneyTransferRequestBody(vmjExchange);
+    public Map<String, Object> getFacilitatorMoneyTransferRequestBody(VMJExchange vmjExchange){
+        return record.getFacilitatorMoneyTransferRequestBody(vmjExchange);
     }
 
     public Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange){
         return record.getInternationalMoneyTransferRequestBody(vmjExchange);
     }
 
-    public Map<String, Object> getAgentMoneyTransferRequestBody(VMJExchange vmjExchange){
-        return record.getAgentMoneyTransferRequestBody(vmjExchange);
+    public Map<String, Object> getAggregatorMoneyTransferRequestBody(VMJExchange vmjExchange){
+        return record.getAggregatorMoneyTransferRequestBody(vmjExchange);
     }
 
     public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
@@ -127,15 +127,15 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getMoneyTransferResponse(rawResponse);
     }
 
-    public Map<String, Object> getSpecialMoneyTransferResponse(String rawResponse){
-        return record.getSpecialMoneyTransferResponse(rawResponse);
+    public Map<String, Object> getFacilitatorMoneyTransferResponse(String rawResponse){
+        return record.getFacilitatorMoneyTransferResponse(rawResponse);
     }
 
     public Map<String, Object> getInternationalMoneyTransferResponse(String rawResponse){
         return record.getInternationalMoneyTransferResponse(rawResponse);
     }
 
-    public Map<String, Object> getAgentMoneyTransferResponse(String rawResponse){
-        return record.getAgentMoneyTransferResponse(rawResponse);
+    public Map<String, Object> getAggregatorMoneyTransferResponse(String rawResponse){
+        return record.getAggregatorMoneyTransferResponse(rawResponse);
     }
 }

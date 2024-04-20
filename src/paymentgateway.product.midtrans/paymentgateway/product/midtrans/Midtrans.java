@@ -28,12 +28,12 @@ public class Midtrans {
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.invoice.PaymentImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.paymentrouting.PaymentImpl.class);
-		configuration.addAnnotatedClass(PaymentLinkImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.payment.paymentlink.PaymentLinkImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.virtualaccount.VirtualAccountImpl.class);
-		configuration.addAnnotatedClass(EWalletImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.payment.ewallet.EWalletImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.debitcard.PaymentImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.creditcard.PaymentImpl.class);
-		configuration.addAnnotatedClass(RetailOutletImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.payment.retailoutlet.RetailOutletImpl.class);
 		
 		configuration.addAnnotatedClass(prices.auth.vmj.model.core.Role.class);
         configuration.addAnnotatedClass(prices.auth.vmj.model.core.RoleComponent.class);

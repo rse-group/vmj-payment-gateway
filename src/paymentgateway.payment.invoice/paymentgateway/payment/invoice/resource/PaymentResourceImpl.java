@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -67,7 +69,7 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(requestString))
+				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(body)))
 				.build();
 
 		Map<String, Object> responseMap = new HashMap<>();
@@ -82,6 +84,25 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		}
 
 		return responseMap;
+	}
+
+	public String getParamsUrlEncoded(Map<String, Object> vmjExchange) {
+		ArrayList<String> paramList = new ArrayList<>();
+		for (Map.Entry<String, Object> entry : vmjExchange.entrySet()) {
+			String key = entry.getKey();
+			Object val = entry.getValue();
+			if (val instanceof String) {
+				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
+			} else if (val instanceof Integer) {
+				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
+			} else if (val instanceof Double) {
+				int temp = ((Double) val).intValue();
+				paramList.add(key + "=" + URLEncoder.encode(Integer.toString(temp), StandardCharsets.UTF_8));
+			}
+
+		}
+		String encodedURL = String.join("&",paramList);
+		return encodedURL;
 	}
 	
 	@Route(url="call/invoice")

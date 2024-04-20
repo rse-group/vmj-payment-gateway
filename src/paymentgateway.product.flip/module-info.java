@@ -14,12 +14,16 @@ module paymentgateway.product.flip {
 
     requires paymentgateway.disbursement.core;
     requires paymentgateway.disbursement.moneytransfer;
+    requires paymentgateway.disbursement.agent;
     requires paymentgateway.disbursement.special;
     requires paymentgateway.disbursement.international;
-    requires paymentgateway.disbursement.agent;
     requires paymentgateway.disbursement.internationalmoneytransfer;
-    requires paymentgateway.disbursement.specialmoneytransfer;
-    requires paymentgateway.disbursement.agentmoneytransfer;
+    requires paymentgateway.payment.core;
+    requires paymentgateway.payment.paymentlink;
+    requires paymentgateway.payment.virtualaccount;
+    requires paymentgateway.payment.ewallet;
+    requires paymentgateway.disbursement.aggregatormoneytransfer;
+    requires paymentgateway.disbursement.facilitatormoneytransfer;
 	
 	requires prices.auth.vmj;
     requires prices.auth.vmj.model;

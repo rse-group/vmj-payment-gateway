@@ -100,16 +100,5 @@ public class DisbursementConfiguration {
         return headerParams;
     }
 
-//	public HttpRequest setHttpBody (HashMap<String,Object> bodyElements, HttpRequest header) {
-//		HttpRequest headerConfig = HttpRequest.newBuilder();
-//		for (Map.Entry<String, Object> entry : bodyElements.entrySet()) {
-//		    String key = entry.getKey();
-//		    String val = entry.getValue();
-//		    headerConfig.header(key,val);
-//		}
-//
-//		return headerConfig;
-//	}
-
 
 }

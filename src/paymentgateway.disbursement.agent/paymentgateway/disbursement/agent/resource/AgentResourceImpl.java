@@ -22,8 +22,6 @@ import paymentgateway.disbursement.core.Disbursement;
 import paymentgateway.disbursement.core.DisbursementResourceDecorator;
 import paymentgateway.disbursement.core.DisbursementImpl;
 import paymentgateway.disbursement.core.DisbursementResourceComponent;
-import paymentgateway.disbursement.core.MoneyTransferResponse;
-import paymentgateway.disbursement.core.Sender;
 
 
 public class AgentResourceImpl extends DisbursementResourceDecorator {
