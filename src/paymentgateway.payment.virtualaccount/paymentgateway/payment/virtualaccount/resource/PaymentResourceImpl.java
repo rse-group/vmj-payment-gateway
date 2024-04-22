@@ -59,14 +59,14 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		int id = ((Integer) requestMap.get("id")).intValue();
 		System.out.println("id:" + Integer.toString(id));
 		requestMap.remove("id");
-		// String requestString = gson.toJson(requestMap);
+		String requestString = gson.toJson(requestMap);
 		String configUrl = config.getProductEnv("VirtualAccount");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 		System.out.println("configUrl: " + configUrl);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(requestMap)))
+				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
 
 

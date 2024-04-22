@@ -69,7 +69,7 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(body)))
+				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
 
 		Map<String, Object> responseMap = new HashMap<>();

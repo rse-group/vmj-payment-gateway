@@ -52,7 +52,7 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		Map<String, Object> requestMap = config.getPaymentLinkRequestBody(vmjExchange);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
-		// String requestString = gson.toJson(requestMap);
+		String requestString = gson.toJson(requestMap);
 		String configUrl = config.getProductEnv("PaymentLink");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 		System.out.println("configUrl: " + configUrl);
@@ -60,7 +60,7 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(requestMap)))
+				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
 
 		Map<String, Object> responseMap = new HashMap<>();

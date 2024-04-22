@@ -75,7 +75,6 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		String configUrl = config.getProductEnv("PaymentRouting");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 		System.out.println("configUrl: " + configUrl);
-		System.out.println(configUrl);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
