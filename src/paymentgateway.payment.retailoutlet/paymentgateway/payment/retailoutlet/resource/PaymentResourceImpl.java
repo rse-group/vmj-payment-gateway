@@ -58,7 +58,7 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		Map<String, Object> requestMap = config.getRetailOutletRequestBody(vmjExchange);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
-		String requestString = gson.toJson(requestMap);
+		String requestString = config.getRequestString(requestMap);
 		String configUrl = config.getProductEnv("RetailOutlet");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 		System.out.println("configUrl: " + configUrl);

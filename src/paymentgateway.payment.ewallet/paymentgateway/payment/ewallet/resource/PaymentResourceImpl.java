@@ -68,16 +68,14 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		Map<String, Object> requestMap = config.getEWalletRequestBody(vmjExchange);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
-		// String requestString = gson.toJson(requestMap);
 		String configUrl = config.getProductEnv("EWallet");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 		System.out.println("configUrl: " + configUrl);
-		System.out.println(9);
-
+		String requestString = config.getRequestString(requestMap);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(requestMap)))
+				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
 
 		Map<String, Object> responseMap = new HashMap<>();
@@ -96,26 +94,6 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		return responseMap;
 	}
 
-	public String getParamsUrlEncoded(Map<String, Object> vmjExchange) {
-		ArrayList<String> paramList = new ArrayList<>();
-		for (Map.Entry<String, Object> entry : vmjExchange.entrySet()) {
-			String key = entry.getKey();
-			Object val = entry.getValue();
-			if (val instanceof String) {
-				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
-			} else if (val instanceof Integer) {
-				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
-			} else if (val instanceof Double) {
-				int temp = ((Double) val).intValue();
-				paramList.add(key + "=" + URLEncoder.encode(Integer.toString(temp), StandardCharsets.UTF_8));
-			}
-
-		}
-		String encodedURL = String.join("&",paramList);
-		return encodedURL;
-	}
-
-	
 	@Route(url="call/ewallet")
 	public HashMap<String,Object> Ewallet(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")){

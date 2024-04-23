@@ -28,6 +28,11 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
+    public String getRequestString(Map<String, Object> requestMap){
+        return EncodeResponse.getParamsUrlEncoded(requestMap);
+    }
+
+    @Override
     public Map<String, Object> getMoneyTransferResponse(String rawResponse){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
@@ -110,7 +115,6 @@ public class FlipConfiguration extends ConfigDecorator{
         int id = generateId();
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) vmjExchange.getRequestBodyForm("title");
-        String type = (String) vmjExchange.getRequestBodyForm("type");
         int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
         String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
         String senderEmail = (String) vmjExchange.getRequestBodyForm("sender_email");
@@ -118,7 +122,7 @@ public class FlipConfiguration extends ConfigDecorator{
 
         requestMap.put("id",id);
         requestMap.put("title", title);
-        requestMap.put("type", type);
+        requestMap.put("type", PaymentType.SINGLE.getValue());
         requestMap.put("amount",amount);
         requestMap.put("sender_name",senderName);
         requestMap.put("sender_email",senderEmail);
@@ -130,23 +134,26 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id){
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id) {
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
-        String va_number = (String) rawResponseMap.get("account_number");
-        response.put("va_number",va_number);
+        Map<String, Object> billPayment = (Map<String, Object>) rawResponseMap.get("bill_payment");
+        Map<String, Object> receiverBankAccount = (Map<String, Object>) billPayment.get("receiver_bank_account");
+        String vaNumber = (String) receiverBankAccount.get("account_number");
+        response.put("va_number", vaNumber);
         response.put("id", id);
+        
         return response;
     }
+
 
     @Override
     public Map<String, Object> getEWalletRequestBody(VMJExchange vmjExchange){
         int id = generateId();
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) vmjExchange.getRequestBodyForm("title");
-        String type = (String) vmjExchange.getRequestBodyForm("type");
         int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
         String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
         String senderEmail = (String) vmjExchange.getRequestBodyForm("sender_email");
@@ -155,7 +162,7 @@ public class FlipConfiguration extends ConfigDecorator{
 
         requestMap.put("id",id);
         requestMap.put("title", title);
-        requestMap.put("type", type);
+        requestMap.put("type", PaymentType.SINGLE.getValue());
         requestMap.put("amount",amount);
         requestMap.put("sender_name",senderName);
         requestMap.put("sender_email",senderEmail);
@@ -190,14 +197,13 @@ public class FlipConfiguration extends ConfigDecorator{
         int id = generateId();
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) vmjExchange.getRequestBodyForm("title");
-        String type = (String) vmjExchange.getRequestBodyForm("type");
         int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
         String senderEmail = (String) vmjExchange.getRequestBodyForm("sender_email");
         String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
         
         requestMap.put("id",id);
         requestMap.put("title", title);
-        requestMap.put("type", type);
+        requestMap.put("type", PaymentType.SINGLE.getValue());
         requestMap.put("sender_name", senderName);
         requestMap.put("sender_email",senderEmail);
         requestMap.put("amount",amount);

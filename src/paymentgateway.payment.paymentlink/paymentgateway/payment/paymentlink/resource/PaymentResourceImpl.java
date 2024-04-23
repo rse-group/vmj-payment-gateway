@@ -47,24 +47,20 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 
 	protected Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
 		Config config = ConfigFactory.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-
 		Gson gson = new Gson();
 		Map<String, Object> requestMap = config.getPaymentLinkRequestBody(vmjExchange);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
-		// String requestString = gson.toJson(requestMap);
 		String configUrl = config.getProductEnv("PaymentLink");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 		System.out.println("configUrl: " + configUrl);
-		System.out.println(9);
+		String requestString = config.getRequestString(requestMap);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(getParamsUrlEncoded(requestMap)))
+				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
-
 		Map<String, Object> responseMap = new HashMap<>();
-
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
@@ -76,6 +72,7 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 
 		return responseMap;
 	}
+
 
 	public String getParamsUrlEncoded(Map<String, Object> vmjExchange) {
 		ArrayList<String> paramList = new ArrayList<>();
@@ -95,7 +92,6 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		String encodedURL = String.join("&",paramList);
 		return encodedURL;
 	}
-
 
 	@Route(url = "call/paymentlink")
 	public HashMap<String, Object> paymentLink(VMJExchange vmjExchange) {

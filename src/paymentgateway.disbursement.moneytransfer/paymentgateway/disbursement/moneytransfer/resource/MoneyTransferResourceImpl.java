@@ -53,33 +53,60 @@ public class MoneyTransferResourceImpl extends DisbursementResourceDecorator {
 		return moneyTransferTransaction;
 	}
 
-	public Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
+	// public Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
 
+	// 	Config config = ConfigFactory.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+	// 	Map<String, Object> body = vmjExchange.getPayload();
+	// 	String configUrl = config.getProductEnv("MoneyTransfer");
+	// 	HashMap<String, String> headerParams = config.getHeaderParams();
+	// 	LOGGER.info("header: " + headerParams);
+	// 	LOGGER.info("configUrl: " + configUrl);
+	// 	Gson gson = new Gson();
+	// 	HttpClient client = HttpClient.newHttpClient();
+	// 	HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(), headerParams))
+	// 			.uri(URI.create(configUrl))
+	// 			.POST(HttpRequest.BodyPublishers.ofString(record.getParamsUrlEncoded(body)))
+	// 			.build();
+				
+	// 	Map<String, Object> requestMap = new HashMap<>();
+
+	// 	try {
+	// 		HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+	// 		String rawResponse = response.body().toString();
+	// 		LOGGER.info("rawResponse:" + rawResponse);
+	// 		requestMap = config.getMoneyTransferResponse(rawResponse);
+	// 	} catch (Exception e) {
+	// 		e.printStackTrace();
+	// 	}
+
+	// 	return requestMap;
+	// }
+	protected Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
 		Config config = ConfigFactory.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-		Map<String, Object> body = vmjExchange.getPayload();
+		Gson gson = new Gson();
+		Map<String, Object> requestMap = vmjExchange.getPayload();
 		String configUrl = config.getProductEnv("MoneyTransfer");
 		HashMap<String, String> headerParams = config.getHeaderParams();
+		System.out.println("configUrl: " + configUrl);
 		LOGGER.info("header: " + headerParams);
 		LOGGER.info("configUrl: " + configUrl);
-		Gson gson = new Gson();
+		String requestString = config.getRequestString(requestMap);
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(), headerParams))
+		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(record.getParamsUrlEncoded(body)))
+				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
-				
-		Map<String, Object> requestMap = new HashMap<>();
-
+		Map<String, Object> responseMap = new HashMap<>();
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			LOGGER.info("rawResponse:" + rawResponse);
-			requestMap = config.getMoneyTransferResponse(rawResponse);
+			System.out.println("rawResponse " + rawResponse);
+			responseMap = config.getMoneyTransferResponse(rawResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return requestMap;
+		return responseMap;
 	}
 
 	// @Route(url = "call/money-transfer/update-status")

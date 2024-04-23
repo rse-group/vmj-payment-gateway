@@ -23,6 +23,12 @@ public class OyConfiguration extends ConfigDecorator{
         return "Oy";
     }
 
+    @Override
+    public String getRequestString(Map<String, Object> requestMap){
+        Gson gson = new Gson();
+        return gson.toJson(requestMap);
+    }
+
     public Map<String, String> getOyBankCode(){
         Map<String, String> immutableMap = Map.of("bni", "009",
                 "bca", "014",
@@ -48,10 +54,14 @@ public class OyConfiguration extends ConfigDecorator{
         int id = generateId();
         int amount = (int) (Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount")));
         String name = (String) vmjExchange.getRequestBodyForm("sender_name");
+        String email = (String) vmjExchange.getRequestBodyForm("email");
+        String description = (String) vmjExchange.getRequestBodyForm("title");
 
         requestMap.put("partner_tx_id", String.valueOf(id));
         requestMap.put("amount", amount);
         requestMap.put("sender_name", name);
+        requestMap.put("email", email);
+        requestMap.put("description",description);
         requestMap.put("id",id);
         System.out.println("Oy id:" + String.valueOf(id));
         return requestMap;
