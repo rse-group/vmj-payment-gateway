@@ -17,14 +17,22 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class FlipConfiguration extends ConfigDecorator{
+    private String CONFIG_FILE = "flip.properties";
 
     public FlipConfiguration(ConfigComponent record) {
         super(record);
     }
 
     @Override
-    public String getProductName(){
+    public String getVendorName(){
+        System.out.println("test");
         return "Flip";
+    }
+
+    @Override
+    public String getProductEnv(String serviceName){
+        return record.getProductEnv(CONFIG_FILE, serviceName);
+        
     }
 
     @Override
@@ -221,9 +229,9 @@ public class FlipConfiguration extends ConfigDecorator{
     @Override
     public HashMap<String, String> getHeaderParams() {
         HashMap<String, String> flipHeaderParams = new HashMap<>();
-        String contentType = PropertiesReader.getProp("content_type");
-        String authorization = PropertiesReader.getProp("authorization");
-        String cookie = PropertiesReader.getProp("cookie");
+        String contentType = PropertiesReader.getProp(CONFIG_FILE, "content_type");
+        String authorization = PropertiesReader.getProp(CONFIG_FILE, "authorization");
+        String cookie = PropertiesReader.getProp(CONFIG_FILE, "cookie");
         flipHeaderParams.put("Content-Type",contentType);
         flipHeaderParams.put("idempotency-key", UUID.randomUUID().toString());
         flipHeaderParams.put("X-TIMESTAMP","");

@@ -13,14 +13,20 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class OyConfiguration extends ConfigDecorator{
+    private String CONFIG_FILE = "oy.properties";
 
     public OyConfiguration(ConfigComponent record) {
         super(record);
     }
 
     @Override
-    public String getProductName(){
+    public String getVendorName(){
         return "Oy";
+    }
+
+    @Override
+    public String getProductEnv(String serviceName){
+        return record.getProductEnv(CONFIG_FILE, serviceName);
     }
 
     public Map<String, String> getOyBankCode(){
@@ -231,9 +237,9 @@ public class OyConfiguration extends ConfigDecorator{
     @Override
     public HashMap<String, String> getHeaderParams() {
         HashMap<String, String> headerParams = new HashMap<>();
-        String contentType = PropertiesReader.getProp("content_type");
-        String username = PropertiesReader.getProp("api_username");
-        String apikey = PropertiesReader.getProp("authorization");
+        String contentType = PropertiesReader.getProp(CONFIG_FILE, "content_type");
+        String username = PropertiesReader.getProp(CONFIG_FILE, "api_username");
+        String apikey = PropertiesReader.getProp(CONFIG_FILE, "authorization");
         headerParams.put("x-oy-username",username);
         headerParams.put("content-type",contentType);
         headerParams.put("x-api-key", apikey);

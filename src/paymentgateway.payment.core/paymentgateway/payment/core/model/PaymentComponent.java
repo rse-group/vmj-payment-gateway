@@ -24,9 +24,9 @@ public abstract class PaymentComponent implements Payment {
 //	public abstract int getId();
 //	public abstract void setId(int id);
 
-	public abstract String getProductName();
+	public abstract String getVendorName();
 
-	public abstract void setProductName(String productName);
+	public abstract void setVendorName(String vendorName);
 
 	public int getIdTransaction() {
 		return this.idTransaction;

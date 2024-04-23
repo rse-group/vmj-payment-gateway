@@ -22,11 +22,11 @@ public class PaymentImpl extends PaymentComponent {
 //	@Id
 //	protected int id;
 	protected double amount;
-	protected String productName;
+	protected String vendorName;
 
-	public PaymentImpl(int idTransaction, String productName, double amount) {
+	public PaymentImpl(int idTransaction, String vendorName, double amount) {
 		this.idTransaction = idTransaction;
-		this.productName = productName;
+		this.vendorName = vendorName;
 		this.amount = amount;
 	}
 
@@ -49,18 +49,18 @@ public class PaymentImpl extends PaymentComponent {
 		this.amount = amount;
 	}
 
-	public String getProductName() {
-		return productName;
+	public String getVendorName() {
+		return vendorName;
 	}
 
-	public void setProductName(String productName) {
-		this.productName = productName;
+	public void setVendorName(String vendorName) {
+		this.vendorName = vendorName;
 	}
 
 	public HashMap<String,Object> toHashMap() {
 		HashMap<String,Object> interfaceMap = new HashMap<String,Object>();
 		interfaceMap.put("id", getId());
-		interfaceMap.put("productName", getProductName());
+		interfaceMap.put("vendorName", getVendorName());
 		interfaceMap.put("amount", getAmount());
 		return interfaceMap;
 	}

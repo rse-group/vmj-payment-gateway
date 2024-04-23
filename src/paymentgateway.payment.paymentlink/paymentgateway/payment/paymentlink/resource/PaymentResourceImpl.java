@@ -46,7 +46,9 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	}
 
 	protected Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
-		Config config = ConfigFactory.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
+
+		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
 		Gson gson = new Gson();
 		Map<String, Object> requestMap = config.getPaymentLinkRequestBody(vmjExchange);
@@ -107,13 +109,13 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	}
 
 
-	@Route(url = "call/paymentlink/productname")
-	public List<PaymentLinkImpl> getByProductName(VMJExchange vmjExchange) {
-		String productName = (String) vmjExchange.getRequestBodyForm("product_name");
+	@Route(url = "call/paymentlink/vendorname")
+	public List<PaymentLinkImpl> getByVendorName(VMJExchange vmjExchange) {
+		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
 		List<PaymentLinkImpl> result = new ArrayList<>();
 		List<PaymentLinkImpl> paymentLink = paymentLinkRepository.getAllObject("paymentlink_impl");
 		for(PaymentLinkImpl payment : paymentLink){
-			if (payment.getProductName().equals(productName)){
+			if (payment.getVendorName().equals(vendorName)){
 				result.add(payment);
 			}
 		}

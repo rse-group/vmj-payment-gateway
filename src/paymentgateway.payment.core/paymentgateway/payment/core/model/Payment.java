@@ -9,8 +9,8 @@ public interface Payment {
 
 	int getIdTransaction();
 	void setIdTransaction(int idTransaction);
-	String getProductName();
-	void setProductName(String productName);
+	String getVendorName();
+	void setVendorName(String vendorName);
 	
 	double getAmount();
 	void setAmount(double amount);

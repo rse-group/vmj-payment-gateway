@@ -45,11 +45,11 @@ public abstract class PaymentDecorator extends PaymentComponent{
 		record.setAmount(amount);
 	}
 
-	public String getProductName(){
-		return record.getProductName();
+	public String getVendorName(){
+		return record.getVendorName();
 	}
-	public void setProductName(String productName){
-		record.setProductName(productName);
+	public void setVendorName(String vendorName){
+		record.setVendorName(vendorName);
 	}
 }
 

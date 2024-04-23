@@ -5,13 +5,11 @@ import java.net.http.HttpRequest;
 import vmj.routing.route.VMJExchange;
 
 public interface Config {
-    String getProductName();
+    String getVendorName();
 
     // get url lengkap sama service ex: moneytransfer
+    String getProductEnv(String fileName, String serviceName);
     String getProductEnv(String serviceName);
-
-    // get config readernya (tetep disini atau dipindah? untuk sekarang dijadiin static)
-    // Object getPropertiesReader();
 
     HttpRequest.Builder getBuilder(HttpRequest.Builder builder, HashMap<String, String> headerParams);
 

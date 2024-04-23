@@ -15,8 +15,12 @@ public abstract class ConfigDecorator extends ConfigComponent{
     public ConfigDecorator(){
     }
 
-    public String getProductName(){
-        return record.getProductName();
+    public String getVendorName(){
+        return record.getVendorName();
+    }
+
+    public String getProductEnv(String fileName, String serviceName){
+        return record.getProductEnv(fileName, serviceName);
     }
 
     public String getProductEnv(String serviceName){

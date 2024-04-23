@@ -55,10 +55,11 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	}
 	
 	protected Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
+		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
+
+		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+
 		Gson gson = new Gson();
-
-		Config config = ConfigFactory.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-
 		Map<String, Object> requestMap = config.getInvoiceRequestBody(vmjExchange);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");

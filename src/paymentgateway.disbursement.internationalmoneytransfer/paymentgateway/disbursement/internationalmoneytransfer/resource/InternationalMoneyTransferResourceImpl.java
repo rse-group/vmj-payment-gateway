@@ -65,8 +65,10 @@ public class InternationalMoneyTransferResourceImpl extends InternationalResourc
 	}
 
 	public Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
+		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
 
-		Config config = ConfigFactory.createConfig(ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+		
 		Map<String, Object> body = vmjExchange.getPayload();
 		String configUrl = config.getProductEnv("InternationalMoneyTransfer");
 		HashMap<String, String> headerParams = config.getHeaderParams();

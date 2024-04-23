@@ -24,58 +24,24 @@ public class ConfigImpl extends ConfigComponent {
 //
 //    }
 
-    public String getProductName(){
+    public String getVendorName(){
         return "";
     }
 
-    public String getProductEnv(String serviceName){
+    public String getProductEnv(String fileName, String serviceName){
         String url = "";
-        String baseUrl = (String) PropertiesReader.getProp("base_url");
-        String apiEndpoint = (String) PropertiesReader.getProp(serviceName);
+        String baseUrl = (String) PropertiesReader.getProp(fileName, "base_url");
+        String apiEndpoint = (String) PropertiesReader.getProp(fileName, serviceName);
 
         url = baseUrl + apiEndpoint;
         System.out.println("url: " + url);
-        // try {
-        //     String baseUrl = (String) PropertiesReader.getProp("base_url");
-        //     String apiEndpoint = (String) PropertiesReader.getProp(serviceName);
-
-        //     url = baseUrl + apiEndpoint;
-        //     System.out.println("url: " + url);
-        // }
-        // catch (IllegalArgumentException e){
-        //     e.printStackTrace();
-        // }
-        // catch (NoSuchMethodException e) {
-        //     e.printStackTrace();
-        // }
-        // catch (Exception e) {
-        //     e.printStackTrace();
-        // }
 
         return url;
     }
 
-    // public Object getPropertiesReader(){
-    //     Object prop = null;
-    //     try {
-    //         String propClassName = "paymentgateway.config.core.PropertiesReader";
-    //         Class<?> propClass = Class.forName(propClassName); // convert string classname to class
-    //         prop = propClass.newInstance();
-    //     }
-    //     catch (ClassNotFoundException e) {
-    //         e.printStackTrace();
-    //     }
-    //     catch (IllegalArgumentException e){
-    //         e.printStackTrace();
-    //     }
-    //     catch (InstantiationException e) {
-    //         e.printStackTrace();
-    //     }
-    //     catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    //     return prop;
-    // }
+    public String getProductEnv(String serviceName){
+        throw new UnsupportedOperationException();
+    }
 
     public HttpRequest.Builder getBuilder(HttpRequest.Builder builder, HashMap<String, String> headerParams){
         for (Map.Entry<String, String> e : headerParams.entrySet()) {
@@ -86,24 +52,6 @@ public class ConfigImpl extends ConfigComponent {
 
     public HashMap<String, String> getHeaderParams(){
         HashMap<String, String> headerParams = new HashMap<>();
-        // Object prop = getPropertiesReader();
-
-        // try {
-        //     Method method = prop.getClass().getMethod("get" + productName + "HeaderParams");
-        //     headerParams = (HashMap<String, String>) method.invoke(prop);
-
-        // }
-        // catch (IllegalArgumentException e){
-        //     e.printStackTrace();
-        // }
-        // catch (NoSuchMethodException e) {
-        //     e.printStackTrace();
-        // }
-        // catch (Exception e) {
-        //     e.printStackTrace();
-        // }
-
-
         return headerParams;
     }
 
@@ -121,27 +69,6 @@ public class ConfigImpl extends ConfigComponent {
     }
 
     public Map<String, Object>  processRequestMap(VMJExchange vmjExchange, String serviceName){
-        // Map<String, Object> result = new HashMap<>();
-        // Map<String, Object> result = null;
-        // Object prop = null;
-        // String className = "paymentgateway.config." + productName.toLowerCase() + "." + productName + "Configuration";
-        // try {
-        //     Class<?> clz = Class.forName(className);
-        //     Constructor<?> constructor = clz.getDeclaredConstructors()[0];
-        //     prop = (Config) constructor.newInstance(this);
-        //     Method m = prop.getClass().getMethod("get" + productName + serviceName + "RequestBody", VMJExchange.class);
-        //     result = (Map<String, Object>) m.invoke(prop, vmjExchange);
-        // }
-        // catch (IllegalArgumentException e){
-        //     e.printStackTrace();
-        // }
-        // catch (InvocationTargetException e){
-        //     e.printStackTrace();
-        // }
-        // catch (Exception e) {
-        //     e.printStackTrace();
-        // }
-        // return result;
         return vmjExchange.getPayload();
     }
 

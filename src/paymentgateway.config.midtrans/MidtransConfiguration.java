@@ -13,13 +13,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class MidtransConfiguration extends ConfigDecorator{
+    private String CONFIG_FILE = "midtrans.properties";
 
     public MidtransConfiguration(ConfigComponent record) {
         super(record);
     }
 
     @Override
-    public String getProductName(){
+    public String getVendorName(){
         return "Midtrans";
     }
 
@@ -262,12 +263,12 @@ public class MidtransConfiguration extends ConfigDecorator{
     @Override
     public String getProductEnv(String serviceName){
         String url = "";
-        String baseUrl = (String) PropertiesReader.getProp("base_url");
+        String baseUrl = (String) PropertiesReader.getProp(CONFIG_FILE, "base_url");
         String apiEndpoint = "";
         if (serviceName.equals("PaymentLink")){
-            apiEndpoint = (String) PropertiesReader.getProp("paymentlink");
+            apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "paymentlink");
         } else {
-            apiEndpoint = (String) PropertiesReader.getProp("apiendpoint");
+            apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "apiendpoint");
         }
         
         url = baseUrl + apiEndpoint;
@@ -279,9 +280,9 @@ public class MidtransConfiguration extends ConfigDecorator{
     @Override
     public HashMap<String, String> getHeaderParams() {
         HashMap<String, String> headerParams = new HashMap<>();
-        String contentType = PropertiesReader.getProp("content_type");
-        String accept = PropertiesReader.getProp("accept");
-        String auth = PropertiesReader.getProp("authorization");
+        String contentType = PropertiesReader.getProp(CONFIG_FILE, "content_type");
+        String accept = PropertiesReader.getProp(CONFIG_FILE, "accept");
+        String auth = PropertiesReader.getProp(CONFIG_FILE, "authorization");
         headerParams.put("authorization",auth);
         headerParams.put("content-type",contentType);
         headerParams.put("accept", accept);
