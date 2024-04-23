@@ -60,7 +60,7 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		int id = ((Integer) requestMap.get("id")).intValue();
 		System.out.println("id:" + Integer.toString(id));
 		requestMap.remove("id");
-		String requestString = gson.toJson(requestMap);
+		String requestString = config.getRequestString(requestMap);
 		String configUrl = config.getProductEnv("VirtualAccount");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 		System.out.println("configUrl: " + configUrl);
@@ -84,28 +84,6 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		
 		return responseMap;
 	}
-
-
-	public String getParamsUrlEncoded(Map<String, Object> vmjExchange) {
-		ArrayList<String> paramList = new ArrayList<>();
-		for (Map.Entry<String, Object> entry : vmjExchange.entrySet()) {
-			String key = entry.getKey();
-			Object val = entry.getValue();
-			if (val instanceof String) {
-				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
-			} else if (val instanceof Integer) {
-				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
-			} else if (val instanceof Double) {
-				int temp = ((Double) val).intValue();
-				paramList.add(key + "=" + URLEncoder.encode(Integer.toString(temp), StandardCharsets.UTF_8));
-			}
-
-		}
-		String encodedURL = String.join("&",paramList);
-		return encodedURL;
-	}
-	
-
 	
 	@Route(url="call/virtualaccount")
 	public HashMap<String,Object> testVirtualAccount(VMJExchange vmjExchange) {

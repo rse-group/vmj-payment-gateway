@@ -11,6 +11,12 @@ public interface Config {
     String getProductEnv(String fileName, String serviceName);
     String getProductEnv(String serviceName);
 
+    //
+    String getRequestString(Map<String, Object> requestMap);
+
+    // get config readernya (tetep disini atau dipindah? untuk sekarang dijadiin static)
+    // Object getPropertiesReader();
+
     HttpRequest.Builder getBuilder(HttpRequest.Builder builder, HashMap<String, String> headerParams);
 
     // get header detail per produk nya (ex: flip) dilempar ke delta config

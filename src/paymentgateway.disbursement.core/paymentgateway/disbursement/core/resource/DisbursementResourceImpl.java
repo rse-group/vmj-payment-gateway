@@ -50,25 +50,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 		HashMap<String, Object> responseObj = null;
 		return responseObj;
 	}
-
-	public String getParamsUrlEncoded(Map<String, Object> vmjExchange) {
-		ArrayList<String> paramList = new ArrayList<>();
-		for (Map.Entry<String, Object> entry : vmjExchange.entrySet()) {
-			String key = entry.getKey();
-			Object val = entry.getValue();
-			if (val instanceof String) {
-				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
-			} else if (val instanceof Integer) {
-				paramList.add(key + "=" + URLEncoder.encode(val.toString(), StandardCharsets.UTF_8));
-			} else if (val instanceof Double) {
-				int temp = ((Double) val).intValue();
-				paramList.add(key + "=" + URLEncoder.encode(Integer.toString(temp), StandardCharsets.UTF_8));
-			}
-
-		}
-		String encodedURL = String.join("&",paramList);
-		return encodedURL;
-	}
+	
 	@Route(url="call/disbursement/detail")
 	public HashMap<String, Object> getDisbursement(VMJExchange vmjExchange){
 		int id = ((Double) vmjExchange.getRequestBodyForm("id")).intValue();

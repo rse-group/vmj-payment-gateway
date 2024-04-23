@@ -29,6 +29,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> customer_details = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
+        List<String> customerDetailsRequiredFields = Arrays.asList("first_name", "email");
 
         int id = generateId();
         double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
@@ -38,7 +39,10 @@ public class MidtransConfiguration extends ConfigDecorator{
         transaction_details.put("gross_amount", amount);
         requestMap.put("transaction_details", transaction_details);
 
+
         String name = (String) vmjExchange.getRequestBodyForm("sender_name");
+        String email = (String) vmjExchange.getRequestBodyForm("email");
+        String title = (String) vmjExchange.getRequestBodyForm("title");
         String[] arr = name.split(" ", 2);
         if(arr.length > 1){
             customer_details.put("first_name", arr[0]);
@@ -46,7 +50,10 @@ public class MidtransConfiguration extends ConfigDecorator{
         } else{
             customer_details.put("first_name", arr[0]);
         }
+        customer_details.put("email",email);
+        customer_details.put("customer_details_required_fields",customerDetailsRequiredFields);
         requestMap.put("costumer_details", customer_details);
+        requestMap.put("title",title);
         requestMap.put("id",id);
         System.out.println("Midtrans id:" + String.valueOf(id));
         return requestMap;

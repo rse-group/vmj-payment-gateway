@@ -69,30 +69,29 @@ public class InternationalMoneyTransferResourceImpl extends InternationalResourc
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		
-		Map<String, Object> body = vmjExchange.getPayload();
+		Map<String, Object> requestMap = vmjExchange.getPayload();
 		String configUrl = config.getProductEnv("InternationalMoneyTransfer");
 		HashMap<String, String> headerParams = config.getHeaderParams();
+		System.out.println("configUrl: " + configUrl);
 		LOGGER.info("header: " + headerParams);
 		LOGGER.info("configUrl: " + configUrl);
-		Gson gson = new Gson();
+		String requestString = config.getRequestString(requestMap);
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(), headerParams))
+		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
 				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(record.getParamsUrlEncoded(body)))
+				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
-				
-		Map<String, Object> requestMap = new HashMap<>();
-
+		Map<String, Object> responseMap = new HashMap<>();
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			LOGGER.info("rawResponse:" + rawResponse);
-			requestMap = config.getInternationalMoneyTransferResponse(rawResponse);
+			System.out.println("rawResponse " + rawResponse);
+			responseMap = config.getInternationalMoneyTransferResponse(rawResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return requestMap;
+		return responseMap;
 	}
 
 	@Route(url = "call/international-money-transfer")

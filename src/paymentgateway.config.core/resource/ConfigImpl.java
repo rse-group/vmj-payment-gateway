@@ -27,6 +27,11 @@ public class ConfigImpl extends ConfigComponent {
     public String getVendorName(){
         return "";
     }
+    
+    public String getRequestString(Map<String, Object> requestMap){
+        Gson gson = new Gson();
+        return gson.toJson(requestMap);
+    }
 
     public String getProductEnv(String fileName, String serviceName){
         String url = "";
