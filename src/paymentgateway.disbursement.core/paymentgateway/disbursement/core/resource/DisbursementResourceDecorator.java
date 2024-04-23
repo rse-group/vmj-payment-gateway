@@ -33,10 +33,6 @@ public abstract class DisbursementResourceDecorator extends DisbursementResource
     public HashMap<String, Object> sendTransaction(VMJExchange vmjExchange, String serviceName){
         return record.sendTransaction(vmjExchange, serviceName);
     }
-
-    public String getParamsUrlEncoded(Map<String, Object> vmjExchange){
-        return record.getParamsUrlEncoded(vmjExchange);
-    }
     public HashMap<String, Object> getDisbursementById(int id){
         return record.getDisbursementById(id);
     }

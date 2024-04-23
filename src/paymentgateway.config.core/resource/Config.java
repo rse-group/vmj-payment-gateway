@@ -10,6 +10,9 @@ public interface Config {
     // get url lengkap sama service ex: moneytransfer
     String getProductEnv(String serviceName);
 
+    //
+    String getRequestString(Map<String, Object> requestMap);
+
     // get config readernya (tetep disini atau dipindah? untuk sekarang dijadiin static)
     // Object getPropertiesReader();
 

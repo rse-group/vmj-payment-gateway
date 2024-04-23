@@ -27,6 +27,10 @@ public class ConfigImpl extends ConfigComponent {
     public String getProductName(){
         return "";
     }
+    
+    public String getRequestString(Map<String, Object>requestMap){
+        return "";
+    }
 
     public String getProductEnv(String serviceName){
         String url = "";

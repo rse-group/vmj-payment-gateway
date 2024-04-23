@@ -19,6 +19,10 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getProductName();
     }
 
+    public String getRequestString(Map<String, Object> requestMap){
+        return record.getRequestString(requestMap);
+    }
+
     public String getProductEnv(String serviceName){
         return record.getProductEnv(serviceName);
     }

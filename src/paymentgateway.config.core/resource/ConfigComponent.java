@@ -7,6 +7,7 @@ import vmj.routing.route.VMJExchange;
 public abstract class ConfigComponent implements Config {
     public abstract String getProductName();
     public abstract String getProductEnv(String serviceName);
+    public abstract String getRequestString(Map<String, Object> requestMap);
     public abstract HttpRequest.Builder getBuilder(HttpRequest.Builder builder, HashMap<String, String> headerParams);
     public abstract HashMap<String, String> getHeaderParams();
     public abstract Map<String, Object> processRequestMap(VMJExchange vmjExchange, String serviceName);
