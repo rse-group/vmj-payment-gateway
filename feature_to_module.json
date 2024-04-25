@@ -1,0 +1,32 @@
+{
+	"Config":["paymentgateway.config.core"],
+	"Flip":["paymentgateway.config.flip"],
+	"Midtrans":["paymentgateway.config.midtrans"],
+	"Oy":["paymentgateway.config.oy"],
+	"Disbursement": [ "paymentgateway.disbursement.core"],
+	"MoneyTransfer": [ "paymentgateway.disbursement.moneytransfer"],
+	"AggregatorMoneyTransfer": [ 
+		"paymentgateway.disbursement.moneytransfer",
+		"paymentgateway.disbursement.agent",
+		"paymentgateway.disbursement.aggregatormoneytransfer"
+	],
+	"FacilitatorMoneyTransfer": [ 
+		"paymentgateway.disbursement.moneytransfer",
+		"paymentgateway.disbursement.special",
+		"paymentgateway.disbursement.facilitatormoneytransfer"
+	],
+	"InternationalMoneyTransfer": [ 
+		"paymentgateway.disbursement.moneytransfer",
+		"paymentgateway.disbursement.international",
+		"paymentgateway.disbursement.internationalmoneytransfer"
+	],
+	"Payment": [ "paymentgateway.payment.core"],
+	"CreditCard": ["paymentgateway.payment.creditcard"],
+	"DebitCard": ["paymentgateway.payment.debitcard"],
+	"EWallet": ["paymentgateway.payment.ewallet"],
+	"Invoice": ["paymentgateway.payment.invoice"],
+	"PaymentLink": ["paymentgateway.payment.paymentlink"],
+	"PaymentRouting": ["paymentgateway.payment.paymentrouting"],
+	"RetailOutlet": ["paymentgateway.payment.retailoutlet"],
+	"VirtualAccount": ["paymentgateway.payment.virtualaccount"]
+  }
