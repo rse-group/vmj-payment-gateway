@@ -17,12 +17,18 @@
 			<and abstract="true" name="Disbursement">
 				<feature name="AggregatorMoneyTransfer"/>
 				<feature name="FacilitatorMoneyTransfer"/>
+				<feature name="MoneyTransfer"/>
 			</and>
 			<and abstract="true" name="Payment">
+				<graphics key="collapsed" value="false"/>
 				<feature name="PaymentLink"/>
 				<feature name="EWallet"/>
 				<feature name="RetailOutlet"/>
 				<feature name="VirtualAccount"/>
+				<feature name="Invoice"/>
+				<feature name="PaymentRouting"/>
+				<feature name="DebitCard"/>
+				<feature name="CreditCard"/>
 			</and>
 			<and abstract="true" mandatory="true" name="Config">
 				<feature name="Flip"/>
