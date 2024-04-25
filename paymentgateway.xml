@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<featureModel>
+	<properties>
+		<graphics key="autolayoutconstraints" value="false"/>
+		<graphics key="legendposition" value="1153,63"/>
+		<graphics key="legendautolayout" value="false"/>
+		<graphics key="showconstraints" value="true"/>
+		<graphics key="showshortnames" value="false"/>
+		<graphics key="layout" value="horizontal"/>
+		<graphics key="showcollapsedconstraints" value="true"/>
+		<graphics key="legendhidden" value="false"/>
+		<graphics key="layoutalgorithm" value="1"/>
+	</properties>
+	<struct>
+		<and abstract="true" mandatory="true" name="PaymentGateway">
+			<graphics key="collapsed" value="false"/>
+			<and abstract="true" name="Disbursement">
+				<feature name="AggregatorMoneyTransfer"/>
+				<feature name="FacilitatorMoneyTransfer"/>
+			</and>
+			<and abstract="true" name="Payment">
+				<feature name="PaymentLink"/>
+				<feature name="EWallet"/>
+				<feature name="RetailOutlet"/>
+				<feature name="VirtualAccount"/>
+			</and>
+			<and abstract="true" mandatory="true" name="Config">
+				<feature name="Flip"/>
+				<feature name="Midtrans"/>
+				<feature name="Oy"/>
+			</and>
+		</and>
+	</struct>
+</featureModel>
