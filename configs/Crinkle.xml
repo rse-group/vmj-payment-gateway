@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature automatic="selected" name="PaymentGateway"/>
+	<feature automatic="selected" name="Config"/>
+	<feature automatic="selected" manual="selected" name="Flip"/>
+	<feature automatic="selected" name="Midtrans"/>
+	<feature automatic="selected" name="Oy"/>
+	<feature automatic="selected" name="Disbursement"/>
+	<feature manual="selected" name="MoneyTransfer"/>
+	<feature name="InternationalMoneyTransfer"/>
+	<feature manual="selected" name="FacilitatorMoneyTransfer"/>
+	<feature name="AggregatorMoneyTransfer"/>
+	<feature automatic="selected" name="Payment"/>
+	<feature name="PaymentLink"/>
+	<feature name="VirtualAccount"/>
+	<feature name="RetailOutlet"/>
+	<feature name="EWallet"/>
+	<feature name="Invoice"/>
+	<feature manual="selected" name="PaymentRouting"/>
+	<feature name="CreditCard"/>
+	<feature manual="selected" name="DebitCard"/>
+</configuration>

@@ -1,0 +1,33 @@
+namespace PaymentGateway
+
+features
+	PaymentGateway {abstract true}
+		mandatory
+			Config {abstract true}
+				or
+					Flip
+					Midtrans
+					Oy
+		optional
+			Disbursement {abstract true}
+				or
+					MoneyTransfer
+					InternationalMoneyTransfer
+					FacilitatorMoneyTransfer
+					AggregatorMoneyTransfer
+			Payment {abstract true}
+				or
+					PaymentLink
+					VirtualAccount
+					RetailOutlet
+					EWallet
+					Invoice
+					PaymentRouting
+					CreditCard
+					DebitCard
+
+constraints
+	Disbursement => Flip
+	RetailOutlet => Midtrans | Oy
+	Invoice | PaymentRouting => Oy
+	CreditCard | DebitCard => Midtrans
