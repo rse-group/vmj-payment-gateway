@@ -123,8 +123,8 @@ public class FlipConfiguration extends ConfigDecorator{
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) vmjExchange.getRequestBodyForm("title");
         int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
-        String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
-        String senderEmail = (String) vmjExchange.getRequestBodyForm("sender_email");
+        String senderName = (String) vmjExchange.getRequestBodyForm("name");
+        String senderEmail = (String) vmjExchange.getRequestBodyForm("email");
         String senderBank = (String) vmjExchange.getRequestBodyForm("bank");
 
         requestMap.put("id",id);
@@ -162,8 +162,8 @@ public class FlipConfiguration extends ConfigDecorator{
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) vmjExchange.getRequestBodyForm("title");
         int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
-        String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
-        String senderEmail = (String) vmjExchange.getRequestBodyForm("sender_email");
+        String senderName = (String) vmjExchange.getRequestBodyForm("name");
+        String senderEmail = (String) vmjExchange.getRequestBodyForm("email");
         String senderBank = (String) vmjExchange.getRequestBodyForm("payment_type");
         String senderPhoneNumber = (String) vmjExchange.getRequestBodyForm("phone_number");
 
@@ -205,8 +205,8 @@ public class FlipConfiguration extends ConfigDecorator{
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) vmjExchange.getRequestBodyForm("title");
         int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
-        String senderEmail = (String) vmjExchange.getRequestBodyForm("sender_email");
-        String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
+        String senderEmail = (String) vmjExchange.getRequestBodyForm("email");
+        String senderName = (String) vmjExchange.getRequestBodyForm("name");
         
         requestMap.put("id",id);
         requestMap.put("title", title);
@@ -214,7 +214,7 @@ public class FlipConfiguration extends ConfigDecorator{
         requestMap.put("sender_name", senderName);
         requestMap.put("sender_email",senderEmail);
         requestMap.put("amount",amount);
-        requestMap.put("step", PaymentFlow.SECOND.getValue() );
+        requestMap.put("step", PaymentFlow.SECOND.getValue());
 
         return requestMap;
     }
