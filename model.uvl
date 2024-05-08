@@ -2,12 +2,6 @@ namespace PaymentGateway
 
 features
 	PaymentGateway {abstract true}
-		mandatory
-			Config {abstract true}
-				or
-					Flip
-					Midtrans
-					Oy
 		optional
 			Disbursement {abstract true}
 				or
@@ -26,8 +20,3 @@ features
 					CreditCard
 					DebitCard
 
-constraints
-	Disbursement => Flip
-	RetailOutlet => Midtrans | Oy
-	Invoice | PaymentRouting => Oy
-	CreditCard | DebitCard => Midtrans
