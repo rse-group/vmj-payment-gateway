@@ -27,6 +27,14 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getRequestString(requestMap);
     }
 
+    public String getPaymentDetailEndpoint(String configUrl,String id){
+        return record.getPaymentDetailEndpoint(configUrl,id);
+    }
+
+    public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
+        return record.getPaymentStatusResponse(rawResponse,id);
+    }
+
     public String getProductEnv(String serviceName){
         return record.getProductEnv(serviceName);
     }
@@ -146,4 +154,5 @@ public abstract class ConfigDecorator extends ConfigComponent{
     public Map<String, Object> getAggregatorMoneyTransferResponse(String rawResponse){
         return record.getAggregatorMoneyTransferResponse(rawResponse);
     }
+    
 }

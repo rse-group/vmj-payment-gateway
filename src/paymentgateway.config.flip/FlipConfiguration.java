@@ -9,7 +9,14 @@ import com.google.gson.JsonObject;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.lang.reflect.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.*;
 
 import vmj.routing.route.VMJExchange;
 
@@ -189,14 +196,57 @@ public class FlipConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String url = (String) rawResponseMap.get("payment_url");
-        String paymentType = (String) rawResponseMap.get("bank_code");
+        String paymentMethod = (String) rawResponseMap.get("bank_code");
         String phoneNumber = (String) rawResponseMap.get("user_phone");
         response.put("phone_number",phoneNumber);
         response.put("url", url);
-        response.put("payment_type",paymentType);
+        response.put("payment_type",paymentMethod);
         response.put("id", id);
         return response;
     }
+
+    @Override
+    public String getPaymentDetailEndpoint(String configUrl,String id){
+        configUrl = configUrl.replace("[id]", id);
+        return configUrl;
+    }
+
+    @Override
+    public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        if (rawResponseMap.containsKey("errors")) {
+            List<Map<String, Object>> errors = (List<Map<String, Object>>) rawResponseMap.get("errors");
+            if (!errors.isEmpty()) {
+                Map<String, Object> firstError = errors.get(0);
+                String errorMessage = (String) firstError.get("message");
+                response.put("error", errorMessage);
+                return response;
+            }
+        }
+        ArrayList<Object> dataList = (ArrayList<Object>) rawResponseMap.get("data");
+        if (!dataList.isEmpty()) {
+            Map<String, Object> dataObject = (Map<String, Object>) dataList.get(0);
+            String status = (String) dataObject.get("status");
+            String name = (String) dataObject.get("sender_name");
+            int amount = ((Number) dataObject.get("amount")).intValue();
+            String paymentMethod = (String) dataObject.get("sender_bank_type");
+
+            response.put("name", name);
+            response.put("amount", amount);
+            response.put("status", status);
+            response.put("payment_method", paymentMethod);
+            response.put("id", id);
+        } else {
+            response.put("id", id);
+            response.put("status", "PENDING");
+        }
+        return response;
+    }
+
+
 
 
     @Override
@@ -226,8 +276,9 @@ public class FlipConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String url = (String) rawResponseMap.get("link_url");
+        int billId = (int) ((Double) rawResponseMap.get("link_id")).doubleValue();
         response.put("url", url);
-        response.put("id", id);
+        response.put("id", billId);
         return response;
     }
 

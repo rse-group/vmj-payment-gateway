@@ -14,6 +14,9 @@ public abstract class ConfigComponent implements Config {
     public abstract Map<String, Object> processRequestMap(VMJExchange vmjExchange, String serviceName);
     public abstract List<Map<String,Object>> toListMap(VMJExchange vmjExchange, String name);
     public abstract int generateId();
+    public abstract String getPaymentDetailEndpoint(String configUrl,String id);
+
+    public abstract Map<String, Object> getPaymentStatusResponse(String rawResponse, String id);
 
     public abstract Map<String, Object> getMoneyTransferRequestBody(VMJExchange vmjExchange);
     public abstract Map<String, Object> getFacilitatorMoneyTransferRequestBody(VMJExchange vmjExchange);

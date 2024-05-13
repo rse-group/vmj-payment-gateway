@@ -72,8 +72,39 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return responseMap;
+	}
+
+	protected Map<String, Object> checkPaymentStatus(VMJExchange vmjExchange) {
+		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
+		String Id = (String) vmjExchange.getRequestBodyForm("id");
+
+		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+		HttpClient client = HttpClient.newHttpClient();
+        String configUrl = config.getProductEnv("PaymentDetail");
+        configUrl = config.getPaymentDetailEndpoint(configUrl, Id);
+        HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),config.getHeaderParams()))
+				.uri(URI.create(configUrl))
+				.GET()
+				.build();
+        Map<String, Object> responseMap = new HashMap<>();
+		try {
+			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			String rawResponse = response.body().toString();
+			System.out.println("rawResponse " + rawResponse);
+            responseMap = config.getPaymentStatusResponse(rawResponse, Id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return responseMap;
+	}
+
+	@Route(url = "call/paymentlink/paymentstatus")
+	public Map<String, Object> paymentStatus(VMJExchange vmjExchange) {
+		if (vmjExchange.getHttpMethod().equals("POST")){
+			return this.checkPaymentStatus(vmjExchange);
+		}
+		throw new NotFoundException("Route tidak ditemukan");
 	}
 
 	@Route(url = "call/paymentlink")
@@ -84,6 +115,8 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		}
 		throw new NotFoundException("Route tidak ditemukan");
 	}
+
+	
 
 
 	@Route(url = "call/paymentlink/vendorname")

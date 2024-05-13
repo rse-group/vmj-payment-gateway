@@ -48,6 +48,14 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
+    public String getPaymentDetailEndpoint(String configUrl,String id){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
+        throw new UnsupportedOperationException();
+    }
+
     public HttpRequest.Builder getBuilder(HttpRequest.Builder builder, HashMap<String, String> headerParams){
         for (Map.Entry<String, String> e : headerParams.entrySet()) {
             builder.header(e.getKey(), e.getValue());

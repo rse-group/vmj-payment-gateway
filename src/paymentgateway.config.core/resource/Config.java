@@ -44,6 +44,10 @@ public interface Config {
     Map<String, Object> getInvoiceRequestBody(VMJExchange vmjExchange);
     Map<String, Object> getPaymentRoutingRequestBody(VMJExchange vmjExchange);
 
+    String getPaymentDetailEndpoint(String configUrl,String id);
+
+    Map<String, Object> getPaymentStatusResponse(String rawResponse, String id);
+
     // Payment Response
     Map<String, Object> getPaymentLinkResponse(String rawResponse, int id);
     Map<String, Object> getDebitCardResponse(String rawResponse, int id);

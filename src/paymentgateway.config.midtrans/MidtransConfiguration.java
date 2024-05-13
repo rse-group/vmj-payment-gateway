@@ -25,19 +25,50 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
+    public String getPaymentDetailEndpoint(String configUrl,String Id){
+        configUrl = configUrl.replace("[id]", Id);
+        return configUrl;
+    }    
+
+    @Override
+    public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        Map<String, Object> customerData = (Map<String, Object>) rawResponseMap.get("customer_details");
+        String firstName = (String) customerData.get("first_name");
+        String lastName = (String) customerData.get("last_name");
+        int amount = (int) ((Double) rawResponseMap.get("gross_amount")).doubleValue();
+
+        ArrayList<Object> dataList = (ArrayList<Object>) rawResponseMap.get("purchases");
+        if (!dataList.isEmpty()) {
+            Map<String, Object> dataObject = (Map<String, Object>) dataList.get(0);
+            String status = (String) dataObject.get("payment_status");
+            String paymentMethod = (String) dataObject.get("payment_method");
+
+            response.put("name", firstName);
+            response.put("amount", amount);
+            response.put("status", status);
+            response.put("payment_method", paymentMethod);
+            response.put("id", id);
+        }
+        return response;
+    }
+    
+
+    @Override
     public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> customer_details = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
-        List<String> customerDetailsRequiredFields = Arrays.asList("first_name", "email");
-
+        
         int id = generateId();
         double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
-
-
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
         requestMap.put("transaction_details", transaction_details);
+        requestMap.put( "customer_required",true);
 
 
         String name = (String) vmjExchange.getRequestBodyForm("sender_name");
@@ -51,7 +82,6 @@ public class MidtransConfiguration extends ConfigDecorator{
             customer_details.put("first_name", arr[0]);
         }
         customer_details.put("email",email);
-        customer_details.put("customer_details_required_fields",customerDetailsRequiredFields);
         requestMap.put("costumer_details", customer_details);
         requestMap.put("title",title);
         requestMap.put("id",id);
@@ -274,7 +304,11 @@ public class MidtransConfiguration extends ConfigDecorator{
         String apiEndpoint = "";
         if (serviceName.equals("PaymentLink")){
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "paymentlink");
-        } else {
+        } 
+        else if (serviceName.equals("PaymentDetail")){
+            apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "paymentdetail");
+        }
+        else {
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "apiendpoint");
         }
         

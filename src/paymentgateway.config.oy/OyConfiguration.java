@@ -29,6 +29,36 @@ public class OyConfiguration extends ConfigDecorator{
         return record.getProductEnv(CONFIG_FILE, serviceName);
     }
 
+     @Override
+    public String getPaymentDetailEndpoint(String configUrl,String Id){
+
+        configUrl = configUrl.replace("[id]", Id);
+        return configUrl;
+    }
+
+    
+
+    @Override
+    public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        Map<String, Object> paymentData = (Map<String, Object>) rawResponseMap.get("data");
+
+        String name = (String) paymentData.get("sender_name");
+        int amount = (int) ((Double) paymentData.get("amount")).doubleValue();
+        String status = (String) paymentData.get("status");
+        String paymentMethod = (String) paymentData.get("payment_method");
+
+        response.put("name", name);
+        response.put("amount", amount);
+        response.put("status", status);
+        response.put("payment_method", paymentMethod);
+        response.put("id", id);
+        return response;
+    }
+
     public Map<String, String> getOyBankCode(){
         Map<String, String> immutableMap = Map.of("bni", "009",
                 "bca", "014",
