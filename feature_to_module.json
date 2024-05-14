@@ -1,5 +1,5 @@
 {
-	"Config":["paymentgateway.config.core"],
+	"Vendor":["paymentgateway.config.core"],
 	"Flip":["paymentgateway.config.flip"],
 	"Midtrans":["paymentgateway.config.midtrans"],
 	"Oy":["paymentgateway.config.oy"],

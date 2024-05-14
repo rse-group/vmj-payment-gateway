@@ -7,150 +7,36 @@ import vmj.routing.route.Router;
 import vmj.hibernate.integrator.HibernateUtil;
 import org.hibernate.cfg.Configuration;
 
-import paymentgateway.payment.PaymentResourceFactory;
-import paymentgateway.payment.core.PaymentResource;
+FreeMarker template error (DEBUG mode; use RETHROW in production!):
+The following has evaluated to null or missing:
+==> imports  [in template "ProductClass.ftl" at line 10, column 8]
 
-import prices.auth.vmj.model.UserResourceFactory;
-import prices.auth.vmj.model.RoleResourceFactory;
-import prices.auth.vmj.model.core.UserResource;
-import prices.auth.vmj.model.core.RoleResource;
+----
+Tip: If the failing expression is known to legally refer to something that's sometimes null or missing, either specify a default value like myOptionalVar!myDefault, or use <#if myOptionalVar??>when-present<#else>when-missing</#if>. (These only cover the last step of the expression; to cover the whole expression, use parenthesis: (myOptionalVar.foo)!myDefault, (myOptionalVar.foo)??
+----
 
+----
+FTL stack trace ("~" means nesting-related):
+	- Failed at: #list imports as import  [in template "ProductClass.ftl" at line 10, column 1]
+----
 
-public class Creak {
-
-	public static void main(String[] args) {
-		
-		// get hostAddress and portnum from env var
-        // ex:
-        // AMANAH_HOST_BE --> "localhost"
-        // AMANAH_PORT_BE --> 7776
-		String hostAddress= getEnvVariableHostAddress("AMANAH_HOST_BE");
-        int portNum = getEnvVariablePortNumber("AMANAH_PORT_BE");
-        activateServer(hostAddress, portNum);
-
-		Configuration configuration = new Configuration();
-		// panggil setter setelah membuat object dari kelas Configuration
-        // ex:
-        // AMANAH_DB_URL --> jdbc:postgresql://localhost:5432/superorg
-        // AMANAH_DB_USERNAME --> postgres
-        // AMANAH_DB_PASSWORD --> postgres123
-		setDBProperties("AMANAH_DB_URL", "url", configuration);
-        setDBProperties("AMANAH_DB_USERNAME", "username", configuration);
-        setDBProperties("AMANAH_DB_PASSWORD","password", configuration);
-		
-		configuration.addAnnotatedClass(paymentgateway.payment.core.Payment.class);
-		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentComponent.class);
-		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentDecorator.class);
-		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.payment.invoice.PaymentImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.payment.virtualaccount.VirtualAccountImpl.class);
-		
-		configuration.addAnnotatedClass(prices.auth.vmj.model.core.Role.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.RoleComponent.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.RoleImpl.class);
-        
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserRole.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserRoleComponent.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserRoleImpl.class);
-
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.User.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserComponent.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserDecorator.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserImpl.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.passworded.UserPasswordedImpl.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.social.UserSocialImpl.class);
-		
-		configuration.buildMappings();
-		HibernateUtil.buildSessionFactory(configuration);
-	
-		createObjectsAndBindEndPoints();
-	}
-
-	public static void activateServer(String hostName, int portNumber) {
-		VMJServer vmjServer = VMJServer.getInstance(hostName, portNumber);
-		try {
-			vmjServer.startServerGeneric();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-	}
-
-	public static void createObjectsAndBindEndPoints() {
-		System.out.println("== CREATING OBJECTS AND BINDING ENDPOINTS ==");
-		PaymentResource payment = PaymentResourceFactory
-			.createPaymentResource(
-			"paymentgateway.payment.core.PaymentResourceImpl"
-			);
-		PaymentResource invoice = PaymentResourceFactory
-			.createPaymentResource(
-			"paymentgateway.payment.invoice.PaymentResourceImpl"
-			,
-			PaymentResourceFactory.createPaymentResource(
-			"paymentgateway.payment.core.PaymentResourceImpl"));
-		PaymentResource virtualaccount = PaymentResourceFactory
-			.createPaymentResource(
-			"paymentgateway.payment.virtualaccount.PaymentResourceImpl"
-			,
-			PaymentResourceFactory.createPaymentResource(
-			"paymentgateway.payment.core.PaymentResourceImpl"));
-		
-		UserResource userCore = UserResourceFactory
-                .createUserResource("prices.auth.vmj.model.core.UserResourceImpl");
-        UserResource userPassworded = UserResourceFactory
-	        .createUserResource("prices.auth.vmj.model.passworded.UserPasswordedResourceDecorator",
-		        UserResourceFactory
-		        	.createUserResource("prices.auth.vmj.model.core.UserResourceImpl"));
-        UserResource userSocial = UserResourceFactory
-        	.createUserResource("prices.auth.vmj.model.social.UserSocialResourceDecorator",
-        		userPassworded);        
-        RoleResource role = RoleResourceFactory
-        	.createRoleResource("prices.auth.vmj.model.core.RoleResourceImpl");
-
-		System.out.println("virtualaccount endpoints binding");
-		Router.route(virtualaccount);
-		
-		System.out.println("invoice endpoints binding");
-		Router.route(invoice);
-		
-		System.out.println("payment endpoints binding");
-		Router.route(payment);
-		
-		
-		System.out.println("auth endpoints binding");
-		Router.route(userCore);
-		Router.route(userPassworded);
-		Router.route(userSocial);
-		Router.route(role);
-		System.out.println();
-	}
-	
-	public static void setDBProperties(String varname, String typeProp, Configuration configuration) {
-		String varNameValue = System.getenv(varname);
-		String propertyName = String.format("hibernate.connection.%s",typeProp);
-		if (varNameValue != null) {
-			configuration.setProperty(propertyName, varNameValue);
-		} else {
-			String hibernatePropertyVal = configuration.getProperty(propertyName);
-			if (hibernatePropertyVal == null) {
-				String error_message = String.format("Please check '%s' in your local environment variable or "
-                	+ "'hibernate.connection.%s' in your 'hibernate.properties' file!", varname, typeProp);
-            	System.out.println(error_message);
-			}
-		}
-	}
-
-	// if the env variable for server host is null, use localhost instead.
-    public static String getEnvVariableHostAddress(String varname_host){
-            String hostAddress = System.getenv(varname_host)  != null ? System.getenv(varname_host) : "localhost"; // Host
-            return hostAddress;
-    }
-
-    // try if the environment variable for port number is null, use 7776 instead
-    public static int getEnvVariablePortNumber(String varname_port){
-            String portNum = System.getenv(varname_port)  != null? System.getenv(varname_port)  : "7776"; //PORT
-            int portNumInt = Integer.parseInt(portNum);
-            return portNumInt;
-    }
-
-}
+Java stack trace (for programmers):
+----
+freemarker.core.InvalidReferenceException: [... Exception message was already printed; see it above ...]
+	at freemarker.core.InvalidReferenceException.getInstance(InvalidReferenceException.java:134)
+	at freemarker.core.Expression.assertNonNull(Expression.java:249)
+	at freemarker.core.IteratorBlock.acceptWithResult(IteratorBlock.java:104)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:94)
+	at freemarker.core.Environment.visit(Environment.java:347)
+	at freemarker.core.Environment.visit(Environment.java:353)
+	at freemarker.core.Environment.process(Environment.java:326)
+	at freemarker.template.Template.process(Template.java:383)
+	at de.ovgu.featureide.core.winvmj.templates.TemplateRenderer.write(TemplateRenderer.java:66)
+	at de.ovgu.featureide.core.winvmj.templates.TemplateRenderer.render(TemplateRenderer.java:37)
+	at de.ovgu.featureide.core.winvmj.WinVMJComposer.composeProduct(WinVMJComposer.java:96)
+	at de.ovgu.featureide.core.winvmj.WinVMJComposer$1.execute(WinVMJComposer.java:76)
+	at de.ovgu.featureide.core.winvmj.WinVMJComposer$1.execute(WinVMJComposer.java:1)
+	at de.ovgu.featureide.fm.core.job.Executer.execute(Executer.java:44)
+	at de.ovgu.featureide.fm.core.job.LongRunningJob.work(LongRunningJob.java:48)
+	at de.ovgu.featureide.fm.core.job.AbstractJob.run(AbstractJob.java:122)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
