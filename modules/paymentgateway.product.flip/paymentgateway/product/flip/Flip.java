@@ -14,10 +14,10 @@ import paymentgateway.payment.PaymentResourceFactory;
 import paymentgateway.payment.core.PaymentResource;
 import paymentgateway.payment.paymentlink.PaymentLinkImpl;
 
-import prices.auth.vmj.model.UserResourceFactory;
-import prices.auth.vmj.model.RoleResourceFactory;
-import prices.auth.vmj.model.core.UserResource;
-import prices.auth.vmj.model.core.RoleResource;
+import vmj.auth.model.UserResourceFactory;
+import vmj.auth.model.RoleResourceFactory;
+import vmj.auth.model.core.UserResource;
+import vmj.auth.model.core.RoleResource;
 
 public class Flip {
 	private static final Logger LOGGER = Logger.getLogger(Flip.class.getName());
@@ -48,8 +48,8 @@ public class Flip {
 		configuration.addAnnotatedClass(paymentgateway.disbursement.moneytransfer.MoneyTransferImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.disbursement.special.SpecialImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.disbursement.agent.AgentImpl.class);
-		// configuration.addAnnotatedClass(paymentgateway.disbursement.aggregatormoneytransfer.class);
-		// configuration.addAnnotatedClass(paymentgateway.disbursement.facilitatormoneytransfer.class);
+		// configuration.addAnnotatedClass(paymentgateway.disbursement.agentmoneytransfer.class);
+		// configuration.addAnnotatedClass(paymentgateway.disbursement.specialmoneytransfer.class);
 //		configuration.addAnnotatedClass(paymentgateway.disbursement.scheduled.ScheduledImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.Payment.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentComponent.class);
@@ -65,20 +65,20 @@ public class Flip {
 
 		// configuration.addAnnotatedClass(paymentgateway.disbursement.approvalsystem.ApprovalSystemImpl.class);
 
-		configuration.addAnnotatedClass(prices.auth.vmj.model.core.Role.class);
-		configuration.addAnnotatedClass(prices.auth.vmj.model.core.RoleComponent.class);
-		configuration.addAnnotatedClass(prices.auth.vmj.model.core.RoleImpl.class);
+		configuration.addAnnotatedClass(vmj.auth.model.core.Role.class);
+		configuration.addAnnotatedClass(vmj.auth.model.core.RoleComponent.class);
+		configuration.addAnnotatedClass(vmj.auth.model.core.RoleImpl.class);
 
-		configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserRole.class);
-		configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserRoleComponent.class);
-		configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserRoleImpl.class);
+		configuration.addAnnotatedClass(vmj.auth.model.core.UserRole.class);
+		configuration.addAnnotatedClass(vmj.auth.model.core.UserRoleComponent.class);
+		configuration.addAnnotatedClass(vmj.auth.model.core.UserRoleImpl.class);
 
-		configuration.addAnnotatedClass(prices.auth.vmj.model.core.User.class);
-		configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserComponent.class);
-		configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserDecorator.class);
-		configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserImpl.class);
-		configuration.addAnnotatedClass(prices.auth.vmj.model.passworded.UserPasswordedImpl.class);
-		configuration.addAnnotatedClass(prices.auth.vmj.model.social.UserSocialImpl.class);
+		configuration.addAnnotatedClass(vmj.auth.model.core.User.class);
+		configuration.addAnnotatedClass(vmj.auth.model.core.UserComponent.class);
+		configuration.addAnnotatedClass(vmj.auth.model.core.UserDecorator.class);
+		configuration.addAnnotatedClass(vmj.auth.model.core.UserImpl.class);
+		configuration.addAnnotatedClass(vmj.auth.model.passworded.UserPasswordedImpl.class);
+		configuration.addAnnotatedClass(vmj.auth.model.social.UserSocialImpl.class);
 
 		configuration.buildMappings();
 		HibernateUtil.buildSessionFactory(configuration);
@@ -134,14 +134,14 @@ public class Flip {
 						DisbursementResourceFactory.createDisbursementResource(
 								"paymentgateway.disbursement.core.DisbursementResourceImpl"));
 		
-		DisbursementResource aggregator = DisbursementResourceFactory
+		DisbursementResource agent = DisbursementResourceFactory
 				.createDisbursementResource(
-						"paymentgateway.disbursement.aggregatormoneytransfer.AggregatorMoneyTransferResourceImpl",
+						"paymentgateway.disbursement.agentmoneytransfer.AgentMoneyTransferResourceImpl",
 						moneytransfer);
 
-		DisbursementResource facilitator = DisbursementResourceFactory
+		DisbursementResource special = DisbursementResourceFactory
 				.createDisbursementResource(
-						"paymentgateway.disbursement.facilitatormoneytransfer.FacilitatorMoneyTransferResourceImpl",
+						"paymentgateway.disbursement.specialmoneytransfer.SpecialMoneyTransferResourceImpl",
 						moneytransfer);
 
 		DisbursementResource internationalmoneytransfer = DisbursementResourceFactory
@@ -155,16 +155,16 @@ public class Flip {
 		LOGGER.info("================================");
 
 		UserResource userCore = UserResourceFactory
-				.createUserResource("prices.auth.vmj.model.core.UserResourceImpl");
+				.createUserResource("vmj.auth.model.core.UserResourceImpl");
 		UserResource userPassworded = UserResourceFactory
-				.createUserResource("prices.auth.vmj.model.passworded.UserPasswordedResourceDecorator",
+				.createUserResource("vmj.auth.model.passworded.UserPasswordedResourceDecorator",
 						UserResourceFactory
-								.createUserResource("prices.auth.vmj.model.core.UserResourceImpl"));
+								.createUserResource("vmj.auth.model.core.UserResourceImpl"));
 		UserResource userSocial = UserResourceFactory
-				.createUserResource("prices.auth.vmj.model.social.UserSocialResourceDecorator",
+				.createUserResource("vmj.auth.model.social.UserSocialResourceDecorator",
 						userPassworded);
 		RoleResource role = RoleResourceFactory
-				.createRoleResource("prices.auth.vmj.model.core.RoleResourceImpl");
+				.createRoleResource("vmj.auth.model.core.RoleResourceImpl");
 
 		LOGGER.info("Binding MoneyTransfer endpoints");
 		Router.route(moneytransfer);
@@ -172,11 +172,11 @@ public class Flip {
 		LOGGER.info("Binding InternationalMoneyTransfer endpoints");
 		Router.route(internationalmoneytransfer);
 		
-		System.out.println("Aggregator endpoints binding");
-		Router.route(aggregator);
+		System.out.println("Agent endpoints binding");
+		Router.route(agent);
 		
-		System.out.println("Facilitator endpoints binding");
-		Router.route(facilitator);
+		System.out.println("Special endpoints binding");
+		Router.route(special);
 
 		LOGGER.info("Binding Payment endpoints");
 		Router.route(payment);

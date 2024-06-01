@@ -7,19 +7,18 @@ import vmj.routing.route.Router;
 import vmj.hibernate.integrator.HibernateUtil;
 import org.hibernate.cfg.Configuration;
 
+import vmj.auth.model.UserResourceFactory;
+import vmj.auth.model.RoleResourceFactory;
+import vmj.auth.model.core.UserResource;
+import vmj.auth.model.core.RoleResource;
+
 import paymentgateway.payment.PaymentResourceFactory;
 import paymentgateway.payment.core.PaymentResource;
-
-import prices.auth.vmj.model.UserResourceFactory;
-import prices.auth.vmj.model.RoleResourceFactory;
-import prices.auth.vmj.model.core.UserResource;
-import prices.auth.vmj.model.core.RoleResource;
-
 
 public class Creak {
 
 	public static void main(String[] args) {
-		
+
 		// get hostAddress and portnum from env var
         // ex:
         // AMANAH_HOST_BE --> "localhost"
@@ -37,32 +36,31 @@ public class Creak {
 		setDBProperties("AMANAH_DB_URL", "url", configuration);
         setDBProperties("AMANAH_DB_USERNAME", "username", configuration);
         setDBProperties("AMANAH_DB_PASSWORD","password", configuration);
-		
+
+		configuration.addAnnotatedClass(vmj.auth.model.core.Role.class);
+        configuration.addAnnotatedClass(vmj.auth.model.core.RoleComponent.class);
+        configuration.addAnnotatedClass(vmj.auth.model.core.RoleDecorator.class);
+        configuration.addAnnotatedClass(vmj.auth.model.core.RoleImpl.class);
+        configuration.addAnnotatedClass(vmj.auth.model.core.UserRole.class);
+        configuration.addAnnotatedClass(vmj.auth.model.core.UserRoleComponent.class);
+        configuration.addAnnotatedClass(vmj.auth.model.core.UserRoleDecorator.class);
+        configuration.addAnnotatedClass(vmj.auth.model.core.UserRoleImpl.class);
+        configuration.addAnnotatedClass(vmj.auth.model.core.User.class);
+        configuration.addAnnotatedClass(vmj.auth.model.core.UserComponent.class);
+        configuration.addAnnotatedClass(vmj.auth.model.core.UserDecorator.class);
+        configuration.addAnnotatedClass(vmj.auth.model.core.UserImpl.class);
+        configuration.addAnnotatedClass(vmj.auth.model.passworded.UserImpl.class);
+
 		configuration.addAnnotatedClass(paymentgateway.payment.core.Payment.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentComponent.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentDecorator.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.invoice.PaymentImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.virtualaccount.VirtualAccountImpl.class);
-		
-		configuration.addAnnotatedClass(prices.auth.vmj.model.core.Role.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.RoleComponent.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.RoleImpl.class);
-        
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserRole.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserRoleComponent.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserRoleImpl.class);
 
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.User.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserComponent.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserDecorator.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.core.UserImpl.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.passworded.UserPasswordedImpl.class);
-        configuration.addAnnotatedClass(prices.auth.vmj.model.social.UserSocialImpl.class);
-		
 		configuration.buildMappings();
 		HibernateUtil.buildSessionFactory(configuration);
-	
+
 		createObjectsAndBindEndPoints();
 	}
 
@@ -78,53 +76,49 @@ public class Creak {
 
 	public static void createObjectsAndBindEndPoints() {
 		System.out.println("== CREATING OBJECTS AND BINDING ENDPOINTS ==");
-		PaymentResource payment = PaymentResourceFactory
-			.createPaymentResource(
-			"paymentgateway.payment.core.PaymentResourceImpl"
+		UserResource userResource = UserResourceFactory
+            .createUserResource("vmj.auth.model.core.UserResourceImpl"
 			);
-		PaymentResource invoice = PaymentResourceFactory
-			.createPaymentResource(
-			"paymentgateway.payment.invoice.PaymentResourceImpl"
-			,
-			PaymentResourceFactory.createPaymentResource(
-			"paymentgateway.payment.core.PaymentResourceImpl"));
-		PaymentResource virtualaccount = PaymentResourceFactory
-			.createPaymentResource(
-			"paymentgateway.payment.virtualaccount.PaymentResourceImpl"
-			,
-			PaymentResourceFactory.createPaymentResource(
-			"paymentgateway.payment.core.PaymentResourceImpl"));
-		
-		UserResource userCore = UserResourceFactory
-                .createUserResource("prices.auth.vmj.model.core.UserResourceImpl");
-        UserResource userPassworded = UserResourceFactory
-	        .createUserResource("prices.auth.vmj.model.passworded.UserPasswordedResourceDecorator",
-		        UserResourceFactory
-		        	.createUserResource("prices.auth.vmj.model.core.UserResourceImpl"));
-        UserResource userSocial = UserResourceFactory
-        	.createUserResource("prices.auth.vmj.model.social.UserSocialResourceDecorator",
-        		userPassworded);        
-        RoleResource role = RoleResourceFactory
-        	.createRoleResource("prices.auth.vmj.model.core.RoleResourceImpl");
 
-		System.out.println("virtualaccount endpoints binding");
-		Router.route(virtualaccount);
+		RoleResource roleResource = RoleResourceFactory
+        	.createRoleResource("vmj.auth.model.core.RoleResourceImpl"
+			);
+        
+        UserResource userPasswordedResource = UserResourceFactory
+	        .createUserResource("vmj.auth.model.passworded.UserResourceImpl"
+			,
+		    UserResourceFactory.createUserResource("vmj.auth.model.core.UserResourceImpl"));
+
+		PaymentResource paymentPaymentResource = PaymentResourceFactory
+			.createPaymentResource("paymentgateway.payment.core.PaymentResourceImpl"
+			);
 		
-		System.out.println("invoice endpoints binding");
-		Router.route(invoice);
+		PaymentResource invoicePaymentResource = PaymentResourceFactory
+			.createPaymentResource("paymentgateway.payment.invoice.PaymentResourceImpl"
+			,
+			paymentPaymentResource);
 		
-		System.out.println("payment endpoints binding");
-		Router.route(payment);
+		PaymentResource virtualaccountPaymentResource = PaymentResourceFactory
+			.createPaymentResource("paymentgateway.payment.virtualaccount.PaymentResourceImpl"
+			,
+			paymentPaymentResource);
 		
+
+		System.out.println("virtualaccountPaymentResource endpoints binding");
+		Router.route(virtualaccountPaymentResource);
 		
-		System.out.println("auth endpoints binding");
-		Router.route(userCore);
-		Router.route(userPassworded);
-		Router.route(userSocial);
-		Router.route(role);
-		System.out.println();
+		System.out.println("invoicePaymentResource endpoints binding");
+		Router.route(invoicePaymentResource);
+		
+		System.out.println("paymentPaymentResource endpoints binding");
+		Router.route(paymentPaymentResource);
+		
+		System.out.println("authResource endpoints binding");
+		Router.route(userPasswordedResource);
+		Router.route(roleResource);
+		Router.route(userResource);
 	}
-	
+
 	public static void setDBProperties(String varname, String typeProp, Configuration configuration) {
 		String varNameValue = System.getenv(varname);
 		String propertyName = String.format("hibernate.connection.%s",typeProp);

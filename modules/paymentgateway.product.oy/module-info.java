@@ -18,6 +18,6 @@ module paymentgateway.product.oy {
     requires paymentgateway.payment.ewallet;
     requires paymentgateway.payment.retailoutlet;
 	
-	requires prices.auth.vmj;
-    requires prices.auth.vmj.model;
+	requires vmj.auth;
+    requires vmj.auth.model;
 }

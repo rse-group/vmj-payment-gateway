@@ -29,10 +29,6 @@ import paymentgateway.payment.core.PaymentResourceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
-import com.midtrans.Midtrans;
-import com.midtrans.httpclient.SnapApi;
-import com.midtrans.httpclient.error.MidtransError;
-
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	
 	protected String apiKey;

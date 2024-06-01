@@ -9,7 +9,14 @@ import com.google.gson.JsonObject;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.lang.reflect.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.*;
 
 import vmj.routing.route.VMJExchange;
 
@@ -57,7 +64,7 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getAggregatorMoneyTransferResponse(String rawResponse){
+    public Map<String, Object> getAgentMoneyTransferResponse(String rawResponse){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -75,7 +82,7 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getFacilitatorMoneyTransferResponse(String rawResponse){
+    public Map<String, Object> getSpecialMoneyTransferResponse(String rawResponse){
         Map<String, Object> response = getMoneyTransferResponse(rawResponse);
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -123,8 +130,8 @@ public class FlipConfiguration extends ConfigDecorator{
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) vmjExchange.getRequestBodyForm("title");
         int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
-        String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
-        String senderEmail = (String) vmjExchange.getRequestBodyForm("sender_email");
+        String senderName = (String) vmjExchange.getRequestBodyForm("name");
+        String senderEmail = (String) vmjExchange.getRequestBodyForm("email");
         String senderBank = (String) vmjExchange.getRequestBodyForm("bank");
 
         requestMap.put("id",id);
@@ -136,6 +143,50 @@ public class FlipConfiguration extends ConfigDecorator{
         requestMap.put("sender_bank",senderBank);
         requestMap.put("sender_bank_type",SenderBankType.VIRTUALACCOUNT.getValue());
         requestMap.put("step", PaymentFlow.THIRD.getValue());
+
+        return requestMap;
+    }
+    
+    @Override
+    public Map<String, Object> getCallbackRequestBody(VMJExchange vmjExchange){
+        Map<String, Object> requestMap = new HashMap<>();
+        Map<String, Object> payload = vmjExchange.getPayload();
+		System.out.println(payload);
+		String status = "PENDING";
+		String flipToken = PropertiesReader.getProp(CONFIG_FILE, "token");
+        String id = "";
+		
+		String data = (String) payload.get("data");
+		String token = (String) payload.get("token");
+		System.out.println(11);
+		System.out.println(flipToken);
+		System.out.println(13);
+		System.out.println(data);
+		System.out.println(token);
+		
+		Gson gson = new Gson();
+    	Map<String, Object> decodedData = gson.fromJson(data, Map.class);
+    	System.out.println(decodedData);
+    	status = (String) decodedData.get("status");
+    	id = String.valueOf(((Double) decodedData.get("bill_link_id")).intValue());
+    	System.out.println(status);
+    	System.out.println(id);
+		
+        if (token.equals(flipToken)) {
+        	System.out.println(234);
+            requestMap.put("id",id);
+            requestMap.put("status", status);
+        }
+        
+//        if (token.equals(flipToken)){
+//        	Gson gson = new Gson();
+//        	Map<String, Object> decodedData = gson.fromJson(data, Map.class);
+//        	System.out.println(decodedData);
+//        	status = (String) decodedData.get("status");
+//        	System.out.println(status);
+////            id = String.valueOf(((Double) decodedData.get("bill_link_id")).intValue());
+//        }
+//        
 
         return requestMap;
     }
@@ -162,8 +213,8 @@ public class FlipConfiguration extends ConfigDecorator{
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) vmjExchange.getRequestBodyForm("title");
         int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
-        String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
-        String senderEmail = (String) vmjExchange.getRequestBodyForm("sender_email");
+        String senderName = (String) vmjExchange.getRequestBodyForm("name");
+        String senderEmail = (String) vmjExchange.getRequestBodyForm("email");
         String senderBank = (String) vmjExchange.getRequestBodyForm("payment_type");
         String senderPhoneNumber = (String) vmjExchange.getRequestBodyForm("phone_number");
 
@@ -189,14 +240,50 @@ public class FlipConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String url = (String) rawResponseMap.get("payment_url");
-        String paymentType = (String) rawResponseMap.get("bank_code");
+        String paymentMethod = (String) rawResponseMap.get("bank_code");
         String phoneNumber = (String) rawResponseMap.get("user_phone");
         response.put("phone_number",phoneNumber);
         response.put("url", url);
-        response.put("payment_type",paymentType);
+        response.put("payment_type",paymentMethod);
         response.put("id", id);
         return response;
     }
+
+    @Override
+    public String getPaymentDetailEndpoint(String configUrl,String id){
+        configUrl = configUrl.replace("[id]", id);
+        return configUrl;
+    }
+
+    @Override
+    public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        if (rawResponseMap.containsKey("errors")) {
+            List<Map<String, Object>> errors = (List<Map<String, Object>>) rawResponseMap.get("errors");
+            if (!errors.isEmpty()) {
+                Map<String, Object> firstError = errors.get(0);
+                String errorMessage = (String) firstError.get("message");
+                response.put("error", errorMessage);
+                return response;
+            }
+        }
+        ArrayList<Object> dataList = (ArrayList<Object>) rawResponseMap.get("data");
+        if (!dataList.isEmpty()) {
+            Map<String, Object> dataObject = (Map<String, Object>) dataList.get(0);
+            String status = (String) dataObject.get("status");
+            response.put("status", status);
+            response.put("id", id);
+        } else {
+            response.put("id", id);
+            response.put("status", PaymentStatus.PENDING.getStatus());
+        }
+        return response;
+    }
+
+
 
 
     @Override
@@ -205,8 +292,8 @@ public class FlipConfiguration extends ConfigDecorator{
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) vmjExchange.getRequestBodyForm("title");
         int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
-        String senderEmail = (String) vmjExchange.getRequestBodyForm("sender_email");
-        String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
+        String senderEmail = (String) vmjExchange.getRequestBodyForm("email");
+        String senderName = (String) vmjExchange.getRequestBodyForm("name");
         
         requestMap.put("id",id);
         requestMap.put("title", title);
@@ -214,7 +301,7 @@ public class FlipConfiguration extends ConfigDecorator{
         requestMap.put("sender_name", senderName);
         requestMap.put("sender_email",senderEmail);
         requestMap.put("amount",amount);
-        requestMap.put("step", PaymentFlow.SECOND.getValue() );
+        requestMap.put("step", PaymentFlow.SECOND.getValue());
 
         return requestMap;
     }
@@ -226,8 +313,9 @@ public class FlipConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String url = (String) rawResponseMap.get("link_url");
+        int billId = (int) ((Double) rawResponseMap.get("link_id")).doubleValue();
         response.put("url", url);
-        response.put("id", id);
+        response.put("id", billId);
         return response;
     }
 

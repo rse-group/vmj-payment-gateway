@@ -22,9 +22,9 @@ module paymentgateway.product.flip {
     requires paymentgateway.payment.paymentlink;
     requires paymentgateway.payment.virtualaccount;
     requires paymentgateway.payment.ewallet;
-    requires paymentgateway.disbursement.aggregatormoneytransfer;
-    requires paymentgateway.disbursement.facilitatormoneytransfer;
+    requires paymentgateway.disbursement.agentmoneytransfer;
+    requires paymentgateway.disbursement.specialmoneytransfer;
 	
-	requires prices.auth.vmj;
-    requires prices.auth.vmj.model;
+	requires vmj.auth;
+    requires vmj.auth.model;
 }

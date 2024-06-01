@@ -25,22 +25,63 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
+    public String getPaymentDetailEndpoint(String configUrl,String Id){
+        configUrl = configUrl.replace("[id]", Id);
+        return configUrl;
+    }    
+
+    @Override
+    public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        String status = (String) rawResponseMap.get("transaction_status");
+        response.put("status", status);
+        response.put("id", id);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getCallbackRequestBody(VMJExchange vmjExchange){
+        Map<String, Object> requestMap = new HashMap<>();
+        String id = (String) vmjExchange.getRequestBodyForm("order_id");
+        String status = (String) vmjExchange.getRequestBodyForm("transaction_status");
+		System.out.println(status);
+        String[] parts = id.split("-");
+        String orderId = parts[0];
+  
+        if(status.equals(PaymentStatus.SETTLEMENT.getStatus())){
+            status = PaymentStatus.SUCCESSFUL.getStatus();
+        }
+        else if (status.equals(PaymentStatus.CANCEL.getStatus())){
+            status = PaymentStatus.CANCELLED.getStatus();
+        }
+        else if (status.equals(PaymentStatus.FAIL.getStatus())){
+            status = PaymentStatus.FAILED.getStatus();
+        }
+
+	    requestMap.put("id",orderId);
+	    requestMap.put("status", status);
+	    return requestMap;
+    }
+    
+
+    @Override
     public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> customer_details = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
-        List<String> customerDetailsRequiredFields = Arrays.asList("first_name", "email");
-
+        
         int id = generateId();
         double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
-
-
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
         requestMap.put("transaction_details", transaction_details);
+        requestMap.put( "customer_required",true);
 
 
-        String name = (String) vmjExchange.getRequestBodyForm("sender_name");
+        String name = (String) vmjExchange.getRequestBodyForm("name");
         String email = (String) vmjExchange.getRequestBodyForm("email");
         String title = (String) vmjExchange.getRequestBodyForm("title");
         String[] arr = name.split(" ", 2);
@@ -51,7 +92,6 @@ public class MidtransConfiguration extends ConfigDecorator{
             customer_details.put("first_name", arr[0]);
         }
         customer_details.put("email",email);
-        customer_details.put("customer_details_required_fields",customerDetailsRequiredFields);
         requestMap.put("costumer_details", customer_details);
         requestMap.put("title",title);
         requestMap.put("id",id);
@@ -67,7 +107,7 @@ public class MidtransConfiguration extends ConfigDecorator{
 
         int id = generateId();
         double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
-        String store = (String) vmjExchange.getRequestBodyForm("retailOutlet");
+        String store = (String) vmjExchange.getRequestBodyForm("retail_outlet");
 
 
         transaction_details.put("order_id", String.valueOf(id));
@@ -113,7 +153,7 @@ public class MidtransConfiguration extends ConfigDecorator{
 
         int id = generateId();
         double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
-        String ewallet = (String) vmjExchange.getRequestBodyForm("ewalletType");
+        String ewallet = (String) vmjExchange.getRequestBodyForm("ewallet_type");
         String phone = (String) vmjExchange.getRequestBodyForm("phone_number");
 
 
@@ -274,7 +314,11 @@ public class MidtransConfiguration extends ConfigDecorator{
         String apiEndpoint = "";
         if (serviceName.equals("PaymentLink")){
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "paymentlink");
-        } else {
+        } 
+        else if (serviceName.equals("PaymentDetail")){
+            apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "paymentdetail");
+        }
+        else {
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "apiendpoint");
         }
         

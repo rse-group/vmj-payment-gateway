@@ -72,7 +72,6 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return responseMap;
 	}
 
@@ -84,6 +83,8 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		}
 		throw new NotFoundException("Route tidak ditemukan");
 	}
+
+	
 
 
 	@Route(url = "call/paymentlink/vendorname")
