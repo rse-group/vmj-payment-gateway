@@ -2,6 +2,7 @@
 <configuration>
 	<feature automatic="selected" name="PaymentGateway"/>
 	<feature automatic="selected" name="Vendor"/>
+	<feature automatic="selected" name="Vendor"/>
 	<feature name="Flip"/>
 	<feature name="Midtrans"/>
 	<feature automatic="selected" manual="selected" name="Oy"/>
@@ -9,7 +10,9 @@
 	<feature name="AbstractMoneyTransfer"/>
 	<feature name="InternationalMoneyTransfer"/>
 	<feature name="FlipInternationalMoneyTransfer"/>
+	<feature name="FlipInternationalMoneyTransfer"/>
 	<feature name="FacilitatorMoneyTransfer"/>
+	<feature name="FlipFacilitatorMoneyTransfer"/>
 	<feature name="FlipFacilitatorMoneyTransfer"/>
 	<feature name="AggregatorMoneyTransfer"/>
 	<feature name="FlipAggregatorMoneyTransfer"/>
@@ -27,6 +30,8 @@
 	<feature name="RetailOutlet"/>
 	<feature name="MidtransRetailOutlet"/>
 	<feature name="OyRetailOutlet"/>
+	<feature name="MidtransRetailOutlet"/>
+	<feature name="OyRetailOutlet"/>
 	<feature name="EWallet"/>
 	<feature name="FlipEWallet"/>
 	<feature name="MidtransEWallet"/>
@@ -35,8 +40,11 @@
 	<feature automatic="selected" name="OyInvoice"/>
 	<feature name="PaymentRouting"/>
 	<feature name="OyPaymentRouting"/>
+	<feature name="OyPaymentRouting"/>
 	<feature name="CreditCard"/>
 	<feature name="MidtransCreditCard"/>
+	<feature name="MidtransCreditCard"/>
 	<feature name="DebitCard"/>
+	<feature name="MidtransDebitCard"/>
 	<feature name="MidtransDebitCard"/>
 </configuration>

@@ -8,6 +8,11 @@ features
 					Flip
 					Midtrans
 					Oy
+			Vendor {abstract true}
+				or
+					Flip
+					Midtrans
+					Oy
 			Disbursement {abstract true}
 				or
 					AbstractMoneyTransfer {abstract true}
@@ -31,7 +36,15 @@ features
 							FlipPaymentLink
 							MidtransPaymentLink
 							OyPaymentLink
+						or
+							FlipPaymentLink
+							MidtransPaymentLink
+							OyPaymentLink
 					VirtualAccount
+						or
+							FlipVirtualAccount
+							MidtransVirtualAccount
+							OyVirtualAccount
 						or
 							FlipVirtualAccount
 							MidtransVirtualAccount
@@ -40,7 +53,14 @@ features
 						or
 							MidtransRetailOutlet
 							OyRetailOutlet
+						or
+							MidtransRetailOutlet
+							OyRetailOutlet
 					EWallet
+						or
+							FlipEWallet
+							MidtransEWallet
+							OyEWallet
 						or
 							FlipEWallet
 							MidtransEWallet
@@ -48,13 +68,21 @@ features
 					Invoice
 						mandatory
 							OyInvoice
+						mandatory
+							OyInvoice
 					PaymentRouting
+						mandatory
+							OyPaymentRouting
 						mandatory
 							OyPaymentRouting
 					CreditCard
 						mandatory
 							MidtransCreditCard
+						mandatory
+							MidtransCreditCard
 					DebitCard
+						mandatory
+							MidtransDebitCard
 						mandatory
 							MidtransDebitCard
 
