@@ -8,11 +8,6 @@ features
 					Flip
 					Midtrans
 					Oy
-			Vendor {abstract true}
-				or
-					Flip
-					Midtrans
-					Oy
 			Disbursement {abstract true}
 				or
 					AbstractMoneyTransfer {abstract true}
@@ -20,12 +15,12 @@ features
 							InternationalMoneyTransfer
 								mandatory
 									FlipInternationalMoneyTransfer
-							FacilitatorMoneyTransfer
+							SpecialMoneyTransfer
 								mandatory
-									FlipFacilitatorMoneyTransfer
-							AggregatorMoneyTransfer
+									FlipSpecialMoneyTransfer
+							AgentMoneyTransfer
 								mandatory
-									FlipAggregatorMoneyTransfer
+									FlipAgentMoneyTransfer
 					MoneyTransfer
 						mandatory
 							FlipMoneyTransfer
@@ -36,15 +31,7 @@ features
 							FlipPaymentLink
 							MidtransPaymentLink
 							OyPaymentLink
-						or
-							FlipPaymentLink
-							MidtransPaymentLink
-							OyPaymentLink
 					VirtualAccount
-						or
-							FlipVirtualAccount
-							MidtransVirtualAccount
-							OyVirtualAccount
 						or
 							FlipVirtualAccount
 							MidtransVirtualAccount
@@ -53,14 +40,7 @@ features
 						or
 							MidtransRetailOutlet
 							OyRetailOutlet
-						or
-							MidtransRetailOutlet
-							OyRetailOutlet
 					EWallet
-						or
-							FlipEWallet
-							MidtransEWallet
-							OyEWallet
 						or
 							FlipEWallet
 							MidtransEWallet
@@ -68,25 +48,17 @@ features
 					Invoice
 						mandatory
 							OyInvoice
-						mandatory
-							OyInvoice
 					PaymentRouting
-						mandatory
-							OyPaymentRouting
 						mandatory
 							OyPaymentRouting
 					CreditCard
 						mandatory
 							MidtransCreditCard
-						mandatory
-							MidtransCreditCard
 					DebitCard
-						mandatory
-							MidtransDebitCard
 						mandatory
 							MidtransDebitCard
 
 constraints
 	OyInvoice | OyPaymentRouting | OyPaymentLink | OyRetailOutlet | OyVirtualAccount | OyEWallet => Oy
 	MidtransCreditCard | MidtransDebitCard | MidtransPaymentLink | MidtransVirtualAccount | MidtransEWallet | MidtransRetailOutlet => Midtrans
-	FlipAggregatorMoneyTransfer | FlipFacilitatorMoneyTransfer | FlipInternationalMoneyTransfer | FlipMoneyTransfer => Flip
+	FlipAgentMoneyTransfer | FlipSpecialMoneyTransfer | FlipInternationalMoneyTransfer | FlipMoneyTransfer => Flip

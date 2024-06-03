@@ -4,8 +4,8 @@ import vmj.routing.route.VMJExchange;
 import java.util.*;
 
 public interface Payment {
-	String getStatus();
-	void setStatus(String status);
+//	int getId();
+//	void setId(int id);
 
 	int getIdTransaction();
 	void setIdTransaction(int idTransaction);

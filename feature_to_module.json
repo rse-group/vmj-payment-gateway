@@ -20,13 +20,13 @@
     "AbstractMoneyTransfer": [
         "paymentgateway.disbursement.moneytransfer"
     ],
-	"AggregatorMoneyTransfer": [
+	"AgentMoneyTransfer": [
 		"paymentgateway.disbursement.moneytransfer.agent",
-		"paymentgateway.disbursement.moneytransfer.aggregatormoneytransfer"
+		"paymentgateway.disbursement.moneytransfer.agentmoneytransfer"
 	],
-	"FacilitatorMoneyTransfer": [
+	"SpecialMoneyTransfer": [
 		"paymentgateway.disbursement.moneytransfer.special",
-		"paymentgateway.disbursement.moneytransfer.facilitatormoneytransfer"
+		"paymentgateway.disbursement.moneytransfer.specialmoneytransfer"
 	],
 	"InternationalMoneyTransfer": [
 		"paymentgateway.disbursement.moneytransfer.international",

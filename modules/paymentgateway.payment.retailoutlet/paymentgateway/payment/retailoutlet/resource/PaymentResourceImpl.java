@@ -32,7 +32,7 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 
 	public Payment createPayment(VMJExchange vmjExchange) {
 		Map<String, Object> response = sendTransaction(vmjExchange);
-		String retailOutlet = (String) vmjExchange.getRequestBodyForm("retail_outlet");
+		String retailOutlet = (String) vmjExchange.getRequestBodyForm("retailOutlet");
 
 		String retailPaymentCode = (String) response.get("retail_payment_code");
 		int id = (int) response.get("id");

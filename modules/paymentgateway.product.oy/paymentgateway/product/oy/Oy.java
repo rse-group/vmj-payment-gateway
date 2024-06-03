@@ -21,24 +21,8 @@ import vmj.auth.model.core.RoleResource;
 public class Oy {
 
 	public static void main(String[] args) {
-	    // get hostAddress and portnum from env var
-        // ex:
-        // AMANAH_HOST_BE --> "localhost"
-        // AMANAH_PORT_BE --> 7776
-        String hostAddress= getEnvVariableHostAddress("AMANAH_HOST_BE");
-        int portNum = getEnvVariablePortNumber("AMANAH_PORT_BE");
-        activateServer(hostAddress, portNum);
-
-        Configuration configuration = new Configuration();
-        // panggil setter setelah membuat object dari kelas Configuration
-        // ex:
-        // AMANAH_DB_URL --> jdbc:postgresql://localhost:5432/superorg
-        // AMANAH_DB_USERNAME --> postgres
-        // AMANAH_DB_PASSWORD --> postgres123
-        setDBProperties("AMANAH_DB_URL", "url", configuration);
-        setDBProperties("AMANAH_DB_USERNAME", "username", configuration);
-        setDBProperties("AMANAH_DB_PASSWORD","password", configuration);
-        
+		activateServer("localhost", 7776);
+		Configuration configuration = new Configuration();
 		configuration.addAnnotatedClass(paymentgateway.payment.core.Payment.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentComponent.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentDecorator.class);

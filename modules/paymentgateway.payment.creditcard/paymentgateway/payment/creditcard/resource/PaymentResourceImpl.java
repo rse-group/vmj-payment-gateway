@@ -77,7 +77,7 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	}
 
 
-	@Route(url = "call/creditcard")
+	@Route(url = "test/call/creditcard")
 	public HashMap<String, Object> testDebitCard(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")){
 			Payment result = this.createPayment(vmjExchange);

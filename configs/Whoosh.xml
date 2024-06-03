@@ -2,53 +2,41 @@
 <configuration>
 	<feature automatic="selected" name="PaymentGateway"/>
 	<feature automatic="selected" name="Vendor"/>
-	<feature manual="selected" name="Flip"/>
-	<feature automatic="selected" manual="selected" name="Midtrans"/>
-	<feature automatic="selected" manual="selected" name="Oy"/>
-	<feature name="Disbursement"/>
-	<feature name="AbstractMoneyTransfer"/>
-	<feature name="InternationalMoneyTransfer"/>
-	<feature name="FlipInternationalMoneyTransfer"/>
-	<feature name="FlipInternationalMoneyTransfer"/>
-	<feature name="FacilitatorMoneyTransfer"/>
-	<feature name="FlipFacilitatorMoneyTransfer"/>
-	<feature name="FlipFacilitatorMoneyTransfer"/>
-	<feature name="AggregatorMoneyTransfer"/>
-	<feature name="FlipAggregatorMoneyTransfer"/>
+	<feature automatic="selected" manual="selected" name="Flip"/>
+	<feature name="Midtrans"/>
+	<feature name="Oy"/>
+	<feature automatic="selected" name="Disbursement"/>
+	<feature automatic="selected" manual="selected" name="AbstractMoneyTransfer"/>
+	<feature automatic="selected" name="InternationalMoneyTransfer"/>
+	<feature manual="selected" name="FlipInternationalMoneyTransfer"/>
+	<feature automatic="selected" name="SpecialMoneyTransfer"/>
+	<feature manual="selected" name="FlipSpecialMoneyTransfer"/>
+	<feature automatic="selected" name="AgentMoneyTransfer"/>
+	<feature manual="selected" name="FlipAgentMoneyTransfer"/>
 	<feature name="MoneyTransfer"/>
 	<feature name="FlipMoneyTransfer"/>
-	<feature automatic="selected" name="Payment"/>
-	<feature automatic="selected" manual="selected" name="PaymentLink"/>
-	<feature manual="selected" name="FlipPaymentLink"/>
-	<feature manual="selected" name="MidtransPaymentLink"/>
-	<feature manual="selected" name="OyPaymentLink"/>
-	<feature automatic="selected" name="VirtualAccount"/>
-	<feature manual="selected" name="FlipVirtualAccount"/>
-	<feature manual="selected" name="MidtransVirtualAccount"/>
-	<feature manual="selected" name="OyVirtualAccount"/>
+	<feature name="Payment"/>
+	<feature name="PaymentLink"/>
+	<feature name="FlipPaymentLink"/>
+	<feature name="MidtransPaymentLink"/>
+	<feature name="OyPaymentLink"/>
+	<feature name="VirtualAccount"/>
+	<feature name="FlipVirtualAccount"/>
+	<feature name="MidtransVirtualAccount"/>
+	<feature name="OyVirtualAccount"/>
 	<feature name="RetailOutlet"/>
 	<feature name="MidtransRetailOutlet"/>
 	<feature name="OyRetailOutlet"/>
-	<feature automatic="selected" name="EWallet"/>
-	<feature manual="selected" name="FlipEWallet"/>
-	<feature manual="selected" name="MidtransEWallet"/>
-	<feature manual="selected" name="OyEWallet"/>
-	<feature name="MidtransRetailOutlet"/>
-	<feature name="OyRetailOutlet"/>
-	<feature automatic="selected" name="EWallet"/>
-	<feature manual="selected" name="FlipEWallet"/>
-	<feature manual="selected" name="MidtransEWallet"/>
-	<feature manual="selected" name="OyEWallet"/>
+	<feature name="EWallet"/>
+	<feature name="FlipEWallet"/>
+	<feature name="MidtransEWallet"/>
+	<feature name="OyEWallet"/>
 	<feature name="Invoice"/>
-	<feature name="OyInvoice"/>
 	<feature name="OyInvoice"/>
 	<feature name="PaymentRouting"/>
 	<feature name="OyPaymentRouting"/>
-	<feature name="OyPaymentRouting"/>
 	<feature name="CreditCard"/>
 	<feature name="MidtransCreditCard"/>
-	<feature name="MidtransCreditCard"/>
 	<feature name="DebitCard"/>
-	<feature name="MidtransDebitCard"/>
 	<feature name="MidtransDebitCard"/>
 </configuration>

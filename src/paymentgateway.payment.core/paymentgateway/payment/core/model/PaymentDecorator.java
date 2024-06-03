@@ -25,13 +25,13 @@ public abstract class PaymentDecorator extends PaymentComponent{
 	public PaymentDecorator () {
 	}
 
-	public String getStatus(){
-		return record.getStatus();
-	}
-
-	public void setStatus(String status){
-		record.setStatus(status);
-	}
+//	public int getId(){
+//		return record.getId();
+//	}
+//
+//	public void setId(int id){
+//		record.setId(id);
+//	}
 	public int getIdTransaction() {
 		return record.getIdTransaction();
 	}

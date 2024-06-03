@@ -20,24 +20,8 @@ import vmj.auth.model.core.RoleResource;
 public class Midtrans {
 
 	public static void main(String[] args) {
-	    // get hostAddress and portnum from env var
-        // ex:
-        // AMANAH_HOST_BE --> "localhost"
-        // AMANAH_PORT_BE --> 7776
-        String hostAddress= getEnvVariableHostAddress("AMANAH_HOST_BE");
-        int portNum = getEnvVariablePortNumber("AMANAH_PORT_BE");
-        activateServer(hostAddress, portNum);
-
-        Configuration configuration = new Configuration();
-        // panggil setter setelah membuat object dari kelas Configuration
-        // ex:
-        // AMANAH_DB_URL --> jdbc:postgresql://localhost:5432/superorg
-        // AMANAH_DB_USERNAME --> postgres
-        // AMANAH_DB_PASSWORD --> postgres123
-        setDBProperties("AMANAH_DB_URL", "url", configuration);
-        setDBProperties("AMANAH_DB_USERNAME", "username", configuration);
-        setDBProperties("AMANAH_DB_PASSWORD","password", configuration);
-        
+		activateServer("localhost", 7776);
+		Configuration configuration = new Configuration();
 		configuration.addAnnotatedClass(paymentgateway.payment.core.Payment.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentComponent.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentDecorator.class);
@@ -63,7 +47,8 @@ public class Midtrans {
         configuration.addAnnotatedClass(vmj.auth.model.core.UserComponent.class);
         configuration.addAnnotatedClass(vmj.auth.model.core.UserDecorator.class);
         configuration.addAnnotatedClass(vmj.auth.model.core.UserImpl.class);
-        configuration.addAnnotatedClass(vmj.auth.model.passworded.UserImpl.class);
+        configuration.addAnnotatedClass(vmj.auth.model.passworded.UserPasswordedImpl.class);
+        configuration.addAnnotatedClass(vmj.auth.model.social.UserSocialImpl.class);
 		
 		configuration.buildMappings();
 		HibernateUtil.buildSessionFactory(configuration);
@@ -153,9 +138,12 @@ public class Midtrans {
 		UserResource userCore = UserResourceFactory
                 .createUserResource("vmj.auth.model.core.UserResourceImpl");
         UserResource userPassworded = UserResourceFactory
-	        .createUserResource("vmj.auth.model.passworded.UserResourceImpl",
+	        .createUserResource("vmj.auth.model.passworded.UserPasswordedResourceDecorator",
 		        UserResourceFactory
-		        	.createUserResource("vmj.auth.model.core.UserResourceImpl"));      
+		        	.createUserResource("vmj.auth.model.core.UserResourceImpl"));
+        UserResource userSocial = UserResourceFactory
+        	.createUserResource("vmj.auth.model.social.UserSocialResourceDecorator",
+        		userPassworded);        
         RoleResource role = RoleResourceFactory
         	.createRoleResource("vmj.auth.model.core.RoleResourceImpl");
 
@@ -190,6 +178,7 @@ public class Midtrans {
 		System.out.println("auth endpoints binding");
 		Router.route(userCore);
 		Router.route(userPassworded);
+		Router.route(userSocial);
 		Router.route(role);
 		System.out.println();
 	}

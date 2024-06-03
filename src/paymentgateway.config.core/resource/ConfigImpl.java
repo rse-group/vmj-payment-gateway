@@ -43,20 +43,8 @@ public class ConfigImpl extends ConfigComponent {
 
         return url;
     }
-    
-    public Map<String, Object> getCallbackRequestBody(VMJExchange vmjExchange){
-    	throw new UnsupportedOperationException();
-    }
 
     public String getProductEnv(String serviceName){
-        throw new UnsupportedOperationException();
-    }
-
-    public String getPaymentDetailEndpoint(String configUrl,String id){
-        throw new UnsupportedOperationException();
-    }
-
-    public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 

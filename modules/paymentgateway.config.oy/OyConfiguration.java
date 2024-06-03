@@ -29,47 +29,6 @@ public class OyConfiguration extends ConfigDecorator{
         return record.getProductEnv(CONFIG_FILE, serviceName);
     }
 
-    @Override
-    public String getPaymentDetailEndpoint(String configUrl,String Id){
-        configUrl = configUrl.replace("[id]", Id);
-        return configUrl;
-    }
-     
-    @Override
-    public Map<String, Object> getCallbackRequestBody(VMJExchange vmjExchange){
-	    Map<String, Object> requestMap = new HashMap<>();
-	    String id = (String) vmjExchange.getRequestBodyForm("partner_tx_id");
-		String status = (String) vmjExchange.getRequestBodyForm("status");
-
-		if(status.equals(PaymentStatus.COMPLETE.getStatus())){
-			status = PaymentStatus.SUCCESSFUL.getStatus();
-		}
-		else if (status.equals(PaymentStatus.CLOSED.getStatus())){
-			status = PaymentStatus.CANCELLED.getStatus();
-		}
-        else if (status.equals(PaymentStatus.FAIL.getStatus())){
-            status = PaymentStatus.FAILED.getStatus();
-        }
-
-        requestMap.put("id",id);
-        requestMap.put("status", status);
-        return requestMap;
-    }
-     
-    @Override
-    public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
-        Map<String, Object> response = new HashMap<>();
-        Gson gson = new Gson();
-        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
-        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
-        Map<String, Object> paymentData = (Map<String, Object>) rawResponseMap.get("data");
-        String status = (String) paymentData.get("status");
-
-        response.put("status", status);
-        response.put("id", id);
-        return response;
-    }
-
     public Map<String, String> getOyBankCode(){
         Map<String, String> immutableMap = Map.of("bni", "009",
                 "bca", "014",
@@ -94,7 +53,7 @@ public class OyConfiguration extends ConfigDecorator{
 
         int id = generateId();
         int amount = (int) (Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount")));
-        String name = (String) vmjExchange.getRequestBodyForm("name");
+        String name = (String) vmjExchange.getRequestBodyForm("sender_name");
         String email = (String) vmjExchange.getRequestBodyForm("email");
         String description = (String) vmjExchange.getRequestBodyForm("title");
 
@@ -115,7 +74,7 @@ public class OyConfiguration extends ConfigDecorator{
 
         int id = generateId();
         int amount = (int) (Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount")));
-        String store = (String) vmjExchange.getRequestBodyForm("retail_outlet");
+        String store = (String) vmjExchange.getRequestBodyForm("retailOutlet");
 
         requestMap.put("partner_trx_id", String.valueOf(id));
         requestMap.put("customer_id", String.valueOf(id));
@@ -152,7 +111,7 @@ public class OyConfiguration extends ConfigDecorator{
         int id = generateId();
         String uuid = UUID.randomUUID().toString();
         int amount = (int) (Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount")));
-        String ewallet = (String) vmjExchange.getRequestBodyForm("ewallet_type");
+        String ewallet = (String) vmjExchange.getRequestBodyForm("ewalletType");
         String phone = (String) vmjExchange.getRequestBodyForm("phone_number");
 
         requestMap.put("partner_trx_id", String.valueOf(id));

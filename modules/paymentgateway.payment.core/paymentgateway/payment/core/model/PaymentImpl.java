@@ -18,16 +18,16 @@ import javax.persistence.OneToMany;
 @Entity(name="payment_impl")
 @Table(name="payment_impl")
 public class PaymentImpl extends PaymentComponent {
-	
+
+//	@Id
+//	protected int id;
 	protected double amount;
 	protected String vendorName;
-	protected String status;
 
-	public PaymentImpl(int idTransaction, String vendorName, double amount, String status) {
+	public PaymentImpl(int idTransaction, String vendorName, double amount) {
 		this.idTransaction = idTransaction;
 		this.vendorName = vendorName;
 		this.amount = amount;
-		this.status = status;
 	}
 
 	public  PaymentImpl(){
@@ -36,7 +36,7 @@ public class PaymentImpl extends PaymentComponent {
 	public int getId() {
 		return idTransaction;
 	}
-
+//
 	public void setId(int id) {
 		this.idTransaction = id;
 	}
@@ -57,20 +57,11 @@ public class PaymentImpl extends PaymentComponent {
 		this.vendorName = vendorName;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 	public HashMap<String,Object> toHashMap() {
 		HashMap<String,Object> interfaceMap = new HashMap<String,Object>();
 		interfaceMap.put("id", getId());
 		interfaceMap.put("vendorName", getVendorName());
 		interfaceMap.put("amount", getAmount());
-		interfaceMap.put("status",getStatus());
 		return interfaceMap;
 	}
 }
