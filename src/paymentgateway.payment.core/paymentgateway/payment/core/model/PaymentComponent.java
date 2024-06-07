@@ -21,8 +21,6 @@ public abstract class PaymentComponent implements Payment {
 	public PaymentComponent() {
 
 	}
-//	public abstract int getId();
-//	public abstract void setId(int id);
 
 	public abstract String getVendorName();
 

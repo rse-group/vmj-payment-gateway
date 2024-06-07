@@ -35,12 +35,12 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		Map<String, Object> response = sendTransaction(vmjExchange);
 		String idToken = (String) vmjExchange.getRequestBodyForm("token_id");
 
-		String creditCardUrl = (String) response.get("redirect_url");
+		String statusCreditPayment = (String) response.get("status");
 		int id = (int) response.get("id");
 
 		Payment transaction = record.createPayment(vmjExchange, id);
 		Payment creditCardTransaction = PaymentFactory.createPayment(
-				"paymentgateway.payment.creditcard.PaymentImpl", transaction, idToken, creditCardUrl);
+				"paymentgateway.payment.creditcard.PaymentImpl", transaction, idToken, statusCreditPayment);
 		PaymentRepository.saveObject(creditCardTransaction);
 		return creditCardTransaction;
 	}
@@ -77,7 +77,7 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	}
 
 
-	@Route(url = "test/call/creditcard")
+	@Route(url = "call/creditcard")
 	public HashMap<String, Object> testDebitCard(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")){
 			Payment result = this.createPayment(vmjExchange);

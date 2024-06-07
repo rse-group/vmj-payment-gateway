@@ -18,9 +18,7 @@ import javax.persistence.OneToMany;
 @Entity(name="payment_impl")
 @Table(name="payment_impl")
 public class PaymentImpl extends PaymentComponent {
-
-//	@Id
-//	protected int id;
+	
 	protected double amount;
 	protected String vendorName;
 
@@ -36,7 +34,7 @@ public class PaymentImpl extends PaymentComponent {
 	public int getId() {
 		return idTransaction;
 	}
-//
+
 	public void setId(int id) {
 		this.idTransaction = id;
 	}

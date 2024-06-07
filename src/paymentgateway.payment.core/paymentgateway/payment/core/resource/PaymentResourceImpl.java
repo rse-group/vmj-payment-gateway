@@ -1,25 +1,29 @@
 package paymentgateway.payment.core;
 
 import java.math.BigInteger;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import paymentgateway.payment.PaymentFactory;
 import vmj.auth.annotations.Restricted;
-//add other required packages
+import vmj.routing.route.exceptions.*;
+
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
 
 public class PaymentResourceImpl extends PaymentResourceComponent {
 	protected PaymentResourceComponent record;
 
 	public Payment createPayment(VMJExchange vmjExchange, int id) {
 		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
-//		String id = (String) vmjExchange.getRequestBodyForm(bodyKeys.get("id"));
-//		int amount = (int) vmjExchange.getRequestBodyForm(bodyKeys.get("amount"));
 		double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
-//		String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
-//		String unique_no = generateUUIDNo.substring(0,5);
-//		int id = Integer.parseInt(unique_no);
 		Payment transaction = PaymentFactory.createPayment("paymentgateway.payment.core.PaymentImpl",
 				id,
 				vendorName,
@@ -31,6 +35,76 @@ public class PaymentResourceImpl extends PaymentResourceComponent {
 
 	private void sendTransaction() {
 		// to do implement this in deltas
+	}
+	
+	protected Map<String, Object> checkPaymentStatus(VMJExchange vmjExchange) {
+		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
+		String Id = (String) vmjExchange.getRequestBodyForm("id");
+
+		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+		HttpClient client = HttpClient.newHttpClient();
+        String configUrl = config.getProductEnv("PaymentDetail");
+        configUrl = config.getPaymentDetailEndpoint(configUrl, Id);
+        HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),config.getHeaderParams()))
+				.uri(URI.create(configUrl))
+				.GET()
+				.build();
+        Map<String, Object> responseMap = new HashMap<>();
+		try {
+			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			String rawResponse = response.body().toString();
+			System.out.println("rawResponse " + rawResponse);
+            responseMap = config.getPaymentStatusResponse(rawResponse, Id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return responseMap;
+	}
+
+	@Route(url = "call/paymentstatus")
+	public Map<String, Object> paymentStatus(VMJExchange vmjExchange) {
+		if (vmjExchange.getHttpMethod().equals("POST")){
+			return this.checkPaymentStatus(vmjExchange);
+		}
+		throw new NotFoundException("Route tidak ditemukan");
+	}
+	
+	@Route(url = "call/callback")
+	public int callback(VMJExchange vmjExchange) {
+		String[] vendors = {"Midtrans","Oy", "Flip"};
+		for (String vendor : vendors) {
+		    try {
+		         Config config = ConfigFactory.createConfig(vendor, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+		         Map<String, Object> requestMap = config.getCallbackRequestBody(vmjExchange);
+	
+		         String idStr = (String) requestMap.get("id");
+		         String status = (String) requestMap.get("status");
+		        
+		         System.out.println(idStr);
+		         System.out.println(status);
+
+				 HttpClient client = HttpClient.newHttpClient();
+				 // String configUrl = config.getProductEnv("ReceiveCallback");
+				 String configUrl = "http://localhost:443/call/receivecallback";
+				 String requestString = config.getRequestString(requestMap);
+				 HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),config.getHeaderParams()))
+				 					.uri(URI.create(configUrl))
+				 					.POST(HttpRequest.BodyPublishers.ofString(requestString))
+				 					.build();
+
+				 Map<String, Object> responseMap = new HashMap<>();
+				 try {
+				 	HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+				 	String rawResponse = response.body().toString();
+				 	System.out.println("rawResponse " + rawResponse);
+				 } catch (Exception e) {
+				 	e.printStackTrace();
+				 }
+		    } catch (Exception e) {
+		     	e.printStackTrace();
+		    }
+		}
+		return 200;
 	}
 
 	@Route(url = "call/payment/list")

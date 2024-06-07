@@ -24,14 +24,6 @@ public abstract class PaymentDecorator extends PaymentComponent{
 
 	public PaymentDecorator () {
 	}
-
-//	public int getId(){
-//		return record.getId();
-//	}
-//
-//	public void setId(int id){
-//		record.setId(id);
-//	}
 	public int getIdTransaction() {
 		return record.getIdTransaction();
 	}

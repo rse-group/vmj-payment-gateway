@@ -27,6 +27,8 @@ public interface Config {
     
     List<Map<String,Object>> toListMap(VMJExchange vmjExchange, String name);
     int generateId();
+    
+    Map<String, Object> getCallbackRequestBody(VMJExchange vmjExchange);
 
     // Disbursement Request
     Map<String, Object> getMoneyTransferRequestBody(VMJExchange vmjExchange);
@@ -43,6 +45,10 @@ public interface Config {
     Map<String, Object> getCreditCardRequestBody(VMJExchange vmjExchange);
     Map<String, Object> getInvoiceRequestBody(VMJExchange vmjExchange);
     Map<String, Object> getPaymentRoutingRequestBody(VMJExchange vmjExchange);
+
+    String getPaymentDetailEndpoint(String configUrl,String id);
+
+    Map<String, Object> getPaymentStatusResponse(String rawResponse, String id);
 
     // Payment Response
     Map<String, Object> getPaymentLinkResponse(String rawResponse, int id);

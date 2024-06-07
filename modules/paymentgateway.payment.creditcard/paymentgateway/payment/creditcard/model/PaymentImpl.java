@@ -14,11 +14,11 @@ import javax.persistence.Table;
 public class PaymentImpl extends PaymentDecorator {
 
 	protected String idToken;
-	protected String creditCardUrl;
-	public PaymentImpl(PaymentComponent record, String idToken, String creditCardUrl) {
+	protected String statusCreditPayment;
+	public PaymentImpl(PaymentComponent record, String idToken, String statusCreditPayment) {
 		super(record);
 		this.idToken = idToken;
-		this.creditCardUrl = creditCardUrl;
+		this.statusCreditPayment = statusCreditPayment;
 	}
 
 	public PaymentImpl(){
@@ -32,18 +32,18 @@ public class PaymentImpl extends PaymentDecorator {
 	public void setIdToken(String idToken) {
 		this.idToken = idToken;
 	}
-	public String getCreditCardUrl() {
-		return this.creditCardUrl;
+	public String getstatusCreditPayment() {
+		return this.statusCreditPayment;
 	}
 
-	public void setCreditCardUrl(String creditCardUrl) {
-		this.creditCardUrl = creditCardUrl;
+	public void setstatusCreditPayment(String statusCreditPayment) {
+		this.statusCreditPayment = statusCreditPayment;
 	}
 
 	public HashMap<String,Object> toHashMap() {
 		HashMap<String,Object> creditCardMap = record.toHashMap();
 		creditCardMap.put("idToken", getIdToken());
-		creditCardMap.put("creditCardUrl", getCreditCardUrl());
+		creditCardMap.put("statusCreditPayment", getstatusCreditPayment());
 		return creditCardMap;
 	}
 }

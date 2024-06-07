@@ -22,9 +22,21 @@ public abstract class ConfigDecorator extends ConfigComponent{
     public String getProductEnv(String fileName, String serviceName){
         return record.getProductEnv(fileName, serviceName);
     }
+    
+    public Map<String, Object> getCallbackRequestBody(VMJExchange vmjExchange){
+    	return record.getCallbackRequestBody(vmjExchange);
+    }
 
     public String getRequestString(Map<String, Object> requestMap){
         return record.getRequestString(requestMap);
+    }
+
+    public String getPaymentDetailEndpoint(String configUrl,String id){
+        return record.getPaymentDetailEndpoint(configUrl,id);
+    }
+
+    public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
+        return record.getPaymentStatusResponse(rawResponse,id);
     }
 
     public String getProductEnv(String serviceName){
@@ -146,4 +158,5 @@ public abstract class ConfigDecorator extends ConfigComponent{
     public Map<String, Object> getAgentMoneyTransferResponse(String rawResponse){
         return record.getAgentMoneyTransferResponse(rawResponse);
     }
+    
 }

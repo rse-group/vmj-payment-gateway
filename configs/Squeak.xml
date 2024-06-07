@@ -24,7 +24,7 @@
 	<feature name="FlipVirtualAccount"/>
 	<feature name="MidtransVirtualAccount"/>
 	<feature name="OyVirtualAccount"/>
-	<feature automatic="selected" name="RetailOutlet"/>
+	<feature automatic="selected" manual="selected" name="RetailOutlet"/>
 	<feature manual="selected" name="MidtransRetailOutlet"/>
 	<feature name="OyRetailOutlet"/>
 	<feature name="EWallet"/>
@@ -35,8 +35,8 @@
 	<feature name="OyInvoice"/>
 	<feature name="PaymentRouting"/>
 	<feature name="OyPaymentRouting"/>
-	<feature automatic="selected" name="CreditCard"/>
-	<feature manual="selected" name="MidtransCreditCard"/>
+	<feature manual="selected" name="CreditCard"/>
+	<feature automatic="selected" name="MidtransCreditCard"/>
 	<feature name="DebitCard"/>
 	<feature name="MidtransDebitCard"/>
 </configuration>
