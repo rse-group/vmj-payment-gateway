@@ -1,4 +1,5 @@
 #!/bin/bash
+source ~/.zshrc  
 
 cleanup() {
     echo "Exiting script..."
@@ -8,11 +9,12 @@ cleanup() {
 
 trap cleanup SIGINT
 
+echo "Enter the path to the frontend directory: "
 read -p "Enter the path to the frontend directory: " frontend_dir
 
-echo "SELECT 'CREATE DATABASE paymentgateway_product_basic' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'paymentgateway_product_basic') \gexec" | psql "postgresql://postgres:@localhost"
+echo "SELECT 'CREATE DATABASE paymentgateway_product_basic' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'paymentgateway_product_basic') \gexec" | psql "postgresql://postgres:admin@localhost"
 for file in sql/*.sql; do
-    psql -a -f "$file" "postgresql://postgres:@localhost/paymentgateway_product_basic"
+    psql -a -f "$file" "postgresql://postgres:admin@localhost/paymentgateway_product_basic"
 done
 
 java -cp paymentgateway.product.basic --module-path paymentgateway.product.basic -m paymentgateway.product.basic &

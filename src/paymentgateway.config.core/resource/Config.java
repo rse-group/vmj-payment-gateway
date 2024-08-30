@@ -28,7 +28,8 @@ public interface Config {
     List<Map<String,Object>> toListMap(VMJExchange vmjExchange, String name);
     int generateId();
     
-    Map<String, Object> getCallbackRequestBody(VMJExchange vmjExchange);
+    Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange);
+    Map<String, Object> getCallbackDisbursementRequestBody(VMJExchange vmjExchange);
 
     // Disbursement Request
     Map<String, Object> getMoneyTransferRequestBody(VMJExchange vmjExchange);

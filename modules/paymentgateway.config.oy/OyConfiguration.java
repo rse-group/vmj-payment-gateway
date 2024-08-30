@@ -36,10 +36,28 @@ public class OyConfiguration extends ConfigDecorator{
     }
      
     @Override
-    public Map<String, Object> getCallbackRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
 	    Map<String, Object> requestMap = new HashMap<>();
-	    String id = (String) vmjExchange.getRequestBodyForm("partner_tx_id");
-		String status = (String) vmjExchange.getRequestBodyForm("status");
+	    Map<String, Object> payload = vmjExchange.getPayload();
+	    String id = "";
+	    String status = "";
+		
+	    if (payload.get("success") != null) {
+	        boolean successStatus = ((boolean) payload.get("success"));
+	        if (payload.get("partner_trx_id") != null) {
+	        	id = (String) payload.get("partner_trx_id");
+	        }
+	        else if (payload.get("customer_id") != null) {
+	        	id = (String) payload.get("customer_id");
+	        }
+	        else if (payload.get("partner_user_id")!=null) {
+	        	id = (String) payload.get("partner_user_id");
+	        }
+	        status = successStatus ? PaymentStatus.SUCCESSFUL.getStatus() : PaymentStatus.FAILED.getStatus();
+	    } else {
+			id = (String) payload.get("partner_tx_id");
+			status = (String) payload.get("status");
+		}
 
 		if(status.equals(PaymentStatus.COMPLETE.getStatus())){
 			status = PaymentStatus.SUCCESSFUL.getStatus();
@@ -153,12 +171,12 @@ public class OyConfiguration extends ConfigDecorator{
         String uuid = UUID.randomUUID().toString();
         int amount = (int) (Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount")));
         String ewallet = (String) vmjExchange.getRequestBodyForm("ewallet_type");
-        String phone = (String) vmjExchange.getRequestBodyForm("phone_number");
+        String phone = (String) vmjExchange.getRequestBodyForm("phone");
 
         requestMap.put("partner_trx_id", String.valueOf(id));
         requestMap.put("customer_id", String.valueOf(id));
         requestMap.put("amount", amount);
-        requestMap.put("mobile_numer",phone);
+        requestMap.put("mobile_number",phone);
         requestMap.put("ewallet_code", getOyEWalletCode().get(ewallet.toLowerCase()));
         requestMap.put("success_redirect_url","https://myweb.com/usertx/" + uuid);
         requestMap.put("id",id);
@@ -168,34 +186,79 @@ public class OyConfiguration extends ConfigDecorator{
     @Override
     public Map<String, Object> getInvoiceRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
-
         int id = generateId();
-        int amount = (int) (Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount")));
-
+        int amount = (int) (Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount")));  
+        int quantity = (int) (Double.parseDouble((String) vmjExchange.getRequestBodyForm("quantity")));
+        int pricePerItem = (int) (Double.parseDouble((String) vmjExchange.getRequestBodyForm("price_per_item")));
+      
+        Map<String, Object> invoiceMap = new HashMap<>();
+        
+        invoiceMap.put("quantity", quantity);
+        invoiceMap.put("price_per_item", pricePerItem);
+        
+        List<Map<String, Object>> invoicesItems = new ArrayList<>();
+        invoicesItems.add(invoiceMap);
+        
         requestMap.put("partner_tx_id", String.valueOf(id));
         requestMap.put("amount", amount);
-
-        List<Map<String, Object>> items = toListMap(vmjExchange, "invoice_items");
-        requestMap.put("invoice_items",items);
+        requestMap.put("invoice_items",invoicesItems);
 
         requestMap.put("id",id);
         return requestMap;
     }
-
+//{
+// "amount" : "100000",
+// "list_enable_payment_method": "VA",
+// "list_enable_sof" : "002",
+// "vendor_name": "Oy",
+// "routings": [
+//     {
+//     "recipient_account": "123",
+//     "recipient_bank": "e14",
+//     "recipient_amount": "50000",
+//     "recipient_email" : "budi.arti@gmail.com",
+//     "recipient_note" : "donasi"
+//     },
+//     {
+//     "recipient_account": "456",
+//     "recipient_bank": "014",
+//     "recipient_amount": "50000",
+//     "recipient_email" : "ani.wati@gmail.com",
+//     "recipient_note": "donasi oy"
+//     }
+//     ]
+//}
+    
     @Override
     public Map<String, Object> getPaymentRoutingRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
 
         int id = generateId();
         int amount = (int) (Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount")));
+        
+        String recipientAccount = (String) vmjExchange.getRequestBodyForm("recipient_account");
+        String recipientBank = (String) vmjExchange.getRequestBodyForm("recipient_bank");
+        String recipientAmount = (String) vmjExchange.getRequestBodyForm("recipient_amount");
+        String recipientEmail = (String) vmjExchange.getRequestBodyForm("recipient_email");
+        String recipientNote = (String) vmjExchange.getRequestBodyForm("recipient_note");
 
         requestMap.put("partner_trx_id", String.valueOf(id));
         requestMap.put("partner_user_id", String.valueOf(id));
         requestMap.put("need_frontend", true);
-
-        List<Map<String,Object>> routings = toListMap(vmjExchange,"routings");
-        requestMap.put("list_enable_sof", vmjExchange.getRequestBodyForm("list_enable_sof"));
-        requestMap.put("list_enable_payment_method",vmjExchange.getRequestBodyForm("list_enable_payment_method"));
+        
+        Map<String, Object> routingMap = new HashMap<>();
+        
+        routingMap.put("recipient_account", recipientAccount);
+        routingMap.put("recipient_bank", recipientBank);
+        routingMap.put("recipient_amount", recipientAmount);
+        routingMap.put("recipient_email", recipientEmail);
+        routingMap.put("recipient_note", recipientNote);
+        
+        List<Map<String, Object>> routings = new ArrayList<>();
+        routings.add(routingMap);
+        
+        requestMap.put("list_enable_sof", "002");
+        requestMap.put("list_enable_payment_method", "VA");
         requestMap.put("need_frontend",true);
         requestMap.put("receive_amount",amount);
         requestMap.put("routings",routings);
@@ -222,8 +285,8 @@ public class OyConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
-        String transactionToken = (String) rawResponseMap.get("payment_link_id");
-        response.put("transaction_token", transactionToken);
+        String transactionUrl = (String) rawResponseMap.get("url");
+        response.put("url", transactionUrl);
         response.put("id", id);
         return response;
     }

@@ -9,7 +9,9 @@ public enum PaymentStatus {
 	CANCELLED("CANCELLED"),
 
 	SETTLEMENT("settlement"),
-	SUCCESSFUL("SUCCESSFUL");
+	SUCCESSFUL("SUCCESSFUL"),
+	
+	CAPTURE("capture");
     
 
     private final String value;

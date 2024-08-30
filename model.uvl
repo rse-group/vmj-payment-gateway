@@ -24,6 +24,7 @@ features
 					MoneyTransfer
 						mandatory
 							FlipMoneyTransfer
+		mandatory
 			Payment {abstract true}
 				or
 					PaymentLink

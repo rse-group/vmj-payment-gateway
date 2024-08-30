@@ -12,6 +12,8 @@ import vmj.auth.model.RoleResourceFactory;
 import vmj.auth.model.core.UserResource;
 import vmj.auth.model.core.RoleResource;
 
+import paymentgateway.disbursement.DisbursementResourceFactory;
+import paymentgateway.disbursement.core.DisbursementResource;
 import paymentgateway.payment.PaymentResourceFactory;
 import paymentgateway.payment.core.PaymentResource;
 
@@ -51,13 +53,18 @@ public class Basic {
         configuration.addAnnotatedClass(vmj.auth.model.core.UserImpl.class);
         configuration.addAnnotatedClass(vmj.auth.model.passworded.UserImpl.class);
 
+		configuration.addAnnotatedClass(paymentgateway.disbursement.core.Disbursement.class);
+		configuration.addAnnotatedClass(paymentgateway.disbursement.core.DisbursementComponent.class);
+		configuration.addAnnotatedClass(paymentgateway.disbursement.core.DisbursementDecorator.class);
+		configuration.addAnnotatedClass(paymentgateway.disbursement.core.DisbursementImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.disbursement.moneytransfer.MoneyTransferImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.disbursement.moneytransfer.international.InternationalImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.Payment.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentComponent.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentDecorator.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.ewallet.EWalletImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.paymentlink.PaymentLinkImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.payment.retailoutlet.RetailOutletImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.virtualaccount.VirtualAccountImpl.class);
 
 		configuration.buildMappings();
@@ -91,6 +98,25 @@ public class Basic {
 			,
 		    UserResourceFactory.createUserResource("vmj.auth.model.core.UserResourceImpl"));
 
+		DisbursementResource disbursementDisbursementResource = DisbursementResourceFactory
+			.createDisbursementResource("paymentgateway.disbursement.core.DisbursementResourceImpl"
+			);
+		
+		DisbursementResource moneytransferDisbursementResource = DisbursementResourceFactory
+			.createDisbursementResource("paymentgateway.disbursement.moneytransfer.MoneyTransferResourceImpl"
+			,
+			disbursementDisbursementResource);
+		
+		DisbursementResource internationalDisbursementResource = DisbursementResourceFactory
+			.createDisbursementResource("paymentgateway.disbursement.moneytransfer.international.InternationalResourceImpl"
+			,
+			moneytransferDisbursementResource);
+		
+		DisbursementResource internationalmoneytransferDisbursementResource = DisbursementResourceFactory
+			.createDisbursementResource("paymentgateway.disbursement.moneytransfer.internationalmoneytransfer.InternationalMoneyTransferResourceImpl"
+			,
+			moneytransferDisbursementResource);
+		
 		PaymentResource paymentPaymentResource = PaymentResourceFactory
 			.createPaymentResource("paymentgateway.payment.core.PaymentResourceImpl"
 			);
@@ -98,29 +124,21 @@ public class Basic {
 		PaymentResource ewalletPaymentResource = PaymentResourceFactory
 			.createPaymentResource("paymentgateway.payment.ewallet.PaymentResourceImpl"
 			,
-			PaymentResourceFactory.createPaymentResource("paymentgateway.payment.core.PaymentResourceImpl"));
+			paymentPaymentResource);
 		
 		PaymentResource paymentlinkPaymentResource = PaymentResourceFactory
 			.createPaymentResource("paymentgateway.payment.paymentlink.PaymentResourceImpl"
 			,
-			PaymentResourceFactory.createPaymentResource("paymentgateway.payment.core.PaymentResourceImpl"));
-		
-		PaymentResource retailoutletPaymentResource = PaymentResourceFactory
-			.createPaymentResource("paymentgateway.payment.retailoutlet.PaymentResourceImpl"
-			,
-			PaymentResourceFactory.createPaymentResource("paymentgateway.payment.core.PaymentResourceImpl"));
+			paymentPaymentResource);
 		
 		PaymentResource virtualaccountPaymentResource = PaymentResourceFactory
 			.createPaymentResource("paymentgateway.payment.virtualaccount.PaymentResourceImpl"
 			,
-			PaymentResourceFactory.createPaymentResource("paymentgateway.payment.core.PaymentResourceImpl"));
+			paymentPaymentResource);
 		
 
 		System.out.println("virtualaccountPaymentResource endpoints binding");
 		Router.route(virtualaccountPaymentResource);
-		
-		System.out.println("retailoutletPaymentResource endpoints binding");
-		Router.route(retailoutletPaymentResource);
 		
 		System.out.println("paymentlinkPaymentResource endpoints binding");
 		Router.route(paymentlinkPaymentResource);
@@ -130,6 +148,18 @@ public class Basic {
 		
 		System.out.println("paymentPaymentResource endpoints binding");
 		Router.route(paymentPaymentResource);
+		
+		System.out.println("internationalmoneytransferDisbursementResource endpoints binding");
+		Router.route(internationalmoneytransferDisbursementResource);
+		
+		System.out.println("internationalDisbursementResource endpoints binding");
+		Router.route(internationalDisbursementResource);
+		
+		System.out.println("moneytransferDisbursementResource endpoints binding");
+		Router.route(moneytransferDisbursementResource);
+		
+		System.out.println("disbursementDisbursementResource endpoints binding");
+		Router.route(disbursementDisbursementResource);
 		
 		System.out.println("authResource endpoints binding");
 		Router.route(userPasswordedResource);

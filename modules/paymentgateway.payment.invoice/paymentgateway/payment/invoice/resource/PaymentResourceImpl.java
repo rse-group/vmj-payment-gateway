@@ -41,11 +41,11 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		Map<String, Object> response = sendTransaction(vmjExchange);
 
 		int id = (int) response.get("id");
-		String transactionToken = (String) response.get("transaction_token");
+		String transactionUrl = (String) response.get("url");
 
 		Payment transaction = record.createPayment(vmjExchange, id);
 		Payment invoiceTransaction = PaymentFactory.createPayment(
-				"paymentgateway.payment.invoice.PaymentImpl", transaction, transactionToken);
+				"paymentgateway.payment.invoice.PaymentImpl", transaction, transactionUrl);
 		PaymentRepository.saveObject(invoiceTransaction);
 		return invoiceTransaction;
 	}

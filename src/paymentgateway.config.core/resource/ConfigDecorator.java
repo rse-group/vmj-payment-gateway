@@ -23,8 +23,12 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getProductEnv(fileName, serviceName);
     }
     
-    public Map<String, Object> getCallbackRequestBody(VMJExchange vmjExchange){
-    	return record.getCallbackRequestBody(vmjExchange);
+    public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
+    	return record.getCallbackPaymentRequestBody(vmjExchange);
+    }
+    
+    public Map<String, Object> getCallbackDisbursementRequestBody(VMJExchange vmjExchange){
+    	return record.getCallbackDisbursementRequestBody(vmjExchange);
     }
 
     public String getRequestString(Map<String, Object> requestMap){

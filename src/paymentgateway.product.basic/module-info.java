@@ -10,11 +10,13 @@ module paymentgateway.product.basic {
     requires jdk.unsupported;
 
     requires paymentgateway.config.core;
-    requires paymentgateway.config.midtrans;
-    requires paymentgateway.config.oy;
+    requires paymentgateway.config.flip;
+    requires paymentgateway.disbursement.core;
+    requires paymentgateway.disbursement.moneytransfer;
+    requires paymentgateway.disbursement.moneytransfer.international;
+    requires paymentgateway.disbursement.moneytransfer.internationalmoneytransfer;
     requires paymentgateway.payment.core;
     requires paymentgateway.payment.ewallet;
     requires paymentgateway.payment.paymentlink;
-    requires paymentgateway.payment.retailoutlet;
     requires paymentgateway.payment.virtualaccount;
 }

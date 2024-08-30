@@ -12,26 +12,26 @@ import javax.persistence.Table;
 @Table(name = "invoice_impl")
 public class PaymentImpl extends PaymentDecorator {
 
-	protected String transactionToken;
-	public PaymentImpl(PaymentComponent record, String transactionToken) {
+	protected String transactionUrl;
+	public PaymentImpl(PaymentComponent record, String transactionUrl) {
 		super(record);
-		this.transactionToken = transactionToken;
+		this.transactionUrl = transactionUrl;
 	}
 	public PaymentImpl(){
 		super();
 	}
 
-	public String getTransactionToken() {
-		return this.transactionToken;
+	public String getTransactionUrl() {
+		return this.transactionUrl;
 	}
 
-	public void setTransactionToken(String transactionToken) {
-		this.transactionToken = transactionToken;
+	public void setTransactionUrl(String transactionUrl) {
+		this.transactionUrl = transactionUrl;
 	}
 	
 	public HashMap<String,Object> toHashMap() {
 		HashMap<String,Object> invoiceMap = record.toHashMap();
-		invoiceMap.put("transactionToken", getTransactionToken());
+		invoiceMap.put("transactionUrl", getTransactionUrl());
 		return invoiceMap;
 	}
 }

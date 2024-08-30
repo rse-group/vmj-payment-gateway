@@ -43,7 +43,7 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getCallbackRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
         String id = (String) vmjExchange.getRequestBodyForm("order_id");
         String status = (String) vmjExchange.getRequestBodyForm("transaction_status");
@@ -51,7 +51,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         String[] parts = id.split("-");
         String orderId = parts[0];
   
-        if(status.equals(PaymentStatus.SETTLEMENT.getStatus())){
+        if (status.equals(PaymentStatus.SETTLEMENT.getStatus()) || status.equals(PaymentStatus.CAPTURE.getStatus())) {
             status = PaymentStatus.SUCCESSFUL.getStatus();
         }
         else if (status.equals(PaymentStatus.CANCEL.getStatus())){
@@ -154,7 +154,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         int id = generateId();
         double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
         String ewallet = (String) vmjExchange.getRequestBodyForm("ewallet_type");
-        String phone = (String) vmjExchange.getRequestBodyForm("phone_number");
+        String phone = (String) vmjExchange.getRequestBodyForm("phone");
 
 
         transaction_details.put("order_id", String.valueOf(id));
@@ -262,9 +262,6 @@ public class MidtransConfiguration extends ConfigDecorator{
         if (statusCode.equals("200")) {
         	status = "BERHASIL";
         }
-        System.out.println(statusCode);
-        System.out.println(status);
-        System.out.println("klsfdfd");
         response.put("status", status);
         response.put("id", id);
         return response;

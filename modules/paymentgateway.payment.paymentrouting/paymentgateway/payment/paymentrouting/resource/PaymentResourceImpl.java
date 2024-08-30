@@ -42,20 +42,19 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		int id = (int) response.get("id");
 		String paymentCheckoutUrl = (String) response.get("payment_checkout_url");
 
-		String paymentMethods = (String) vmjExchange.getRequestBodyForm("list_enable_payment_method");
-		String sourceOfFunds = (String) vmjExchange.getRequestBodyForm("list_enable_sof");
-		Gson gson = new Gson();
-		Type resultType = new TypeToken<List<PaymentRoutingRecipient>>(){}.getType();
-		List<PaymentRoutingRecipient> routings = gson.fromJson(gson.toJson(vmjExchange.getRequestBodyForm("routings")), resultType);
+//		String paymentMethods = (String) vmjExchange.getRequestBodyForm("list_enable_payment_method");
+//		String sourceOfFunds = (String) vmjExchange.getRequestBodyForm("list_enable_sof");
+		
+//		Gson gson = new Gson();
+//		Type resultType = new TypeToken<List<PaymentRoutingRecipient>>(){}.getType();
+//		List<PaymentRoutingRecipient> routings = routing
+//		List<PaymentRoutingRecipient> routings = gson.fromJson(gson.toJson(vmjExchange.getRequestBodyForm("routings")), resultType);
 //		List<PaymentRoutingRecipient> routings = (List<PaymentRoutingRecipient>) vmjExchange.getRequestBodyForm("routings");
 
 		Payment transaction = record.createPayment(vmjExchange, id);
 		Payment paymentRoutingTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.paymentrouting.PaymentImpl",
 				transaction,
-				paymentMethods,
-				sourceOfFunds,
-				routings,
 				paymentCheckoutUrl
 				);
 

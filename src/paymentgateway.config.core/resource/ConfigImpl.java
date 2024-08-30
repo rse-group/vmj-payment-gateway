@@ -44,7 +44,11 @@ public class ConfigImpl extends ConfigComponent {
         return url;
     }
     
-    public Map<String, Object> getCallbackRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
+    	throw new UnsupportedOperationException();
+    }
+    
+    public Map<String, Object> getCallbackDisbursementRequestBody(VMJExchange vmjExchange){
     	throw new UnsupportedOperationException();
     }
 

@@ -18,20 +18,15 @@ import javax.persistence.ElementCollection;
 @Table(name = "paymentrouting_impl")
 public class PaymentImpl extends PaymentDecorator {
 
-	protected String paymentMethods;
-	protected String sourceOfFunds;
-	@ElementCollection
-	protected List<PaymentRoutingRecipient> routings;
+//	protected String paymentMethods;
+//	protected String sourceOfFunds;
 	protected String paymentCheckoutUrl;
 	public PaymentImpl(
-			PaymentComponent record, String paymentMethods,
-			String sourceOfFunds, List<PaymentRoutingRecipient> routings,
-			String paymentCheckoutUrl
+			PaymentComponent record,String paymentCheckoutUrl
 			) {
 		super(record);
-		this.paymentMethods = paymentMethods;
-		this.sourceOfFunds = sourceOfFunds;
-		this.routings = routings;
+//		this.paymentMethods = paymentMethods;
+//		this.sourceOfFunds = sourceOfFunds;
 		this.paymentCheckoutUrl = paymentCheckoutUrl;
 	}
 
@@ -39,27 +34,20 @@ public class PaymentImpl extends PaymentDecorator {
 		super();
 	}
 
-	public String getPaymentMethods() {
-		return this.paymentMethods;
-	}
-
-	public void setPaymentMethods(String paymentMethods) {
-		this.paymentMethods = paymentMethods;
-	}
-	public String getSourceOfFunds() {
-		return this.sourceOfFunds;
-	}
-
-	public void setSourceOfFunds(String sourceOfFunds) {
-		this.sourceOfFunds = sourceOfFunds;
-	}
-	public List<PaymentRoutingRecipient> getPaymentRoutings() {
-		return this.routings;
-	}
-	
-	public void setPaymentRoutings(List<PaymentRoutingRecipient> routings) {
-		this.routings = routings;
-	}
+//	public String getPaymentMethods() {
+//		return this.paymentMethods;
+//	}
+//
+//	public void setPaymentMethods(String paymentMethods) {
+//		this.paymentMethods = paymentMethods;
+//	}
+//	public String getSourceOfFunds() {
+//		return this.sourceOfFunds;
+//	}
+//
+//	public void setSourceOfFunds(String sourceOfFunds) {
+//		this.sourceOfFunds = sourceOfFunds;
+//	}
 	public String getPaymentCheckoutUrl() {
 		return this.paymentCheckoutUrl;
 	}
@@ -70,13 +58,8 @@ public class PaymentImpl extends PaymentDecorator {
 	
 	public HashMap<String,Object> toHashMap() {
 		HashMap<String,Object> paymentRoutingMap = record.toHashMap();
-		paymentRoutingMap.put("paymentMethods", getPaymentMethods());
-		paymentRoutingMap.put("sourceOfFunds", getSourceOfFunds());
-		List<PaymentRoutingRecipient> paymentRoutings = new ArrayList<PaymentRoutingRecipient>();
-		for(PaymentRoutingRecipient x : this.routings) {
-			paymentRoutings.add(x);
-		}
-		paymentRoutingMap.put("routings", paymentRoutings);
+//		paymentRoutingMap.put("paymentMethods", getPaymentMethods());
+//		paymentRoutingMap.put("sourceOfFunds", getSourceOfFunds());
 		paymentRoutingMap.put("paymentCheckoutUrl", getPaymentCheckoutUrl());
 		
 		return paymentRoutingMap;

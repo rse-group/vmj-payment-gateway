@@ -45,7 +45,7 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		String type = (String) response.get("payment_type");
 		int id = (int) response.get("id");
 
-		String phoneNumber = (String) vmjExchange.getRequestBodyForm("phone_number");
+		String phoneNumber = (String) vmjExchange.getRequestBodyForm("phone");
 		System.out.println(id);
 		Payment transaction = record.createPayment(vmjExchange, id);
 		Payment ewalletTransaction =
