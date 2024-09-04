@@ -13,53 +13,62 @@ public abstract class DisbursementDecorator extends DisbursementComponent {
     @OneToOne(cascade=CascadeType.REMOVE, optional=true)
     protected DisbursementComponent record;
 
-    public DisbursementDecorator(DisbursementComponent record) {
+    public DisbursementDecorator(DisbursementComponent record, int userId) {
         String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
         String unique_no = generateUUIDNo.substring(0,5);
         this.id = Integer.parseInt(unique_no);
+        this.userId = userId;
         this.record = record;
     }
 
-    public DisbursementDecorator() {
+    public DisbursementDecorator(DisbursementComponent record, int userId, String objectName) {
+        String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
+        String unique_no = generateUUIDNo.substring(0,5);
+        this.id = Integer.parseInt(unique_no);
+        this.userId = userId;
+        this.objectName = objectName;
+        this.record = record;
     }
+
+    public DisbursementDecorator() { }
 
     public int getId() {
         return record.getId();
     }
+
     public void setId(int id){
         record.setId(id);
     }
-    public int getUserId() {
 
+    public int getUserId() {
         return record.getUserId();
     }
-    public void setUserId(int userId) {
 
+    public void setUserId(int userId) {
         record.setUserId(userId);
     }
-    public String getAccountNumber() {
 
+    public String getAccountNumber() {
         return record.getAccountNumber();
     }
-    public void setAccountNumber(String accountNumber) {
 
+    public void setAccountNumber(String accountNumber) {
         record.setAccountNumber(accountNumber);
     }
-    public String getBankCode() {
 
+    public String getBankCode() {
         return record.getBankCode();
     }
-    public void setBankCode(String bankCode) {
 
+    public void setBankCode(String bankCode) {
         record.setBankCode(bankCode);
     }
-    public double getAmount() {
 
+    public double getAmount() {
         return record.getAmount();
     }
+    
     public void setAmount(double amount) {
-
         record.setAmount(amount);
     }
-
 }

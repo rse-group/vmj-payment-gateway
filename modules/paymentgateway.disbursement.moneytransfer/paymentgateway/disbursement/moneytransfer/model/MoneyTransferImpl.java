@@ -14,10 +14,11 @@ import paymentgateway.disbursement.core.DisbursementComponent;
 public class MoneyTransferImpl extends DisbursementDecorator {
 	protected String status;
 
-	public MoneyTransferImpl(DisbursementComponent record, String status) {
-		super(record);
+	public MoneyTransferImpl(DisbursementComponent record, int userId, String status) {
+		super(record, userId, MoneyTransferImpl.class.getName());
 		this.status = status;
 	}
+
 	public MoneyTransferImpl() {
 		super();
 	}
@@ -26,10 +27,12 @@ public class MoneyTransferImpl extends DisbursementDecorator {
 	public int getId() {
 		return super.getId();
 	}
+
 	@Override
 	public void setUserId(int userId) {
 		super.setUserId(userId);
 	}
+
 	public String getStatus() {
 		return this.status;
 	}
@@ -43,5 +46,4 @@ public class MoneyTransferImpl extends DisbursementDecorator {
 		moneyTransferMap.put("status", getStatus());
 		return moneyTransferMap;
 	}
-
 }

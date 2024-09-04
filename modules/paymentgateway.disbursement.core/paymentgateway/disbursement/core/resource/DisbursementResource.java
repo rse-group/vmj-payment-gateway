@@ -5,13 +5,13 @@ import java.util.*;
 import vmj.routing.route.VMJExchange;
 
 public interface DisbursementResource {
-    Disbursement createDisbursement(VMJExchange vmjExchange,int id, int userId);
+    Disbursement createDisbursement(VMJExchange vmjExchange);
+    Disbursement createDisbursement(VMJExchange vmjExchange, Map<String, Object> response);
     HashMap<String, Object> getDisbursement(VMJExchange vmjExchange);
     List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange);
-    List<HashMap<String,Object>> deleteDisbursement(VMJExchange vmjExchange);
+    List<HashMap<String, Object>> deleteDisbursement(VMJExchange vmjExchange);
     HashMap<String, Object> updateDisbursement(VMJExchange vmjExchange);
-    List<HashMap<String,Object>> transformListToHashMap(List<Disbursement> List);
-    HashMap<String, Object> sendTransaction(VMJExchange vmjExchange, String serviceName);
+    List<HashMap<String, Object>> transformListToHashMap(List<Disbursement> List);
+    Map<String, Object> sendTransaction(VMJExchange vmjExchange);
     HashMap<String, Object> getDisbursementById(int id);
-
 }

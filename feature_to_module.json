@@ -17,9 +17,15 @@
 	"MoneyTransfer": [
 		"paymentgateway.disbursement.moneytransfer"
 	],
-    "AbstractMoneyTransfer": [
-        "paymentgateway.disbursement.moneytransfer"
-    ],
+	"International": [
+		"paymentgateway.disbursement.moneytransfer.international"
+	],
+	"Special": [
+		"paymentgateway.disbursement.moneytransfer.special"
+	],
+	"Agent": [
+		"paymentgateway.disbursement.moneytransfer.agent"
+	],
 	"AgentMoneyTransfer": [
 		"paymentgateway.disbursement.moneytransfer.agent",
 		"paymentgateway.disbursement.moneytransfer.agentmoneytransfer"
@@ -31,6 +37,11 @@
 	"InternationalMoneyTransfer": [
 		"paymentgateway.disbursement.moneytransfer.international",
 		"paymentgateway.disbursement.moneytransfer.internationalmoneytransfer"
+	],
+	"SpecialInternationalMoneyTransfer": [
+		"paymentgateway.disbursement.moneytransfer.international",
+		"paymentgateway.disbursement.moneytransfer.special",
+		"paymentgateway.disbursement.moneytransfer.specialinternationalmoneytransfer"
 	],
 	"Payment": [
 		"paymentgateway.payment.core"

@@ -5,24 +5,24 @@
 	<feature automatic="selected" manual="selected" name="Flip"/>
 	<feature name="Midtrans"/>
 	<feature name="Oy"/>
-	<feature name="Disbursement"/>
-	<feature name="MoneyTransfer"/>
-	<feature name="FlipMoneyTransfer"/>
-	<feature name="International"/>
-	<feature name="FlipInternational"/>
+	<feature automatic="selected" name="Disbursement"/>
+	<feature manual="selected" name="MoneyTransfer"/>
+	<feature automatic="selected" name="FlipMoneyTransfer"/>
+	<feature manual="selected" name="International"/>
+	<feature automatic="selected" name="FlipInternational"/>
 	<feature name="Special"/>
 	<feature name="FlipSpecial"/>
 	<feature name="Agent"/>
 	<feature name="FlipAgent"/>
-	<feature name="InternationalMoneyTransfer"/>
-	<feature name="FlipInternationalMoneyTransfer"/>
-	<feature name="SpecialMoneyTransfer"/>
-	<feature name="FlipSpecialMoneyTransfer"/>
-	<feature name="AgentMoneyTransfer"/>
-	<feature name="FlipAgentMoneyTransfer"/>
-	<feature name="SpecialInternationalMoneyTransfer"/>
-	<feature name="FlipSpecialInternationalMoneyTransfer"/>
-	<feature automatic="selected" name="Payment"/>
+	<feature manual="selected" name="InternationalMoneyTransfer"/>
+	<feature automatic="selected" name="FlipInternationalMoneyTransfer"/>
+	<feature manual="selected" name="SpecialMoneyTransfer"/>
+	<feature automatic="selected" name="FlipSpecialMoneyTransfer"/>
+	<feature manual="selected" name="AgentMoneyTransfer"/>
+	<feature automatic="selected" name="FlipAgentMoneyTransfer"/>
+	<feature automatic="selected" name="SpecialInternationalMoneyTransfer"/>
+	<feature manual="selected" name="FlipSpecialInternationalMoneyTransfer"/>
+	<feature name="Payment"/>
 	<feature name="PaymentLink"/>
 	<feature name="FlipPaymentLink"/>
 	<feature name="MidtransPaymentLink"/>
@@ -34,8 +34,8 @@
 	<feature name="RetailOutlet"/>
 	<feature name="MidtransRetailOutlet"/>
 	<feature name="OyRetailOutlet"/>
-	<feature automatic="selected" name="EWallet"/>
-	<feature manual="selected" name="FlipEWallet"/>
+	<feature name="EWallet"/>
+	<feature name="FlipEWallet"/>
 	<feature name="MidtransEWallet"/>
 	<feature name="OyEWallet"/>
 	<feature name="Invoice"/>

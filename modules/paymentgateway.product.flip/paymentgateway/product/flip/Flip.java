@@ -128,23 +128,23 @@ public class Flip {
 		LOGGER.info("================================");
 		DisbursementResource moneytransfer = DisbursementResourceFactory
 				.createDisbursementResource(
-						"paymentgateway.disbursement.moneytransfer.MoneyTransferResourceImpl",
+						"paymentgateway.disbursement.moneytransfer.DisbursementResourceImpl",
 						DisbursementResourceFactory.createDisbursementResource(
 								"paymentgateway.disbursement.core.DisbursementResourceImpl"));
 
 		DisbursementResource agent = DisbursementResourceFactory
 				.createDisbursementResource(
-						"paymentgateway.disbursement.moneytransfer.agentmoneytransfer.AgentMoneyTransferResourceImpl",
+						"paymentgateway.disbursement.moneytransfer.agentmoneytransfer.DisbursementResourceImpl",
 						moneytransfer);
 
 		DisbursementResource special = DisbursementResourceFactory
 				.createDisbursementResource(
-						"paymentgateway.disbursement.moneytransfer.specialmoneytransfer.SpecialMoneyTransferResourceImpl",
+						"paymentgateway.disbursement.moneytransfer.specialmoneytransfer.DisbursementResourceImpl",
 						moneytransfer);
 
 		DisbursementResource internationalmoneytransfer = DisbursementResourceFactory
 				.createDisbursementResource(
-						"paymentgateway.disbursement.moneytransfer.internationalmoneytransfer.InternationalMoneyTransferResourceImpl",
+						"paymentgateway.disbursement.moneytransfer.internationalmoneytransfer.DisbursementResourceImpl",
 						moneytransfer);
 
 		LOGGER.info("================================");

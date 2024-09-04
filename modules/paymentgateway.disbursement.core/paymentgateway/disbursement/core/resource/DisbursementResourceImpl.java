@@ -18,29 +18,43 @@ import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
 public class DisbursementResourceImpl extends DisbursementResourceComponent {
-	protected DisbursementResourceComponent record;
 	private static final Logger LOGGER = Logger.getLogger(DisbursementResourceImpl.class.getName());
 
-	public Disbursement createDisbursement(VMJExchange vmjExchange,int id, int userId) {
+	public Disbursement createDisbursement(VMJExchange vmjExchange){
+		throw new UnsupportedOperationException(
+			"This operation is not supported in the disbursement core module resource.");
+	}
+	
+	public Disbursement createDisbursement(VMJExchange vmjExchange, Map<String, Object> response){
 		String bank_code = "";
-		String account_number = "";
 		try{
 			bank_code = (String) vmjExchange.getRequestBodyForm("bank_code");
-			account_number = (String) vmjExchange.getRequestBodyForm("account_number");
-		}catch (Exception e){
+		} catch (Exception e){
 			bank_code = (String) vmjExchange.getRequestBodyForm("beneficiary_bank_name");
+		}
+
+		String account_number = "";
+		try{
+			account_number = (String) vmjExchange.getRequestBodyForm("account_number");
+		} catch (Exception e){
 			account_number = (String) vmjExchange.getRequestBodyForm("beneficiary_account_number");
 		}
-		double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
 
+		double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
+		int id = (int) response.get("id");
+		int userId = (int) response.get("user_id");
+		
 		Disbursement disbursement = DisbursementFactory.createDisbursement(
-				"paymentgateway.disbursement.core.DisbursementImpl",
-				id,
-				userId,
-				account_number,
-				amount,
-				bank_code);
+			"paymentgateway.disbursement.core.DisbursementImpl",
+			id,
+			userId,
+			account_number,
+			amount,
+			bank_code
+		);
+
 		Repository.saveObject(disbursement);
+		
 		return disbursement;
 	}
 	
@@ -59,25 +73,21 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	public int callback(VMJExchange vmjExchange) {
 		String workingDir = System.getProperty("user.dir");
 		List<File> propertyFiles = new ArrayList<>();
-		
 		List<String> vendors = new ArrayList<>();
-
 		String[] targetFiles = {"oy.properties", "flip.properties", "midtrans.properties"};
 
 		// Iterate through target files
 		for (String targetFile : targetFiles) {
-		  File file = new File(workingDir, targetFile);
-		  if (file.exists()) {
-			  String fileName = file.getName();
-			  String nameBeforeDot = fileName.substring(0, fileName.indexOf('.'));
-			  String capitalized = nameBeforeDot.substring(0, 1).toUpperCase() + nameBeforeDot.substring(1);
-              vendors.add(capitalized);
-		  }
+			File file = new File(workingDir, targetFile);
+			if (file.exists()) {
+				String fileName = file.getName();
+				String nameBeforeDot = fileName.substring(0, fileName.indexOf('.'));
+				String capitalized = nameBeforeDot.substring(0, 1).toUpperCase() + nameBeforeDot.substring(1);
+            	vendors.add(capitalized);
+			}
 		}
 		
-		
 		for (String vendor : vendors) {
-	    	System.out.println(vendor);
 	        try {
 	            Config config = ConfigFactory.createConfig(vendor, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 	            Map<String, Object> requestMap = config.getCallbackDisbursementRequestBody(vmjExchange);
@@ -85,13 +95,12 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	            String idStr = (String) requestMap.get("id");
 	            String status = (String) requestMap.get("status");
 
-	            System.out.println("Processing vendor: " + vendor);
-	            System.out.println("ID: " + idStr);
-	            System.out.println("Status: " + status);
+	            LOGGER.info("Processing vendor: " + vendor);
+	            LOGGER.info("ID: " + idStr);
+	            LOGGER.info("Status: " + status);
 
 				String hostAddress = getEnvVariableHostAddress("AMANAH_HOST_BE");
         		int portNum = getEnvVariablePortNumber("AMANAH_PORT_BE");
-
 	            HttpClient client = HttpClient.newHttpClient();
 				String configUrl = String.format("http://%s:%d/call/receivedisbursementcallback", hostAddress, portNum);
 	            String requestString = config.getRequestString(requestMap);
@@ -99,11 +108,11 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	                                       .uri(URI.create(configUrl))
 	                                       .POST(HttpRequest.BodyPublishers.ofString(requestString))
 	                                       .build();
-
+				
 	            try {
 	                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 	                String rawResponse = response.body();
-	                System.out.println("rawResponse: " + rawResponse);
+	                LOGGER.info("rawResponse: " + rawResponse);
 	            } catch (Exception e) {
 	                System.err.println("Failed to send request for vendor: " + vendor);
 	                e.printStackTrace();
@@ -117,9 +126,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	    return 200;
 	}
 
-
-
-	public HashMap<String, Object> sendTransaction(VMJExchange vmjExchange, String serviceName) {
+	public Map<String, Object> sendTransaction(VMJExchange vmjExchange){
 		HashMap<String, Object> responseObj = null;
 		return responseObj;
 	}
@@ -128,36 +135,35 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	public HashMap<String, Object> getDisbursement(VMJExchange vmjExchange){
 		int id = ((Double) vmjExchange.getRequestBodyForm("id")).intValue();
 		Disbursement disbursementImpl = Repository.getObject(id);
-		HashMap<String,Object> disbursementDataMap = disbursementImpl.toHashMap();
+		HashMap<String, Object> disbursementDataMap = disbursementImpl.toHashMap();
 		return disbursementDataMap;
 	}
 
 	public HashMap<String, Object> getDisbursementById(int id){
-		List<HashMap<String,Object>> disbursementList = getAllDisbursement("moneytransfer_impl");
-		for (HashMap<String,Object> disbursement : disbursementList){
+		List<HashMap<String, Object>> disbursementList = getAllDisbursement("moneytransfer_impl");
+		for (HashMap<String, Object> disbursement : disbursementList){
 			int record_id = ((Double) disbursement.get("record_id")).intValue();
-			if(record_id == id){
+			if (record_id == id){
 				return disbursement;
 			}
-
 		}
 
 		return null;
 	}
 
 	@Route(url="call/disbursement/list")
-	public List<HashMap<String,Object>> getAllDisbursement(VMJExchange vmjExchange){
+	public List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange){
 		String table = (String) vmjExchange.getRequestBodyForm("table_name");
 		List<Disbursement> List = Repository.getAllObject(table);
 		return transformListToHashMap(List);
 	}
 
-	public List<HashMap<String,Object>> getAllDisbursement(String tableName){
+	public List<HashMap<String, Object>> getAllDisbursement(String tableName){
 		List<Disbursement> List = Repository.getAllObject(tableName);
 		return transformListToHashMap(List);
 	}
 
-	public String getParamsUrlEncoded(VMJExchange vmjExchange) {
+	public String getParamsUrlEncoded(VMJExchange vmjExchange){
 		ArrayList<String> paramList = new ArrayList<>();
 		for (Map.Entry<String, Object> entry : vmjExchange.getPayload().entrySet()) {
 			String key = entry.getKey();
@@ -170,50 +176,54 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 				int temp = ((Double) val).intValue();
 				paramList.add(key + "=" + URLEncoder.encode(Integer.toString(temp), StandardCharsets.UTF_8));
 			}
-
 		}
+
 		String encodedURL = String.join("&",paramList);
 		return encodedURL;
 	}
 
-	public List<HashMap<String,Object>> transformListToHashMap(List<Disbursement> List){
-		List<HashMap<String,Object>> resultList = new ArrayList<HashMap<String,Object>>();
-		for(int i = 0; i < List.size(); i++) {
+	public List<HashMap<String, Object>> transformListToHashMap(List<Disbursement> List){
+		List<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
+
+		for (int i = 0; i < List.size(); i++){
 			resultList.add(List.get(i).toHashMap());
 		}
+		
 		return resultList;
 	}
 
 	@Route(url="call/disbursement/delete")
-	public List<HashMap<String,Object>> deleteDisbursement(VMJExchange vmjExchange) {
+	public List<HashMap<String, Object>> deleteDisbursement(VMJExchange vmjExchange){
 		if (vmjExchange.getHttpMethod().equals("OPTIONS")) {
 			return null;
 		}
+
 		int id = ((Double) vmjExchange.getRequestBodyForm("id")).intValue();
 		Disbursement disbursement = Repository.getObject(id);
 		Repository.deleteObject(id);
+
 		return getAllDisbursement(vmjExchange);
 	}
 
 	@Route(url="call/disbursement/update")
 	public HashMap<String, Object> updateDisbursement(VMJExchange vmjExchange){
-		if (vmjExchange.getHttpMethod().equals("OPTIONS")) {
+		if (vmjExchange.getHttpMethod().equals("OPTIONS")){
 			return null;
 		}
+
 		int id = ((Double) vmjExchange.getRequestBodyForm("id")).intValue();
 		Disbursement disbursement = Repository.getObject(id);
-		try{
+
+		try {
 			disbursement.setAmount((Double) vmjExchange.getRequestBodyForm("amount"));
 			disbursement.setAccountNumber((String) vmjExchange.getRequestBodyForm("account_number"));
 			disbursement.setBankCode((String) vmjExchange.getRequestBodyForm("bank_code"));
-
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			e.printStackTrace();
 		}
 
 		Repository.updateObject(disbursement);
+		
 		return disbursement.toHashMap();
 	}
-
 }

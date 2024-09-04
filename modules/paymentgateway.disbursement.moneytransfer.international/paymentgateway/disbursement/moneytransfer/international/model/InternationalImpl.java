@@ -20,9 +20,9 @@ public class InternationalImpl extends DisbursementDecorator {
 	private double amount_in_sender_currency;
 	private String beneficiary_currency_code;
 
-	public InternationalImpl(DisbursementComponent record, double exchange_rate, double fee, String source_country,
+	public InternationalImpl(DisbursementComponent record, int userId, double exchange_rate, double fee, String source_country,
 			String destination_country, double amount_in_sender_currency, String beneficiary_currency_code) {
-		super(record);
+		super(record, userId, InternationalImpl.class.getName());
 		this.exchange_rate = exchange_rate;
 		this.fee = fee;
 		this.source_country = source_country;
@@ -32,7 +32,7 @@ public class InternationalImpl extends DisbursementDecorator {
 	}
 
 	public InternationalImpl() {
-
+		super();
 	}
 
 	public double getExchange_rate() {
@@ -93,5 +93,4 @@ public class InternationalImpl extends DisbursementDecorator {
 		moneyTransferMap.put("beneficiary_currency_code", getBeneficiary_currency_code());
 		return moneyTransferMap;
 	}
-
 }

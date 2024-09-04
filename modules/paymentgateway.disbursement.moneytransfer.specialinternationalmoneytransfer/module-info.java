@@ -1,7 +1,7 @@
-module paymentgateway.disbursement.moneytransfer.specialmoneytransfer {
+module paymentgateway.disbursement.moneytransfer.specialinternationalmoneytransfer {
 	requires paymentgateway.disbursement.core;
 
-	exports paymentgateway.disbursement.moneytransfer.specialmoneytransfer;
+	exports paymentgateway.disbursement.moneytransfer.specialinternationalmoneytransfer;
 
 	requires paymentgateway.config.core;
 	requires vmj.routing.route;
@@ -9,5 +9,5 @@ module paymentgateway.disbursement.moneytransfer.specialmoneytransfer {
 	requires java.naming;
 	requires java.net.http;
 
-	opens paymentgateway.disbursement.moneytransfer.specialmoneytransfer to org.hibernate.orm.core, gson;
+	opens paymentgateway.disbursement.moneytransfer.specialinternationalmoneytransfer to org.hibernate.orm.core, gson;
 }

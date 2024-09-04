@@ -14,16 +14,15 @@ import paymentgateway.disbursement.core.DisbursementComponent;
 @Entity(name = "special_impl")
 @Table(name = "special_impl")
 public class SpecialImpl extends DisbursementDecorator {
-
 	protected int sender_country;
 	protected String sender_name;
 	protected String sender_address;
 	protected String sender_job;
 	protected String direction;
 
-	public SpecialImpl(DisbursementComponent record, int sender_country, String sender_name, String sender_address,
-			String sender_job, String direction) {
-		super(record);
+	public SpecialImpl(DisbursementComponent record, int userId, int sender_country, String sender_name, 
+			String sender_address, String sender_job, String direction) {
+		super(record, userId, SpecialImpl.class.getName());
 		this.sender_country = sender_country;
 		this.sender_name = sender_name;
 		this.sender_address = sender_address;
@@ -32,6 +31,7 @@ public class SpecialImpl extends DisbursementDecorator {
 	}
 
 	public SpecialImpl() {
+		super();
 	}
 
 	public int getSender_country() {
@@ -83,5 +83,4 @@ public class SpecialImpl extends DisbursementDecorator {
 		specialMap.put("direction", getDirection());
 		return specialMap;
 	}
-
 }

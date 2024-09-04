@@ -1,10 +1,9 @@
 module paymentgateway.disbursement.moneytransfer.international {
 	requires paymentgateway.disbursement.core;
 
-	requires paymentgateway.disbursement.moneytransfer;
-
 	exports paymentgateway.disbursement.moneytransfer.international;
 
+	requires paymentgateway.config.core;
 	requires vmj.routing.route;
 	requires vmj.hibernate.integrator;
 	requires vmj.auth;
