@@ -12,19 +12,9 @@ import javax.persistence.Id;
 @Entity(name = "disbursement_impl")
 @Table(name = "disbursement_impl")
 public class DisbursementImpl extends DisbursementComponent {
-	protected String accountNumber;
-	protected String bankCode;
-	protected double amount;
-
 	public DisbursementImpl(int id, int userId, String accountNumber, double amount, String bankCode) {
-		this.id = id;
-		this.userId = userId;
+		super(id, userId, accountNumber, amount, bankCode);
 		this.objectName = DisbursementImpl.class.getName();
-		this.accountNumber = accountNumber;
-		this.amount = amount;
-		System.out.println("lebah ganteng");
-		System.out.println(amount);
-		this.bankCode = bankCode;
 	}
 
 	// read this for more information why default constructor needed

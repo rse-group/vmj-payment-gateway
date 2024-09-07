@@ -17,11 +17,23 @@ public abstract class DisbursementComponent implements Disbursement {
 	@Id
 	protected  int id;
 	protected int userId;
+	protected String accountNumber;
+	protected String bankCode;
+	protected double amount;
 
 	@Column(nullable = true)
 	protected String objectName = null;
 
 	public DisbursementComponent() { }
+
+	public DisbursementComponent(int id, int userId, String accountNumber, double amount, String bankCode) {
+		this.id = id;
+		this.userId = userId;
+		this.objectName = DisbursementComponent.class.getName();
+		this.accountNumber = accountNumber;
+		this.amount = amount;
+		this.bankCode = bankCode;
+	}
 
 	public int getId(){
 		return id;
