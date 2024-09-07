@@ -71,4 +71,12 @@ public abstract class DisbursementDecorator extends DisbursementComponent {
     public void setAmount(double amount) {
         record.setAmount(amount);
     }
+
+    public String getStatus() {
+		return record.getStatus();
+	}
+
+	public void setStatus(String status) {
+		record.setStatus(status);
+	}
 }

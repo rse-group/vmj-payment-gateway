@@ -8,11 +8,8 @@ features
 					Flip
 					Midtrans
 					Oy
-			Disbursement {abstract true}
+			Disbursement
 				or
-					MoneyTransfer
-						mandatory
-							FlipMoneyTransfer
 					International
 						mandatory
 							FlipInternational
@@ -22,19 +19,8 @@ features
 					Agent
 						mandatory
 							FlipAgent
-					InternationalMoneyTransfer
-						mandatory
-							FlipInternationalMoneyTransfer
-					SpecialMoneyTransfer
-						mandatory
-							FlipSpecialMoneyTransfer
-					AgentMoneyTransfer
-						mandatory
-							FlipAgentMoneyTransfer
-					SpecialInternationalMoneyTransfer
-						mandatory
-							FlipSpecialInternationalMoneyTransfer
-		mandatory
+				mandatory
+					FlipDisbursement
 			Payment {abstract true}
 				or
 					PaymentLink
@@ -72,4 +58,4 @@ features
 constraints
 	OyInvoice | OyPaymentRouting | OyPaymentLink | OyRetailOutlet | OyVirtualAccount | OyEWallet => Oy
 	MidtransCreditCard | MidtransDebitCard | MidtransPaymentLink | MidtransVirtualAccount | MidtransEWallet | MidtransRetailOutlet => Midtrans
-	FlipMoneyTransfer | FlipInternational | FlipSpecial | FlipAgent | FlipInternationalMoneyTransfer | FlipSpecialMoneyTransfer | FlipAgentMoneyTransfer | FlipSpecialInternationalMoneyTransfer => Flip
+	FlipDisbursement | FlipInternational | FlipSpecial | FlipAgent => Flip

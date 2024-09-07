@@ -13,6 +13,8 @@ import java.nio.charset.StandardCharsets;
 
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
+import vmj.routing.route.exceptions.*;
+
 import paymentgateway.disbursement.DisbursementFactory;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
@@ -21,8 +23,8 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	private static final Logger LOGGER = Logger.getLogger(DisbursementResourceImpl.class.getName());
 
 	public Disbursement createDisbursement(VMJExchange vmjExchange){
-		throw new UnsupportedOperationException(
-			"This operation is not supported in the disbursement core module resource.");
+		Map<String, Object> response = sendTransaction(vmjExchange);
+		return createDisbursement(vmjExchange, response);
 	}
 	
 	public Disbursement createDisbursement(VMJExchange vmjExchange, Map<String, Object> response){
@@ -43,6 +45,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 		double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
 		int id = (int) response.get("id");
 		int userId = (int) response.get("user_id");
+		String status = (String) response.get("status");
 		
 		Disbursement disbursement = DisbursementFactory.createDisbursement(
 			"paymentgateway.disbursement.core.DisbursementImpl",
@@ -50,7 +53,8 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 			userId,
 			account_number,
 			amount,
-			bank_code
+			bank_code,
+			status
 		);
 
 		Repository.saveObject(disbursement);
@@ -126,9 +130,35 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	    return 200;
 	}
 
-	public Map<String, Object> sendTransaction(VMJExchange vmjExchange){
-		HashMap<String, Object> responseObj = null;
-		return responseObj;
+	public Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
+		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
+		Config config = ConfigFactory.createConfig(vendorName,
+				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+		Map<String, Object> requestMap = vmjExchange.getPayload();
+		String configUrl = config.getProductEnv("MoneyTransfer");
+		HashMap<String, String> headerParams = config.getHeaderParams();
+
+		LOGGER.info("header: " + headerParams);
+		LOGGER.info("configUrl: " + configUrl);
+
+		String requestString = config.getRequestString(requestMap);
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(), headerParams))
+				.uri(URI.create(configUrl))
+				.POST(HttpRequest.BodyPublishers.ofString(requestString))
+				.build();
+		Map<String, Object> responseMap = new HashMap<>();
+		
+		try {
+			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			String rawResponse = response.body().toString();
+			LOGGER.info("rawResponse: " + rawResponse);
+			responseMap = config.getMoneyTransferResponse(rawResponse);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return responseMap;
 	}
 	
 	@Route(url="call/disbursement/detail")
@@ -225,5 +255,14 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 		Repository.updateObject(disbursement);
 		
 		return disbursement.toHashMap();
+	}
+
+	@Route(url = "call/disbursement")
+	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
+		if (vmjExchange.getHttpMethod().equals("POST")) {
+			Disbursement result = this.createDisbursement(vmjExchange);
+			return result.toHashMap();
+		}
+		throw new NotFoundException("Route tidak ditemukan");
 	}
 }

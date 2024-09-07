@@ -20,19 +20,27 @@ public abstract class DisbursementComponent implements Disbursement {
 	protected String accountNumber;
 	protected String bankCode;
 	protected double amount;
+	protected String status;
 
 	@Column(nullable = true)
 	protected String objectName = null;
 
 	public DisbursementComponent() { }
 
-	public DisbursementComponent(int id, int userId, String accountNumber, double amount, String bankCode) {
+	public DisbursementComponent(
+		int id, 
+		int userId, 
+		String accountNumber, 
+		double amount, 
+		String bankCode,
+		String status
+	) {
 		this.id = id;
 		this.userId = userId;
-		this.objectName = DisbursementComponent.class.getName();
 		this.accountNumber = accountNumber;
 		this.amount = amount;
 		this.bankCode = bankCode;
+		this.status = status;
 	}
 
 	public int getId(){
@@ -59,6 +67,9 @@ public abstract class DisbursementComponent implements Disbursement {
 
 	public abstract String getAccountNumber();
 	public abstract void setAccountNumber(String accountNumber);
+
+	public abstract String getStatus();
+	public abstract void setStatus(String status);
 
 	public abstract HashMap<String, Object> toHashMap();
 }

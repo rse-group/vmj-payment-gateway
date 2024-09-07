@@ -14,34 +14,14 @@
 	"Disbursement": [
 		"paymentgateway.disbursement.core"
 	],
-	"MoneyTransfer": [
-		"paymentgateway.disbursement.moneytransfer"
-	],
 	"International": [
-		"paymentgateway.disbursement.moneytransfer.international"
+		"paymentgateway.disbursement.international"
 	],
 	"Special": [
-		"paymentgateway.disbursement.moneytransfer.special"
+		"paymentgateway.disbursement.special"
 	],
 	"Agent": [
-		"paymentgateway.disbursement.moneytransfer.agent"
-	],
-	"AgentMoneyTransfer": [
-		"paymentgateway.disbursement.moneytransfer.agent",
-		"paymentgateway.disbursement.moneytransfer.agentmoneytransfer"
-	],
-	"SpecialMoneyTransfer": [
-		"paymentgateway.disbursement.moneytransfer.special",
-		"paymentgateway.disbursement.moneytransfer.specialmoneytransfer"
-	],
-	"InternationalMoneyTransfer": [
-		"paymentgateway.disbursement.moneytransfer.international",
-		"paymentgateway.disbursement.moneytransfer.internationalmoneytransfer"
-	],
-	"SpecialInternationalMoneyTransfer": [
-		"paymentgateway.disbursement.moneytransfer.international",
-		"paymentgateway.disbursement.moneytransfer.special",
-		"paymentgateway.disbursement.moneytransfer.specialinternationalmoneytransfer"
+		"paymentgateway.disbursement.agent"
 	],
 	"Payment": [
 		"paymentgateway.payment.core"
@@ -70,5 +50,4 @@
 	"VirtualAccount": [
 		"paymentgateway.payment.virtualaccount"
 	]
-	
 }

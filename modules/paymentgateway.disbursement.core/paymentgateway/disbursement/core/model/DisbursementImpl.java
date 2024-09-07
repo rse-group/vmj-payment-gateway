@@ -12,8 +12,14 @@ import javax.persistence.Id;
 @Entity(name = "disbursement_impl")
 @Table(name = "disbursement_impl")
 public class DisbursementImpl extends DisbursementComponent {
-	public DisbursementImpl(int id, int userId, String accountNumber, double amount, String bankCode) {
-		super(id, userId, accountNumber, amount, bankCode);
+	public DisbursementImpl(
+		int id, 
+		int userId, 
+		String accountNumber, 
+		double amount, 
+		String bankCode,
+		String status) {
+		super(id, userId, accountNumber, amount, bankCode, status);
 		this.objectName = DisbursementImpl.class.getName();
 	}
 
@@ -44,6 +50,14 @@ public class DisbursementImpl extends DisbursementComponent {
 	
 	public void setBankCode(String bankCode) {
 		this.bankCode = bankCode;
+	}
+
+	public String getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public HashMap<String, Object> toHashMap() {

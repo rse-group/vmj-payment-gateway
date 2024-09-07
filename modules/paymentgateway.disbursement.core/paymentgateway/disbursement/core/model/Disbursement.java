@@ -18,5 +18,8 @@ public interface Disbursement {
 	public String getBankCode();
 	public void setBankCode(String bankCode);
 
+	public String getStatus();
+	public void setStatus(String status);
+
 	public HashMap<String, Object> toHashMap();
 }
