@@ -40,14 +40,12 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 	}
 
 	public Disbursement createDisbursement(VMJExchange vmjExchange, Map<String, Object> response) {
-		int userId = (int) response.get("user_id");
 		int agent_id = (int) response.get("agent_id");
 		String direction = (String) response.get("direction");
 
 		Disbursement agentTransaction = DisbursementFactory.createDisbursement(
 			"paymentgateway.disbursement.agent.AgentImpl",
 			record.createDisbursement(vmjExchange, response),
-			userId,
 			agent_id,
 			direction
 		);

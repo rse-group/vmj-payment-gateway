@@ -41,7 +41,6 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 	}
 
 	public Disbursement createDisbursement(VMJExchange vmjExchange, Map<String, Object> response) {
-		int userId = (int) response.get("user_id");
 		int sender_country = (int) response.get("country");
 		String sender_name = (String) response.get("name");
 		String sender_address = (String) response.get("address");
@@ -51,7 +50,6 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 		Disbursement approvalTransaction = DisbursementFactory.createDisbursement(
 			"paymentgateway.disbursement.special.SpecialImpl",
 			record.createDisbursement(vmjExchange, response),
-			userId,
 			sender_country,
 			sender_name,
 			sender_address,

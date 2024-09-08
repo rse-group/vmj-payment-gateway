@@ -20,9 +20,9 @@ public class SpecialImpl extends DisbursementDecorator {
 	protected String sender_job;
 	protected String direction;
 
-	public SpecialImpl(DisbursementComponent record, int userId, int sender_country, String sender_name, 
+	public SpecialImpl(DisbursementComponent record, int sender_country, String sender_name, 
 			String sender_address, String sender_job, String direction) {
-		super(record, userId, SpecialImpl.class.getName());
+		super(record, SpecialImpl.class.getName());
 		this.sender_country = sender_country;
 		this.sender_name = sender_name;
 		this.sender_address = sender_address;
