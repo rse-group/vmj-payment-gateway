@@ -57,7 +57,6 @@ public class PaymentResourceImpl extends PaymentResourceComponent {
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			System.out.println("rawResponse " + rawResponse);
             responseMap = config.getPaymentStatusResponse(rawResponse, Id);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,17 +107,12 @@ public class PaymentResourceImpl extends PaymentResourceComponent {
 		
 		
 		for (String vendor : vendors) {
-	    	System.out.println(vendor);
 	        try {
 	            Config config = ConfigFactory.createConfig(vendor, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 	            Map<String, Object> requestMap = config.getCallbackPaymentRequestBody(vmjExchange);
 
 	            String idStr = (String) requestMap.get("id");
 	            String status = (String) requestMap.get("status");
-
-	            System.out.println("Processing vendor: " + vendor);
-	            System.out.println("ID: " + idStr);
-	            System.out.println("Status: " + status);
 
 				String hostAddress = getEnvVariableHostAddress("AMANAH_HOST_BE");
         		int portNum = getEnvVariablePortNumber("AMANAH_PORT_BE");
@@ -135,7 +129,6 @@ public class PaymentResourceImpl extends PaymentResourceComponent {
 	            try {
 	                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 	                String rawResponse = response.body();
-	                System.out.println("rawResponse: " + rawResponse);
 	            } catch (Exception e) {
 	                System.err.println("Failed to send request for vendor: " + vendor);
 	                e.printStackTrace();
@@ -148,10 +141,6 @@ public class PaymentResourceImpl extends PaymentResourceComponent {
 
 	    return 200;
 	}
-	
-
-
-
 
 	@Route(url = "call/payment/list")
 	public List<HashMap<String,Object>> getAll(VMJExchange vmjExchange) {

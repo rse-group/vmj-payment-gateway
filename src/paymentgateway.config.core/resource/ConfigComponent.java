@@ -20,10 +20,8 @@ public abstract class ConfigComponent implements Config {
 
     public abstract Map<String, Object> getPaymentStatusResponse(String rawResponse, String id);
 
-    public abstract Map<String, Object> getMoneyTransferRequestBody(VMJExchange vmjExchange);
-    public abstract Map<String, Object> getSpecialMoneyTransferRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getDomesticMoneyTransferRequestBody(VMJExchange vmjExchange);
     public abstract Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange);
-    public abstract Map<String, Object> getAgentMoneyTransferRequestBody(VMJExchange vmjExchange);
 
     public abstract Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange);
     public abstract Map<String, Object> getRetailOutletRequestBody(VMJExchange vmjExchange);

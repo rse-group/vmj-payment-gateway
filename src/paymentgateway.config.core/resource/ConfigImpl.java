@@ -39,7 +39,6 @@ public class ConfigImpl extends ConfigComponent {
         String apiEndpoint = (String) PropertiesReader.getProp(fileName, serviceName);
 
         url = baseUrl + apiEndpoint;
-        System.out.println("url: " + url);
 
         return url;
     }
@@ -77,7 +76,6 @@ public class ConfigImpl extends ConfigComponent {
     }
 
     public int generateId(){
-        System.out.println("masuk generate id");
         String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
         return Integer.parseInt(generateUUIDNo.substring(0,5));
     }
@@ -93,22 +91,14 @@ public class ConfigImpl extends ConfigComponent {
         return vmjExchange.getPayload();
     }
 
-    public Map<String, Object> getMoneyTransferRequestBody(VMJExchange vmjExchange){
-        throw new UnsupportedOperationException();
-    }
-
-    public Map<String, Object> getSpecialMoneyTransferRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getDomesticMoneyTransferRequestBody(VMJExchange vmjExchange){
         throw new UnsupportedOperationException();
     }
 
     public Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange){
         throw new UnsupportedOperationException();
     }
-
-    public Map<String, Object> getAgentMoneyTransferRequestBody(VMJExchange vmjExchange){
-        throw new UnsupportedOperationException();
-    }
-
+    
     public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
         throw new UnsupportedOperationException();
     }

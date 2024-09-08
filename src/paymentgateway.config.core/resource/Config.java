@@ -32,10 +32,8 @@ public interface Config {
     Map<String, Object> getCallbackDisbursementRequestBody(VMJExchange vmjExchange);
 
     // Disbursement Request
-    Map<String, Object> getMoneyTransferRequestBody(VMJExchange vmjExchange);
-    Map<String, Object> getSpecialMoneyTransferRequestBody(VMJExchange vmjExchange);
+    Map<String, Object> getDomesticMoneyTransferRequestBody(VMJExchange vmjExchange);
     Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange);
-    Map<String, Object> getAgentMoneyTransferRequestBody(VMJExchange vmjExchange);
 
     // Payment Request
     Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange);

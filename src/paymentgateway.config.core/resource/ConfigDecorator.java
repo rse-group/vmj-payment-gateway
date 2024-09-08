@@ -67,20 +67,12 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.generateId();    
     }
 
-    public Map<String, Object> getMoneyTransferRequestBody(VMJExchange vmjExchange){
-        return record.getMoneyTransferRequestBody(vmjExchange);
-    }
-
-    public Map<String, Object> getSpecialMoneyTransferRequestBody(VMJExchange vmjExchange){
-        return record.getSpecialMoneyTransferRequestBody(vmjExchange);
+    public Map<String, Object> getDomesticMoneyTransferRequestBody(VMJExchange vmjExchange){
+        return record.getDomesticMoneyTransferRequestBody(vmjExchange);
     }
 
     public Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange){
         return record.getInternationalMoneyTransferRequestBody(vmjExchange);
-    }
-
-    public Map<String, Object> getAgentMoneyTransferRequestBody(VMJExchange vmjExchange){
-        return record.getAgentMoneyTransferRequestBody(vmjExchange);
     }
 
     public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
