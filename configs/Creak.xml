@@ -3,15 +3,21 @@
 	<feature automatic="selected" name="PaymentGateway"/>
 	<feature automatic="selected" name="Vendor"/>
 	<feature name="Flip"/>
-	<feature manual="selected" name="Midtrans"/>
+	<feature name="Midtrans"/>
 	<feature automatic="selected" manual="selected" name="Oy"/>
 	<feature name="Disbursement"/>
 	<feature name="International"/>
 	<feature name="FlipInternational"/>
+	<feature name="InternationalMoneyTransfer"/>
+	<feature name="FlipInternationalMoneyTransfer"/>
 	<feature name="Special"/>
 	<feature name="FlipSpecial"/>
+	<feature name="SpecialMoneyTransfer"/>
+	<feature name="FlipSpecialMoneyTransfer"/>
 	<feature name="Agent"/>
 	<feature name="FlipAgent"/>
+	<feature name="AgentMoneyTransfer"/>
+	<feature name="FlipAgentMoneyTransfer"/>
 	<feature name="FlipDisbursement"/>
 	<feature automatic="selected" name="Payment"/>
 	<feature name="PaymentLink"/>

@@ -122,7 +122,6 @@ public class OyConfiguration extends ConfigDecorator{
         requestMap.put("email", email);
         requestMap.put("description",description);
         requestMap.put("id",id);
-        System.out.println("Oy id:" + String.valueOf(id));
         return requestMap;
     }
 

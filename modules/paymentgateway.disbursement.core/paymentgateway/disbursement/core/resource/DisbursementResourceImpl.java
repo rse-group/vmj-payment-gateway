@@ -31,15 +31,23 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 		String bank_code = "";
 		try{
 			bank_code = (String) vmjExchange.getRequestBodyForm("bank_code");
-		} catch (Exception e){
-			bank_code = (String) vmjExchange.getRequestBodyForm("beneficiary_bank_name");
+		} catch (Exception e1){
+			try {
+				bank_code = (String) vmjExchange.getRequestBodyForm("beneficiary_bank_name");
+			} catch (Exception e2) {
+				throw new BadRequestException("bank_code dan beneficiary_bank_name tidak ditemukan pada payload.");
+			}
 		}
 
 		String account_number = "";
 		try{
 			account_number = (String) vmjExchange.getRequestBodyForm("account_number");
-		} catch (Exception e){
-			account_number = (String) vmjExchange.getRequestBodyForm("beneficiary_account_number");
+		} catch (Exception e1){
+			try {
+				account_number = (String) vmjExchange.getRequestBodyForm("beneficiary_account_number");
+			} catch (Exception e2) {
+				throw new BadRequestException("account_number dan beneficiary_account_number tidak ditemukan pada payload.");
+			}
 		}
 
 		double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));

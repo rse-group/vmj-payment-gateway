@@ -47,7 +47,6 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> requestMap = new HashMap<>();
         String id = (String) vmjExchange.getRequestBodyForm("order_id");
         String status = (String) vmjExchange.getRequestBodyForm("transaction_status");
-		System.out.println(status);
         String[] parts = id.split("-");
         String orderId = parts[0];
   
@@ -95,7 +94,6 @@ public class MidtransConfiguration extends ConfigDecorator{
         requestMap.put("costumer_details", customer_details);
         requestMap.put("title",title);
         requestMap.put("id",id);
-        System.out.println("Midtrans id:" + String.valueOf(id));
         return requestMap;
     }
 
@@ -327,7 +325,6 @@ public class MidtransConfiguration extends ConfigDecorator{
         }
         
         url = baseUrl + apiEndpoint;
-        System.out.println("url: " + url);
 
         return url;
     }

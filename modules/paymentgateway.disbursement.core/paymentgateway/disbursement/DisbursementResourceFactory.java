@@ -48,29 +48,17 @@ public class DisbursementResourceFactory {
     public static boolean checkConfig(String fqn, Object base) {
         boolean a = true;
         if (fqn.equals(
-                "paymentgateway.disbursement.moneytransfer.agent.DisbursementResourceImpl") ||
+                "paymentgateway.disbursement.agent.DisbursementResourceImpl") ||
             fqn.equals(
-                "paymentgateway.disbursement.moneytransfer.international.DisbursementResourceImpl") ||
+                "paymentgateway.disbursement.international.DisbursementResourceImpl") ||
             fqn.equals(
-                "paymentgateway.disbursement.moneytransfer.special.DisbursementResourceImpl")) {
+                "paymentgateway.disbursement.special.DisbursementResourceImpl")) {
             String baseku = base.getClass().getCanonicalName();
-            a = baseku.equals("paymentgateway.disbursement.moneytransfer.DisbursementResourceImpl");
+            a = baseku.equals("paymentgateway.disbursement.core.DisbursementResourceImpl");
         } else if (fqn.equals(
                 "paymentgateway.disbursement.moneytransfer.agentmoneytransfer.DisbursementResourceImpl")) {
             String baseku = base.getClass().getCanonicalName();
             a = baseku.equals("paymentgateway.disbursement.agent.DisbursementResourceImpl");
-        } else if (fqn.equals(
-                "paymentgateway.disbursement.moneytransfer.internationalmoneytransfer.DisbursementResourceImpl")) {
-            String baseku = base.getClass().getCanonicalName();
-            a = baseku.equals("paymentgateway.disbursement.international.DisbursementResourceImpl");
-        } else if (fqn.equals(
-                "paymentgateway.disbursement.moneytransfer.specialmoneytransfer.DisbursementResourceImpl")) {
-            String baseku = base.getClass().getCanonicalName();
-            a = baseku.equals("paymentgateway.disbursement.special.DisbursementResourceImpl");
-        } else if (fqn.equals(
-                "paymentgateway.disbursement.moneytransfer.specialinternationalmoneytransfer.DisbursementResourceImpl")) {
-            String baseku = base.getClass().getCanonicalName();
-            a = baseku.equals("paymentgateway.disbursement.special.DisbursementResourceImpl");
         }
         return a;
     }

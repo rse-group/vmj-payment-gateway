@@ -8,10 +8,16 @@
 	<feature automatic="selected" name="Disbursement"/>
 	<feature manual="selected" name="International"/>
 	<feature automatic="selected" name="FlipInternational"/>
+	<feature manual="selected" name="InternationalMoneyTransfer"/>
+	<feature automatic="selected" name="FlipInternationalMoneyTransfer"/>
 	<feature manual="selected" name="Special"/>
 	<feature automatic="selected" name="FlipSpecial"/>
+	<feature manual="selected" name="SpecialMoneyTransfer"/>
+	<feature automatic="selected" name="FlipSpecialMoneyTransfer"/>
 	<feature manual="selected" name="Agent"/>
 	<feature automatic="selected" name="FlipAgent"/>
+	<feature manual="selected" name="AgentMoneyTransfer"/>
+	<feature automatic="selected" name="FlipAgentMoneyTransfer"/>
 	<feature manual="selected" name="FlipDisbursement"/>
 	<feature name="Payment"/>
 	<feature name="PaymentLink"/>

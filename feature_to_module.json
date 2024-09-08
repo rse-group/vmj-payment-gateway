@@ -17,11 +17,27 @@
 	"International": [
 		"paymentgateway.disbursement.international"
 	],
+	"InternationalMoneyTransfer": [
+		"paymentgateway.disbursement.international",
+		"paymentgateway.disbursement.internationalmoneytransfervalidator",
+		"paymentgateway.disbursement.internationalmoneytransfer"
+	],
 	"Special": [
 		"paymentgateway.disbursement.special"
 	],
+	"SpecialMoneyTransfer": [
+		"paymentgateway.disbursement.special",
+		"paymentgateway.disbursement.domesticmoneytransfervalidator",
+		"paymentgateway.disbursement.internationalmoneytransfervalidator",
+		"paymentgateway.disbursement.specialmoneytransfer"
+	],
 	"Agent": [
 		"paymentgateway.disbursement.agent"
+	],
+	"AgentMoneyTransfer": [
+		"paymentgateway.disbursement.agent",
+		"paymentgateway.disbursement.domesticmoneytransfervalidator",
+		"paymentgateway.disbursement.agentmoneytransfer"
 	],
 	"Payment": [
 		"paymentgateway.payment.core"
