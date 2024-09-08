@@ -69,8 +69,8 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 		String configUrl = config.getProductEnv("InternationalMoneyTransfer");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 
-		LOGGER.info("header: " + headerParams);
-		LOGGER.info("configUrl: " + configUrl);
+		LOGGER.info("Header: " + headerParams);
+		LOGGER.info("Config URL: " + configUrl);
 
 		String requestString = config.getRequestString(requestMap);
 		HttpClient client = HttpClient.newHttpClient();
@@ -83,7 +83,7 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			LOGGER.info("rawResponse: " + rawResponse);
+			LOGGER.info("Raw Response: " + rawResponse);
 			responseMap = config.getInternationalMoneyTransferResponse(rawResponse);
 		} catch (Exception e) {
 			e.printStackTrace();

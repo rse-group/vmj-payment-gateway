@@ -107,7 +107,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	            String idStr = (String) requestMap.get("id");
 	            String status = (String) requestMap.get("status");
 
-	            LOGGER.info("Processing vendor: " + vendor);
+	            LOGGER.info("Processing Vendor: " + vendor);
 	            LOGGER.info("ID: " + idStr);
 	            LOGGER.info("Status: " + status);
 
@@ -124,7 +124,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	            try {
 	                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 	                String rawResponse = response.body();
-	                LOGGER.info("rawResponse: " + rawResponse);
+	                LOGGER.info("Raw Response: " + rawResponse);
 	            } catch (Exception e) {
 	                System.err.println("Failed to send request for vendor: " + vendor);
 	                e.printStackTrace();
@@ -146,8 +146,8 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 		String configUrl = config.getProductEnv("MoneyTransfer");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 
-		LOGGER.info("header: " + headerParams);
-		LOGGER.info("configUrl: " + configUrl);
+		LOGGER.info("Header: " + headerParams);
+		LOGGER.info("Config URL: " + configUrl);
 
 		String requestString = config.getRequestString(requestMap);
 		HttpClient client = HttpClient.newHttpClient();
@@ -160,7 +160,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			LOGGER.info("rawResponse: " + rawResponse);
+			LOGGER.info("Raw Response: " + rawResponse);
 			responseMap = config.getMoneyTransferResponse(rawResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
