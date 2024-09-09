@@ -30,6 +30,7 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 	@Route(url = "call/special-money-transfer")
 	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")) {
+			System.out.println("Here");
 			Disbursement result = disbursementResourceService.createDisbursement(vmjExchange);
 			return result.toHashMap();
 		}

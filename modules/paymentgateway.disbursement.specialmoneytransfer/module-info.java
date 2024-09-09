@@ -3,6 +3,8 @@ module paymentgateway.disbursement.specialmoneytransfer {
 
     exports paymentgateway.disbursement.specialmoneytransfer;
 
+	requires paymentgateway.config.core;
+
     requires vmj.routing.route;
     requires java.naming;
 	requires java.net.http;

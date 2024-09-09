@@ -31,7 +31,7 @@ public class DisbursementResourceService extends DisbursementResourceDecorator {
                         DisbursementResourceFactory.createDisbursementResource(
                             "paymentgateway.disbursement.domesticmoneytransfervalidator.DisbursementResourceImpl",
                                 DisbursementResourceFactory.createDisbursementResource(
-                                    "paymentgateway.disbursement.special.DisbursementResourceImpl",
+                                    "paymentgateway.disbursement.special.DisbursementResourceService",
                                         DisbursementResourceFactory.createDisbursementResource(
                                             "paymentgateway.disbursement.core.DisbursementResourceImpl"))));
 	}
