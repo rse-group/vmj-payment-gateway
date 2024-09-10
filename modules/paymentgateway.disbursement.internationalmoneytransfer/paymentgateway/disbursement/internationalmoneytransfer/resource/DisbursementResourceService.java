@@ -1,4 +1,4 @@
-package paymentgateway.disbursement.specialmoneytransfer;
+package paymentgateway.disbursement.internationalmoneytransfer;
 
 import vmj.routing.route.VMJExchange;
 
@@ -21,19 +21,18 @@ import paymentgateway.disbursement.core.DisbursementResource;
 
 public class DisbursementResourceService extends DisbursementResourceDecorator {
 	private static final Logger LOGGER = Logger.getLogger(DisbursementResourceService.class.getName());
+	
 	private static DisbursementResource RESOURCE;
 
-    public DisbursementResourceService(DisbursementResourceComponent record) {
-   		super(record);
-   		RESOURCE = DisbursementResourceFactory
-				.createDisbursementResource(
-                    "paymentgateway.disbursement.internationalmoneytransfervalidator.DisbursementResourceImpl",
-                        DisbursementResourceFactory.createDisbursementResource(
-                            "paymentgateway.disbursement.domesticmoneytransfervalidator.DisbursementResourceImpl",
-                                DisbursementResourceFactory.createDisbursementResource(
-                                    "paymentgateway.disbursement.special.DisbursementResourceService",
-                                        DisbursementResourceFactory.createDisbursementResource(
-                                            "paymentgateway.disbursement.core.DisbursementResourceService"))));
+	public DisbursementResourceService(DisbursementResourceComponent record) {
+		super(record);
+		RESOURCE = DisbursementResourceFactory
+					.createDisbursementResource(
+						"paymentgateway.disbursement.internationalmoneytransfervalidator.DisbursementResourceImpl",
+							DisbursementResourceFactory.createDisbursementResource(
+								"paymentgateway.disbursement.international.DisbursementResourceService",
+									DisbursementResourceFactory.createDisbursementResource(
+										"paymentgateway.disbursement.core.DisbursementResourceService")));
 	}
 
 	public Disbursement createDisbursement(VMJExchange vmjExchange) {

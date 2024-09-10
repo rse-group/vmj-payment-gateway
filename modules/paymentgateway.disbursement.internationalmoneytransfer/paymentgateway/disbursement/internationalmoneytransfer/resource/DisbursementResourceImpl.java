@@ -13,21 +13,11 @@ import paymentgateway.disbursement.core.DisbursementResourceComponent;
 import paymentgateway.disbursement.DisbursementResourceFactory;
 
 public class DisbursementResourceImpl extends DisbursementResourceDecorator {
-    private static DisbursementResource RESOURCE;
+	private final DisbursementResourceService disbursementResourceService;
 
-    public DisbursementResourceImpl(DisbursementResourceComponent record) {
+	public DisbursementResourceImpl(DisbursementResourceComponent record) {
 		super(record);
-		RESOURCE = DisbursementResourceFactory
-					.createDisbursementResource(
-						"paymentgateway.disbursement.internationalmoneytransfervalidator.DisbursementResourceImpl",
-							DisbursementResourceFactory.createDisbursementResource(
-								"paymentgateway.disbursement.international.DisbursementResourceImpl",
-									DisbursementResourceFactory.createDisbursementResource(
-										"paymentgateway.disbursement.core.DisbursementResourceImpl")));
-	}
-
-	public Disbursement createDisbursement(VMJExchange vmjExchange) {
-		return RESOURCE.createDisbursement(vmjExchange);
+		this.disbursementResourceService = new DisbursementResourceService(record);
 	}
 
 	@Route(url = "call/disbursement/international-money-transfer")

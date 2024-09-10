@@ -13,19 +13,27 @@ public abstract class DisbursementDecorator extends DisbursementComponent {
     @OneToOne(cascade=CascadeType.REMOVE, optional=true)
     protected DisbursementComponent record;
 
-    public DisbursementDecorator(DisbursementComponent record, int userId) {
+    public DisbursementDecorator(DisbursementComponent record) {
         String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
         String unique_no = generateUUIDNo.substring(0,5);
         this.id = Integer.parseInt(unique_no);
-        this.userId = userId;
+        this.userId = record.getUserId();
+        this.accountNumber = record.getAccountNumber();
+        this.bankCode = record.getBankCode();
+        this.amount = record.getAmount();
+        this.status = record.getStatus();
         this.record = record;
     }
 
-    public DisbursementDecorator(DisbursementComponent record, int userId, String objectName) {
+    public DisbursementDecorator(DisbursementComponent record, String objectName) {
         String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
         String unique_no = generateUUIDNo.substring(0,5);
         this.id = Integer.parseInt(unique_no);
-        this.userId = userId;
+        this.userId = record.getUserId();
+        this.accountNumber = record.getAccountNumber();
+        this.bankCode = record.getBankCode();
+        this.amount = record.getAmount();
+        this.status = record.getStatus();
         this.objectName = objectName;
         this.record = record;
     }

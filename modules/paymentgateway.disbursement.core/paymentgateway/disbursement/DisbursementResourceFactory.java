@@ -54,7 +54,7 @@ public class DisbursementResourceFactory {
             fqn.equals(
                 "paymentgateway.disbursement.special.DisbursementResourceImpl")) {
             String baseku = base.getClass().getCanonicalName();
-            a = baseku.equals("paymentgateway.disbursement.core.DisbursementResourceImpl");
+            a = baseku.equals("paymentgateway.disbursement.core.DisbursementResourceService");
         }
         return a;
     }

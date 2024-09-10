@@ -13,22 +13,13 @@ import paymentgateway.disbursement.core.DisbursementResourceComponent;
 import paymentgateway.disbursement.DisbursementResourceFactory;
 
 public class DisbursementResourceImpl extends DisbursementResourceDecorator {
-    private static DisbursementResource RESOURCE;
+	private final DisbursementResourceService disbursementResourceService;
 
-    public DisbursementResourceImpl(DisbursementResourceComponent record) {
+	public DisbursementResourceImpl(DisbursementResourceComponent record) {
 		super(record);
-		RESOURCE = DisbursementResourceFactory
-					.createDisbursementResource(
-						"paymentgateway.disbursement.domesticmoneytransfervalidator.DisbursementResourceImpl",
-							DisbursementResourceFactory.createDisbursementResource(
-								"paymentgateway.disbursement.agent.DisbursementResourceImpl",
-									DisbursementResourceFactory.createDisbursementResource(
-										"paymentgateway.disbursement.core.DisbursementResourceImpl")));
+		this.disbursementResourceService = new DisbursementResourceService(record);
 	}
-
-	public Disbursement createDisbursement(VMJExchange vmjExchange) {
-		return RESOURCE.createDisbursement(vmjExchange);
-	}
+  
 
 	@Route(url = "call/disbursement/agent-money-transfer")
 	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
