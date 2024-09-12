@@ -19,7 +19,7 @@ import paymentgateway.disbursement.core.DisbursementResourceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
-public class DisbursementResourceImpl extends DisbursementControllerComponent{
+public class DisbursementResourceImpl extends DisbursementResourceComponent{
 	private static final Logger LOGGER = Logger.getLogger(DisbursementResourceImpl.class.getName());
 	
 	private final DisbursementResourceService disbursementResourceService = new DisbursementResourceService();

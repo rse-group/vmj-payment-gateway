@@ -4,7 +4,7 @@ import java.util.*;
 
 import vmj.routing.route.VMJExchange;
 
-public interface DisbursementController {
+public interface DisbursementResource {
 	int callback(VMJExchange vmjExchange);
 	HashMap<String, Object> getDisbursement(VMJExchange vmjExchange);
     List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange);

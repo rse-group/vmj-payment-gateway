@@ -7,9 +7,9 @@ import vmj.routing.route.VMJExchange;
 
 import paymentgateway.disbursement.core.Disbursement;
 
-public abstract class DisbursementControllerComponent implements DisbursementController {
+public abstract class DisbursementResourceComponent implements DisbursementResource {
 
-    public DisbursementControllerComponent() { }
+    public DisbursementResourceComponent() { }
     
     public abstract int callback(VMJExchange vmjExchange);
     public abstract HashMap<String, Object> getDisbursement(VMJExchange vmjExchange);

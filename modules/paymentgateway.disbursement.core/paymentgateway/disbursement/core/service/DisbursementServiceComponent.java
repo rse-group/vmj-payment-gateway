@@ -7,10 +7,10 @@ import vmj.routing.route.VMJExchange;
 
 import paymentgateway.disbursement.core.Disbursement;
 
-public abstract class DisbursementResourceComponent implements DisbursementResource {
+public abstract class DisbursementServiceComponent implements DisbursementService {
     protected RepositoryUtil<Disbursement> Repository;
 
-    public DisbursementResourceComponent() {
+    public DisbursementServiceComponent() {
         this.Repository = new RepositoryUtil<Disbursement>(
                 paymentgateway.disbursement.core.DisbursementComponent.class);
     }

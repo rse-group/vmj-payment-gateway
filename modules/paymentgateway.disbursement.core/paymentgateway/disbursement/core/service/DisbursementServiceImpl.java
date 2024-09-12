@@ -19,8 +19,8 @@ import paymentgateway.disbursement.DisbursementFactory;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
-public class DisbursementResourceService extends DisbursementResourceComponent {
-	private static final Logger LOGGER = Logger.getLogger(DisbursementResourceService.class.getName());
+public class DisbursementServiceImpl extends DisbursementServiceComponent {
+	private static final Logger LOGGER = Logger.getLogger(DisbursementServiceImpl.class.getName());
     
     public Disbursement createDisbursement(VMJExchange vmjExchange){
 		Map<String, Object> response = sendTransaction(vmjExchange);

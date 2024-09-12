@@ -4,10 +4,10 @@ import java.util.*;
 
 import vmj.routing.route.VMJExchange;
 
-public abstract class DisbursementControllerDecorator extends DisbursementControllerComponent {
-    protected DisbursementControllerComponent record;
+public abstract class DisbursementResourceDecorator extends DisbursementResourceComponent {
+    protected DisbursementResourceComponent record;
 
-    public DisbursementControllerDecorator(DisbursementControllerComponent record){
+    public DisbursementResourceDecorator(DisbursementResourceComponent record){
         this.record = record;
     }
 
