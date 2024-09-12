@@ -1,12 +1,12 @@
-package paymentgateway.disbursement.special;
+package paymentgateway.disbursement.international;
 
 import vmj.routing.route.VMJExchange;
 
 import paymentgateway.disbursement.DisbursementFactory;
 import paymentgateway.disbursement.core.Disbursement;
-import paymentgateway.disbursement.core.DisbursementResourceDecorator;
+import paymentgateway.disbursement.core.DisbursementServiceDecorator;
 import paymentgateway.disbursement.core.DisbursementImpl;
-import paymentgateway.disbursement.core.DisbursementResourceComponent;
+import paymentgateway.disbursement.core.DisbursementServiceComponent;
 
 
 import paymentgateway.config.core.Config;
@@ -20,10 +20,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class DisbursementResourceService extends DisbursementResourceDecorator {
-	private static final Logger LOGGER = Logger.getLogger(DisbursementResourceService.class.getName());
+public class DisbursementServiceImpl extends DisbursementServiceDecorator {
+	private static final Logger LOGGER = Logger.getLogger(DisbursementServiceImpl.class.getName());
 
-    public DisbursementResourceService(DisbursementResourceComponent record) {
+    public DisbursementServiceImpl(DisbursementServiceComponent record) {
     	super(record);
     }
 
@@ -33,25 +33,27 @@ public class DisbursementResourceService extends DisbursementResourceDecorator {
 	}
 
 	public Disbursement createDisbursement(VMJExchange vmjExchange, Map<String, Object> response) {
-		int sender_country = (int) response.get("country");
-		String sender_name = (String) response.get("name");
-		String sender_address = (String) response.get("address");
-		String sender_job = (String) response.get("job");
-		String direction = (String) response.get("direction");
+		double exachange_rate = (double) response.get("exchange_rate");
+		double fee = (double) response.get("fee");
+		String source_country = (String) response.get("source_country");
+		String destination_country = (String) response.get("destination_country");
+		double amount_in_sender_currency = (double) response.get("amount");
+		String beneficiary_currency_code = (String) response.get("beneficiary_currency_code");
 
-		Disbursement approvalTransaction = DisbursementFactory.createDisbursement(
-			"paymentgateway.disbursement.special.SpecialImpl",
+		Disbursement internationalTransaction = DisbursementFactory.createDisbursement(
+			"paymentgateway.disbursement.international.InternationalImpl",
 			record.createDisbursement(vmjExchange, response),
-			sender_country,
-			sender_name,
-			sender_address,
-			sender_job,
-			direction
+			exachange_rate,
+			fee,
+			source_country,
+			destination_country,
+			amount_in_sender_currency,
+			beneficiary_currency_code
 		);
 
-		Repository.saveObject(approvalTransaction);
-		
-		return approvalTransaction;
+		Repository.saveObject(internationalTransaction);
+
+		return internationalTransaction;
 	}
 
 	public Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
@@ -59,7 +61,7 @@ public class DisbursementResourceService extends DisbursementResourceDecorator {
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		Map<String, Object> requestMap = vmjExchange.getPayload();
-		String configUrl = config.getProductEnv("SpecialMoneyTransfer");
+		String configUrl = config.getProductEnv("InternationalMoneyTransfer");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 
 		LOGGER.info("Header: " + headerParams);
@@ -77,11 +79,12 @@ public class DisbursementResourceService extends DisbursementResourceDecorator {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
 			LOGGER.info("Raw Response: " + rawResponse);
-			responseMap = config.getSpecialMoneyTransferResponse(rawResponse);
+			responseMap = config.getInternationalMoneyTransferResponse(rawResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return responseMap;
 	}
+
 }

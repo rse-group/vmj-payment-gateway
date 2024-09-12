@@ -1,23 +1,23 @@
 package paymentgateway.disbursement;
 
-import paymentgateway.disbursement.core.DisbursementResource;
+import paymentgateway.disbursement.core.DisbursementService;
 
 import java.lang.reflect.Constructor;
 import java.util.logging.Logger;
 
-public class DisbursementResourceFactory {
-    private static final Logger LOGGER = Logger.getLogger(DisbursementResourceFactory.class.getName());
+public class DisbursementServiceFactory {
+    private static final Logger LOGGER = Logger.getLogger(DisbursementServiceFactory.class.getName());
 
-    public DisbursementResourceFactory() {
+    public DisbursementServiceFactory() {
 
     }
 
-    public static DisbursementResource createDisbursementResource(String fullyQualifiedName, Object... base) {
-        DisbursementResource record = null;
+    public static DisbursementService createDisbursementService(String fullyQualifiedName, Object... base) {
+        DisbursementService record = null;
         try {
             Class<?> clz = Class.forName(fullyQualifiedName);
             Constructor<?> constructor = clz.getDeclaredConstructors()[0];
-            record = (DisbursementResource) constructor.newInstance(base);
+            record = (DisbursementService) constructor.newInstance(base);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             LOGGER.severe("Failed to create instance of Disbursement.");
@@ -48,13 +48,13 @@ public class DisbursementResourceFactory {
     public static boolean checkConfig(String fqn, Object base) {
         boolean a = true;
         if (fqn.equals(
-                "paymentgateway.disbursement.agent.DisbursementResourceImpl") ||
+                "paymentgateway.disbursement.agent.DisbursementServiceImpl") ||
             fqn.equals(
-                "paymentgateway.disbursement.international.DisbursementResourceImpl") ||
+                "paymentgateway.disbursement.international.DisbursementServiceImpl") ||
             fqn.equals(
-                "paymentgateway.disbursement.special.DisbursementResourceImpl")) {
+                "paymentgateway.disbursement.special.DisbursementServiceImpl")) {
             String baseku = base.getClass().getCanonicalName();
-            a = baseku.equals("paymentgateway.disbursement.core.DisbursementResourceService");
+            a = baseku.equals("paymentgateway.disbursement.core.DisbursementServiceImpl");
         }
         return a;
     }

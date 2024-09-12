@@ -18,30 +18,27 @@ import vmj.routing.route.exceptions.*;
 
 import java.text.SimpleDateFormat;
 
-import paymentgateway.disbursement.DisbursementFactory;
-import paymentgateway.disbursement.core.Disbursement;
-import paymentgateway.disbursement.core.DisbursementResourceDecorator;
-import paymentgateway.disbursement.core.DisbursementImpl;
-import paymentgateway.disbursement.core.DisbursementResourceComponent;
-
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
+import paymentgateway.disbursement.core.Disbursement;
+import paymentgateway.disbursement.core.DisbursementResourceComponent;
+import paymentgateway.disbursement.core.DisbursementServiceComponent;
+import paymentgateway.disbursement.core.DisbursementResourceDecorator;
+import paymentgateway.disbursement.core.DisbursementResource;
+
 public class DisbursementResourceImpl extends DisbursementResourceDecorator {
-	private static final Logger LOGGER = Logger.getLogger(DisbursementResourceImpl.class.getName());
+	private final DisbursementServiceImpl disbursementServiceImpl;
 
-	private final DisbursementResourceService disbursementResourceService;
-
-	public DisbursementResourceImpl(DisbursementResourceComponent record) {
-		super(record);
-		this.disbursementResourceService = new DisbursementResourceService(record);
+	public DisbursementResourceImpl(DisbursementResourceComponent recordController, DisbursementServiceComponent recordService) {
+		super(recordController);
+		this.disbursementServiceImpl = new DisbursementServiceImpl(recordService);
 	}
-
 
 	@Route(url = "call/disbursement/agent")
 	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")) {
-			Disbursement result = this.createDisbursement(vmjExchange);
+			Disbursement result = disbursementServiceImpl.createDisbursement(vmjExchange);
 			return result.toHashMap();
 		}
 		throw new NotFoundException("Route tidak ditemukan");

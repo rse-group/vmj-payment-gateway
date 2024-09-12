@@ -3,14 +3,14 @@ package paymentgateway.disbursement.internationalmoneytransfervalidator;
 import vmj.routing.route.VMJExchange;
 
 import paymentgateway.disbursement.core.Disbursement;
-import paymentgateway.disbursement.core.DisbursementResourceDecorator;
-import paymentgateway.disbursement.core.DisbursementResourceComponent;
+import paymentgateway.disbursement.core.DisbursementServiceDecorator;
+import paymentgateway.disbursement.core.DisbursementServiceComponent;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
-public class DisbursementResourceImpl extends DisbursementResourceDecorator {
-    public DisbursementResourceImpl(DisbursementResourceComponent record) {
+public class DisbursementServiceImpl extends DisbursementServiceDecorator {
+    public DisbursementServiceImpl(DisbursementServiceComponent record) {
 		super(record);
 	}
 

@@ -13,16 +13,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import paymentgateway.disbursement.core.Disbursement;
 import paymentgateway.disbursement.DisbursementFactory;
-import paymentgateway.disbursement.core.DisbursementResourceComponent;
-import paymentgateway.disbursement.core.DisbursementResourceDecorator;
-import paymentgateway.disbursement.core.DisbursementResource;
+import paymentgateway.disbursement.core.Disbursement;
+import paymentgateway.disbursement.core.DisbursementServiceDecorator;
+import paymentgateway.disbursement.core.DisbursementImpl;
+import paymentgateway.disbursement.core.DisbursementServiceComponent;
 
-public class DisbursementResourceService extends DisbursementResourceDecorator {
-	private static final Logger LOGGER = Logger.getLogger(DisbursementResourceService.class.getName());
-	
-	public DisbursementResourceService(DisbursementResourceComponent record) {
+public class DisbursementServiceImpl extends DisbursementServiceDecorator {
+	private static final Logger LOGGER = Logger.getLogger(DisbursementServiceImpl.class.getName());
+
+    public DisbursementServiceImpl(DisbursementServiceComponent record) {
     	super(record);
     }
 	

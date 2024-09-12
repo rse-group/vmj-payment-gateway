@@ -22,7 +22,7 @@ import paymentgateway.config.ConfigFactory;
 public class DisbursementResourceImpl extends DisbursementResourceComponent{
 	private static final Logger LOGGER = Logger.getLogger(DisbursementResourceImpl.class.getName());
 	
-	private final DisbursementResourceService disbursementResourceService = new DisbursementResourceService();
+	private final DisbursementServiceImpl disbursementServiceImpl = new DisbursementServiceImpl();
 	
 	@Route(url = "call/disbursement/callback")
 	public int callback(VMJExchange vmjExchange) {
@@ -54,8 +54,8 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent{
 	            LOGGER.info("ID: " + idStr);
 	            LOGGER.info("Status: " + status);
 
-				String hostAddress = disbursementResourceService.getEnvVariableHostAddress("AMANAH_HOST_BE");
-        		int portNum = disbursementResourceService.getEnvVariablePortNumber("AMANAH_PORT_BE");
+				String hostAddress = disbursementServiceImpl.getEnvVariableHostAddress("AMANAH_HOST_BE");
+        		int portNum = disbursementServiceImpl.getEnvVariablePortNumber("AMANAH_PORT_BE");
 	            HttpClient client = HttpClient.newHttpClient();
 				String configUrl = String.format("http://%s:%d/call/receivedisbursementcallback", hostAddress, portNum);
 	            String requestString = config.getRequestString(requestMap);
@@ -83,12 +83,12 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent{
 
 	@Route(url="call/disbursement/detail")
 	public HashMap<String, Object> getDisbursement(VMJExchange vmjExchange){
-		return disbursementResourceService.getDisbursement(vmjExchange);
+		return disbursementServiceImpl.getDisbursement(vmjExchange);
 	}
 
 	@Route(url="call/disbursement/list")
 	public List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange){
-		return disbursementResourceService.getAllDisbursement(vmjExchange);
+		return disbursementServiceImpl.getAllDisbursement(vmjExchange);
 	}
 
 	@Route(url="call/disbursement/delete")
@@ -97,7 +97,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent{
 			return null;
 		}
 
-		return disbursementResourceService.deleteDisbursement(vmjExchange);
+		return disbursementServiceImpl.deleteDisbursement(vmjExchange);
 	}
 
 	@Route(url="call/disbursement/update")
@@ -106,13 +106,13 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent{
 			return null;
 		}
 
-		return disbursementResourceService.updateDisbursement(vmjExchange);
+		return disbursementServiceImpl.updateDisbursement(vmjExchange);
 	}
 
 	@Route(url = "call/disbursement")
 	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")) {
-			Disbursement result = disbursementResourceService.createDisbursement(vmjExchange);
+			Disbursement result = disbursementServiceImpl.createDisbursement(vmjExchange);
 			return result.toHashMap();
 		}
 		throw new NotFoundException("Route tidak ditemukan");

@@ -24,23 +24,24 @@ import paymentgateway.disbursement.core.Disbursement;
 import paymentgateway.disbursement.core.DisbursementResourceDecorator;
 import paymentgateway.disbursement.core.DisbursementImpl;
 import paymentgateway.disbursement.core.DisbursementResourceComponent;
+import paymentgateway.disbursement.core.DisbursementServiceComponent;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
 public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 	private static final Logger LOGGER = Logger.getLogger(DisbursementResourceImpl.class.getName());
-	private final DisbursementResourceService disbursementResourceService;
+	private final DisbursementServiceImpl disbursementServiceImpl;
 
-	public DisbursementResourceImpl(DisbursementResourceComponent record) {
-		super(record);
-		this.disbursementResourceService = new DisbursementResourceService(record);
+	public DisbursementResourceImpl(DisbursementResourceComponent recordResource, DisbursementServiceComponent recordService) {
+		super(recordResource);
+		this.disbursementServiceImpl = new DisbursementServiceImpl(recordService);
 	}
 
 	@Route(url = "call/disbursement/special")
 	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")) {
-			Disbursement result = disbursementResourceService.createDisbursement(vmjExchange);
+			Disbursement result = disbursementServiceImpl.createDisbursement(vmjExchange);
 			return result.toHashMap();
 		}
 		throw new NotFoundException("Route tidak ditemukan");
