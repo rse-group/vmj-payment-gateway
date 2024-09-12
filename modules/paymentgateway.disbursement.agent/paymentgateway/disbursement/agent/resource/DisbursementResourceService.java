@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import paymentgateway.disbursement.core.Disbursement;
-import paymentgateway.disbursement.DisbursementResourceFactory;
+import paymentgateway.disbursement.DisbursementFactory;
 import paymentgateway.disbursement.core.DisbursementResourceComponent;
 import paymentgateway.disbursement.core.DisbursementResourceDecorator;
 import paymentgateway.disbursement.core.DisbursementResource;

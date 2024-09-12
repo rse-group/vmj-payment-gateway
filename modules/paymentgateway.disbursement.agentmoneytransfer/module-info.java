@@ -4,4 +4,11 @@ module paymentgateway.disbursement.agentmoneytransfer {
     exports paymentgateway.disbursement.agentmoneytransfer;
 
     requires vmj.routing.route;
+    
+
+	requires paymentgateway.config.core;
+
+    requires java.naming;
+	requires java.net.http;
+	requires java.logging;
 }

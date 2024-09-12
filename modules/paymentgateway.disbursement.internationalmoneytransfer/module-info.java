@@ -4,4 +4,10 @@ module paymentgateway.disbursement.internationalmoneytransfer {
     exports paymentgateway.disbursement.internationalmoneytransfer;
 
     requires vmj.routing.route;
+
+	requires paymentgateway.config.core;
+
+    requires java.naming;
+	requires java.net.http;
+	requires java.logging;
 }

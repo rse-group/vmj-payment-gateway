@@ -1,4 +1,4 @@
-package paymentgateway.disbursement.special;
+package paymentgateway.disbursement.international;
 
 import vmj.routing.route.VMJExchange;
 
