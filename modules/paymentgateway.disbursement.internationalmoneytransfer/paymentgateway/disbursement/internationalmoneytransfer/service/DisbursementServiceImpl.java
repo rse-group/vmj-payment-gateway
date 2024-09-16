@@ -27,7 +27,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
    		super(record);
 		RESOURCE = DisbursementServiceFactory
 					.createDisbursementService(
-						"paymentgateway.disbursement.internationalmoneytransfervalidator.DisbursementResourceImpl",
+						"paymentgateway.disbursement.internationalmoneytransfervalidator.DisbursementServiceImpl",
 							DisbursementServiceFactory.createDisbursementService(
 								"paymentgateway.disbursement.international.DisbursementServiceImpl",
 									DisbursementServiceFactory.createDisbursementService(
