@@ -17,11 +17,6 @@ public abstract class DisbursementDecorator extends DisbursementComponent {
         String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
         String unique_no = generateUUIDNo.substring(0,5);
         this.id = Integer.parseInt(unique_no);
-        this.userId = record.getUserId();
-        this.accountNumber = record.getAccountNumber();
-        this.bankCode = record.getBankCode();
-        this.amount = record.getAmount();
-        this.status = record.getStatus();
         this.record = record;
     }
 
@@ -29,11 +24,6 @@ public abstract class DisbursementDecorator extends DisbursementComponent {
         String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
         String unique_no = generateUUIDNo.substring(0,5);
         this.id = Integer.parseInt(unique_no);
-        this.userId = record.getUserId();
-        this.accountNumber = record.getAccountNumber();
-        this.bankCode = record.getBankCode();
-        this.amount = record.getAmount();
-        this.status = record.getStatus();
         this.objectName = objectName;
         this.record = record;
     }
