@@ -14,16 +14,23 @@ import paymentgateway.disbursement.DisbursementResourceFactory;
 
 public class DisbursementResourceImpl extends DisbursementResourceDecorator {
     private static DisbursementResource RESOURCE;
+	private static final String[] DELTA_MODULES = {
+		"paymentgateway.disbursement.international.DisbursementResourceImpl",
+		"paymentgateway.disbursement.internationalmoneytransfervalidator.DisbursementResourceImpl"
+	};
 
     public DisbursementResourceImpl(DisbursementResourceComponent record) {
 		super(record);
-		RESOURCE = DisbursementResourceFactory
-					.createDisbursementResource(
-						"paymentgateway.disbursement.internationalmoneytransfervalidator.DisbursementResourceImpl",
-							DisbursementResourceFactory.createDisbursementResource(
-								"paymentgateway.disbursement.international.DisbursementResourceImpl",
-									DisbursementResourceFactory.createDisbursementResource(
-										"paymentgateway.disbursement.core.DisbursementResourceImpl")));
+
+		RESOURCE = DisbursementResourceFactory.createDisbursementResource(
+			"paymentgateway.disbursement.core.DisbursementResourceImpl");
+
+		for (int i = 0; i < DELTA_MODULES.length; i++) {
+			RESOURCE = DisbursementResourceFactory.createDisbursementResource(
+				DELTA_MODULES[i],
+				RESOURCE
+			);
+		}
 	}
 
 	public Disbursement createDisbursement(VMJExchange vmjExchange) {
