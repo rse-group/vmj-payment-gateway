@@ -74,8 +74,8 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getDomesticMoneyTransferRequestBody(VMJExchange vmjExchange) {
-        String direction = (String) vmjExchange.getRequestBodyForm("direction");
+    public Map<String, Object> getDomesticMoneyTransferRequestBody(Map<String, Object> requestBody) {
+        String direction = (String) requestBody.get("direction");
         try {
             DirectionType.valueOf(direction);
         } catch (Exception e) {
@@ -91,11 +91,11 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange) {
-        Integer senderCountry = Integer.parseInt((String)vmjExchange.getRequestBodyForm("sender_country"));
-        String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
-        String senderAddress = (String) vmjExchange.getRequestBodyForm("sender_address");
-        String senderJob = (String) vmjExchange.getRequestBodyForm("sender_job");
+    public Map<String, Object> getInternationalMoneyTransferRequestBody(Map<String, Object> requestBody) {
+        Integer senderCountry = Integer.parseInt((String)requestBody.get("sender_country"));
+        String senderName = (String) requestBody.get("sender_name");
+        String senderAddress = (String) requestBody.get("sender_address");
+        String senderJob = (String) requestBody.get("sender_job");
 
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("sender_country", senderCountry);

@@ -15,13 +15,13 @@ public abstract class DisbursementServiceComponent implements DisbursementServic
                 paymentgateway.disbursement.core.DisbursementComponent.class);
     }
 
-    public abstract Disbursement createDisbursement(VMJExchange vmjExchange);
-    public abstract Disbursement createDisbursement(VMJExchange vmjExchange, Map<String, Object> response);
+    public abstract Disbursement createDisbursement(Map<String, Object> requestBody);
+    public abstract Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response);
     public abstract HashMap<String, Object> getDisbursement(VMJExchange vmjExchange);
     public abstract List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange);
     public abstract List<HashMap<String, Object>> deleteDisbursement(VMJExchange vmjExchange);
     public abstract HashMap<String, Object> updateDisbursement(VMJExchange vmjExchange);
     public abstract List<HashMap<String, Object>> transformListToHashMap(List<Disbursement> List);
-    public abstract Map<String, Object> sendTransaction(VMJExchange vmjExchange);
+    public abstract Map<String, Object> sendTransaction(Map<String, Object> requestBody);
     public abstract HashMap<String, Object> getDisbursementById(int id);
 }

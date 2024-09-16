@@ -11,12 +11,12 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
         this.record = record;
     }
 
-    public Disbursement createDisbursement(VMJExchange vmjExchange){
-        return record.createDisbursement(vmjExchange);
+    public Disbursement createDisbursement(Map<String, Object> requestBody){
+        return record.createDisbursement(requestBody);
     }
 
-    public Disbursement createDisbursement(VMJExchange vmjExchange, Map<String, Object> response){
-        return record.createDisbursement(vmjExchange, response);
+    public Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response){
+        return record.createDisbursement(requestBody, response);
     }
 
     public HashMap<String, Object> getDisbursement(VMJExchange vmjExchange){
@@ -39,8 +39,8 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
         return record.transformListToHashMap(List);
     }
     
-    public Map<String, Object> sendTransaction(VMJExchange vmjExchange){
-        return record.sendTransaction(vmjExchange);
+    public Map<String, Object> sendTransaction(Map<String, Object> requestBody){
+        return record.sendTransaction(requestBody);
     }
 
     public HashMap<String, Object> getDisbursementById(int id){

@@ -22,18 +22,18 @@ import paymentgateway.config.ConfigFactory;
 public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	private static final Logger LOGGER = Logger.getLogger(DisbursementServiceImpl.class.getName());
     
-    public Disbursement createDisbursement(VMJExchange vmjExchange){
-		Map<String, Object> response = sendTransaction(vmjExchange);
-		return createDisbursement(vmjExchange, response);
-	}
+    public Disbursement createDisbursement(Map<String, Object> requestBody) {
+        Map<String, Object> response = sendTransaction(requestBody);
+        return createDisbursement(requestBody, response);
+    }
 	
-	public Disbursement createDisbursement(VMJExchange vmjExchange, Map<String, Object> response){
+	public Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response){
 		String bank_code = "";
 		try{
-			bank_code = (String) vmjExchange.getRequestBodyForm("bank_code");
+			bank_code = (String) requestBody.get("bank_code");
 		} catch (Exception e1){
 			try {
-				bank_code = (String) vmjExchange.getRequestBodyForm("beneficiary_bank_name");
+				bank_code = (String) requestBody.get("beneficiary_bank_name");
 			} catch (Exception e2) {
 				throw new BadRequestException("bank_code dan beneficiary_bank_name tidak ditemukan pada payload.");
 			}
@@ -41,16 +41,16 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 
 		String account_number = "";
 		try{
-			account_number = (String) vmjExchange.getRequestBodyForm("account_number");
+			account_number = (String) requestBody.get("account_number");
 		} catch (Exception e1){
 			try {
-				account_number = (String) vmjExchange.getRequestBodyForm("beneficiary_account_number");
+				account_number = (String) requestBody.get("beneficiary_account_number");
 			} catch (Exception e2) {
 				throw new BadRequestException("account_number dan beneficiary_account_number tidak ditemukan pada payload.");
 			}
 		}
 
-		double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
+		double amount = Double.parseDouble((String) requestBody.get("amount"));
 		int id = (int) response.get("id");
 		int userId = (int) response.get("user_id");
 		String status = (String) response.get("status");
@@ -109,18 +109,18 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	}
     
 
-	public Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
-		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
+	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+        String vendorName = (String) requestBody.get("vendor_name");
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-		Map<String, Object> requestMap = vmjExchange.getPayload();
+
 		String configUrl = config.getProductEnv("MoneyTransfer");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 
 		LOGGER.info("Header: " + headerParams);
 		LOGGER.info("Config URL: " + configUrl);
 
-		String requestString = config.getRequestString(requestMap);
+		String requestString = config.getRequestString(requestBody);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(), headerParams))
 				.uri(URI.create(configUrl))

@@ -7,6 +7,9 @@ import paymentgateway.disbursement.core.DisbursementServiceDecorator;
 import paymentgateway.disbursement.core.DisbursementServiceComponent;
 
 import paymentgateway.config.core.Config;
+
+import java.util.Map;
+
 import paymentgateway.config.ConfigFactory;
 
 public class DisbursementServiceImpl extends DisbursementServiceDecorator {
@@ -14,11 +17,11 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		super(record);
 	}
 
-    public Disbursement createDisbursement(VMJExchange vmjExchange) {
-		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
+    public Disbursement createDisbursement(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-        config.getInternationalMoneyTransferRequestBody(vmjExchange);
-		return record.createDisbursement(vmjExchange);
+        config.getInternationalMoneyTransferRequestBody(requestBody);
+		return record.createDisbursement(requestBody);
 	}
 }

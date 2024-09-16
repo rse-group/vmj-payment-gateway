@@ -41,7 +41,8 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 	@Route(url = "call/disbursement/special")
 	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")) {
-			Disbursement result = disbursementServiceImpl.createDisbursement(vmjExchange);
+            Map<String, Object> requestBody = vmjExchange.getPayload(); 
+			Disbursement result = disbursementServiceImpl.createDisbursement(requestBody);
 			return result.toHashMap();
 		}
 		throw new NotFoundException("Route tidak ditemukan");

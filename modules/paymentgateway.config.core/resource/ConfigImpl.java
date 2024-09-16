@@ -91,11 +91,11 @@ public class ConfigImpl extends ConfigComponent {
         return vmjExchange.getPayload();
     }
 
-    public Map<String, Object> getDomesticMoneyTransferRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getDomesticMoneyTransferRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getInternationalMoneyTransferRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
     

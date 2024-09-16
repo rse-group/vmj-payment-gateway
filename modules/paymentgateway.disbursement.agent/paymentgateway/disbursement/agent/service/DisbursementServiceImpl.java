@@ -26,18 +26,18 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
     	super(record);
     }
 	
-	public Disbursement createDisbursement(VMJExchange vmjExchange) {
-		Map<String, Object> response = sendTransaction(vmjExchange);
-		return createDisbursement(vmjExchange, response);
+	public Disbursement createDisbursement(Map<String, Object> requestBody) {
+		Map<String, Object> response = sendTransaction(requestBody);
+		return createDisbursement(requestBody, response);
 	}
 
-	public Disbursement createDisbursement(VMJExchange vmjExchange, Map<String, Object> response) {
+	public Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response) {
 		int agent_id = (int) response.get("agent_id");
 		String direction = (String) response.get("direction");
 
 		Disbursement agentTransaction = DisbursementFactory.createDisbursement(
 			"paymentgateway.disbursement.agent.AgentImpl",
-			record.createDisbursement(vmjExchange, response),
+			record.createDisbursement(requestBody, response),
 			agent_id,
 			direction
 		);
@@ -47,18 +47,18 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		return agentTransaction;
 	}
 
-	public Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
-		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
+	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-		Map<String, Object> requestMap = vmjExchange.getPayload();
+
 		String configUrl = config.getProductEnv("AgentMoneyTransfer");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 
 		LOGGER.info("Header: " + headerParams);
 		LOGGER.info("Config URL: " + configUrl);
 
-		String requestString = config.getRequestString(requestMap);
+		String requestString = config.getRequestString(requestBody);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(), headerParams))
 				.uri(URI.create(configUrl))
