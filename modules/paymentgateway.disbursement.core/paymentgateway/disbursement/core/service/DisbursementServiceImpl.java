@@ -23,19 +23,15 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	private static final Logger LOGGER = Logger.getLogger(DisbursementServiceImpl.class.getName());
     
     public Disbursement createDisbursement(Map<String, Object> requestBody) {
-        Map<String, Object> response = sendTransaction(requestBody);
+        Map<String, Object> response = sendTransaction(validateRequestBody(requestBody));
         return createDisbursement(requestBody, response);
     }
 	
 	public Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response){
-				String vendorName = (String) requestBody.get("vendor_name");
-		Config config = ConfigFactory.createConfig(vendorName,
-				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-		Map<String, Object> disbursementRequestBody = config.getDisbursementRequestBody(requestBody);
-
-		String bank_code = (String) disbursementRequestBody.get("bank_code");
-		String account_number = (String) disbursementRequestBody.get("account_number");
-		double amount = (Double) disbursementRequestBody.get("amount");
+		Map<String, Object> validatedRequestBody = validateRequestBody(requestBody);
+		String bank_code = (String) validatedRequestBody.get("bank_code");
+		String account_number = (String) validatedRequestBody.get("account_number");
+		double amount = (Double) validatedRequestBody.get("amount");
 		int id = (int) response.get("id");
 		int userId = (int) response.get("user_id");
 		String status = (String) response.get("status");
@@ -92,7 +88,6 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
         int portNumInt = Integer.parseInt(portNum);
         return portNumInt;
 	}
-    
 
 	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
         String vendorName = (String) requestBody.get("vendor_name");
@@ -202,5 +197,10 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
         return Repository.getAllObject(tableName);
     }
 
-	
+	private Map<String, Object> validateRequestBody(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
+		Config config = ConfigFactory.createConfig(vendorName,
+				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+        return config.getDisbursementRequestBody(requestBody);
+	}
 }

@@ -76,6 +76,7 @@ public class FlipConfiguration extends ConfigDecorator{
 
     @Override
     public Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody) {
+        String vendor_name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "vendor_name");
         String bank_code = RequestBodyValidator.stringRequestBodyValidator(
             requestBody,
             new String[]{ "bank_code", "beneficiary_bank_name" }
@@ -87,6 +88,7 @@ public class FlipConfiguration extends ConfigDecorator{
         double amount = RequestBodyValidator.doubleRequestBodyValidator(requestBody, "amount");
 
         Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("vendor_name", vendor_name);
         requestMap.put("bank_code", bank_code);
         requestMap.put("account_number", account_number);
         requestMap.put("amount", amount);
