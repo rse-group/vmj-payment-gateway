@@ -7,10 +7,10 @@ import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
 
 import paymentgateway.disbursement.core.Disbursement;
-import paymentgateway.disbursement.core.DisbursementResource;
-import paymentgateway.disbursement.core.DisbursementResourceDecorator;
 import paymentgateway.disbursement.core.DisbursementResourceComponent;
-import paymentgateway.disbursement.DisbursementResourceFactory;
+import paymentgateway.disbursement.core.DisbursementServiceComponent;
+import paymentgateway.disbursement.core.DisbursementResourceDecorator;
+import paymentgateway.disbursement.core.DisbursementResource;
 
 public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 	private final DisbursementServiceImpl disbursementServiceImpl;
@@ -21,7 +21,7 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 	}
 
 	@Route(url = "call/disbursement/special")
-	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
+	public HashMap<String, Object> disbursement(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")) {
             Map<String, Object> requestBody = vmjExchange.getPayload(); 
 			Disbursement result = disbursementServiceImpl.createDisbursement(requestBody);

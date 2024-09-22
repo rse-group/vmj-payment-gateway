@@ -3,6 +3,7 @@ package paymentgateway.config.flip;
 import paymentgateway.config.core.ConfigDecorator;
 import paymentgateway.config.core.ConfigComponent;
 import paymentgateway.config.core.PropertiesReader;
+import paymentgateway.config.core.RequestBodyValidator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -75,37 +76,30 @@ public class FlipConfiguration extends ConfigDecorator{
 
     @Override
     public Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody) {
-        String bank_code = "";
-		try{
-			bank_code = (String) requestBody.get("bank_code");
-		} catch (Exception e1){
-			try {
-				bank_code = (String) requestBody.get("beneficiary_bank_name");
-			} catch (Exception e2) {
-				throw new BadRequestException("bank_code dan beneficiary_bank_name tidak ditemukan pada payload.");
-			}
-		}
-
-        String account_number = "";
-		try{
-			account_number = (String) requestBody.get("account_number");
-		} catch (Exception e1){
-			try {
-				account_number = (String) requestBody.get("beneficiary_account_number");
-			} catch (Exception e2) {
-				throw new BadRequestException("account_number dan beneficiary_account_number tidak ditemukan pada payload.");
-			}
-		}
+        String bank_code = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            new String[]{ "bank_code", "beneficiary_bank_name" }
+        );
+        String account_number = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            new String[]{ "account_number", "beneficiary_account_number" }
+        );
+        double amount = RequestBodyValidator.doubleRequestBodyValidator(requestBody, "amount");
 
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("bank_code", bank_code);
         requestMap.put("account_number", account_number);
+        requestMap.put("amount", amount);
 
         return requestMap;
     }
 
     @Override
     public Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody) {
+        if (!requestBody.containsKey("direction")) {
+            throw new BadRequestException("direction tidak ditemukan pada payload.");
+        }
+
         String direction = (String) requestBody.get("direction");
         try {
             DirectionType.valueOf(direction);
@@ -115,20 +109,29 @@ public class FlipConfiguration extends ConfigDecorator{
             );
         }
 
-        Map<String, Object> requestMap = new HashMap<>();
+        Map<String, Object> requestMap = getDisbursementRequestBody(requestBody);
         requestMap.put("direction", direction);
 
         return requestMap;
     }
 
     @Override
-    public Map<String, Object> getInternationalMoneyTransferRequestBody(Map<String, Object> requestBody) {
-        Integer senderCountry = Integer.parseInt((String)requestBody.get("sender_country"));
-        String senderName = (String) requestBody.get("sender_name");
-        String senderAddress = (String) requestBody.get("sender_address");
-        String senderJob = (String) requestBody.get("sender_job");
+    public Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
+        Integer senderCountry = RequestBodyValidator.intRequestBodyValidator(requestBody, "sender_country");
+        String senderName = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "sender_name"
+        );
+        String senderAddress = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "sender_address"
+        );
+        String senderJob = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "sender_job"
+        );
 
-        Map<String, Object> requestMap = new HashMap<>();
+        Map<String, Object> requestMap = getDisbursementRequestBody(requestBody);
         requestMap.put("sender_country", senderCountry);
         requestMap.put("sender_name", senderName);
         requestMap.put("sender_address", senderAddress);

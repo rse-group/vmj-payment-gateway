@@ -10,5 +10,5 @@ public interface DisbursementResource {
     List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange);
     List<HashMap<String, Object>> deleteDisbursement(VMJExchange vmjExchange);
     HashMap<String, Object> updateDisbursement(VMJExchange vmjExchange);
-    HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange);
+    HashMap<String, Object> disbursement(VMJExchange vmjExchange);
 }

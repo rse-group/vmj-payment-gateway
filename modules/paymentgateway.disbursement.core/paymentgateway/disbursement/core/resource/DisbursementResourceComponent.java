@@ -16,5 +16,5 @@ public abstract class DisbursementResourceComponent implements DisbursementResou
     public abstract List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange);
     public abstract List<HashMap<String, Object>> deleteDisbursement(VMJExchange vmjExchange);
     public abstract HashMap<String, Object> updateDisbursement(VMJExchange vmjExchange);
-    public abstract HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange);
+    public abstract HashMap<String, Object> disbursement(VMJExchange vmjExchange);
 }

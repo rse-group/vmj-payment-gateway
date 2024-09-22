@@ -13,6 +13,7 @@ import paymentgateway.disbursement.core.DisbursementResourceDecorator;
 import paymentgateway.disbursement.core.DisbursementResource;
 
 public class DisbursementResourceImpl extends DisbursementResourceDecorator {
+	private final DisbursementServiceImpl disbursementServiceImpl;
 
 	public DisbursementResourceImpl(DisbursementResourceComponent recordController, DisbursementServiceComponent recordService) {
 		super(recordController);

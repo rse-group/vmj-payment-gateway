@@ -75,8 +75,8 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getDomesticDisbursementRequestBody(requestBody);
     }
 
-    public Map<String, Object> getInternationalMoneyTransferRequestBody(Map<String, Object> requestBody){
-        return record.getInternationalMoneyTransferRequestBody(requestBody);
+    public Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody){
+        return record.getInternationalDisbursementRequestBody(requestBody);
     }
 
     public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){

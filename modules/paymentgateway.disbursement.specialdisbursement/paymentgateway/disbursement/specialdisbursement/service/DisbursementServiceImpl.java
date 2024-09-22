@@ -34,7 +34,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		}
 	}
 
-	public Disbursement createDisbursement(VMJExchange vmjExchange) {
-		return RESOURCE.createDisbursement(vmjExchange);
+	public Disbursement createDisbursement(Map<String, Object> requestBody) {
+		return RESOURCE.createDisbursement(requestBody);
 	}
 }

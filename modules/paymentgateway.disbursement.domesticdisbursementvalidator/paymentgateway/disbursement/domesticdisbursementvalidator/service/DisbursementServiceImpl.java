@@ -1,5 +1,6 @@
 package paymentgateway.disbursement.domesticdisbursementvalidator;
 
+import java.util.Map;
 import vmj.routing.route.VMJExchange;
 
 import paymentgateway.disbursement.core.Disbursement;
@@ -18,7 +19,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		String vendorName = (String) requestBody.get("vendor_name");
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-        config.getDomesticMoneyTransferRequestBody(requestBody);
+        config.getDomesticDisbursementRequestBody(requestBody);
 		return record.createDisbursement(requestBody);
 	}
 }

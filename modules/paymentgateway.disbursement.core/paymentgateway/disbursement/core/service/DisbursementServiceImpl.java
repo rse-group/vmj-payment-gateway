@@ -35,7 +35,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 
 		String bank_code = (String) disbursementRequestBody.get("bank_code");
 		String account_number = (String) disbursementRequestBody.get("account_number");
-		double amount = Double.parseDouble((String) disbursementRequestBody.get("amount"));
+		double amount = (Double) disbursementRequestBody.get("amount");
 		int id = (int) response.get("id");
 		int userId = (int) response.get("user_id");
 		String status = (String) response.get("status");
@@ -99,7 +99,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
-		String configUrl = config.getProductEnv("MoneyTransfer");
+		String configUrl = config.getProductEnv("Disbursement");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 
 		LOGGER.info("Header: " + headerParams);
@@ -117,7 +117,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
 			LOGGER.info("Raw Response: " + rawResponse);
-			responseMap = config.getMoneyTransferResponse(rawResponse);
+			responseMap = config.getDisbursementResponse(rawResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -126,7 +126,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	}
 	
 	public HashMap<String, Object> getDisbursementById(int id){
-		List<HashMap<String, Object>> disbursementList = getAllDisbursement("moneytransfer_impl");
+		List<HashMap<String, Object>> disbursementList = getAllDisbursement("disbursement_impl");
 		for (HashMap<String, Object> disbursement : disbursementList){
 			int record_id = ((Double) disbursement.get("record_id")).intValue();
 			if (record_id == id){

@@ -31,7 +31,7 @@ public abstract class DisbursementResourceDecorator extends DisbursementResource
         return record.updateDisbursement(vmjExchange);
     }
 
-    public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
-        return record.moneyTransfer(vmjExchange);
+    public HashMap<String, Object> disbursement(VMJExchange vmjExchange) {
+        return record.disbursement(vmjExchange);
     }
 }

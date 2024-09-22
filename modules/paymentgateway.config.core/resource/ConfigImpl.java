@@ -99,7 +99,7 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getInternationalMoneyTransferRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
     
