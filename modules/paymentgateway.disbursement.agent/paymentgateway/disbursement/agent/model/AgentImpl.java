@@ -17,7 +17,7 @@ public class AgentImpl extends DisbursementDecorator {
 	protected String direction;
 
 	public AgentImpl(DisbursementComponent record, int agent_id, String direction) {
-		super(record, AgentImpl.class.getName());
+		super(record);
 		this.agent_id = agent_id;
 		this.direction = direction;
 	}

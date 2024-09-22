@@ -3,44 +3,21 @@ package paymentgateway.disbursement.core;
 import java.util.*;
 import vmj.routing.route.VMJExchange;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.Table;
-import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
-@Entity
-@Table(name = "disbursement_comp")
-@Inheritance(strategy = InheritanceType.JOINED)
+@MappedSuperclass
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class DisbursementComponent implements Disbursement {
 	@Id
 	protected  int id;
-	protected int userId;
-	protected String accountNumber;
-	protected String bankCode;
-	protected double amount;
-	protected String status;
-
-	@Column(nullable = true)
-	protected String objectName = null;
 
 	public DisbursementComponent() { }
 
-	public DisbursementComponent(
-		int id, 
-		int userId, 
-		String accountNumber, 
-		double amount, 
-		String bankCode,
-		String status
-	) {
+	public DisbursementComponent(int id) {
 		this.id = id;
-		this.userId = userId;
-		this.accountNumber = accountNumber;
-		this.amount = amount;
-		this.bankCode = bankCode;
-		this.status = status;
 	}
 
 	public int getId(){
@@ -51,13 +28,8 @@ public abstract class DisbursementComponent implements Disbursement {
 		this.id = id;
 	}
 
-	public int getUserId() {
-		return userId;
-	}
-	
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
+	public abstract int getUserId();
+	public abstract void setUserId(int userId);
 	
 	public abstract double getAmount();
 	public abstract void setAmount(double amount);

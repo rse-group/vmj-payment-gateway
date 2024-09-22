@@ -6,35 +6,15 @@ import java.math.BigInteger;
 import javax.persistence.OneToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.CascadeType;
+import javax.persistence.Transient;
 
 @MappedSuperclass
-public abstract class DisbursementDecorator extends DisbursementComponent {
-    //https://stackoverflow.com/questions/9116630/one-to-one-delete-on-cascade
-    @OneToOne(cascade=CascadeType.REMOVE, optional=true)
+public abstract class DisbursementDecorator extends DisbursementComponent {    
+    @Transient
     protected DisbursementComponent record;
 
     public DisbursementDecorator(DisbursementComponent record) {
-        String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
-        String unique_no = generateUUIDNo.substring(0,5);
-        this.id = Integer.parseInt(unique_no);
-        this.userId = record.getUserId();
-        this.accountNumber = record.getAccountNumber();
-        this.bankCode = record.getBankCode();
-        this.amount = record.getAmount();
-        this.status = record.getStatus();
-        this.record = record;
-    }
-
-    public DisbursementDecorator(DisbursementComponent record, String objectName) {
-        String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
-        String unique_no = generateUUIDNo.substring(0,5);
-        this.id = Integer.parseInt(unique_no);
-        this.userId = record.getUserId();
-        this.accountNumber = record.getAccountNumber();
-        this.bankCode = record.getBankCode();
-        this.amount = record.getAmount();
-        this.status = record.getStatus();
-        this.objectName = objectName;
+        this.id = record.getId();
         this.record = record;
     }
 
@@ -87,4 +67,8 @@ public abstract class DisbursementDecorator extends DisbursementComponent {
 	public void setStatus(String status) {
 		record.setStatus(status);
 	}
+
+    public DisbursementComponent getRecord() {
+        return this.record;
+    }
 }

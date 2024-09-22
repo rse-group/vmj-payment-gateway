@@ -74,7 +74,38 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getDomesticMoneyTransferRequestBody(Map<String, Object> requestBody) {
+    public Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody) {
+        String bank_code = "";
+		try{
+			bank_code = (String) requestBody.get("bank_code");
+		} catch (Exception e1){
+			try {
+				bank_code = (String) requestBody.get("beneficiary_bank_name");
+			} catch (Exception e2) {
+				throw new BadRequestException("bank_code dan beneficiary_bank_name tidak ditemukan pada payload.");
+			}
+		}
+
+        String account_number = "";
+		try{
+			account_number = (String) requestBody.get("account_number");
+		} catch (Exception e1){
+			try {
+				account_number = (String) requestBody.get("beneficiary_account_number");
+			} catch (Exception e2) {
+				throw new BadRequestException("account_number dan beneficiary_account_number tidak ditemukan pada payload.");
+			}
+		}
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("bank_code", bank_code);
+        requestMap.put("account_number", account_number);
+
+        return requestMap;
+    }
+
+    @Override
+    public Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody) {
         String direction = (String) requestBody.get("direction");
         try {
             DirectionType.valueOf(direction);
@@ -151,7 +182,7 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getMoneyTransferResponse(String rawResponse){
+    public Map<String, Object> getDisbursementResponse(String rawResponse){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -167,7 +198,7 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getAgentMoneyTransferResponse(String rawResponse){
+    public Map<String, Object> getAgentDisbursementResponse(String rawResponse){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -185,8 +216,8 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getSpecialMoneyTransferResponse(String rawResponse){
-        Map<String, Object> response = getMoneyTransferResponse(rawResponse);
+    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse){
+        Map<String, Object> response = getDisbursementResponse(rawResponse);
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
@@ -206,8 +237,8 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getInternationalMoneyTransferResponse(String rawResponse){
-        Map<String, Object> response = getMoneyTransferResponse(rawResponse);
+    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse){
+        Map<String, Object> response = getDisbursementResponse(rawResponse);
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);

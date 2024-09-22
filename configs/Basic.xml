@@ -5,19 +5,13 @@
 	<feature automatic="selected" manual="selected" name="Flip"/>
 	<feature name="Midtrans"/>
 	<feature name="Oy"/>
-	<feature automatic="selected" name="Disbursement"/>
-	<feature manual="selected" name="International"/>
-	<feature automatic="selected" name="FlipInternational"/>
-	<feature manual="selected" name="InternationalMoneyTransfer"/>
-	<feature automatic="selected" name="FlipInternationalMoneyTransfer"/>
-	<feature manual="selected" name="Special"/>
-	<feature automatic="selected" name="FlipSpecial"/>
-	<feature automatic="selected" name="SpecialMoneyTransfer"/>
-	<feature manual="selected" name="FlipSpecialMoneyTransfer"/>
-	<feature name="Agent"/>
-	<feature name="FlipAgent"/>
-	<feature name="AgentMoneyTransfer"/>
-	<feature name="FlipAgentMoneyTransfer"/>
+	<feature name="Disbursement"/>
+	<feature name="InternationalDisbursement"/>
+	<feature name="FlipInternationalDisbursement"/>
+	<feature name="SpecialDisbursement"/>
+	<feature name="FlipSpecialDisbursement"/>
+	<feature name="AgentDisbursement"/>
+	<feature name="FlipAgentDisbursement"/>
 	<feature name="FlipDisbursement"/>
 	<feature name="Payment"/>
 	<feature name="PaymentLink"/>

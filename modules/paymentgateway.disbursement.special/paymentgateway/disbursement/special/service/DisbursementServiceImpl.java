@@ -59,7 +59,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
-		String configUrl = config.getProductEnv("SpecialMoneyTransfer");
+		String configUrl = config.getProductEnv("SpecialDisbursement");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 
 		LOGGER.info("Header: " + headerParams);
@@ -77,7 +77,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
 			LOGGER.info("Raw Response: " + rawResponse);
-			responseMap = config.getSpecialMoneyTransferResponse(rawResponse);
+			responseMap = config.getSpecialDisbursementResponse(rawResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

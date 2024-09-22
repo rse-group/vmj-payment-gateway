@@ -2,22 +2,16 @@
 <configuration>
 	<feature automatic="selected" name="PaymentGateway"/>
 	<feature automatic="selected" name="Vendor"/>
-	<feature automatic="selected" manual="selected" name="Flip"/>
+	<feature automatic="selected" name="Flip"/>
 	<feature name="Midtrans"/>
 	<feature name="Oy"/>
 	<feature automatic="selected" name="Disbursement"/>
-	<feature manual="selected" name="International"/>
-	<feature automatic="selected" name="FlipInternational"/>
-	<feature manual="selected" name="InternationalMoneyTransfer"/>
-	<feature automatic="selected" name="FlipInternationalMoneyTransfer"/>
-	<feature manual="selected" name="Special"/>
-	<feature automatic="selected" name="FlipSpecial"/>
-	<feature manual="selected" name="SpecialMoneyTransfer"/>
-	<feature automatic="selected" name="FlipSpecialMoneyTransfer"/>
-	<feature manual="selected" name="Agent"/>
-	<feature automatic="selected" name="FlipAgent"/>
-	<feature manual="selected" name="AgentMoneyTransfer"/>
-	<feature automatic="selected" name="FlipAgentMoneyTransfer"/>
+	<feature manual="selected" name="InternationalDisbursement"/>
+	<feature automatic="selected" name="FlipInternationalDisbursement"/>
+	<feature manual="selected" name="SpecialDisbursement"/>
+	<feature automatic="selected" name="FlipSpecialDisbursement"/>
+	<feature manual="selected" name="AgentDisbursement"/>
+	<feature automatic="selected" name="FlipAgentDisbursement"/>
 	<feature manual="selected" name="FlipDisbursement"/>
 	<feature name="Payment"/>
 	<feature name="PaymentLink"/>

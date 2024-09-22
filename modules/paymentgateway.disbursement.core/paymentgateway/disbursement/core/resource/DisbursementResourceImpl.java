@@ -110,7 +110,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent{
 	}
 
 	@Route(url = "call/disbursement")
-	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
+	public HashMap<String, Object> disbursement(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")) {
             Map<String, Object> requestBody = vmjExchange.getPayload(); 
 			Disbursement result = disbursementServiceImpl.createDisbursement(requestBody);

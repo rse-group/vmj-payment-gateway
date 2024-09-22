@@ -28,29 +28,14 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
     }
 	
 	public Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response){
-		String bank_code = "";
-		try{
-			bank_code = (String) requestBody.get("bank_code");
-		} catch (Exception e1){
-			try {
-				bank_code = (String) requestBody.get("beneficiary_bank_name");
-			} catch (Exception e2) {
-				throw new BadRequestException("bank_code dan beneficiary_bank_name tidak ditemukan pada payload.");
-			}
-		}
+				String vendorName = (String) requestBody.get("vendor_name");
+		Config config = ConfigFactory.createConfig(vendorName,
+				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+		Map<String, Object> disbursementRequestBody = config.getDisbursementRequestBody(requestBody);
 
-		String account_number = "";
-		try{
-			account_number = (String) requestBody.get("account_number");
-		} catch (Exception e1){
-			try {
-				account_number = (String) requestBody.get("beneficiary_account_number");
-			} catch (Exception e2) {
-				throw new BadRequestException("account_number dan beneficiary_account_number tidak ditemukan pada payload.");
-			}
-		}
-
-		double amount = Double.parseDouble((String) requestBody.get("amount"));
+		String bank_code = (String) disbursementRequestBody.get("bank_code");
+		String account_number = (String) disbursementRequestBody.get("account_number");
+		double amount = Double.parseDouble((String) disbursementRequestBody.get("amount"));
 		int id = (int) response.get("id");
 		int userId = (int) response.get("user_id");
 		String status = (String) response.get("status");

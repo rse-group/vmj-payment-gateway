@@ -67,8 +67,12 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.generateId();    
     }
 
-    public Map<String, Object> getDomesticMoneyTransferRequestBody(Map<String, Object> requestBody){
-        return record.getDomesticMoneyTransferRequestBody(requestBody);
+    public Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody){
+        return record.getDisbursementRequestBody(requestBody);
+    }
+
+    public Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody){
+        return record.getDomesticDisbursementRequestBody(requestBody);
     }
 
     public Map<String, Object> getInternationalMoneyTransferRequestBody(Map<String, Object> requestBody){
@@ -139,20 +143,20 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getVirtualAccountResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getMoneyTransferResponse(String rawResponse){
-        return record.getMoneyTransferResponse(rawResponse);
+    public Map<String, Object> getDisbursementResponse(String rawResponse){
+        return record.getDisbursementResponse(rawResponse);
     }
 
-    public Map<String, Object> getSpecialMoneyTransferResponse(String rawResponse){
-        return record.getSpecialMoneyTransferResponse(rawResponse);
+    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse){
+        return record.getSpecialDisbursementResponse(rawResponse);
     }
 
-    public Map<String, Object> getInternationalMoneyTransferResponse(String rawResponse){
-        return record.getInternationalMoneyTransferResponse(rawResponse);
+    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse){
+        return record.getInternationalDisbursementResponse(rawResponse);
     }
 
-    public Map<String, Object> getAgentMoneyTransferResponse(String rawResponse){
-        return record.getAgentMoneyTransferResponse(rawResponse);
+    public Map<String, Object> getAgentDisbursementResponse(String rawResponse){
+        return record.getAgentDisbursementResponse(rawResponse);
     }
     
 }
