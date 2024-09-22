@@ -14,33 +14,21 @@
 	"Disbursement": [
 		"paymentgateway.disbursement.core"
 	],
-	"International": [
-		"paymentgateway.disbursement.international"
-	],
-	"InternationalMoneyTransfer": [
+	"InternationalDisbursement": [
 		"paymentgateway.disbursement.international",
-		"paymentgateway.disbursement.internationalmoneytransfervalidator",
-		"paymentgateway.disbursement.internationalmoneytransfer"
+		"paymentgateway.disbursement.internationaldisbursementvalidator",
+		"paymentgateway.disbursement.internationaldisbursement"
 	],
-	"Special": [
-		"paymentgateway.disbursement.special"
-	],
-	"SpecialMoneyTransfer": [
+	"SpecialDisbursement": [
 		"paymentgateway.disbursement.special",
-		"paymentgateway.disbursement.domesticmoneytransfervalidator",
-		"paymentgateway.disbursement.internationalmoneytransfervalidator",
-		"paymentgateway.disbursement.specialmoneytransfer"
+		"paymentgateway.disbursement.domesticdisbursementvalidator",
+		"paymentgateway.disbursement.internationaldisbursementvalidator",
+		"paymentgateway.disbursement.specialdisbursement"
 	],
-	"Agent": [
-		"paymentgateway.disbursement.agent"
-	],
-	"AgentMoneyTransfer": [
+	"AgentDisbursement": [
 		"paymentgateway.disbursement.agent",
-		"paymentgateway.disbursement.domesticmoneytransfervalidator",
-		"paymentgateway.disbursement.agentmoneytransfer"
-	],
-	"Payment": [
-		"paymentgateway.payment.core"
+		"paymentgateway.disbursement.domesticdisbursementvalidator",
+		"paymentgateway.disbursement.agentdisbursement"
 	],
 	"CreditCard": [
 		"paymentgateway.payment.creditcard"

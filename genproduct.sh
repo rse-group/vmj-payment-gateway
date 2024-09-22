@@ -67,7 +67,7 @@ function build_product_requirement() {
                 echo "library $reqprod was added"  
             else
                 echo "check requirement from another product line"
-                external_module $reqprod
+                # external_module $reqprod
             fi
         done
         build_product
