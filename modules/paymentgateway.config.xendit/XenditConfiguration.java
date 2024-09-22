@@ -30,16 +30,6 @@ public class XenditConfiguration extends ConfigDecorator{
     }
     
     @Override
-    public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
-        Map<String, Object> requestMap = new HashMap<>();
-        Map<String, Object> payload = vmjExchange.getPayload();
-
-        // TODO
-        
-        return requestMap;
-    }
-    
-    @Override
     public Map<String, Object> getCallbackDisbursementRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> payload = vmjExchange.getPayload();
@@ -51,25 +41,10 @@ public class XenditConfiguration extends ConfigDecorator{
 
     @Override
     public Map<String, Object> getDomesticMoneyTransferRequestBody(VMJExchange vmjExchange) {
-        Map<String, Object> requestMap = new HashMap<>();
-        
-        // TODO
-        
-        return requestMap;
-    }
-
-    @Override
-    public Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange) {
-        Integer senderCountry = Integer.parseInt((String)vmjExchange.getRequestBodyForm("sender_country"));
-        String senderName = (String) vmjExchange.getRequestBodyForm("sender_name");
-        String senderAddress = (String) vmjExchange.getRequestBodyForm("sender_address");
-        String senderJob = (String) vmjExchange.getRequestBodyForm("sender_job");
+        String bank_code = (String) vmjExchange.getRequestBodyForm("bank_code");
 
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("sender_country", senderCountry);
-        requestMap.put("sender_name", senderName);
-        requestMap.put("sender_address", senderAddress);
-        requestMap.put("sender_job", senderJob);
+        requestMap.put("channel_code", bank_code);
 
         return requestMap;
     }
@@ -132,155 +107,6 @@ public class XenditConfiguration extends ConfigDecorator{
         response.put("status", status);
         response.put("user_id", userId);
         response.put("id", id);
-        return response;
-    }
-
-    @Override
-    public Map<String, Object> getInternationalMoneyTransferResponse(String rawResponse){
-        Map<String, Object> response = getMoneyTransferResponse(rawResponse);
-        Gson gson = new Gson();
-        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
-        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
-        double exchangeRate = (double) rawResponseMap.get("exchange_rate");
-        double fee = (double) rawResponseMap.get("fee");
-        double amount = (double) rawResponseMap.get("amount");
-        String sourceCountry = (String) rawResponseMap.get("source_country");
-        String destinationCountry = (String) rawResponseMap.get("destination_country");
-        String beneficiaryCurrencyCode = (String) rawResponseMap.get("beneficiary_currency_code");
-        
-        // TODO: convert to Xendit response parsing
-        response.put("exchange_rate", exchangeRate);
-        response.put("fee", fee);
-        response.put("amount", amount);
-        response.put("source_country", sourceCountry);
-        response.put("destination_country", destinationCountry);
-        response.put("beneficiary_currency_code", beneficiaryCurrencyCode);
-        return response;
-    }
-
-    @Override
-    public Map<String, Object> getVirtualAccountRequestBody(VMJExchange vmjExchange){
-        int id = generateId();
-        Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) vmjExchange.getRequestBodyForm("title");
-        int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
-        String senderName = (String) vmjExchange.getRequestBodyForm("name");
-        String senderEmail = (String) vmjExchange.getRequestBodyForm("email");
-        String senderBank = (String) vmjExchange.getRequestBodyForm("bank");
-
-        // TODO: convert to Xendit response parsing
-        requestMap.put("id",id);
-        requestMap.put("title", title);
-        requestMap.put("type", PaymentType.SINGLE.getValue());
-        requestMap.put("amount",amount);
-        requestMap.put("sender_name",senderName);
-        requestMap.put("sender_email",senderEmail);
-        requestMap.put("sender_bank",senderBank);
-        requestMap.put("sender_bank_type",SenderBankType.VIRTUALACCOUNT.getValue());
-        requestMap.put("step", PaymentFlow.THIRD.getValue());
-
-        return requestMap;
-    }
-
-    @Override
-    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id) {
-        Map<String, Object> response = new HashMap<>();
-        Gson gson = new Gson();
-        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
-        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
-        
-        // TODO: convert to Xendit response parsing
-        Map<String, Object> billPayment = (Map<String, Object>) rawResponseMap.get("bill_payment");
-        Map<String, Object> receiverBankAccount = (Map<String, Object>) billPayment.get("receiver_bank_account");
-        String vaNumber = (String) receiverBankAccount.get("account_number");
-        int billId = (int) ((Double) rawResponseMap.get("link_id")).doubleValue();
-        response.put("va_number", vaNumber);
-        response.put("id", billId);
-        
-        return response;
-    }
-
-
-    @Override
-    public Map<String, Object> getEWalletRequestBody(VMJExchange vmjExchange){
-        int id = generateId();
-        Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) vmjExchange.getRequestBodyForm("title");
-        int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
-        String senderName = (String) vmjExchange.getRequestBodyForm("name");
-        String senderEmail = (String) vmjExchange.getRequestBodyForm("email");
-        String senderBank = (String) vmjExchange.getRequestBodyForm("ewallet_type");
-        String senderPhoneNumber = (String) vmjExchange.getRequestBodyForm("phone");
-        
-        // TODO: convert to Xendit response parsing
-        requestMap.put("id",id);
-        requestMap.put("title", title);
-        requestMap.put("type", PaymentType.SINGLE.getValue());
-        requestMap.put("amount",amount);
-        requestMap.put("sender_name",senderName);
-        requestMap.put("sender_email",senderEmail);
-        requestMap.put("sender_bank",senderBank);
-        requestMap.put("is_phone_number_required",PhoneNumberRequired.TRUE.getValue());
-        requestMap.put("sender_phone_number", senderPhoneNumber);
-        requestMap.put("sender_bank_type",SenderBankType.EWALLET.getValue());
-        requestMap.put("step", PaymentFlow.THIRD.getValue());
-
-        return requestMap;
-    }
-
-    @Override
-    public Map<String, Object> getEWalletResponse(String rawResponse, int id){
-        Map<String, Object> response = new HashMap<>();
-        Gson gson = new Gson();
-        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
-        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
-        String url = (String) rawResponseMap.get("payment_url");
-        String paymentType = (String) rawResponseMap.get("bank_code");
-        String phoneNumber = (String) rawResponseMap.get("user_phone");
-        int billId = (int) ((Double) rawResponseMap.get("link_id")).doubleValue();
-        
-        // TODO: convert to Xendit response parsing
-        response.put("phone_number",phoneNumber);
-        response.put("url", url);
-        response.put("payment_type",paymentType);
-        response.put("id", billId);
-        return response;
-    }
-
-
-    @Override
-    public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
-        int id = generateId();
-        Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) vmjExchange.getRequestBodyForm("title");
-        int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
-        String senderEmail = (String) vmjExchange.getRequestBodyForm("email");
-        String senderName = (String) vmjExchange.getRequestBodyForm("name");
-        
-        // TODO: convert to Xendit response parsing
-        requestMap.put("id",id);
-        requestMap.put("title", title);
-        requestMap.put("type", PaymentType.SINGLE.getValue());
-        requestMap.put("sender_name", senderName);
-        requestMap.put("sender_email",senderEmail);
-        requestMap.put("amount",amount);
-        requestMap.put("step", PaymentFlow.SECOND.getValue() );
-
-        return requestMap;
-    }
-
-    @Override
-    public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
-        Map<String, Object> response = new HashMap<>();
-        Gson gson = new Gson();
-        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
-        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
-        
-        // TODO: convert to Xendit response parsing
-        String url = (String) rawResponseMap.get("link_url");
-        int billId = (int) ((Double) rawResponseMap.get("link_id")).doubleValue();
-        response.put("url", url);
-        response.put("id", billId);
         return response;
     }
 

@@ -8,6 +8,7 @@ features
 					Flip
 					Midtrans
 					Oy
+					Xendit
 			Disbursement
 				or
 					International
@@ -28,8 +29,8 @@ features
 					AgentMoneyTransfer
 						mandatory
 							FlipAgentMoneyTransfer
-				mandatory
 					FlipDisbursement
+					XenditDisbursement
 			Payment {abstract true}
 				or
 					PaymentLink
