@@ -5,6 +5,7 @@
 	<feature automatic="selected" name="Flip"/>
 	<feature name="Midtrans"/>
 	<feature name="Oy"/>
+	<feature automatic="selected" name="Xendit"/>
 	<feature automatic="selected" name="Disbursement"/>
 	<feature manual="selected" name="InternationalDisbursement"/>
 	<feature automatic="selected" name="FlipInternationalDisbursement"/>
@@ -12,7 +13,8 @@
 	<feature automatic="selected" name="FlipSpecialDisbursement"/>
 	<feature manual="selected" name="AgentDisbursement"/>
 	<feature automatic="selected" name="FlipAgentDisbursement"/>
-	<feature manual="selected" name="FlipDisbursement"/>
+	<feature name="FlipDisbursement"/>
+	<feature manual="selected" name="XenditDisbursement"/>
 	<feature name="Payment"/>
 	<feature name="PaymentLink"/>
 	<feature name="FlipPaymentLink"/>

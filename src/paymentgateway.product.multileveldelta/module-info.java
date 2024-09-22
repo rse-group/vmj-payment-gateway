@@ -11,6 +11,7 @@ module paymentgateway.product.multileveldelta {
 
     requires paymentgateway.config.core;
     requires paymentgateway.config.flip;
+    requires paymentgateway.config.xendit;
     requires paymentgateway.disbursement.core;
     requires paymentgateway.disbursement.international;
     requires paymentgateway.disbursement.internationaldisbursementvalidator;

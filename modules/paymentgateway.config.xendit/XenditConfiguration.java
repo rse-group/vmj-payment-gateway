@@ -44,14 +44,14 @@ public class XenditConfiguration extends ConfigDecorator{
     public Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody) {
         String vendor_name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "vendor_name");
         String bank_code = RequestBodyValidator.stringRequestBodyValidator(requestBody, "bank_code");
-        String account_number = RequestBodyValidator.stringRequestBodyValidator(requestBody, "account_number")
+        String account_number = RequestBodyValidator.stringRequestBodyValidator(requestBody, "account_number");
         String account_holder_name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "account_holder_name");
         String currency = RequestBodyValidator.stringRequestBodyValidator(requestBody, "currency");
         double amount = RequestBodyValidator.doubleRequestBodyValidator(requestBody, "amount");
 
         Map<String, Object> channelPropertiesMap = new HashMap<>();
-        channelPropertiesMap.put("account_holder_name", accountHolderName);
-        channelPropertiesMap.put("account_number", accountNumber);
+        channelPropertiesMap.put("account_holder_name", account_holder_name);
+        channelPropertiesMap.put("account_number", account_number);
 
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("reference_id", UUID.randomUUID().toString().substring(0, 8));
@@ -73,11 +73,6 @@ public class XenditConfiguration extends ConfigDecorator{
         return record.getProductEnv(CONFIG_FILE, serviceName);
     }
         
-    @Override
-    public String getRequestString(Map<String, Object> requestMap){
-        return EncodeResponse.getParamsUrlEncoded(requestMap);
-    }
-
     @Override
     public Map<String, Object> getDisbursementResponse(String rawResponse){
         Map<String, Object> response = new HashMap<>();
