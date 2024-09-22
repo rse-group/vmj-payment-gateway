@@ -7,7 +7,7 @@ import vmj.routing.route.VMJExchange;
 public interface Config {
     String getVendorName();
 
-    // get url lengkap sama service ex: moneytransfer
+    // get url lengkap sama service ex: disbursement
     String getProductEnv(String fileName, String serviceName);
     String getProductEnv(String serviceName);
 
@@ -32,8 +32,9 @@ public interface Config {
     Map<String, Object> getCallbackDisbursementRequestBody(VMJExchange vmjExchange);
 
     // Disbursement Request
-    Map<String, Object> getDomesticMoneyTransferRequestBody(VMJExchange vmjExchange);
-    Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange);
+    Map<String, Object> getDisbursementRequestBody(VMJExchange vmjExchange);
+    Map<String, Object> getDomesticDisbursementRequestBody(VMJExchange vmjExchange);
+    Map<String, Object> getInternationalDisbursementRequestBody(VMJExchange vmjExchange);
 
     // Payment Request
     Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange);
@@ -60,8 +61,8 @@ public interface Config {
     Map<String, Object> getVirtualAccountResponse(String rawResponse, int id);
 
     // Disbursement Response
-    Map<String, Object> getMoneyTransferResponse(String rawResponse);
-    Map<String, Object> getSpecialMoneyTransferResponse(String rawResponse);
-    Map<String, Object> getInternationalMoneyTransferResponse(String rawResponse);
-    Map<String, Object> getAgentMoneyTransferResponse(String rawResponse);
+    Map<String, Object> getDisbursementResponse(String rawResponse);
+    Map<String, Object> getSpecialDisbursementResponse(String rawResponse);
+    Map<String, Object> getInternationalDisbursementResponse(String rawResponse);
+    Map<String, Object> getAgentDisbursementResponse(String rawResponse);
 }

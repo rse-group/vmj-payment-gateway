@@ -22,7 +22,7 @@ public class SpecialImpl extends DisbursementDecorator {
 
 	public SpecialImpl(DisbursementComponent record, int sender_country, String sender_name, 
 			String sender_address, String sender_job, String direction) {
-		super(record, SpecialImpl.class.getName());
+		super(record);
 		this.sender_country = sender_country;
 		this.sender_name = sender_name;
 		this.sender_address = sender_address;

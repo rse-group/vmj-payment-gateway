@@ -28,28 +28,13 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	}
 	
 	public Disbursement createDisbursement(VMJExchange vmjExchange, Map<String, Object> response){
-		String bank_code = "";
-		try{
-			bank_code = (String) vmjExchange.getRequestBodyForm("bank_code");
-		} catch (Exception e1){
-			try {
-				bank_code = (String) vmjExchange.getRequestBodyForm("beneficiary_bank_name");
-			} catch (Exception e2) {
-				throw new BadRequestException("bank_code dan beneficiary_bank_name tidak ditemukan pada payload.");
-			}
-		}
+		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
+		Config config = ConfigFactory.createConfig(vendorName,
+				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+		Map<String, Object> requestBody = config.getDisbursementRequestBody(vmjExchange);
 
-		String account_number = "";
-		try{
-			account_number = (String) vmjExchange.getRequestBodyForm("account_number");
-		} catch (Exception e1){
-			try {
-				account_number = (String) vmjExchange.getRequestBodyForm("beneficiary_account_number");
-			} catch (Exception e2) {
-				throw new BadRequestException("account_number dan beneficiary_account_number tidak ditemukan pada payload.");
-			}
-		}
-
+		String bank_code = (String) requestBody.get("bank_code");
+		String account_number = (String) requestBody.get("account_number");
 		double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
 		int id = (int) response.get("id");
 		int userId = (int) response.get("user_id");
@@ -143,7 +128,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		Map<String, Object> requestMap = vmjExchange.getPayload();
-		String configUrl = config.getProductEnv("MoneyTransfer");
+		String configUrl = config.getProductEnv("Disbursement");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 
 		LOGGER.info("Header: " + headerParams);
@@ -161,7 +146,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
 			LOGGER.info("Raw Response: " + rawResponse);
-			responseMap = config.getMoneyTransferResponse(rawResponse);
+			responseMap = config.getDisbursementResponse(rawResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -178,7 +163,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	}
 
 	public HashMap<String, Object> getDisbursementById(int id){
-		List<HashMap<String, Object>> disbursementList = getAllDisbursement("moneytransfer_impl");
+		List<HashMap<String, Object>> disbursementList = getAllDisbursement("disbursement_impl");
 		for (HashMap<String, Object> disbursement : disbursementList){
 			int record_id = ((Double) disbursement.get("record_id")).intValue();
 			if (record_id == id){
@@ -266,7 +251,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent {
 	}
 
 	@Route(url = "call/disbursement")
-	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
+	public HashMap<String, Object> disbursement(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")) {
 			Disbursement result = this.createDisbursement(vmjExchange);
 			return result.toHashMap();

@@ -12,21 +12,40 @@ import javax.persistence.Id;
 @Entity(name = "disbursement_impl")
 @Table(name = "disbursement_impl")
 public class DisbursementImpl extends DisbursementComponent {
+	protected int userId;
+	protected String accountNumber;
+	protected String bankCode;
+	protected double amount;
+	protected String status;
+
 	public DisbursementImpl(
-		int id, 
+		int id,
 		int userId, 
 		String accountNumber, 
 		double amount, 
 		String bankCode,
-		String status) {
-		super(id, userId, accountNumber, amount, bankCode, status);
-		this.objectName = DisbursementImpl.class.getName();
+		String status
+	) {
+		super(id);
+		this.userId = userId;
+		this.accountNumber = accountNumber;
+		this.amount = amount;
+		this.bankCode = bankCode;
+		this.status = status;
 	}
 
 	// read this for more information why default constructor needed
 	// https://stackoverflow.com/questions/44088360/org-hibernate-instantiationexception-no-default-constructor-for-entity-princ
 	// https://stackoverflow.com/questions/25452018/hibernate-annotations-no-default-constructor-for-entity?rq=1
 	public DisbursementImpl() { }
+
+	public int getUserId() {
+		return userId;
+	}
+	
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 
 	public String getAccountNumber() {
 		return accountNumber;

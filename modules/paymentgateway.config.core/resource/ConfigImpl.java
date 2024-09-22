@@ -91,11 +91,15 @@ public class ConfigImpl extends ConfigComponent {
         return vmjExchange.getPayload();
     }
 
-    public Map<String, Object> getDomesticMoneyTransferRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getDisbursementRequestBody(VMJExchange vmjExchange){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getDomesticDisbursementRequestBody(VMJExchange vmjExchange){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getInternationalDisbursementRequestBody(VMJExchange vmjExchange){
         throw new UnsupportedOperationException();
     }
     
@@ -163,19 +167,19 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getMoneyTransferResponse(String rawResponse){
+    public Map<String, Object> getDisbursementResponse(String rawResponse){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getSpecialMoneyTransferResponse(String rawResponse){
+    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getInternationalMoneyTransferResponse(String rawResponse){
+    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getAgentMoneyTransferResponse(String rawResponse){
+    public Map<String, Object> getAgentDisbursementResponse(String rawResponse){
         throw new UnsupportedOperationException();
     }
 }

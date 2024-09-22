@@ -11,5 +11,5 @@ module paymentgateway.disbursement.core {
 	requires java.naming;
 	requires java.net.http;
 
-	opens paymentgateway.disbursement.core to org.hibernate.orm.core, gson;
+	opens paymentgateway.disbursement.core to org.hibernate.orm.core, gson, vmj.hibernate.integrator;
 }

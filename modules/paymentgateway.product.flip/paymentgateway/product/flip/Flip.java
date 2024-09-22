@@ -1,12 +1,15 @@
 package paymentgateway.product.flip;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import vmj.routing.route.VMJServer;
 import vmj.routing.route.Router;
 import vmj.hibernate.integrator.HibernateUtil;
 import org.hibernate.cfg.Configuration;
+import com.google.gson.Gson;
 
 import paymentgateway.disbursement.DisbursementResourceFactory;
 import paymentgateway.disbursement.core.DisbursementResource;
@@ -45,26 +48,16 @@ public class Flip {
 		configuration.addAnnotatedClass(paymentgateway.disbursement.core.DisbursementComponent.class);
 		configuration.addAnnotatedClass(paymentgateway.disbursement.core.DisbursementDecorator.class);
 		configuration.addAnnotatedClass(paymentgateway.disbursement.core.DisbursementImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.disbursement.moneytransfer.MoneyTransferImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.disbursement.moneytransfer.special.SpecialImpl.class);
-		configuration.addAnnotatedClass(paymentgateway.disbursement.moneytransfer.agent.AgentImpl.class);
-		// configuration.addAnnotatedClass(paymentgateway.disbursement.moneytransfer.agentmoneytransfer.class);
-		// configuration.addAnnotatedClass(paymentgateway.disbursement.moneytransfer.specialmoneytransfer.class);
-		// configuration.addAnnotatedClass(paymentgateway.disbursement.scheduled.ScheduledImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.disbursement.international.InternationalImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.disbursement.special.SpecialImpl.class);
+		configuration.addAnnotatedClass(paymentgateway.disbursement.agent.AgentImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.Payment.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentComponent.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentDecorator.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.core.PaymentImpl.class);
-
 		configuration.addAnnotatedClass(paymentgateway.payment.virtualaccount.VirtualAccountImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.ewallet.EWalletImpl.class);
 		configuration.addAnnotatedClass(paymentgateway.payment.paymentlink.PaymentLinkImpl.class);
-
-		configuration
-				.addAnnotatedClass(paymentgateway.disbursement.moneytransfer.international.InternationalImpl.class);
-		// configuration.addAnnotatedClass(paymentgateway.disbursement.moneytransfer.internationaltransfer.InternationalTransferImpl.class);
-
-		// configuration.addAnnotatedClass(paymentgateway.disbursement.approvalsystem.ApprovalSystemImpl.class);
 
 		configuration.addAnnotatedClass(vmj.auth.model.core.Role.class);
 		configuration.addAnnotatedClass(vmj.auth.model.core.RoleComponent.class);
@@ -80,6 +73,32 @@ public class Flip {
 		configuration.addAnnotatedClass(vmj.auth.model.core.UserImpl.class);
 		configuration.addAnnotatedClass(vmj.auth.model.passworded.UserPasswordedImpl.class);
 		configuration.addAnnotatedClass(vmj.auth.model.social.UserSocialImpl.class);
+
+		String[] disbursementDeltas = { 
+			paymentgateway.disbursement.international.InternationalImpl.class.getSimpleName(),
+			paymentgateway.disbursement.special.SpecialImpl.class.getSimpleName(),
+			paymentgateway.disbursement.agent.AgentImpl.class.getSimpleName()
+		};
+
+		String[] paymentDeltas = {
+			paymentgateway.payment.virtualaccount.VirtualAccountImpl.class.getSimpleName(),
+			paymentgateway.payment.ewallet.EWalletImpl.class.getSimpleName(),
+			paymentgateway.payment.paymentlink.PaymentLinkImpl.class.getSimpleName()
+		};
+
+		Map<String, String[]> foreignKeyRules = new HashMap<>();
+		foreignKeyRules.put(
+			paymentgateway.disbursement.core.DisbursementImpl.class.getSimpleName(),
+			disbursementDeltas
+		);
+		foreignKeyRules.put(
+			paymentgateway.payment.core.PaymentImpl.class.getSimpleName(),
+			paymentDeltas
+		);
+
+		Gson gson = new Gson();
+		String foreignKeyRulesMap = gson.toJson(foreignKeyRules);
+		configuration.setProperty("custom.foreign.key.rules", foreignKeyRulesMap);
 
 		configuration.buildMappings();
 		HibernateUtil.buildSessionFactory(configuration);

@@ -67,7 +67,7 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		Map<String, Object> requestMap = vmjExchange.getPayload();
-		String configUrl = config.getProductEnv("SpecialMoneyTransfer");
+		String configUrl = config.getProductEnv("SpecialDisbursement");
 		HashMap<String, String> headerParams = config.getHeaderParams();
 
 		LOGGER.info("Header: " + headerParams);
@@ -85,20 +85,11 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
 			LOGGER.info("Raw Response: " + rawResponse);
-			responseMap = config.getSpecialMoneyTransferResponse(rawResponse);
+			responseMap = config.getSpecialDisbursementResponse(rawResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return responseMap;
-	}
-
-	@Route(url = "call/disbursement/special")
-	public HashMap<String, Object> moneyTransfer(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("POST")) {
-			Disbursement result = this.createDisbursement(vmjExchange);
-			return result.toHashMap();
-		}
-		throw new NotFoundException("Route tidak ditemukan");
 	}
 }

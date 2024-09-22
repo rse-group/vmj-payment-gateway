@@ -20,8 +20,9 @@ public abstract class ConfigComponent implements Config {
 
     public abstract Map<String, Object> getPaymentStatusResponse(String rawResponse, String id);
 
-    public abstract Map<String, Object> getDomesticMoneyTransferRequestBody(VMJExchange vmjExchange);
-    public abstract Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getDisbursementRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getDomesticDisbursementRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getInternationalDisbursementRequestBody(VMJExchange vmjExchange);
 
     public abstract Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange);
     public abstract Map<String, Object> getRetailOutletRequestBody(VMJExchange vmjExchange);
@@ -41,8 +42,8 @@ public abstract class ConfigComponent implements Config {
     public abstract Map<String, Object> getRetailOutletResponse(String rawResponse, int id);
     public abstract Map<String, Object> getVirtualAccountResponse(String rawResponse, int id);
 
-    public abstract Map<String, Object> getMoneyTransferResponse(String rawResponse);
-    public abstract Map<String, Object> getSpecialMoneyTransferResponse(String rawResponse);
-    public abstract Map<String, Object> getInternationalMoneyTransferResponse(String rawResponse);
-    public abstract Map<String, Object> getAgentMoneyTransferResponse(String rawResponse);
+    public abstract Map<String, Object> getDisbursementResponse(String rawResponse);
+    public abstract Map<String, Object> getSpecialDisbursementResponse(String rawResponse);
+    public abstract Map<String, Object> getInternationalDisbursementResponse(String rawResponse);
+    public abstract Map<String, Object> getAgentDisbursementResponse(String rawResponse);
 }

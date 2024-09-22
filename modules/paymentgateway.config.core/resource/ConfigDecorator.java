@@ -67,12 +67,16 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.generateId();    
     }
 
-    public Map<String, Object> getDomesticMoneyTransferRequestBody(VMJExchange vmjExchange){
-        return record.getDomesticMoneyTransferRequestBody(vmjExchange);
+    public Map<String, Object> getDisbursementRequestBody(VMJExchange vmjExchange){
+        return record.getDisbursementRequestBody(vmjExchange);
     }
 
-    public Map<String, Object> getInternationalMoneyTransferRequestBody(VMJExchange vmjExchange){
-        return record.getInternationalMoneyTransferRequestBody(vmjExchange);
+    public Map<String, Object> getDomesticDisbursementRequestBody(VMJExchange vmjExchange){
+        return record.getDomesticDisbursementRequestBody(vmjExchange);
+    }
+
+    public Map<String, Object> getInternationalDisbursementRequestBody(VMJExchange vmjExchange){
+        return record.getInternationalDisbursementRequestBody(vmjExchange);
     }
 
     public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
@@ -139,20 +143,20 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getVirtualAccountResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getMoneyTransferResponse(String rawResponse){
-        return record.getMoneyTransferResponse(rawResponse);
+    public Map<String, Object> getDisbursementResponse(String rawResponse){
+        return record.getDisbursementResponse(rawResponse);
     }
 
-    public Map<String, Object> getSpecialMoneyTransferResponse(String rawResponse){
-        return record.getSpecialMoneyTransferResponse(rawResponse);
+    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse){
+        return record.getSpecialDisbursementResponse(rawResponse);
     }
 
-    public Map<String, Object> getInternationalMoneyTransferResponse(String rawResponse){
-        return record.getInternationalMoneyTransferResponse(rawResponse);
+    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse){
+        return record.getInternationalDisbursementResponse(rawResponse);
     }
 
-    public Map<String, Object> getAgentMoneyTransferResponse(String rawResponse){
-        return record.getAgentMoneyTransferResponse(rawResponse);
+    public Map<String, Object> getAgentDisbursementResponse(String rawResponse){
+        return record.getAgentDisbursementResponse(rawResponse);
     }
     
 }

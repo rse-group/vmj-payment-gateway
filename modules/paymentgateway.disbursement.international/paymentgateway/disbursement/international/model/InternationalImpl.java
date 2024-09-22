@@ -22,7 +22,7 @@ public class InternationalImpl extends DisbursementDecorator {
 
 	public InternationalImpl(DisbursementComponent record, double exchange_rate, double fee, String source_country,
 			String destination_country, double amount_in_sender_currency, String beneficiary_currency_code) {
-		super(record, InternationalImpl.class.getName());
+		super(record);
 		this.exchange_rate = exchange_rate;
 		this.fee = fee;
 		this.source_country = source_country;
@@ -84,13 +84,13 @@ public class InternationalImpl extends DisbursementDecorator {
 	}
 
 	public HashMap<String, Object> toHashMap() {
-		HashMap<String, Object> moneyTransferMap = record.toHashMap();
-		moneyTransferMap.put("exchange_rate", getExchange_rate());
-		moneyTransferMap.put("fee", getExchange_rate());
-		moneyTransferMap.put("source_country", getSource_country());
-		moneyTransferMap.put("destination_country", getDestination_country());
-		moneyTransferMap.put("amount_in_sender_currency", getAmount_in_sender_currency());
-		moneyTransferMap.put("beneficiary_currency_code", getBeneficiary_currency_code());
-		return moneyTransferMap;
+		HashMap<String, Object> disbursementMap = record.toHashMap();
+		disbursementMap.put("exchange_rate", getExchange_rate());
+		disbursementMap.put("fee", getExchange_rate());
+		disbursementMap.put("source_country", getSource_country());
+		disbursementMap.put("destination_country", getDestination_country());
+		disbursementMap.put("amount_in_sender_currency", getAmount_in_sender_currency());
+		disbursementMap.put("beneficiary_currency_code", getBeneficiary_currency_code());
+		return disbursementMap;
 	}
 }
