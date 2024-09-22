@@ -61,3 +61,4 @@ constraints
 	OyInvoice | OyPaymentRouting | OyPaymentLink | OyRetailOutlet | OyVirtualAccount | OyEWallet => Oy
 	MidtransCreditCard | MidtransDebitCard | MidtransPaymentLink | MidtransVirtualAccount | MidtransEWallet | MidtransRetailOutlet => Midtrans
 	FlipDisbursement | FlipInternationalDisbursement | FlipSpecialDisbursement | FlipAgentDisbursement => Flip
+	XenditDisbursement => Xendit

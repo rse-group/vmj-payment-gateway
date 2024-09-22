@@ -11,6 +11,9 @@
 	"Oy": [
 		"paymentgateway.config.oy"
 	],
+	"Xendit": [
+		"paymentgateway.config.xendit"
+	],
 	"Disbursement": [
 		"paymentgateway.disbursement.core"
 	],

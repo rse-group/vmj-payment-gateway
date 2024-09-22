@@ -3,7 +3,7 @@ package paymentgateway.config.xendit;
 
 public enum PaymentStatus {
     FAILED("FAILED"),
-	SUCCEEDED("SUCCEEDED"),
+	SUCCEEDED("SUCCEEDED");
 
     private final String value;
 
