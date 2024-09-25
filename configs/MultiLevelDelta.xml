@@ -7,12 +7,12 @@
 	<feature name="Oy"/>
 	<feature automatic="selected" name="Disbursement"/>
 	<feature manual="selected" name="InternationalDisbursement"/>
-	<feature automatic="selected" name="FlipInternationalDisbursement"/>
+	<feature automatic="selected" name="InternationalDisbursementWithAutomaticExchangeRate"/>
 	<feature manual="selected" name="SpecialDisbursement"/>
-	<feature automatic="selected" name="FlipSpecialDisbursement"/>
+	<feature automatic="selected" name="InternationalDisbursementWithIndonesianCurrency"/>
 	<feature manual="selected" name="AgentDisbursement"/>
-	<feature automatic="selected" name="FlipAgentDisbursement"/>
-	<feature manual="selected" name="FlipDisbursement"/>
+	<feature automatic="selected" name="KycAgentDisbursement"/>
+	<feature manual="selected" name="DomesticDisbursement"/>
 	<feature name="Payment"/>
 	<feature name="PaymentLink"/>
 	<feature name="FlipPaymentLink"/>

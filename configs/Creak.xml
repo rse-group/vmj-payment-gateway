@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configuration>
 	<feature automatic="selected" name="PaymentGateway"/>
+	<feature automatic="selected" name="Vendor"/>
+	<feature name="Flip"/>
+	<feature name="Midtrans"/>
+	<feature automatic="selected" name="Oy"/>
 	<feature name="Disbursement"/>
 	<feature name="InternationalDisbursement"/>
-	<feature name="FlipInternationalDisbursement"/>
+	<feature name="InternationalDisbursementWithAutomaticExchangeRate"/>
 	<feature name="SpecialDisbursement"/>
-	<feature name="FlipSpecialDisbursement"/>
+	<feature name="InternationalDisbursementWithIndonesianCurrency"/>
 	<feature name="AgentDisbursement"/>
-	<feature name="FlipAgentDisbursement"/>
-	<feature name="FlipDisbursement"/>
+	<feature name="KycAgentDisbursement"/>
+	<feature name="DomesticDisbursement"/>
 	<feature automatic="selected" name="Payment"/>
 	<feature name="PaymentLink"/>
 	<feature name="FlipPaymentLink"/>

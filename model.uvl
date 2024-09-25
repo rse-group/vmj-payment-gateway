@@ -12,15 +12,15 @@ features
 				or
 					InternationalDisbursement
 						mandatory
-							FlipInternationalDisbursement
+							InternationalDisbursementWithAutomaticExchangeRate
 					SpecialDisbursement
 						mandatory
-							FlipSpecialDisbursement
+							InternationalDisbursementWithIndonesianCurrency
 					AgentDisbursement
 						mandatory
-							FlipAgentDisbursement
+							KycAgentDisbursement
 				mandatory
-					FlipDisbursement
+					DomesticDisbursement
 			Payment {abstract true}
 				or
 					PaymentLink
@@ -58,4 +58,4 @@ features
 constraints
 	OyInvoice | OyPaymentRouting | OyPaymentLink | OyRetailOutlet | OyVirtualAccount | OyEWallet => Oy
 	MidtransCreditCard | MidtransDebitCard | MidtransPaymentLink | MidtransVirtualAccount | MidtransEWallet | MidtransRetailOutlet => Midtrans
-	FlipDisbursement | FlipInternationalDisbursement | FlipSpecialDisbursement | FlipAgentDisbursement => Flip
+	DomesticDisbursement | InternationalDisbursementWithAutomaticExchangeRate | InternationalDisbursementWithIndonesianCurrency | KycAgentDisbursement => Flip
