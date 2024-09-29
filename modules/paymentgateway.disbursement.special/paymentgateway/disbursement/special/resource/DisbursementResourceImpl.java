@@ -31,7 +31,7 @@ import paymentgateway.config.ConfigFactory;
 
 public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 	private static final Logger LOGGER = Logger.getLogger(DisbursementResourceImpl.class.getName());
-	private final DisbursementServiceImpl disbursementServiceImpl;
+	private DisbursementServiceImpl disbursementServiceImpl;
 
 	public DisbursementResourceImpl(DisbursementResourceComponent recordResource, DisbursementServiceComponent recordService) {
 		super(recordResource);
