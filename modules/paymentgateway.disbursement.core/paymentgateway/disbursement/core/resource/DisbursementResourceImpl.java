@@ -83,30 +83,34 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent{
 
 	@Route(url="call/disbursement/detail")
 	public HashMap<String, Object> getDisbursement(VMJExchange vmjExchange){
-		return disbursementServiceImpl.getDisbursement(vmjExchange);
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+		return disbursementServiceImpl.getDisbursement(requestBody);
 	}
 
 	@Route(url="call/disbursement/list")
 	public List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange){
-		return disbursementServiceImpl.getAllDisbursement(vmjExchange);
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+		return disbursementServiceImpl.getAllDisbursement(requestBody);
 	}
 
 	@Route(url="call/disbursement/delete")
 	public List<HashMap<String, Object>> deleteDisbursement(VMJExchange vmjExchange){
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
 		if (vmjExchange.getHttpMethod().equals("OPTIONS")) {
 			return null;
 		}
 
-		return disbursementServiceImpl.deleteDisbursement(vmjExchange);
+		return disbursementServiceImpl.deleteDisbursement(requestBody);
 	}
 
 	@Route(url="call/disbursement/update")
 	public HashMap<String, Object> updateDisbursement(VMJExchange vmjExchange){
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
 		if (vmjExchange.getHttpMethod().equals("OPTIONS")){
 			return null;
 		}
 
-		return disbursementServiceImpl.updateDisbursement(vmjExchange);
+		return disbursementServiceImpl.updateDisbursement(requestBody);
 	}
 
 	@Route(url = "call/disbursement")

@@ -17,10 +17,10 @@ public abstract class DisbursementServiceComponent implements DisbursementServic
 
     public abstract Disbursement createDisbursement(Map<String, Object> requestBody);
     public abstract Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response);
-    public abstract HashMap<String, Object> getDisbursement(VMJExchange vmjExchange);
-    public abstract List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange);
-    public abstract List<HashMap<String, Object>> deleteDisbursement(VMJExchange vmjExchange);
-    public abstract HashMap<String, Object> updateDisbursement(VMJExchange vmjExchange);
+    public abstract HashMap<String, Object> getDisbursement(Map<String, Object> requestBody);
+    public abstract List<HashMap<String, Object>> getAllDisbursement(Map<String, Object> requestBody);
+    public abstract List<HashMap<String, Object>> deleteDisbursement(Map<String, Object> requestBody);
+    public abstract HashMap<String, Object> updateDisbursement(Map<String, Object> requestBody);
     public abstract List<HashMap<String, Object>> transformListToHashMap(List<Disbursement> List);
     public abstract Map<String, Object> sendTransaction(Map<String, Object> requestBody);
     public abstract HashMap<String, Object> getDisbursementById(int id);
