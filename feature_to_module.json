@@ -14,21 +14,24 @@
 	"Disbursement": [
 		"paymentgateway.disbursement.core"
 	],
-	"InternationalDisbursement": [
+	"ExchangeRate": [
 		"paymentgateway.disbursement.international",
 		"paymentgateway.disbursement.internationaldisbursementvalidator",
 		"paymentgateway.disbursement.internationaldisbursement"
 	],
-	"SpecialDisbursement": [
+	"FixedCurrency": [
 		"paymentgateway.disbursement.special",
 		"paymentgateway.disbursement.domesticdisbursementvalidator",
 		"paymentgateway.disbursement.internationaldisbursementvalidator",
 		"paymentgateway.disbursement.specialdisbursement"
 	],
-	"AgentDisbursement": [
+	"Agent": [
 		"paymentgateway.disbursement.agent",
 		"paymentgateway.disbursement.domesticdisbursementvalidator",
 		"paymentgateway.disbursement.agentdisbursement"
+	],
+	"Payment": [
+		"paymentgateway.payment.core"
 	],
 	"CreditCard": [
 		"paymentgateway.payment.creditcard"
