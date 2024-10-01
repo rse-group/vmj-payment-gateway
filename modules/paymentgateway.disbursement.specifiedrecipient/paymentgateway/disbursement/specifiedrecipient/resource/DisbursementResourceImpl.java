@@ -1,4 +1,4 @@
-package paymentgateway.disbursement.agent;
+package paymentgateway.disbursement.specifiedrecipient;
 
 import com.google.gson.Gson;
 

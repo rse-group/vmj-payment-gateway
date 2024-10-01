@@ -1,7 +1,7 @@
-module paymentgateway.disbursement.currency {
+module paymentgateway.disbursement.specifiedrecipient {
 	requires paymentgateway.disbursement.core;
 
-	exports paymentgateway.disbursement.currency;
+	exports paymentgateway.disbursement.specifiedrecipient;
 
 	requires paymentgateway.config.core;
 	requires vmj.routing.route;
@@ -12,5 +12,5 @@ module paymentgateway.disbursement.currency {
 	requires java.naming;
 	requires java.net.http;
 
-	opens paymentgateway.disbursement.currency to org.hibernate.orm.core, gson;
+	opens paymentgateway.disbursement.specifiedrecipient to org.hibernate.orm.core, gson;
 }

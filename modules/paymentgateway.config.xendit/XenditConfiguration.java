@@ -6,6 +6,7 @@ import paymentgateway.config.core.PropertiesReader;
 import paymentgateway.config.core.RequestBodyValidator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -14,9 +15,6 @@ import java.lang.reflect.*;
 
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.BadRequestException;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class XenditConfiguration extends ConfigDecorator{
     private String CONFIG_FILE = "xendit.properties";
@@ -49,15 +47,22 @@ public class XenditConfiguration extends ConfigDecorator{
         String currency = RequestBodyValidator.stringRequestBodyValidator(requestBody, "currency");
         double amount = RequestBodyValidator.doubleRequestBodyValidator(requestBody, "amount");
 
+        DisbursementCurrency.validate(currency);
+        
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("vendor_name", vendor_name);
+        requestMap.put("channel_code", bank_code);
+        requestMap.put("currency", currency);
+        requestMap.put("amount", amount);
+        
         Map<String, Object> channelPropertiesMap = new HashMap<>();
         channelPropertiesMap.put("account_holder_name", account_holder_name);
         channelPropertiesMap.put("account_number", account_number);
-
-        Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("reference_id", UUID.randomUUID().toString().substring(0, 8));
-        requestMap.put("channel_code", bank_code);
-        requestMap.put("currency", currency);
         requestMap.put("channel_properties", channelPropertiesMap);
+        
+        String uuidString = UUID.randomUUID().toString().replace("-", "");
+        int uniqueInteger = Math.abs(uuidString.hashCode()) % 100000;
+        requestMap.put("reference_id", String.format("%05d", uniqueInteger));
 
         return requestMap;
     }
@@ -74,18 +79,31 @@ public class XenditConfiguration extends ConfigDecorator{
     }
         
     @Override
-    public Map<String, Object> getDisbursementResponse(String rawResponse){
+    public Map<String, Object> getDisbursementResponse(String rawResponse) {
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
-        
-        int id = ((Double) rawResponseMap.get("id")).intValue();
-        int businessId = ((Double) rawResponseMap.get("business_id")).intValue();
+
+        String idString = (String) rawResponseMap.get("reference_id");
+        String userIdString = (String) rawResponseMap.get("business_id");
         String status = (String) rawResponseMap.get("status");
+        double amount = ((Number) rawResponseMap.get("amount")).doubleValue();
+        
+        int id = Integer.parseInt(idString);
+        int userId = Integer.parseInt(userIdString.substring(0,5).replaceAll("[^0-9]", ""));
+
         response.put("status", status);
-        response.put("user_id", businessId);
+        response.put("user_id", userId);
         response.put("id", id);
+        response.put("amount", amount);
+        response.put("channel_code", rawResponseMap.get("channel_code"));
+        response.put("currency", rawResponseMap.get("currency"));
+        response.put("reference_id", rawResponseMap.get("reference_id"));
+        response.put("created", rawResponseMap.get("created"));
+        response.put("updated", rawResponseMap.get("updated"));
+        response.put("estimated_arrival_time", rawResponseMap.get("estimated_arrival_time"));
+
         return response;
     }
 

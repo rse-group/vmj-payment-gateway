@@ -33,6 +33,12 @@
 		"paymentgateway.disbursement.domesticdisbursementvalidator",
 		"paymentgateway.disbursement.agentdisbursement"
 	],
+	"DomesticDisbursement": [
+		"paymentgateway.disbursement.domesticdisbursementvalidator"
+	],
+	"SpecifiedRecipient": [
+		"paymentgateway.disbursement.specifiedrecipient"
+	],
 	"CreditCard": [
 		"paymentgateway.payment.creditcard"
 	],

@@ -20,8 +20,9 @@ features
 					AgentDisbursement
 						mandatory
 							KycAgentDisbursement
-				mandatory
 					DomesticDisbursement
+						optional
+							SpecifiedRecipient
 			Payment {abstract true}
 				or
 					PaymentLink
@@ -60,3 +61,4 @@ constraints
 	OyInvoice | OyPaymentRouting | OyPaymentLink | OyRetailOutlet | OyVirtualAccount | OyEWallet => Oy
 	MidtransCreditCard | MidtransDebitCard | MidtransPaymentLink | MidtransVirtualAccount | MidtransEWallet | MidtransRetailOutlet => Midtrans
 	DomesticDisbursement | InternationalDisbursementWithAutomaticExchangeRate | InternationalDisbursementWithIndonesianCurrency | KycAgentDisbursement => Flip
+	SpecifiedRecipient => Xendit
