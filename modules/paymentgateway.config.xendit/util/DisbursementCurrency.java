@@ -1,5 +1,7 @@
 package paymentgateway.config.xendit;
 
+import java.util.EnumSet;
+import java.util.stream.Collectors;
 import vmj.routing.route.exceptions.BadRequestException;
 
 public enum DisbursementCurrency {
@@ -19,9 +21,15 @@ public enum DisbursementCurrency {
         return value;
     }
 
-//    public static void validate(String currency) throws BadRequestException {
-//    	if(!EnumUtils.isValidEnum(DisbursementCurrency.class, currency)) {
-//            throw new BadRequestException("Invalid currency: " + currency);
-//        }
-//    }
+    public static void validate(String currencyCode) throws BadRequestException {
+        for (DisbursementCurrency currency : DisbursementCurrency.values()) {
+            if (currency.getValue().equals(currencyCode)) {
+                return;
+            }
+        }
+        String supportedCurrencies = EnumSet.allOf(DisbursementCurrency.class).stream()
+                .map(DisbursementCurrency::getValue)
+                .collect(Collectors.joining(", "));
+        throw new BadRequestException("Invalid currency: " + currencyCode + ". Supported currencies are: " + supportedCurrencies);
+    }
 }
