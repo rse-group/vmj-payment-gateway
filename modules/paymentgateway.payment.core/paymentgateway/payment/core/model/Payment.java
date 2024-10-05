@@ -4,11 +4,13 @@ import vmj.routing.route.VMJExchange;
 import java.util.*;
 
 public interface Payment {
-	public String getIdTransaction();
-	public void setIdTransaction(String idTransaction);
+	int getIdTransaction();
+	void setIdTransaction(int idTransaction);
+	String getVendorName();
+	void setVendorName(String vendorName);
 	
-	public int getAmount();
-	public void setAmount(int amount);
-	
+	double getAmount();
+	void setAmount(double amount);
+
 	public HashMap<String,Object> toHashMap();
 }

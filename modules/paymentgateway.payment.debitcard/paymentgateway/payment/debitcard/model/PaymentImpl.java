@@ -7,6 +7,10 @@ import java.util.HashMap;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentComponent;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+@Entity(name = "debitcard_impl")
+@Table(name = "debitcard_impl")
 public class PaymentImpl extends PaymentDecorator {
 
 	protected String bankCode;
@@ -15,6 +19,10 @@ public class PaymentImpl extends PaymentDecorator {
 		super(record);
 		this.bankCode = bankCode;
 		this.directDebitUrl = directDebitUrl;
+	}
+
+	public PaymentImpl(){
+		super();
 	}
 
 	public String getBankCode() {

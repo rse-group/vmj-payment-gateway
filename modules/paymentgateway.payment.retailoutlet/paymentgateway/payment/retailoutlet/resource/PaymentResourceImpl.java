@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
+import vmj.routing.route.exceptions.*;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -19,93 +20,78 @@ import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentResourceComponent;
-
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	// implement this with authorization module
 	protected String apiKey;
 	protected String apiEndpoint;
-	protected final String payment_type = "cstore";
     public PaymentResourceImpl (PaymentResourceComponent record) {
     	super(record);
-    	this.apiKey = "SB-Mid-server-NVYFqUidEQUTaozWjW77fFWW";
-    	this.apiEndpoint = "https://api.sandbox.midtrans.com/v2/charge";
     }
 
-	public Payment createPayment(HashMap<String,Object> vmjExchange) {
-		String retailOutlet = (String) vmjExchange.get("retailOutlet");
+	public Payment createPayment(VMJExchange vmjExchange) {
+		Map<String, Object> response = sendTransaction(vmjExchange);
+		String retailOutlet = (String) vmjExchange.getRequestBodyForm("retail_outlet");
+
+		String retailPaymentCode = (String) response.get("retail_payment_code");
+		int id = (int) response.get("id");
 		
-		Payment transaction = record.createPayment(vmjExchange);
-		String retailPaymentCode = sendTransaction(vmjExchange);
+		Payment transaction = record.createPayment(vmjExchange, id);
+
 		Payment retailOutletChannel =
 				PaymentFactory.createPayment(
-						"paymentgateway.payment.retailoutlet.PaymentImpl",
+						"paymentgateway.payment.retailoutlet.RetailOutletImpl",
 						transaction,
 						retailOutlet,
 						retailPaymentCode
 						);
-		
+		PaymentRepository.saveObject(retailOutletChannel);
 		return retailOutletChannel;
 	}
 	
-	protected String sendTransaction(HashMap<String,Object> vmjExchange) {
-		String idTransaction = (String) vmjExchange.get("idTransaction");
-		int amount = (int) vmjExchange.get("amount");
-		String retailOutlet = (String) vmjExchange.get("retailOutlet");
-		
+	protected Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
+		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
+
+		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+
 		Gson gson = new Gson();
-		Map<String,Object> requestMap = new HashMap<String,Object>();
-		requestMap.put("payment_type", payment_type);
-		Map<String,Object> transaction_details = new HashMap<String,Object>();
-		transaction_details.put("order_id", idTransaction);
-		transaction_details.put("gross_amount", amount);
-		requestMap.put("transaction_details", transaction_details);
-		Map<String,Object> cstore = new HashMap<String,Object>();
-		cstore.put("store", retailOutlet);
-		requestMap.put("cstore", cstore);
-		
-		String requestString = gson.toJson(requestMap);
+		Map<String, Object> requestMap = config.getRetailOutletRequestBody(vmjExchange);
+		int id = ((Integer) requestMap.get("id")).intValue();
+		requestMap.remove("id");
+		String requestString = config.getRequestString(requestMap);
+		String configUrl = config.getProductEnv("RetailOutlet");
+		HashMap<String, String> headerParams = config.getHeaderParams();
+		System.out.println("configUrl: " + configUrl);
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder()
-				.header("Authorization", getBasicAuthenticationHeader(apiKey, ""))
-				.header("Content-Type", "application/json")
-				.header("Accept", "application/json")
-				.uri(URI.create(apiEndpoint))
+		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
+				.uri(URI.create(configUrl))
 				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
-		String retailPaymentCode = "";
+
+
+		Map<String, Object> responseMap = new HashMap<>();
 		
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			RetailOutletResponse responseObj = gson.fromJson(rawResponse, RetailOutletResponse.class);
-			retailPaymentCode = retailPaymentCode + responseObj.getPayment_code();
+			System.out.println("rawResponse " + rawResponse);
+			responseMap = config.getRetailOutletResponse(rawResponse, id);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		
-		return retailPaymentCode;
+
+		return responseMap;
 	}
+
 	
-	private static final String getBasicAuthenticationHeader(String username, String password) {
-		String valueToEncode = username + ":" + password;
-		return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
-	}
-	
-	@Route(url="test/call/retailoutlet")
-	public HashMap<String,Object> testRetailOutlet(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("OPTIONS")) return null;
-		
-		int amount = ((Double) vmjExchange.getRequestBodyForm("amount")).intValue();
-		String idTransaction = (String) vmjExchange.getRequestBodyForm("idTransaction");
-		String retailOutlet = (String) vmjExchange.getRequestBodyForm("retailOutlet");
-		
-		HashMap<String,Object> request = new HashMap<String,Object>();
-		request.put("amount", amount);
-		int randomId = Math.abs((new Random()).nextInt());
-		request.put("idTransaction", idTransaction);
-		request.put("retailOutlet", retailOutlet);
-		Payment result = this.createPayment(request);
-		return result.toHashMap();
+	@Route(url="call/retailoutlet")
+	public HashMap<String,Object> RetailOutlet(VMJExchange vmjExchange) {
+		if (vmjExchange.getHttpMethod().equals("POST")){
+			Payment result = this.createPayment(vmjExchange);
+			return result.toHashMap();
+		}
+		throw new NotFoundException("Route tidak ditemukan");
 	}
 }
 

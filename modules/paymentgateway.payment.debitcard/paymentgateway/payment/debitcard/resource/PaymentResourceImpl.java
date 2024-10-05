@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
+import vmj.routing.route.exceptions.*;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -19,6 +20,8 @@ import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentResourceComponent;
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	
@@ -26,85 +29,67 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	protected String apiEndpoint;
     public PaymentResourceImpl (PaymentResourceComponent record) {
     	super(record);
-		this.apiKey = "SB-Mid-server-NVYFqUidEQUTaozWjW77fFWW";
-		this.apiEndpoint = "https://api.sandbox.midtrans.com/v2/charge";
     }
 
-	public Payment createPayment(HashMap<String,Object> vmjExchange) {
-		String bankCode = (String) vmjExchange.get("bankCode");
-		
-		Payment transaction = record.createPayment(vmjExchange);
-		String directDebitUrl = sendTransaction(vmjExchange);
+	public Payment createPayment(VMJExchange vmjExchange) {
+		Map<String, Object> response = sendTransaction(vmjExchange);
+
+		String bankCode = (String) response.get("payment_type");
+		int id = (int) response.get("id");
+		String directDebitUrl = (String) response.get("redirect_url");
+
+		Payment transaction = record.createPayment(vmjExchange, id);
+
 		Payment directDebitTransaction = 
 				PaymentFactory.createPayment(
-						"paymentgateway.payment.debitcard.PaymentImpl",
-						transaction,
-						bankCode,
-						directDebitUrl
-						);
-		
+					"paymentgateway.payment.debitcard.PaymentImpl",
+					transaction,
+					bankCode,
+					directDebitUrl
+				);
+		PaymentRepository.saveObject(directDebitTransaction);
 		return directDebitTransaction;
 	}
 	
-	protected String sendTransaction(HashMap<String,Object> vmjExchange) {
-		String idTransaction = (String) vmjExchange.get("idTransaction");
-		int amount = (int) vmjExchange.get("amount");
-		String bankCode = (String) vmjExchange.get("bankCode");
-		
+	protected Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
+		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
+
+		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+
 		Gson gson = new Gson();
-		Map<String,Object> requestMap = new HashMap<String,Object>();
-		requestMap.put("payment_type", bankCode);
-		Map<String,Object> transaction_details = new HashMap<String,Object>();
-		transaction_details.put("order_id", idTransaction);
-		transaction_details.put("gross_amount", amount);
-		requestMap.put("transaction_details", transaction_details);
-		//Map<String,Object> bank_transfer = new HashMap<String,Object>();
-		//bank_transfer.put("bank", bankCode);
-		//requestMap.put("bank_transfer", bank_transfer);
-		
-		String requestString = gson.toJson(requestMap);
+		Map<String, Object> requestMap = config.getDebitCardRequestBody(vmjExchange);
+		int id = ((Integer) requestMap.get("id")).intValue();
+		requestMap.remove("id");
+		String requestString = config.getRequestString(requestMap);
+		String configUrl = config.getProductEnv("DebitCard");
+		HashMap<String, String> headerParams = config.getHeaderParams();
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder()
-				.header("Authorization", getBasicAuthenticationHeader(apiKey, ""))
-				.header("Content-Type", "application/json")
-				.header("Accept", "application/json")
-				.uri(URI.create(apiEndpoint))
+		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
+				.uri(URI.create(configUrl))
 				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
-		String redirect_url = "";
+
+		Map<String, Object> responseMap = new HashMap<>();;
 		
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			DebitCardResponse responseObj = gson.fromJson(rawResponse, DebitCardResponse.class);
-			redirect_url = redirect_url + responseObj.getRedirect_url();
+			System.out.println("rawResponse " + rawResponse);
+			responseMap = config.getDebitCardResponse(rawResponse, id);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		
-		return redirect_url;
+		return responseMap;
 	}
+
 	
-	private static final String getBasicAuthenticationHeader(String username, String password) {
-		String valueToEncode = username + ":" + password;
-		return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
-	}
-	
-	@Route(url="test/call/debitcard")
+	@Route(url="call/debitcard")
 	public HashMap<String,Object> testDebitCard(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("OPTIONS")) return null;
-		
-		int amount = ((Double) vmjExchange.getRequestBodyForm("amount")).intValue();
-		String idTransaction = (String) vmjExchange.getRequestBodyForm("idTransaction");
-		String paymentMethods = (String) vmjExchange.getRequestBodyForm("paymentMethods");
-		String bankCode = (String) vmjExchange.getRequestBodyForm("bankCode");
-		
-		HashMap<String,Object> request = new HashMap<String,Object>();
-		request.put("amount", amount);
-		request.put("idTransaction", idTransaction);
-		request.put("bankCode", bankCode);
-		Payment result = this.createPayment(request);
-		return result.toHashMap();
+		if (vmjExchange.getHttpMethod().equals("POST")){
+			Payment result = this.createPayment(vmjExchange);
+			return result.toHashMap();
+		}
+		throw new NotFoundException("Route tidak ditemukan");
 	}
 }
 

@@ -8,17 +8,19 @@ module paymentgateway.product.midtrans {
     requires com.fasterxml.classmate;
     requires jdk.unsupported;
 
+    requires paymentgateway.config.core;
+    requires paymentgateway.config.midtrans;
+
     requires paymentgateway.payment.core;
     requires paymentgateway.payment.invoice;
     requires paymentgateway.payment.paymentlink;
-    requires paymentgateway.payment.midtransimpl;
-    requires paymentgateway.payment.paymentlinkmidtrans;
     requires paymentgateway.payment.virtualaccount;
     requires paymentgateway.payment.ewallet;
     requires paymentgateway.payment.debitcard;
     requires paymentgateway.payment.creditcard;
     requires paymentgateway.payment.retailoutlet;
+    requires paymentgateway.payment.paymentrouting;
 
-    requires prices.auth.vmj;
-    requires prices.auth.vmj.model;
+    requires vmj.auth;
+    requires vmj.auth.model;
 }

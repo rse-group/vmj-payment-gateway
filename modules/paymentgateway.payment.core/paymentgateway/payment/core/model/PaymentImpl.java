@@ -18,19 +18,49 @@ import javax.persistence.OneToMany;
 @Entity(name="payment_impl")
 @Table(name="payment_impl")
 public class PaymentImpl extends PaymentComponent {
-	protected int amount;
+	
+	protected double amount;
+	protected String vendorName;
 
-	public PaymentImpl(String idTransaction, int amount) {
+	public PaymentImpl(int idTransaction, String vendorName, double amount) {
 		this.idTransaction = idTransaction;
+		this.vendorName = vendorName;
 		this.amount = amount;
 	}
 
-	public int getAmount() {
+	public  PaymentImpl(){
+
+	}
+	public int getId() {
+		return idTransaction;
+	}
+
+	public void setId(int id) {
+		this.idTransaction = id;
+	}
+
+	public double getAmount() {
 		return this.amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
+	}
+
+	public String getVendorName() {
+		return vendorName;
+	}
+
+	public void setVendorName(String vendorName) {
+		this.vendorName = vendorName;
+	}
+
+	public HashMap<String,Object> toHashMap() {
+		HashMap<String,Object> interfaceMap = new HashMap<String,Object>();
+		interfaceMap.put("id", getId());
+		interfaceMap.put("vendorName", getVendorName());
+		interfaceMap.put("amount", getAmount());
+		return interfaceMap;
 	}
 }
 

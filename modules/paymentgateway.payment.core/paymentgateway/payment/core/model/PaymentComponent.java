@@ -13,27 +13,26 @@ import javax.persistence.Table;
 @Entity
 @Table(name="payment_comp")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class PaymentComponent implements Payment{
-	
+public abstract class PaymentComponent implements Payment {
+
 	@Id
-	protected String idTransaction; 
+	protected int idTransaction;
 
 	public PaymentComponent() {
 
-	} 
+	}
 
-	public String getIdTransaction() {
+	public abstract String getVendorName();
+
+	public abstract void setVendorName(String vendorName);
+
+	public int getIdTransaction() {
 		return this.idTransaction;
 	}
 
-	public void setIdTransaction(String idTransaction) {
+	public void setIdTransaction(int idTransaction) {
 		this.idTransaction = idTransaction;
 	}
- 
-	public HashMap<String,Object> toHashMap() {
-		HashMap<String,Object> interfaceMap = new HashMap<String,Object>();
-		interfaceMap.put("idTransaction", getIdTransaction());
-		interfaceMap.put("amount", getAmount());
-		return interfaceMap;
-	}
+
+	public abstract HashMap<String, Object> toHashMap();
 }

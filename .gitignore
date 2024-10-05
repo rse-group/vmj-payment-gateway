@@ -1,14 +1,3 @@
-outDir
-**/*.class
-javaFiles.txt
-# **/*.db
-# **/*.jar
-*.product.*/*.jar
-.idea
-*.db
-*.iml
-.vscode
-aisco.product.*
-.classpath
+bin/
+bin-comp/
 .project
-/bin/

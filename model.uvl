@@ -1,0 +1,60 @@
+namespace PaymentGateway
+
+features
+	PaymentGateway {abstract true}
+		optional
+			Disbursement
+				optional
+					International {abstract true}
+						optional
+							ExchangeRate
+								mandatory
+									AutomaticExchangeRate
+							FixedCurrency
+								mandatory
+									IDR
+					Agent
+					SpecifiedRecipient
+			Payment {abstract true}
+				or
+					PaymentLink
+						or
+							FlipPaymentLink
+							MidtransPaymentLink
+							OyPaymentLink
+					VirtualAccount
+						or
+							FlipVirtualAccount
+							MidtransVirtualAccount
+							OyVirtualAccount
+					RetailOutlet
+						or
+							MidtransRetailOutlet
+							OyRetailOutlet
+					EWallet
+						or
+							FlipEWallet
+							MidtransEWallet
+							OyEWallet
+					Invoice
+						mandatory
+							OyInvoice
+					PaymentRouting
+						mandatory
+							OyPaymentRouting
+					CreditCard
+						mandatory
+							MidtransCreditCard
+					DebitCard
+						mandatory
+							MidtransDebitCard
+			Vendor {abstract true}
+				or
+					Flip
+					Midtrans
+					Oy
+
+constraints
+	OyInvoice | OyPaymentRouting | OyPaymentLink | OyRetailOutlet | OyVirtualAccount | OyEWallet => Oy
+	MidtransCreditCard | MidtransDebitCard | MidtransPaymentLink | MidtransVirtualAccount | MidtransEWallet | MidtransRetailOutlet => Midtrans
+	Agent | ExchangeRate | IDR | AutomaticExchangeRate => Flip
