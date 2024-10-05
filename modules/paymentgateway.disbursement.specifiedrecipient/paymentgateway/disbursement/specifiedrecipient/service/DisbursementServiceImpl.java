@@ -26,16 +26,15 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 
     @Override
     public Disbursement createDisbursement(Map<String, Object> requestBody) {
-        Disbursement coreDisbursement = RESOURCE.createDisbursement(requestBody);
-
-        LOGGER.info("Core Disbursement - Account Number: " + coreDisbursement.getAccountNumber());
-        LOGGER.info("Core Disbursement - Bank Code: " + coreDisbursement.getBankCode());
-
         Map<String, Object> validatedRequestBody = validateRequestBody(requestBody);
         LOGGER.info("Request Body: " + validatedRequestBody);
         
         Map<String, Object> response = sendTransaction(validatedRequestBody);
         LOGGER.info("Transaction Response: " + response);
+        
+        Disbursement coreDisbursement = RESOURCE.createDisbursement(requestBody);
+        LOGGER.info("Core Disbursement - Account Number: " + coreDisbursement.getAccountNumber());
+        LOGGER.info("Core Disbursement - Bank Code: " + coreDisbursement.getBankCode());
 
         return createDisbursement(requestBody, response, coreDisbursement);
     }
@@ -43,7 +42,6 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
     private Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response, Disbursement coreDisbursement) {
         String currency = (String) response.getOrDefault("currency", requestBody.get("currency"));
         String accountHolderName = (String) response.getOrDefault("account_holder_name", requestBody.get("account_holder_name"));
-
         LOGGER.info("Creating SpecifiedRecipientImpl with currency: " + currency + ", accountHolderName: " + accountHolderName);
 
         Disbursement specifiedRecipientTransaction = DisbursementFactory.createDisbursement(
@@ -52,7 +50,6 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
             currency,
             accountHolderName
         );
-
         LOGGER.info("SpecifiedRecipientImpl created. Account Number: " + specifiedRecipientTransaction.getAccountNumber() + ", Bank Code: " + specifiedRecipientTransaction.getBankCode());
 
         Repository.saveObject(specifiedRecipientTransaction);
