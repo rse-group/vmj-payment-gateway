@@ -34,7 +34,6 @@
 		"paymentgateway.disbursement.agentdisbursement"
 	],
 	"SpecifiedRecipient": [
-		"paymentgateway.disbursement.domesticdisbursementvalidator",
 		"paymentgateway.disbursement.specifiedrecipient"
 	],
 	"Payment": [

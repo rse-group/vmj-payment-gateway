@@ -18,14 +18,15 @@ import paymentgateway.disbursement.core.DisbursementServiceComponent;
 import paymentgateway.disbursement.specifiedrecipient.SpecifiedRecipientImpl;
 
 public class DisbursementServiceImpl extends DisbursementServiceDecorator {
-    private static final Logger LOGGER = Logger.getLogger(DisbursementServiceImpl.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(DisbursementServiceImpl.class.getName());
 
     public DisbursementServiceImpl(DisbursementServiceComponent record) {
         super(record);
     }
     
     public Disbursement createDisbursement(Map<String, Object> requestBody) {
-        Map<String, Object> response = sendTransaction(requestBody);
+        Map<String, Object> validatedRequestBody = validateRequestBody(requestBody);
+        Map<String, Object> response = sendTransaction(validatedRequestBody);
         return createDisbursement(requestBody, response);
     }
 
@@ -44,36 +45,12 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 
 		return specifiedRecipientTransaction;
 	}
-
-	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
-        String vendorName = (String) requestBody.get("vendor_name");
+	
+	private Map<String, Object> validateRequestBody(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-		
-		String configUrl = config.getProductEnv("InternationalDisbursement");
-		HashMap<String, String> headerParams = config.getHeaderParams();
-
-		LOGGER.info("Header: " + headerParams);
-		LOGGER.info("Config URL: " + configUrl);
-
-		String requestString = config.getRequestString(requestBody);
-		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(), headerParams))
-				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(requestString))
-				.build();
-		Map<String, Object> responseMap = new HashMap<>();
-		
-		try {
-			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			String rawResponse = response.body().toString();
-			LOGGER.info("Raw Response: " + rawResponse);
-			responseMap = config.getInternationalDisbursementResponse(rawResponse);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return responseMap;
+        return config.getDisbursementRequestBody(requestBody);
 	}
 }
 
