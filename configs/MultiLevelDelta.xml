@@ -5,6 +5,7 @@
 	<feature automatic="selected" name="Flip"/>
 	<feature name="Midtrans"/>
 	<feature name="Oy"/>
+	<feature automatic="selected" name="Xendit"/>
 	<feature automatic="selected" name="Disbursement"/>
 	<feature manual="selected" name="InternationalDisbursement"/>
 	<feature automatic="selected" name="InternationalDisbursementWithAutomaticExchangeRate"/>
