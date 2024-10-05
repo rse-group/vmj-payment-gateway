@@ -52,6 +52,8 @@ public class XenditConfiguration extends ConfigDecorator{
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("vendor_name", vendor_name);
         requestMap.put("channel_code", bank_code);
+        requestMap.put("bank_code", bank_code);
+        requestMap.put("account_number", account_number);
         requestMap.put("currency", currency);
         requestMap.put("amount", amount);
         
@@ -87,22 +89,21 @@ public class XenditConfiguration extends ConfigDecorator{
 
         String idString = (String) rawResponseMap.get("reference_id");
         String userIdString = (String) rawResponseMap.get("business_id");
-        String status = (String) rawResponseMap.get("status");
+        String accountNumber = (String) ((Map<String, Object>) rawResponseMap.get("channel_properties")).get("account_number");
+        String accountHolderName = (String) ((Map<String, Object>) rawResponseMap.get("channel_properties")).get("account_holder_name");
         double amount = ((Number) rawResponseMap.get("amount")).doubleValue();
         
         int id = Integer.parseInt(idString);
         int userId = Integer.parseInt(userIdString.substring(0,5).replaceAll("[^0-9]", ""));
 
-        response.put("status", status);
         response.put("user_id", userId);
         response.put("id", id);
         response.put("amount", amount);
-        response.put("channel_code", rawResponseMap.get("channel_code"));
+        response.put("account_number", accountNumber);
+        response.put("account_holder_name", accountHolderName);
+        response.put("status", rawResponseMap.get("status"));
+        response.put("bank_code", rawResponseMap.get("channel_code"));
         response.put("currency", rawResponseMap.get("currency"));
-        response.put("reference_id", rawResponseMap.get("reference_id"));
-        response.put("created", rawResponseMap.get("created"));
-        response.put("updated", rawResponseMap.get("updated"));
-        response.put("estimated_arrival_time", rawResponseMap.get("estimated_arrival_time"));
 
         return response;
     }

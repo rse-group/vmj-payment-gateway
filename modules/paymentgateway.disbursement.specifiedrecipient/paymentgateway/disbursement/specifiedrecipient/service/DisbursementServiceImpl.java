@@ -3,59 +3,78 @@ package paymentgateway.disbursement.specifiedrecipient;
 import vmj.routing.route.VMJExchange;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-import paymentgateway.disbursement.DisbursementFactory;
+
 import paymentgateway.disbursement.core.Disbursement;
+import paymentgateway.disbursement.core.DisbursementService;
 import paymentgateway.disbursement.core.DisbursementServiceDecorator;
-import paymentgateway.disbursement.core.DisbursementImpl;
 import paymentgateway.disbursement.core.DisbursementServiceComponent;
-import paymentgateway.disbursement.specifiedrecipient.SpecifiedRecipientImpl;
+import paymentgateway.disbursement.DisbursementFactory;
+import paymentgateway.disbursement.DisbursementServiceFactory;
 
 public class DisbursementServiceImpl extends DisbursementServiceDecorator {
-	private static final Logger LOGGER = Logger.getLogger(DisbursementServiceImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DisbursementServiceImpl.class.getName());
+    private static DisbursementService RESOURCE;
 
     public DisbursementServiceImpl(DisbursementServiceComponent record) {
         super(record);
+        RESOURCE = DisbursementServiceFactory.createDisbursementService(
+            "paymentgateway.disbursement.core.DisbursementServiceImpl"
+        );
     }
-    
+
+    @Override
     public Disbursement createDisbursement(Map<String, Object> requestBody) {
+        Disbursement coreDisbursement = RESOURCE.createDisbursement(requestBody);
+
+        LOGGER.info("Core Disbursement - Account Number: " + coreDisbursement.getAccountNumber());
+        LOGGER.info("Core Disbursement - Bank Code: " + coreDisbursement.getBankCode());
+
         Map<String, Object> validatedRequestBody = validateRequestBody(requestBody);
+        LOGGER.info("Request Body: " + validatedRequestBody);
+        
         Map<String, Object> response = sendTransaction(validatedRequestBody);
-        return createDisbursement(requestBody, response);
+        LOGGER.info("Transaction Response: " + response);
+
+        return createDisbursement(requestBody, response, coreDisbursement);
     }
 
-	public Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response) 	{
-		String currency = (String) response.get("currency");
-		String account_holder_name = (String) response.get("account_holder_name");
+    private Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response, Disbursement coreDisbursement) {
+        String currency = (String) response.getOrDefault("currency", requestBody.get("currency"));
+        String accountHolderName = (String) response.getOrDefault("account_holder_name", requestBody.get("account_holder_name"));
 
-		Disbursement specifiedRecipientTransaction = DisbursementFactory.createDisbursement(
-			"paymentgateway.disbursement.specifiedrecipient.SpecifiedRecipientImpl",
-			record.createDisbursement(requestBody, response),
-			currency,
-			account_holder_name
-		);
+        LOGGER.info("Creating SpecifiedRecipientImpl with currency: " + currency + ", accountHolderName: " + accountHolderName);
 
-		Repository.saveObject(specifiedRecipientTransaction);
+        Disbursement specifiedRecipientTransaction = DisbursementFactory.createDisbursement(
+            "paymentgateway.disbursement.specifiedrecipient.SpecifiedRecipientImpl",
+            coreDisbursement,
+            currency,
+            accountHolderName
+        );
 
-		return specifiedRecipientTransaction;
-	}
-	
-	private Map<String, Object> validateRequestBody(Map<String, Object> requestBody) {
-		String vendorName = (String) requestBody.get("vendor_name");
-		Config config = ConfigFactory.createConfig(vendorName,
-				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-        return config.getDisbursementRequestBody(requestBody);
-	}
-}
+        LOGGER.info("SpecifiedRecipientImpl created. Account Number: " + specifiedRecipientTransaction.getAccountNumber() + ", Bank Code: " + specifiedRecipientTransaction.getBankCode());
 
-class BadRequestException extends Exception {
-    public BadRequestException(String message) {
-        super(message);
+        Repository.saveObject(specifiedRecipientTransaction);
+
+        return specifiedRecipientTransaction;
+    }
+
+    private Map<String, Object> validateRequestBody(Map<String, Object> requestBody) {
+        String vendorName = (String) requestBody.get("vendor_name");
+        Config config = ConfigFactory.createConfig(vendorName,
+            ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+        Map<String, Object> validatedBody = config.getDisbursementRequestBody(requestBody);
+
+        if (validatedBody.get("account_number") == null || validatedBody.get("bank_code") == null) {
+            LOGGER.warning("account_number or bank_code is missing in validated request body");
+        }
+
+        return validatedBody;
+    }
+
+    @Override
+    public Map<String, Object> sendTransaction(Map<String, Object> validatedRequestBody) {
+        return RESOURCE.sendTransaction(validatedRequestBody);
     }
 }
