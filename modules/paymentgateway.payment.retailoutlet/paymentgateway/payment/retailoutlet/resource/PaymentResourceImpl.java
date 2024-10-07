@@ -20,75 +20,23 @@ import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentResourceComponent;
+import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 public class PaymentResourceImpl extends PaymentResourceDecorator {
-	// implement this with authorization module
-	protected String apiKey;
-	protected String apiEndpoint;
-    public PaymentResourceImpl (PaymentResourceComponent record) {
-    	super(record);
-    }
+	
+	private PaymentServiceImpl paymentServiceImpl;
 
-	public Payment createPayment(VMJExchange vmjExchange) {
-		Map<String, Object> response = sendTransaction(vmjExchange);
-		String retailOutlet = (String) vmjExchange.getRequestBodyForm("retail_outlet");
-
-		String retailPaymentCode = (String) response.get("retail_payment_code");
-		int id = (int) response.get("id");
-		
-		Payment transaction = record.createPayment(vmjExchange, id);
-
-		Payment retailOutletChannel =
-				PaymentFactory.createPayment(
-						"paymentgateway.payment.retailoutlet.RetailOutletImpl",
-						transaction,
-						retailOutlet,
-						retailPaymentCode
-						);
-		PaymentRepository.saveObject(retailOutletChannel);
-		return retailOutletChannel;
+	public PaymentResourceImpl(PaymentResourceComponent record, PaymentServiceComponent recordService) {
+		super(record);
+		paymentServiceImpl = new PaymentServiceImpl(recordService);
 	}
 	
-	protected Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
-		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
-
-		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-
-		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getRetailOutletRequestBody(vmjExchange);
-		int id = ((Integer) requestMap.get("id")).intValue();
-		requestMap.remove("id");
-		String requestString = config.getRequestString(requestMap);
-		String configUrl = config.getProductEnv("RetailOutlet");
-		HashMap<String, String> headerParams = config.getHeaderParams();
-		System.out.println("configUrl: " + configUrl);
-		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
-				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(requestString))
-				.build();
-
-
-		Map<String, Object> responseMap = new HashMap<>();
-		
-		try {
-			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			String rawResponse = response.body().toString();
-			System.out.println("rawResponse " + rawResponse);
-			responseMap = config.getRetailOutletResponse(rawResponse, id);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-
-		return responseMap;
-	}
-
-	
-	@Route(url="call/retailoutlet")
-	public HashMap<String,Object> RetailOutlet(VMJExchange vmjExchange) {
+	@Route(url="call/payment/retailoutlet")
+	public HashMap<String,Object> payment(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")){
-			Payment result = this.createPayment(vmjExchange);
+			Map<String, Object> requestBody = vmjExchange.getPayload(); 
+			Payment result = paymentServiceImpl.createPayment(requestBody);
 			return result.toHashMap();
 		}
 		throw new NotFoundException("Route tidak ditemukan");

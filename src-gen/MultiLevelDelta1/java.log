@@ -1,0 +1,195 @@
+public vmj.auth.storages.StorageImpl()
+public vmj.auth.verifiers.VerifierImpl()
+Sep 21, 2024 12:51:10 AM org.hibernate.Version logVersion
+INFO: HHH000412: Hibernate ORM core version [WORKING]
+Sep 21, 2024 12:51:10 AM org.hibernate.cfg.Environment <clinit>
+INFO: HHH000205: Loaded properties from resource hibernate.properties: {hibernate.hbm2ddl.auto=update, hibernate.dialect=org.hibernate.dialect.PostgreSQL94Dialect, hibernate.driver_class=org.postgresql.Driver, hibernate.connection.password=****, hibernate.connection.username=postgres, hibernate.connection.url=jdbc:postgresql://localhost:5432/paymentgateway_product_flip, hibernate.bytecode.use_reflection_optimizer=false, hibernate.show_sql=false}
+Sep 21, 2024 12:51:10 AM org.hibernate.annotations.common.reflection.java.JavaReflectionManager <clinit>
+INFO: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+Sep 21, 2024 12:51:10 AM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl configure
+WARN: HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+Sep 21, 2024 12:51:10 AM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001005: using driver [null] at URL [jdbc:postgresql://localhost:5432/paymentgateway_product_multileveldelta]
+Sep 21, 2024 12:51:10 AM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001001: Connection properties: {password=****, user=postgres}
+Sep 21, 2024 12:51:10 AM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001003: Autocommit mode: false
+Sep 21, 2024 12:51:10 AM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl$PooledConnections <init>
+INFO: HHH000115: Hibernate connection pool size: 20 (min=1)
+Sep 21, 2024 12:51:10 AM org.hibernate.dialect.Dialect <init>
+INFO: HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL94Dialect
+Sep 21, 2024 12:51:11 AM org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl getIsolatedConnection
+INFO: HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@24eeac69] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+Sep 21, 2024 12:51:11 AM org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator initiateService
+INFO: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+== CREATING OBJECTS AND BINDING ENDPOINTS ==
+public vmj.auth.model.core.UserResourceImpl()
+public vmj.auth.model.core.RoleResourceImpl()
+public vmj.auth.model.core.UserResourceImpl()
+public vmj.auth.model.passworded.UserResourceImpl(vmj.auth.model.core.UserResourceComponent)
+agentmoneytransferDisbursementResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/call/disbursement/agent-money-transfer
+agentDisbursementResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/call/disbursement/agent
+specialDisbursementResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/call/disbursement/special
+internationalmoneytransferDisbursementResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/call/disbursement/international-money-transfer
+internationalDisbursementResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/call/disbursement/international
+disbursementDisbursementResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/call/disbursement/callback
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/call/disbursement/detail
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/call/disbursement/list
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/call/disbursement/delete
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/call/disbursement/update
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/call/disbursement
+authResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/auth/user/save
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1025/call/user/delete
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1025/call/user/save
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/auth/login/pwd
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/auth/forgot-password-token
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/auth/forgot-password
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1025/call/role/save
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1025/call/role/list
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1025/call/role/delete
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1025/call/role/update
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1025/call/role/detail
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1025/auth/register
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1025/call/user/update
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1025/call/user/changerole
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1025/call/user/list
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1025/call/user/detail
+{    "vendor_name": "Flip",    "destination_country": "GBR",    "transaction_type": "C2C",    "source_country": "IDN",    "amount": "75000",    "beneficiary_full_name": "Rifqi Farel",    "beneficiary_account_number": "12435236235",    "beneficiary_bank_id": "123",    "beneficiary_bank_name": "Master Card",    "beneficiary_msisdn": " 123",    "beneficiary_nationality": "UK",    "beneficiary_province": "Manchester",    "beneficiary_city": "Manchester",    "beneficiary_address": "Manchester",    "beneficiary_relationship": "FRIEND",    "beneficiary_source_of_funds": "BUSINESS",    "beneficiary_remittance_purposes": "TRAVEL",    "sender_name": "kiki",    "sender_country": "100252",    "sender_place_of_birth": "100252",    "sender_date_of_birth": "2003-10-20",    "sender_address": "Bekasi",    "sender_identity_type": "nat_id",    "sender_identity_number": "124252634634634",    "sender_job": "private_employee",    "sender_email": "rifqifarel222@gmail.com",    "sender_city": "Bekasi",    "sender_phone_number": "085892025984",    "beneficiary_sort_code": "506967"}
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+java.io.FileNotFoundException: flip.properties (No such file or directory)
+java.io.FileNotFoundException: flip.properties (No such file or directory)
+java.io.FileNotFoundException: flip.properties (No such file or directory)
+java.io.FileNotFoundException: flip.properties (No such file or directory)
+java.io.FileNotFoundException: flip.properties (No such file or directory)
+Sep 21, 2024 12:51:14 AM paymentgateway.disbursement.international.DisbursementServiceImpl sendTransaction
+INFO: Header: {Authorization=null, Cookie=null, idempotency-key=8187e529-2a6e-4b1c-945e-a13abe828699, X-TIMESTAMP=, Content-Type=null}
+Sep 21, 2024 12:51:14 AM paymentgateway.disbursement.international.DisbursementServiceImpl sendTransaction
+INFO: Config URL: nullnull
+java.lang.NullPointerException: value
+	at java.base/java.util.Objects.requireNonNull(Objects.java:248)
+	at java.net.http/jdk.internal.net.http.HttpRequestBuilderImpl.checkNameAndValue(HttpRequestBuilderImpl.java:105)
+	at java.net.http/jdk.internal.net.http.HttpRequestBuilderImpl.header(HttpRequestBuilderImpl.java:126)
+	at java.net.http/jdk.internal.net.http.HttpRequestBuilderImpl.header(HttpRequestBuilderImpl.java:43)
+	at paymentgateway.config.core/paymentgateway.config.core.ConfigImpl.getBuilder(ConfigImpl.java:68)
+	at paymentgateway.config.core/paymentgateway.config.core.ConfigDecorator.getBuilder(ConfigDecorator.java:51)
+	at paymentgateway.disbursement.international/paymentgateway.disbursement.international.DisbursementServiceImpl.sendTransaction(DisbursementServiceImpl.java:71)
+	at paymentgateway.disbursement.international/paymentgateway.disbursement.international.DisbursementServiceImpl.createDisbursement(DisbursementServiceImpl.java:30)
+	at paymentgateway.disbursement.internationalmoneytransfervalidator/paymentgateway.disbursement.internationalmoneytransfervalidator.DisbursementServiceImpl.createDisbursement(DisbursementServiceImpl.java:25)
+	at paymentgateway.disbursement.internationalmoneytransfer/paymentgateway.disbursement.internationalmoneytransfer.DisbursementServiceImpl.createDisbursement(DisbursementServiceImpl.java:38)
+	at paymentgateway.disbursement.internationalmoneytransfer/paymentgateway.disbursement.internationalmoneytransfer.DisbursementResourceImpl.moneyTransfer(DisbursementResourceImpl.java:27)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at vmj.routing.route/vmj.routing.route.VMJServer$1.handle(VMJServer.java:71)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:77)
+	at jdk.httpserver/sun.net.httpserver.AuthFilter.doFilter(AuthFilter.java:82)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:80)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(ServerImpl.java:848)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:77)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange.run(ServerImpl.java:817)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$DefaultExecutor.execute(ServerImpl.java:201)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.handle(ServerImpl.java:560)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.run(ServerImpl.java:526)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+java.lang.reflect.InvocationTargetException
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at vmj.routing.route/vmj.routing.route.VMJServer$1.handle(VMJServer.java:71)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:77)
+	at jdk.httpserver/sun.net.httpserver.AuthFilter.doFilter(AuthFilter.java:82)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:80)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(ServerImpl.java:848)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:77)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange.run(ServerImpl.java:817)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$DefaultExecutor.execute(ServerImpl.java:201)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.handle(ServerImpl.java:560)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.run(ServerImpl.java:526)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+Caused by: java.lang.NullPointerException: value
+	at java.base/java.util.Objects.requireNonNull(Objects.java:248)
+	at java.net.http/jdk.internal.net.http.HttpRequestBuilderImpl.checkNameAndValue(HttpRequestBuilderImpl.java:105)
+	at java.net.http/jdk.internal.net.http.HttpRequestBuilderImpl.header(HttpRequestBuilderImpl.java:126)
+	at java.net.http/jdk.internal.net.http.HttpRequestBuilderImpl.header(HttpRequestBuilderImpl.java:43)
+	at paymentgateway.config.core/paymentgateway.config.core.ConfigImpl.getBuilder(ConfigImpl.java:68)
+	at paymentgateway.config.core/paymentgateway.config.core.ConfigDecorator.getBuilder(ConfigDecorator.java:51)
+	at paymentgateway.disbursement.international/paymentgateway.disbursement.international.DisbursementServiceImpl.sendTransaction(DisbursementServiceImpl.java:71)
+	at paymentgateway.disbursement.international/paymentgateway.disbursement.international.DisbursementServiceImpl.createDisbursement(DisbursementServiceImpl.java:30)
+	at paymentgateway.disbursement.internationalmoneytransfervalidator/paymentgateway.disbursement.internationalmoneytransfervalidator.DisbursementServiceImpl.createDisbursement(DisbursementServiceImpl.java:25)
+	at paymentgateway.disbursement.internationalmoneytransfer/paymentgateway.disbursement.internationalmoneytransfer.DisbursementServiceImpl.createDisbursement(DisbursementServiceImpl.java:38)
+	at paymentgateway.disbursement.internationalmoneytransfer/paymentgateway.disbursement.internationalmoneytransfer.DisbursementResourceImpl.moneyTransfer(DisbursementResourceImpl.java:27)
+	... 15 more
+Error: {"data": {"message": "value","vmjErrorCode": 4006}}
+{    "vendor_name": "Flip",    "destination_country": "GBR",    "transaction_type": "C2C",    "source_country": "IDN",    "amount": "75000",    "beneficiary_full_name": "Rifqi Farel",    "beneficiary_account_number": "12435236235",    "beneficiary_bank_id": "123",    "beneficiary_bank_name": "Master Card",    "beneficiary_msisdn": " 123",    "beneficiary_nationality": "UK",    "beneficiary_province": "Manchester",    "beneficiary_city": "Manchester",    "beneficiary_address": "Manchester",    "beneficiary_relationship": "FRIEND",    "beneficiary_source_of_funds": "BUSINESS",    "beneficiary_remittance_purposes": "TRAVEL",    "sender_name": "kiki",    "sender_country": "100252",    "sender_place_of_birth": "100252",    "sender_date_of_birth": "2003-10-20",    "sender_address": "Bekasi",    "sender_identity_type": "nat_id",    "sender_identity_number": "124252634634634",    "sender_job": "private_employee",    "sender_email": "rifqifarel222@gmail.com",    "sender_city": "Bekasi",    "sender_phone_number": "085892025984",    "beneficiary_sort_code": "506967"}
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+Sep 21, 2024 12:53:13 AM paymentgateway.disbursement.international.DisbursementServiceImpl sendTransaction
+INFO: Header: {Authorization=Basic SkRKNUpERXpKRTFEU1Zsc1ltSnROMVY0WkU5aVYwc3ljUzkwYW5WM2FUVnpkVTFyVGpGUWR6SkVSbFV2ZFhFM09WQkZhek5hYnk1SmJVRlg=, Cookie=_csrf=I_hH_U80Wpc07Yx-pV_HBDI4KO64F3ES, idempotency-key=a58eff93-3d9f-49b2-9329-48e5995e808e, X-TIMESTAMP=, Content-Type=application/x-www-form-urlencoded}
+Sep 21, 2024 12:53:13 AM paymentgateway.disbursement.international.DisbursementServiceImpl sendTransaction
+INFO: Config URL: https://bigflip.id/big_sandbox_api/v2/international-disbursement
+Sep 21, 2024 12:53:15 AM paymentgateway.disbursement.international.DisbursementServiceImpl sendTransaction
+INFO: Raw Response: {"id":464,"user_id":9307076,"company_id":75841,"exchange_rate":20257.1,"fee":72000,"amount":1519282500,"source_country":"GBR","destination_country":"IDN","beneficiary_amount":75000,"beneficiary_currency_code":"GBP","status":"PENDING","timestamp":"(not set)","time_served":"(not set)","created_from":"API","receipt":"","transaction_type":"C2C","idempotency_key":"a58eff93-3d9f-49b2-9329-48e5995e808e","beneficiary":{"full_name":"Rifqi Farel","bank_account_number":"12435236235","email":null,"bank":"Master Card","msisdn":"","nationality":"","country":"GBR","province":"Manchester","city":"Manchester","address":"Manchester","postal_code":null,"relationship":"FRIEND","source_of_funds":"BUSINESS","remittance_purpose":"TRAVEL","iban":null,"swift_bic_code":null,"sort_code":"506967","ifs_code":null,"bsb_number":null,"branch_number":null,"document_reference_number":null,"registration_number":null,"id_number":"","id_expiration_date":"","ach_code":""},"sender":{"name":"kiki","place_of_birth":100252,"date_of_birth":"2003-10-20","address":"Bekasi","identity_type":"nat_id","identity_number":"124252634634634","country":100252,"job":"private_employee","email":"rifqifarel222@gmail.com","city":"Bekasi","phone_number":"085892025984"},"reason":""}

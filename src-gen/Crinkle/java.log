@@ -1,0 +1,159 @@
+public vmj.auth.storages.StorageImpl()
+public vmj.auth.verifiers.VerifierImpl()
+Oct 07, 2024 9:51:24 PM org.hibernate.Version logVersion
+INFO: HHH000412: Hibernate ORM core version [WORKING]
+Oct 07, 2024 9:51:24 PM org.hibernate.cfg.Environment <clinit>
+INFO: HHH000205: Loaded properties from resource hibernate.properties: {hibernate.hbm2ddl.auto=update, hibernate.dialect=org.hibernate.dialect.PostgreSQL94Dialect, hibernate.driver_class=org.postgresql.Driver, hibernate.connection.password=****, hibernate.connection.username=postgres, hibernate.connection.url=jdbc:postgresql://localhost:5432/paymentgateway_product_crinkle, hibernate.bytecode.use_reflection_optimizer=false, hibernate.show_sql=false}
+Oct 07, 2024 9:51:25 PM org.hibernate.annotations.common.reflection.java.JavaReflectionManager <clinit>
+INFO: HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+Oct 07, 2024 9:51:25 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl configure
+WARN: HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+Oct 07, 2024 9:51:25 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001005: using driver [null] at URL [jdbc:postgresql://localhost:5432/paymentgateway_product_crinkle]
+Oct 07, 2024 9:51:25 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001001: Connection properties: {password=****, user=postgres}
+Oct 07, 2024 9:51:25 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001003: Autocommit mode: false
+Oct 07, 2024 9:51:25 PM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl$PooledConnections <init>
+INFO: HHH000115: Hibernate connection pool size: 20 (min=1)
+Oct 07, 2024 9:51:25 PM org.hibernate.dialect.Dialect <init>
+INFO: HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL94Dialect
+Oct 07, 2024 9:51:25 PM org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl getIsolatedConnection
+INFO: HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@2ee48610] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+Oct 07, 2024 9:51:26 PM org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator initiateService
+INFO: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+== CREATING OBJECTS AND BINDING ENDPOINTS ==
+public vmj.auth.model.core.UserResourceImpl()
+public vmj.auth.model.core.RoleResourceImpl()
+public vmj.auth.model.core.UserResourceImpl()
+public vmj.auth.model.passworded.UserResourceImpl(vmj.auth.model.core.UserResourceComponent)
+virtualaccountPaymentResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/payment/virtualaccount
+virtualaccountPaymentService endpoints binding
+retailoutletPaymentResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/payment/retailoutlet
+retailoutletPaymentService endpoints binding
+paymentroutingPaymentResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/payment/paymentrouting
+paymentroutingPaymentService endpoints binding
+paymentlinkPaymentResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/paymentlink/deleted
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/paymentlink/detail
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/payment/paymentlink
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/paymentlink/delete
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/paymentlink/vendorname
+paymentlinkPaymentService endpoints binding
+invoicePaymentResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/payment/invoice
+invoicePaymentService endpoints binding
+ewalletPaymentResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/payment/ewallet
+ewalletPaymentService endpoints binding
+debitcardPaymentResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/payment/debitcard
+debitcardPaymentService endpoints binding
+creditcardPaymentResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/payment/creditcard
+creditcardPaymentService endpoints binding
+paymentPaymentResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/payment/callback
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/payment/detail
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/payment
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/paymentstatus
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/payment/list
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/payment/delete
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/call/payment/update
+paymentPaymentService endpoints binding
+authResource endpoints binding
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/auth/user/save
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1026/call/user/delete
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1026/call/user/save
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/auth/login/pwd
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/auth/forgot-password
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/auth/forgot-password-token
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1026/call/role/detail
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1026/call/role/save
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1026/call/role/list
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1026/call/role/delete
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1026/call/role/update
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1026/call/user/detail
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+http://localhost:1026/auth/register
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1026/call/user/update
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1026/call/user/changerole
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: true
+http://localhost:1026/call/user/list
+{    "vendor_name": "Flip",    "bank": "bca",    "title": "Bayar Gojek",    "amount": "100000",    "name": "Rifqi Farel Muhammad",    "email": "rifqifarel222@gmail.com",    "phone": "085892025984"}
+Is Multi-Perms Annotation Present: false
+Is Single Perm Annotation Present: false
+id:70805
+configUrl: https://bigflip.id/big_sandbox_api/v2/pwf/bill
+rawResponse {"link_id":139190,"link_url":"flip.id/pwf-sandbox/$rifqifarelmuhammad/#bayargojek-1701","title":"Bayar Gojek","type":"SINGLE","amount":100000,"redirect_url":"","expired_date":null,"created_from":"API","status":"ACTIVE","is_address_required":0,"is_phone_number_required":0,"step":3,"customer":{"name":"Rifqi Farel Muhammad","email":"rifqifarel222@gmail.com","address":null,"phone":null},"bill_payment":{"id":"PGPWF10117283126912675943","amount":100000,"unique_code":0,"status":"PENDING","sender_bank":"bca","sender_bank_type":"virtual_account","receiver_bank_account":{"account_number":"66806587580974568","account_type":"virtual_account","bank_code":"bca","account_holder":"Rifqi Farel Muhammad"},"user_address":null,"user_phone":null,"created_at":1728312691},"payment_url":"https://flip.id/pwf-sandbox/transaction/consolidated?redirected_from=internal&id=35f1f38f73074c37bb8b70ffa4de2333"}

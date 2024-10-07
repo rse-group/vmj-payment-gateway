@@ -24,14 +24,14 @@ public abstract class ConfigComponent implements Config {
     public abstract Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody);
     public abstract Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody);
 
-    public abstract Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange);
-    public abstract Map<String, Object> getRetailOutletRequestBody(VMJExchange vmjExchange);
-    public abstract Map<String, Object> getVirtualAccountRequestBody(VMJExchange vmjExchange);
-    public abstract Map<String, Object> getEWalletRequestBody(VMJExchange vmjExchange);
-    public abstract Map<String, Object> getDebitCardRequestBody(VMJExchange vmjExchange);
-    public abstract Map<String, Object> getCreditCardRequestBody(VMJExchange vmjExchange);
-    public abstract Map<String, Object> getInvoiceRequestBody(VMJExchange vmjExchange);
-    public abstract Map<String, Object> getPaymentRoutingRequestBody(VMJExchange vmjExchange);
+    public abstract Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody);
+    public abstract Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody);
+    public abstract Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody);
+    public abstract Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody);
+    public abstract Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody);
+    public abstract Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody);
+    public abstract Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody);
+    public abstract Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody);
     
     public abstract Map<String, Object> getPaymentLinkResponse(String rawResponse, int id);
     public abstract Map<String, Object> getDebitCardResponse(String rawResponse, int id);

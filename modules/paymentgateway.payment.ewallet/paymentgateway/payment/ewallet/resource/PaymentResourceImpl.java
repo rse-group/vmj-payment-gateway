@@ -25,80 +25,23 @@ import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentResourceComponent;
+import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
-	// implement this with author
+	private PaymentServiceImpl paymentServiceImpl;
 
-	protected String apiKey;
-	protected String apiEndpoint;
-    public PaymentResourceImpl (PaymentResourceComponent record) {
-        super(record);
-    }
-
-	
-	public Payment createPayment(VMJExchange vmjExchange) {
-		Map<String, Object> response = sendTransaction(vmjExchange);
-
-		String url = (String) response.get("url");
-		String type = (String) response.get("payment_type");
-		int id = (int) response.get("id");
-
-		String phoneNumber = (String) vmjExchange.getRequestBodyForm("phone");
-		System.out.println(id);
-		Payment transaction = record.createPayment(vmjExchange, id);
-		Payment ewalletTransaction =
-			PaymentFactory.createPayment(
-					"paymentgateway.payment.ewallet.EWalletImpl",
-					transaction,
-					phoneNumber,
-					type,
-					url
-			);
-		PaymentRepository.saveObject(ewalletTransaction);
-		return ewalletTransaction;
+	public PaymentResourceImpl(PaymentResourceComponent record, PaymentServiceComponent recordService) {
+		super(record);
+		paymentServiceImpl = new PaymentServiceImpl(recordService);
 	}
 
-	protected Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
-		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
-
-		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-		
-		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getEWalletRequestBody(vmjExchange);
-		int id = ((Integer) requestMap.get("id")).intValue();
-		requestMap.remove("id");
-		String configUrl = config.getProductEnv("EWallet");
-		HashMap<String, String> headerParams = config.getHeaderParams();
-		System.out.println("configUrl: " + configUrl);
-		String requestString = config.getRequestString(requestMap);
-		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
-				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(requestString))
-				.build();
-
-		Map<String, Object> responseMap = new HashMap<>();
-		
-		try {
-			System.out.println(request.toString());
-			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			String rawResponse = response.body().toString();
-			System.out.println("rawResponse " + rawResponse);
-			responseMap = config.getEWalletResponse(rawResponse, id);
-			
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		
-		return responseMap;
-	}
-
-	@Route(url="call/ewallet")
-	public HashMap<String,Object> Ewallet(VMJExchange vmjExchange) {
+	@Route(url="call/payment/ewallet")
+	public HashMap<String,Object> payment(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")){
-			Payment result = this.createPayment(vmjExchange);
+			Map<String, Object> requestBody = vmjExchange.getPayload(); 
+			Payment result = paymentServiceImpl.createPayment(requestBody);
 			return result.toHashMap();
 		}
 		throw new NotFoundException("Route tidak ditemukan");

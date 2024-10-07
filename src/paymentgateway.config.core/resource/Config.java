@@ -37,14 +37,14 @@ public interface Config {
     Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody);
 
     // Payment Request
-    Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange);
-    Map<String, Object> getRetailOutletRequestBody(VMJExchange vmjExchange);
-    Map<String, Object> getVirtualAccountRequestBody(VMJExchange vmjExchange);
-    Map<String, Object> getEWalletRequestBody(VMJExchange vmjExchange);
-    Map<String, Object> getDebitCardRequestBody(VMJExchange vmjExchange);
-    Map<String, Object> getCreditCardRequestBody(VMJExchange vmjExchange);
-    Map<String, Object> getInvoiceRequestBody(VMJExchange vmjExchange);
-    Map<String, Object> getPaymentRoutingRequestBody(VMJExchange vmjExchange);
+    Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody);
 
     String getPaymentDetailEndpoint(String configUrl,String id);
 

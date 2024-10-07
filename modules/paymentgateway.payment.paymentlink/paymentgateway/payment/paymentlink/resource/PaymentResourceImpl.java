@@ -19,67 +19,26 @@ import paymentgateway.payment.PaymentFactory;
 import paymentgateway.payment.PaymentResourceFactory;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
-import vmj.hibernate.integrator.RepositoryUtil;
 import paymentgateway.payment.core.PaymentResourceComponent;
+import paymentgateway.payment.core.PaymentServiceComponent;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
-	RepositoryUtil<PaymentLinkImpl> paymentLinkRepository;
-
-	public PaymentResourceImpl(PaymentResourceComponent record) {
+	private PaymentServiceImpl paymentServiceImpl;
+	
+	public PaymentResourceImpl(PaymentResourceComponent record, PaymentServiceComponent recordService) {
 		super(record);
-		this.paymentLinkRepository = new RepositoryUtil<PaymentLinkImpl>(paymentgateway.payment.paymentlink.PaymentLinkImpl.class);
+		paymentServiceImpl = new PaymentServiceImpl(recordService);
 	}
 
-	public Payment createPayment(VMJExchange vmjExchange) {
-		Map<String, Object> response = sendTransaction(vmjExchange);
-		String paymentLink = (String) response.get("url");
-		int id = (int) response.get("id");
-		Payment transaction = record.createPayment(vmjExchange, id);
-		Payment paymentLinkTransaction =
-			PaymentFactory.createPayment("paymentgateway.payment.paymentlink.PaymentLinkImpl",
-			transaction,id, paymentLink);
-		PaymentRepository.saveObject(paymentLinkTransaction);
-		return paymentLinkTransaction;
-	}
 
-	protected Map<String, Object> sendTransaction(VMJExchange vmjExchange) {
-		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
-
-		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-
-		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getPaymentLinkRequestBody(vmjExchange);
-		int id = ((Integer) requestMap.get("id")).intValue();
-		requestMap.remove("id");
-		String configUrl = config.getProductEnv("PaymentLink");
-		HashMap<String, String> headerParams = config.getHeaderParams();
-		System.out.println("configUrl: " + configUrl);
-		String requestString = config.getRequestString(requestMap);
-		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
-				.uri(URI.create(configUrl))
-				.POST(HttpRequest.BodyPublishers.ofString(requestString))
-				.build();
-		Map<String, Object> responseMap = new HashMap<>();
-		try {
-			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			String rawResponse = response.body().toString();
-			System.out.println("rawResponse " + rawResponse);
-			responseMap = config.getPaymentLinkResponse(rawResponse, id);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return responseMap;
-	}
-
-	@Route(url = "call/paymentlink")
-	public HashMap<String, Object> paymentLink(VMJExchange vmjExchange) {
+	@Route(url = "call/payment/paymentlink")
+	public HashMap<String, Object> payment(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")){
-			Payment result = this.createPayment(vmjExchange);
+			Map<String, Object> requestBody = vmjExchange.getPayload(); 
+			Payment result = paymentServiceImpl.createPayment(requestBody);
 			return result.toHashMap();
 		}
 		throw new NotFoundException("Route tidak ditemukan");
@@ -88,27 +47,14 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 
 	@Route(url = "call/paymentlink/vendorname")
 	public List<PaymentLinkImpl> getByVendorName(VMJExchange vmjExchange) {
-		String vendorName = (String) vmjExchange.getRequestBodyForm("vendor_name");
-		List<PaymentLinkImpl> result = new ArrayList<>();
-		List<PaymentLinkImpl> paymentLink = paymentLinkRepository.getAllObject("paymentlink_impl");
-		for(PaymentLinkImpl payment : paymentLink){
-			if (payment.getVendorName().equals(vendorName)){
-				result.add(payment);
-			}
-		}
-		return result;
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+		return paymentServiceImpl.getByVendorName(requestBody);
 	}
 
 	@Route(url = "call/paymentlink/detail")
 	public HashMap<String, Object> getById(VMJExchange vmjExchange) {
-		int id = ((Double) vmjExchange.getRequestBodyForm("id")).intValue();
-		List<PaymentLinkImpl> paymentLink = paymentLinkRepository.getAllObject("paymentlink_impl");
-		for(PaymentLinkImpl payment : paymentLink){
-			if (payment.getIdTransaction() == id){
-				return payment.toHashMap();
-			}
-		}
-		return null;
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+		return paymentServiceImpl.getById(requestBody);
 	}
 
 
@@ -116,30 +62,14 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	public String deletePaymentLinkById(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("OPTIONS"))
 			return null;
-
-		int id = ((Double) vmjExchange.getRequestBodyForm("id")).intValue();
-//		String id = (String) vmjExchange.getRequestBodyForm("id");
-		List<PaymentLinkImpl> paymentLinks = paymentLinkRepository.getAllObject("paymentlink_impl");
-		for(PaymentLinkImpl payment : paymentLinks){
-			if(payment.getIdTransaction() == id){
-				HashMap<String, Object> paymentMap = payment.toHashMap();
-				int intId = ((Integer) paymentMap.get("idTransaction")).intValue();
-				System.out.println(intId);
-				paymentLinkRepository.deleteObject(intId);
-//				System.out.println("idTransaction: " + payment.getIdTransaction());
-//				System.out.println(payment.getIdTransaction() == nul);
-				return "SUCCESS";
-			}
-		}
-
-		return "There is no paymentlink with id: " + id;
+		
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+		return paymentServiceImpl.deletePaymentLinkById(requestBody);
 	}
 
 	@Route(url = "call/paymentlink/deleted")
-	public void deletePaymentLinkByIdTransaction(VMJExchange vmjExchange) {
-		int id = ((Double) vmjExchange.getRequestBodyForm("id")).intValue();
-//		PaymentRepository.deleteObject(id);
-		record.deletePayment(vmjExchange);
-
+	public List<HashMap<String, Object>> deletePaymentLinkByIdTransaction(VMJExchange vmjExchange) {
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+		return paymentServiceImpl.deletePaymentLinkByIdTransaction(requestBody);
 	}
 }

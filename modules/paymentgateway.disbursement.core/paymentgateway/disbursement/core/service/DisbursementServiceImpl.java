@@ -75,7 +75,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		Disbursement disbursement = this.getObject(id);
 		this.deleteObject(id);
 
-		return getAllDisbursement(vmjExchange);
+		return getAllDisbursement(requestBody);
 	}
 	
 	public String getEnvVariableHostAddress(String varname_host){

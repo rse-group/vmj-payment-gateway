@@ -79,36 +79,36 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getInternationalDisbursementRequestBody(requestBody);
     }
 
-    public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
-        return record.getPaymentLinkRequestBody(vmjExchange);
+    public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
+        return record.getPaymentLinkRequestBody(requestBody);
     }
 
-    public Map<String, Object> getRetailOutletRequestBody(VMJExchange vmjExchange){
-        return record.getRetailOutletRequestBody(vmjExchange);
+    public Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody){
+        return record.getRetailOutletRequestBody(requestBody);
     }
 
-    public Map<String, Object> getVirtualAccountRequestBody(VMJExchange vmjExchange){
-        return record.getVirtualAccountRequestBody(vmjExchange);
+    public Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody){
+        return record.getVirtualAccountRequestBody(requestBody);
     }
 
-    public Map<String, Object> getEWalletRequestBody(VMJExchange vmjExchange){
-        return record.getEWalletRequestBody(vmjExchange);
+    public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
+        return record.getEWalletRequestBody(requestBody);
     }
 
-    public Map<String, Object> getDebitCardRequestBody(VMJExchange vmjExchange){
-        return record.getDebitCardRequestBody(vmjExchange);
+    public Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody){
+        return record.getDebitCardRequestBody(requestBody);
     }
 
-    public Map<String, Object> getCreditCardRequestBody(VMJExchange vmjExchange){
-        return record.getCreditCardRequestBody(vmjExchange);
+    public Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody){
+        return record.getCreditCardRequestBody(requestBody);
     }
 
-    public Map<String, Object> getInvoiceRequestBody(VMJExchange vmjExchange){
-        return record.getInvoiceRequestBody(vmjExchange);
+    public Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody){
+        return record.getInvoiceRequestBody(requestBody);
     }
 
-    public Map<String, Object> getPaymentRoutingRequestBody(VMJExchange vmjExchange){
-        return record.getPaymentRoutingRequestBody(vmjExchange);
+    public Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody){
+        return record.getPaymentRoutingRequestBody(requestBody);
     }
 
     public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){

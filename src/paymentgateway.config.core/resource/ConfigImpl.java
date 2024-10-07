@@ -103,35 +103,35 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
     
-    public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getRetailOutletRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getVirtualAccountRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getEWalletRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getDebitCardRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getCreditCardRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getInvoiceRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getPaymentRoutingRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 

@@ -67,22 +67,22 @@ public class MidtransConfiguration extends ConfigDecorator{
     
 
     @Override
-    public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> customer_details = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
         
         int id = generateId();
-        double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
+        double amount = Double.parseDouble((String) requestBody.get("amount"));
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
         requestMap.put("transaction_details", transaction_details);
         requestMap.put( "customer_required",true);
 
 
-        String name = (String) vmjExchange.getRequestBodyForm("name");
-        String email = (String) vmjExchange.getRequestBodyForm("email");
-        String title = (String) vmjExchange.getRequestBodyForm("title");
+        String name = (String) requestBody.get("name");
+        String email = (String) requestBody.get("email");
+        String title = (String) requestBody.get("title");
         String[] arr = name.split(" ", 2);
         if(arr.length > 1){
             customer_details.put("first_name", arr[0]);
@@ -98,14 +98,14 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getRetailOutletRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> cstore = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
-        double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
-        String store = (String) vmjExchange.getRequestBodyForm("retail_outlet");
+        double amount = Double.parseDouble((String) requestBody.get("amount"));
+        String store = (String) requestBody.get("retail_outlet");
 
 
         transaction_details.put("order_id", String.valueOf(id));
@@ -121,14 +121,14 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getVirtualAccountRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> bank_transfer = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
-        double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
-        String bank = (String) vmjExchange.getRequestBodyForm("bank");
+        double amount = Double.parseDouble((String) requestBody.get("amount"));
+        String bank = (String) requestBody.get("bank");
 
 
         transaction_details.put("order_id", String.valueOf(id));
@@ -144,15 +144,15 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getEWalletRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> customer_details = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
-        double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
-        String ewallet = (String) vmjExchange.getRequestBodyForm("ewallet_type");
-        String phone = (String) vmjExchange.getRequestBodyForm("phone");
+        double amount = Double.parseDouble((String) requestBody.get("amount"));
+        String ewallet = (String) requestBody.get("ewallet_type");
+        String phone = (String) requestBody.get("phone");
 
 
         transaction_details.put("order_id", String.valueOf(id));
@@ -168,14 +168,14 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getDebitCardRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> item_details = new HashMap<>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
-        double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
-        String type = (String) vmjExchange.getRequestBodyForm("payment_type");
+        double amount = Double.parseDouble((String) requestBody.get("amount"));
+        String type = (String) requestBody.get("payment_type");
 
 
         transaction_details.put("order_id", String.valueOf(id));
@@ -193,14 +193,14 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getCreditCardRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> credit_card = new HashMap<>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
-        double amount = Double.parseDouble((String) vmjExchange.getRequestBodyForm("amount"));
-        String token = (String) vmjExchange.getRequestBodyForm("token_id");
+        double amount = Double.parseDouble((String) requestBody.get("amount"));
+        String token = (String) requestBody.get("token_id");
 
 
         transaction_details.put("order_id", String.valueOf(id));

@@ -7,14 +7,13 @@ import vmj.routing.route.VMJExchange;
 
 import paymentgateway.payment.core.Payment;
 public abstract class PaymentResourceComponent implements PaymentResource{
-	protected RepositoryUtil<Payment> PaymentRepository;
 
-    public PaymentResourceComponent(){
-        this.PaymentRepository = new RepositoryUtil<Payment>(paymentgateway.payment.core.PaymentComponent.class);
-    }
+    public PaymentResourceComponent(){}
     
-    public abstract Payment createPayment(VMJExchange vmjExchange, int id);
-    public abstract List<HashMap<String,Object>> getAll(VMJExchange vmjExchange);
-//    public abstract Map<String, Object>  processRequestMap(VMJExchange vmjExchange, String vendorName, String serviceName);
-    public abstract void deletePayment(VMJExchange vmjExchange);
+    public abstract int callback(VMJExchange vmjExchange);
+    public abstract HashMap<String, Object> getPayment(VMJExchange vmjExchange);
+    public abstract List<HashMap<String, Object>> getAllPayment(VMJExchange vmjExchange);
+    public abstract List<HashMap<String, Object>> deletePayment(VMJExchange vmjExchange);
+    public abstract HashMap<String, Object> updatePayment(VMJExchange vmjExchange);
+    public abstract HashMap<String, Object> payment(VMJExchange vmjExchange);
 }

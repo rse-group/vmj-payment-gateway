@@ -264,14 +264,14 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getVirtualAccountRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody){
         int id = generateId();
         Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) vmjExchange.getRequestBodyForm("title");
-        int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
-        String senderName = (String) vmjExchange.getRequestBodyForm("name");
-        String senderEmail = (String) vmjExchange.getRequestBodyForm("email");
-        String senderBank = (String) vmjExchange.getRequestBodyForm("bank");
+        String title = (String) requestBody.get("title");
+        int amount = Integer.parseInt((String)requestBody.get("amount"));
+        String senderName = (String) requestBody.get("name");
+        String senderEmail = (String) requestBody.get("email");
+        String senderBank = (String) requestBody.get("bank");
 
         requestMap.put("id",id);
         requestMap.put("title", title);
@@ -304,15 +304,15 @@ public class FlipConfiguration extends ConfigDecorator{
 
 
     @Override
-    public Map<String, Object> getEWalletRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
         int id = generateId();
         Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) vmjExchange.getRequestBodyForm("title");
-        int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
-        String senderName = (String) vmjExchange.getRequestBodyForm("name");
-        String senderEmail = (String) vmjExchange.getRequestBodyForm("email");
-        String senderBank = (String) vmjExchange.getRequestBodyForm("ewallet_type");
-        String senderPhoneNumber = (String) vmjExchange.getRequestBodyForm("phone");
+        String title = (String) requestBody.get("title");
+        int amount = Integer.parseInt((String)requestBody.get("amount"));
+        String senderName = (String) requestBody.get("name");
+        String senderEmail = (String) requestBody.get("email");
+        String senderBank = (String) requestBody.get("ewallet_type");
+        String senderPhoneNumber = (String) requestBody.get("phone");
 
         requestMap.put("id",id);
         requestMap.put("title", title);
@@ -348,13 +348,13 @@ public class FlipConfiguration extends ConfigDecorator{
 
 
     @Override
-    public Map<String, Object> getPaymentLinkRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
         int id = generateId();
         Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) vmjExchange.getRequestBodyForm("title");
-        int amount = Integer.parseInt((String)vmjExchange.getRequestBodyForm("amount"));
-        String senderEmail = (String) vmjExchange.getRequestBodyForm("email");
-        String senderName = (String) vmjExchange.getRequestBodyForm("name");
+        String title = (String) requestBody.get("title");
+        int amount = Integer.parseInt((String)requestBody.get("amount"));
+        String senderEmail = (String) requestBody.get("email");
+        String senderName = (String) requestBody.get("name");
         
         requestMap.put("id",id);
         requestMap.put("title", title);

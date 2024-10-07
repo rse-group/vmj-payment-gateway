@@ -22,7 +22,7 @@ import paymentgateway.config.ConfigFactory;
 public class DisbursementResourceImpl extends DisbursementResourceComponent{
 	private static final Logger LOGGER = Logger.getLogger(DisbursementResourceImpl.class.getName());
 	
-	private final DisbursementServiceImpl disbursementServiceImpl = new DisbursementServiceImpl();
+	private DisbursementServiceImpl disbursementServiceImpl = new DisbursementServiceImpl();
 	
 	@Route(url = "call/disbursement/callback")
 	public int callback(VMJExchange vmjExchange) {
