@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configuration>
 	<feature automatic="selected" name="PaymentGateway"/>
-	<feature automatic="selected" name="Vendor"/>
-	<feature manual="selected" name="Flip"/>
-	<feature name="Midtrans"/>
-	<feature name="Oy"/>
-	<feature name="Disbursement"/>
-	<feature name="InternationalDisbursement"/>
-	<feature name="InternationalDisbursementWithAutomaticExchangeRate"/>
-	<feature name="SpecialDisbursement"/>
-	<feature name="InternationalDisbursementWithIndonesianCurrency"/>
-	<feature name="AgentDisbursement"/>
-	<feature name="KycAgentDisbursement"/>
-	<feature name="DomesticDisbursement"/>
+	<feature automatic="selected" name="Disbursement"/>
+	<feature automatic="selected" name="International"/>
+	<feature manual="selected" name="ExchangeRate"/>
+	<feature automatic="selected" name="AutomaticExchangeRate"/>
+	<feature manual="selected" name="FixedCurrency"/>
+	<feature automatic="selected" name="IDR"/>
+	<feature manual="selected" name="Agent"/>
+	<feature manual="selected" name="SpecifiedRecipient"/>
 	<feature name="Payment"/>
 	<feature name="PaymentLink"/>
 	<feature name="FlipPaymentLink"/>
@@ -37,4 +33,8 @@
 	<feature name="MidtransCreditCard"/>
 	<feature name="DebitCard"/>
 	<feature name="MidtransDebitCard"/>
+	<feature automatic="selected" name="Vendor"/>
+	<feature automatic="selected" manual="selected" name="Flip"/>
+	<feature name="Midtrans"/>
+	<feature name="Oy"/>
 </configuration>

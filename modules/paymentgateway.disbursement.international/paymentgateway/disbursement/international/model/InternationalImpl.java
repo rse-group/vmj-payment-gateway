@@ -35,19 +35,19 @@ public class InternationalImpl extends DisbursementDecorator {
 		super();
 	}
 
-	public double getExchange_rate() {
+	public double getExchangeRate() {
 		return exchange_rate;
 	}
 
-	public String getDestination_country() {
+	public String getDestinationCountry() {
 		return destination_country;
 	}
 
-	public String getBeneficiary_currency_code() {
+	public String getBeneficiaryCurrencyCode() {
 		return beneficiary_currency_code;
 	}
 
-	public String getSource_country() {
+	public String getSourceCountry() {
 		return source_country;
 	}
 
@@ -55,27 +55,27 @@ public class InternationalImpl extends DisbursementDecorator {
 		return fee;
 	}
 
-	public double getAmount_in_sender_currency() {
+	public double getAmountInSenderCurrency() {
 		return amount_in_sender_currency;
 	}
 
-	public void setSource_country(String source_country) {
+	public void setSourceCountry(String source_country) {
 		this.source_country = source_country;
 	}
 
-	public void setDestination_country(String destination_country) {
+	public void setDestinationCountry(String destination_country) {
 		this.destination_country = destination_country;
 	}
 
-	public void setExchange_rate(double exchange_rate) {
+	public void setExchangeRate(double exchange_rate) {
 		this.exchange_rate = exchange_rate;
 	}
 
-	public void setBeneficiary_currency_code(String beneficiary_currency_code) {
+	public void setBeneficiaryCurrencyCode(String beneficiary_currency_code) {
 		this.beneficiary_currency_code = beneficiary_currency_code;
 	}
 
-	public void setAmount_in_sender_currency(double amount_in_sender_currency) {
+	public void setAmountInSenderCurrency(double amount_in_sender_currency) {
 		this.amount_in_sender_currency = amount_in_sender_currency;
 	}
 
@@ -85,12 +85,12 @@ public class InternationalImpl extends DisbursementDecorator {
 
 	public HashMap<String, Object> toHashMap() {
 		HashMap<String, Object> disbursementMap = record.toHashMap();
-		disbursementMap.put("exchange_rate", getExchange_rate());
-		disbursementMap.put("fee", getExchange_rate());
-		disbursementMap.put("source_country", getSource_country());
-		disbursementMap.put("destination_country", getDestination_country());
-		disbursementMap.put("amount_in_sender_currency", getAmount_in_sender_currency());
-		disbursementMap.put("beneficiary_currency_code", getBeneficiary_currency_code());
+		disbursementMap.put("exchange_rate", getExchangeRate());
+		disbursementMap.put("fee", getExchangeRate());
+		disbursementMap.put("source_country", getSourceCountry());
+		disbursementMap.put("destination_country", getDestinationCountry());
+		disbursementMap.put("amount_in_sender_currency", getAmountInSenderCurrency());
+		disbursementMap.put("beneficiary_currency_code", getBeneficiaryCurrencyCode());
 		return disbursementMap;
 	}
 }
