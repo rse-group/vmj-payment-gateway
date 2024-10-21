@@ -19,20 +19,20 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
         return record.createDisbursement(requestBody, response);
     }
 
-    public HashMap<String, Object> getDisbursement(VMJExchange vmjExchange){
-        return record.getDisbursement(vmjExchange);
+    public HashMap<String, Object> getDisbursement(Map<String, Object> requestBody){
+        return record.getDisbursement(requestBody);
     }
 
-    public List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange){
-        return record.getAllDisbursement(vmjExchange);
+    public List<HashMap<String, Object>> getAllDisbursement(Map<String, Object> requestBody){
+        return record.getAllDisbursement(requestBody);
     }
 
-    public List<HashMap<String, Object>> deleteDisbursement(VMJExchange vmjExchange){
-        return record.deleteDisbursement(vmjExchange);
+    public List<HashMap<String, Object>> deleteDisbursement(Map<String, Object> requestBody){
+        return record.deleteDisbursement(requestBody);
     }
 
-    public HashMap<String, Object> updateDisbursement(VMJExchange vmjExchange){
-        return record.updateDisbursement(vmjExchange);
+    public HashMap<String, Object> updateDisbursement(Map<String, Object> requestBody){
+        return record.updateDisbursement(requestBody);
     }
 
     public List<HashMap<String, Object>> transformListToHashMap(List<Disbursement> List){

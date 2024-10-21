@@ -51,15 +51,15 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		return disbursement;
 	}
 	
-	public HashMap<String, Object> updateDisbursement(VMJExchange vmjExchange) {
+	public HashMap<String, Object> updateDisbursement(Map<String, Object> requestBody) {
 
-		int id = ((Double) vmjExchange.getRequestBodyForm("id")).intValue();
+		int id = ((Double) requestBody.get("id")).intValue();
 		Disbursement disbursement = this.getObject(id);
 
 		try {
-			disbursement.setAmount((Double) vmjExchange.getRequestBodyForm("amount"));
-			disbursement.setAccountNumber((String) vmjExchange.getRequestBodyForm("account_number"));
-			disbursement.setBankCode((String) vmjExchange.getRequestBodyForm("bank_code"));
+			disbursement.setAmount((Double) requestBody.get("amount"));
+			disbursement.setAccountNumber((String) requestBody.get("account_number"));
+			disbursement.setBankCode((String) requestBody.get("bank_code"));
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -70,8 +70,8 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 
     }
 	
-	public List<HashMap<String, Object>> deleteDisbursement(VMJExchange vmjExchange){
-		int id = ((Double) vmjExchange.getRequestBodyForm("id")).intValue();
+	public List<HashMap<String, Object>> deleteDisbursement(Map<String, Object> requestBody){
+		int id = ((Double) requestBody.get("id")).intValue();
 		Disbursement disbursement = this.getObject(id);
 		this.deleteObject(id);
 
@@ -137,22 +137,22 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		return transformListToHashMap(List);
 	}
 	
-	public HashMap<String, Object> getDisbursement(VMJExchange vmjExchange){
-		int id = ((Double) vmjExchange.getRequestBodyForm("id")).intValue();
+	public HashMap<String, Object> getDisbursement(Map<String, Object> requestBody){
+		int id = ((Double) requestBody.get("id")).intValue();
 		Disbursement disbursementImpl = this.getObject(id);
 		HashMap<String, Object> disbursementDataMap = disbursementImpl.toHashMap();
 		return disbursementDataMap;
 	}
 	
-	public List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange){
-		String table = (String) vmjExchange.getRequestBodyForm("table_name");
+	public List<HashMap<String, Object>> getAllDisbursement(Map<String, Object> requestBody){
+		String table = (String) requestBody.get("table_name");
 		List<Disbursement> List = Repository.getAllObject(table);
 		return transformListToHashMap(List);
 	}
 
-	public String getParamsUrlEncoded(VMJExchange vmjExchange){
+	public String getParamsUrlEncoded(Map<String, Object> requestBody){
 		ArrayList<String> paramList = new ArrayList<>();
-		for (Map.Entry<String, Object> entry : vmjExchange.getPayload().entrySet()) {
+		for (Map.Entry<String, Object> entry : requestBody.entrySet()) {
 			String key = entry.getKey();
 			Object val = entry.getValue();
 			if (val instanceof String) {
