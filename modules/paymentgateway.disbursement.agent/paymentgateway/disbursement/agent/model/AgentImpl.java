@@ -26,11 +26,11 @@ public class AgentImpl extends DisbursementDecorator {
 		super();
 	}
 
-	public int getAgent_id() {
+	public int getAgentId() {
 		return agent_id;
 	}
 
-	public void setAgent_id(int agent_id) {
+	public void setAgentId(int agent_id) {
 		this.agent_id = agent_id;
 	}
 
@@ -44,7 +44,7 @@ public class AgentImpl extends DisbursementDecorator {
 
 	public HashMap<String, Object> toHashMap() {
 		HashMap<String, Object> specialMap = record.toHashMap();
-		specialMap.put("agent_id", getAgent_id());
+		specialMap.put("agent_id", getAgentId());
 		specialMap.put("direction", getDirection());
 		return specialMap;
 	}
