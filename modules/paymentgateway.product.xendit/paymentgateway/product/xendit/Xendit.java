@@ -122,15 +122,6 @@ public class Xendit {
 		RoleResource role = RoleResourceFactory
 				.createRoleResource("vmj.auth.model.core.RoleResourceImpl");
 
-		// System.out.println("multiplemoneytransfer endpoints binding");
-		// Router.route(multipletransfer);
-
-		// System.out.println("scheduledtransfer endpoints binding");
-		// Router.route(scheduledtransfer);
-		//
-		// System.out.println("approvaltransfer endpoints binding");
-		// Router.route(approvaltransfer);
-
 		LOGGER.info("Binding Disbursement endpoints");
 		Router.route(disbursement);
 
