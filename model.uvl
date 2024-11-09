@@ -53,8 +53,10 @@ features
 					Flip
 					Midtrans
 					Oy
+					Xendit
 
 constraints
 	OyInvoice | OyPaymentRouting | OyPaymentLink | OyRetailOutlet | OyVirtualAccount | OyEWallet => Oy
 	MidtransCreditCard | MidtransDebitCard | MidtransPaymentLink | MidtransVirtualAccount | MidtransEWallet | MidtransRetailOutlet => Midtrans
+	SpecifiedRecipient => Xendit
 	Agent | ExchangeRate | IDR | AutomaticExchangeRate => Flip
