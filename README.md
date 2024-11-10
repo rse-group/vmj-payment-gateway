@@ -3,11 +3,13 @@ This repository consists a FeatureIDE project with WinVMJ composer for Payment G
 
 ## Requirements
 Install Eclipse and required plugins to run this project:
-- Eclipse Modeling Tools  (2020-12): https://www.eclipse.org/downloads/packages/release/2020-12/r/eclipse-modeling-tools
-- Plugin FeatureIDE 3.9:  http://featureide.cs.ovgu.de/update/v3/
-- Plugin WinVMJ Composer
-- Java 17
-- PostgreSQL 11
+1. [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html).
+2. [Eclipse IDE 4.30 / 2023-12](https://www.eclipse.org/downloads/packages/release/2023-12/r).
+3. [FeatureIDE 3.11.1](https://featureide.github.io/#download).
+4. [Eclipse PDE](https://www.eclipse.org/pde/) if hasn't been included on downloaded IDE.
+5. [PostgreSQL](https://www.postgresql.org/download/).
+6. DBMS to manage PostgreSQL such as [phpmyadmin](https://www.phpmyadmin.net/downloads/) or [adminer](https://www.adminer.org/).
+
 
 ## Getting Started
 - Make sure that all requirements installed in your Eclipse
