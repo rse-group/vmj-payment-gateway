@@ -6,7 +6,7 @@ Install Eclipse and required plugins to run this project:
 - Eclipse Modeling Tools  (2020-12): https://www.eclipse.org/downloads/packages/release/2020-12/r/eclipse-modeling-tools
 - Plugin FeatureIDE 3.9:  http://featureide.cs.ovgu.de/update/v3/
 - Plugin WinVMJ composer: https://amanah.cs.ui.ac.id/priceside/winvmj-composer/updatesite
-- Java 11
+- Java 17
 - PostgreSQL 11
 
 ## Getting Started
@@ -23,8 +23,6 @@ Install Eclipse and required plugins to run this project:
     ├── src-gen
     ├── db.properties
     ├── feature_to_module.json
-    ├── FeatureMapping.xml
-    ├── inter_spl_product.json
     ├── model.uvl
     ```
 - Don't forget to edit file `db.properties` in the project with your PostgreSQL credentials
