@@ -37,8 +37,8 @@ To implement a new variation:
 1. Add a new feature in the feature diagram (model.uvl)
 2. Develop a module in the directory `module`.
 Naming convention for the folder:
-- core module [productlinename].[modulename].core
-- delta module [productlinename].[coremodulename].[deltamodulename]
+- Core module [productlinename].[modulename].core
+- Delta module [productlinename].[coremodulename].[deltamodulename]
 FYI, the core and delta module can be generated from the UML-DOP diagram,
 you can also create/update the UML-DOP diagram and generate the source.
 3. Define a mapping between feature name and delta name in file `feature_to_module.json`
