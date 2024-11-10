@@ -53,8 +53,7 @@ Generate product is started with creating a new configuration:
 3. Defined the config file's name that represents the product's name
 4. Select required features, right click on the config file -> FeatureIDE -> select `Set As Current Configuration`
 5. Generated modules are available in directory `src`
-6. Compile the generated module: right click on directory `src` -> FeatureIDE -> WinVMJ -> Compile
-The generated application is placed in directory `src-gen`
+6. Compile the generated module: right click on directory `src` -> FeatureIDE -> WinVMJ -> Compile. The generated application is placed in directory `src-gen`
 
 ### Run Product
 1. Choose Run -> External Tools -> External Tools Configurations. Define the configuration's name.
