@@ -37,8 +37,8 @@ To implement a new variation:
 1. Add a new feature in the feature diagram (model.uvl)
 2. Develop a module in the directory `module`.
 Naming convention for the folder:
-- core module [productlinename].[modulename].core
-- delta module [productlinename].[coremodulename].[deltamodulename]
+- Core module [productlinename].[modulename].core
+- Delta module [productlinename].[coremodulename].[deltamodulename]
 FYI, the core and delta module can be generated from the UML-DOP diagram,
 you can also create/update the UML-DOP diagram and generate the source.
 See this repository: https://gitlab.com/RSE-Lab-Fasilkom-UI/PricesIDE/uml-to-vmj
@@ -64,5 +64,3 @@ The generated application is placed in directory `src-gen`
     ```
     http://localhost:7776/call/disbursement/agent
     ```
-6. Seed initial data for ChartOfAccount and Auth from directory `sql`. Add your google
-account to `auth_seed.sql` and grant `Administator` role.
