@@ -53,7 +53,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		return requestBody;
 	}
 	
-	protected Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody) {
+	public Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody) {
 		String vendorName = (String) requestBody.get("vendor_name");
 		String Id = (String) requestBody.get("id");
 

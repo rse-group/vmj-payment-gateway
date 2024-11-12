@@ -12,4 +12,5 @@ public interface PaymentService {
     HashMap<String, Object> updatePayment(Map<String, Object> requestBody);
     List<HashMap<String, Object>> transformListToHashMap(List<Payment> List);
     Map<String, Object> sendTransaction(Map<String, Object> requestBody);
+    Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody);
 }

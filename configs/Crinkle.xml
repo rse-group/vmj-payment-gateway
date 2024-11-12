@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configuration>
 	<feature automatic="selected" name="PaymentGateway"/>
-	<feature name="Disbursement"/>
-	<feature name="International"/>
-	<feature name="ExchangeRate"/>
-	<feature name="AutomaticExchangeRate"/>
-	<feature name="FixedCurrency"/>
-	<feature name="IDR"/>
-	<feature name="Agent"/>
-	<feature name="SpecifiedRecipient"/>
+	<feature automatic="selected" manual="selected" name="Disbursement"/>
+	<feature automatic="selected" manual="selected" name="International"/>
+	<feature manual="selected" name="ExchangeRate"/>
+	<feature automatic="selected" name="AutomaticExchangeRate"/>
+	<feature manual="selected" name="FixedCurrency"/>
+	<feature automatic="selected" name="IDR"/>
+	<feature manual="selected" name="Agent"/>
+	<feature manual="selected" name="SpecifiedRecipient"/>
 	<feature automatic="selected" name="Payment"/>
 	<feature automatic="selected" name="PaymentLink"/>
 	<feature manual="selected" name="FlipPaymentLink"/>
@@ -24,7 +24,7 @@
 	<feature automatic="selected" manual="selected" name="EWallet"/>
 	<feature manual="selected" name="FlipEWallet"/>
 	<feature manual="selected" name="MidtransEWallet"/>
-	<feature manual="selected" name="OyEWallet"/>
+	<feature name="OyEWallet"/>
 	<feature manual="selected" name="Invoice"/>
 	<feature automatic="selected" name="OyInvoice"/>
 	<feature automatic="selected" name="PaymentRouting"/>
@@ -34,7 +34,7 @@
 	<feature automatic="selected" name="DebitCard"/>
 	<feature manual="selected" name="MidtransDebitCard"/>
 	<feature automatic="selected" name="Vendor"/>
-	<feature manual="selected" name="Flip"/>
+	<feature automatic="selected" manual="selected" name="Flip"/>
 	<feature automatic="selected" name="Midtrans"/>
 	<feature automatic="selected" name="Oy"/>
 </configuration>
