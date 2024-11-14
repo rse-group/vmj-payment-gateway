@@ -19,6 +19,7 @@ public abstract class PaymentComponent implements Payment {
 	protected int idTransaction;
 	protected double amount;
 	protected String vendorName;
+	
 
 	public PaymentComponent() {
 
