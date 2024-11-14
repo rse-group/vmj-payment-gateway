@@ -6,15 +6,17 @@ import java.math.BigInteger;
 import javax.persistence.OneToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.CascadeType;
-import javax.persistence.Transient;
 
 @MappedSuperclass
-public abstract class DisbursementDecorator extends DisbursementComponent {    
-    @Transient
+public abstract class DisbursementDecorator extends DisbursementComponent {
+    //https://stackoverflow.com/questions/9116630/one-to-one-delete-on-cascade
+    @OneToOne(cascade=CascadeType.REMOVE, optional=true)
     protected DisbursementComponent record;
 
     public DisbursementDecorator(DisbursementComponent record) {
-        this.id = record.getId();
+        String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
+        String unique_no = generateUUIDNo.substring(0,5);
+        this.id = Integer.parseInt(unique_no);
         this.record = record;
     }
 

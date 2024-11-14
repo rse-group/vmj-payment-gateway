@@ -34,35 +34,35 @@ public class SpecialImpl extends DisbursementDecorator {
 		super();
 	}
 
-	public int getSender_country() {
+	public int getSenderCountry() {
 		return sender_country;
 	}
 
-	public void setSender_country(int sender_country) {
+	public void setSenderCountry(int sender_country) {
 		this.sender_country = sender_country;
 	}
 
-	public String getSender_name() {
+	public String getSenderName() {
 		return sender_name;
 	}
 
-	public void setSender_name(String sender_name) {
+	public void setSenderName(String sender_name) {
 		this.sender_name = sender_name;
 	}
 
-	public String getSender_address() {
+	public String getSenderAddress() {
 		return sender_address;
 	}
 
-	public void setSender_address(String sender_address) {
+	public void setSenderAddress(String sender_address) {
 		this.sender_address = sender_address;
 	}
 
-	public String getSender_job() {
+	public String getSenderJob() {
 		return sender_job;
 	}
 
-	public void setSender_job(String sender_job) {
+	public void setSenderJob(String sender_job) {
 		this.sender_job = sender_job;
 	}
 
@@ -76,10 +76,10 @@ public class SpecialImpl extends DisbursementDecorator {
 
 	public HashMap<String, Object> toHashMap() {
 		HashMap<String, Object> specialMap = record.toHashMap();
-		specialMap.put("sender_country", getSender_country());
-		specialMap.put("sender_name", getSender_name());
-		specialMap.put("sender_address", getSender_address());
-		specialMap.put("sender_job", getSender_job());
+		specialMap.put("sender_country", getSenderCountry());
+		specialMap.put("sender_name", getSenderName());
+		specialMap.put("sender_address", getSenderAddress());
+		specialMap.put("sender_job", getSenderJob());
 		specialMap.put("direction", getDirection());
 		return specialMap;
 	}

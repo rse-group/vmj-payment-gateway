@@ -11,6 +11,9 @@
 	"Oy": [
 		"paymentgateway.config.oy"
 	],
+	"Xendit": [
+		"paymentgateway.config.xendit"
+	],
 	"Disbursement": [
 		"paymentgateway.disbursement.core"
 	],
@@ -29,6 +32,9 @@
 		"paymentgateway.disbursement.agent",
 		"paymentgateway.disbursement.domesticdisbursementvalidator",
 		"paymentgateway.disbursement.agentdisbursement"
+	],
+	"SpecifiedRecipient": [
+		"paymentgateway.disbursement.specifiedrecipient"
 	],
 	"Payment": [
 		"paymentgateway.payment.core"

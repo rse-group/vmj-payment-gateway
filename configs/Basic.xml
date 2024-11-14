@@ -2,11 +2,11 @@
 <configuration>
 	<feature automatic="selected" name="PaymentGateway"/>
 	<feature automatic="selected" name="Disbursement"/>
-	<feature name="International"/>
-	<feature name="ExchangeRate"/>
-	<feature name="AutomaticExchangeRate"/>
-	<feature name="FixedCurrency"/>
-	<feature name="IDR"/>
+	<feature automatic="selected" name="International"/>
+	<feature manual="selected" name="ExchangeRate"/>
+	<feature automatic="selected" name="AutomaticExchangeRate"/>
+	<feature manual="selected" name="FixedCurrency"/>
+	<feature automatic="selected" name="IDR"/>
 	<feature manual="selected" name="Agent"/>
 	<feature manual="selected" name="SpecifiedRecipient"/>
 	<feature name="Payment"/>

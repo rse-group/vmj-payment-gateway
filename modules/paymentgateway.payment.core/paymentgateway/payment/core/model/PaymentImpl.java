@@ -19,8 +19,8 @@ import javax.persistence.OneToMany;
 @Table(name="payment_impl")
 public class PaymentImpl extends PaymentComponent {
 	
-	protected double amount;
-	protected String vendorName;
+//	protected double amount;
+//	protected String vendorName;
 
 	public PaymentImpl(int idTransaction, String vendorName, double amount) {
 		this.idTransaction = idTransaction;
