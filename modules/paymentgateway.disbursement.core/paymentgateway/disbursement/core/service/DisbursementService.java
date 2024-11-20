@@ -5,6 +5,7 @@ import java.util.*;
 import vmj.routing.route.VMJExchange;
 
 public interface DisbursementService {
+    int callback(Map<String, Object> requestBody);
     Disbursement createDisbursement(Map<String, Object> requestBody);
     Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response);
     HashMap<String, Object> getDisbursement(Map<String, Object> requestBody);

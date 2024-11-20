@@ -22,6 +22,62 @@ import paymentgateway.config.ConfigFactory;
 public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	private static final Logger LOGGER = Logger.getLogger(DisbursementServiceImpl.class.getName());
     
+	public int callback(Map<String, Object> requestBody) {
+		String workingDir = System.getProperty("user.dir");
+		List<File> propertyFiles = new ArrayList<>();
+		List<String> vendors = new ArrayList<>();
+		String[] targetFiles = {"oy.properties", "flip.properties", "midtrans.properties"};
+
+		// Iterate through target files
+		for (String targetFile : targetFiles) {
+			File file = new File(workingDir, targetFile);
+			if (file.exists()) {
+				String fileName = file.getName();
+				String nameBeforeDot = fileName.substring(0, fileName.indexOf('.'));
+				String capitalized = nameBeforeDot.substring(0, 1).toUpperCase() + nameBeforeDot.substring(1);
+            	vendors.add(capitalized);
+			}
+		}
+		
+		for (String vendor : vendors) {
+	        try {
+	            Config config = ConfigFactory.createConfig(vendor, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+	            Map<String, Object> requestMap = config.getCallbackDisbursementRequestBody(requestBody);
+
+	            String idStr = (String) requestMap.get("id");
+	            String status = (String) requestMap.get("status");
+
+	            LOGGER.info("Processing Vendor: " + vendor);
+	            LOGGER.info("ID: " + idStr);
+	            LOGGER.info("Status: " + status);
+
+				String hostAddress = getEnvVariableHostAddress("AMANAH_HOST_BE");
+        		int portNum = getEnvVariablePortNumber("AMANAH_PORT_BE");
+	            HttpClient client = HttpClient.newHttpClient();
+				String configUrl = String.format("http://%s:%d/call/receivedisbursementcallback", hostAddress, portNum);
+	            String requestString = config.getRequestString(requestMap);
+	            HttpRequest request = config.getBuilder(HttpRequest.newBuilder(), config.getHeaderParams())
+	                                       .uri(URI.create(configUrl))
+	                                       .POST(HttpRequest.BodyPublishers.ofString(requestString))
+	                                       .build();
+				
+	            try {
+	                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+	                String rawResponse = response.body();
+	                LOGGER.info("Raw Response: " + rawResponse);
+	            } catch (Exception e) {
+	                System.err.println("Failed to send request for vendor: " + vendor);
+	                e.printStackTrace();
+	            }
+	        } catch (Exception e) {
+	            System.err.println("Failed to process vendor: " + vendor);
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return 200;
+	}
+
     public Disbursement createDisbursement(Map<String, Object> requestBody) {
         Map<String, Object> response = sendTransaction(validateRequestBody(requestBody));
         return createDisbursement(requestBody, response);

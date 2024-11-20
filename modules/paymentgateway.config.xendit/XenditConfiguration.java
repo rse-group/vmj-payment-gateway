@@ -29,9 +29,8 @@ public class XenditConfiguration extends ConfigDecorator{
     }
     
     @Override
-    public Map<String, Object> getCallbackDisbursementRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getCallbackDisbursementRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
-        Map<String, Object> payload = vmjExchange.getPayload();
         
         // TODO: implement disbursement callback handler
         

@@ -15,6 +15,7 @@ public abstract class DisbursementServiceComponent implements DisbursementServic
                 paymentgateway.disbursement.core.DisbursementComponent.class);
     }
 
+    public abstract int callback(Map<String, Object> requestBody);
     public abstract Disbursement createDisbursement(Map<String, Object> requestBody);
     public abstract Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response);
     public abstract HashMap<String, Object> getDisbursement(Map<String, Object> requestBody);

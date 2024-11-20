@@ -53,15 +53,14 @@ public class FlipConfiguration extends ConfigDecorator{
     }
     
     @Override
-    public Map<String, Object> getCallbackDisbursementRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getCallbackDisbursementRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
-        Map<String, Object> payload = vmjExchange.getPayload();
 		String status = "PENDING";
 		String flipToken = PropertiesReader.getProp(CONFIG_FILE, "token");
         String id = "";
 		
-		String data = (String) payload.get("data");
-		String token = (String) payload.get("token");
+		String data = (String) requestBody.get("data");
+		String token = (String) requestBody.get("token");
 		
 		Gson gson = new Gson();
     	Map<String, Object> decodedData = gson.fromJson(data, Map.class);
@@ -70,7 +69,8 @@ public class FlipConfiguration extends ConfigDecorator{
         if (token.equals(flipToken)) {
             requestMap.put("id",id);
             requestMap.put("status", status);
-        }     
+        }
+
         return requestMap;
     }
 

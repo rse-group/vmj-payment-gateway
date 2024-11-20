@@ -29,7 +29,7 @@ public interface Config {
     int generateId();
     
     Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange);
-    Map<String, Object> getCallbackDisbursementRequestBody(VMJExchange vmjExchange);
+    Map<String, Object> getCallbackDisbursementRequestBody(Map<String, Object> requestBody);
 
     // Disbursement Request
     Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody);
