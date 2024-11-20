@@ -320,6 +320,9 @@ public class MidtransConfiguration extends ConfigDecorator{
         else if (serviceName.equals("PaymentDetail")){
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "paymentdetail");
         }
+        else if (serviceName.equals("CreditCardToken")){
+            apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "token") + "?client_key=" + PropertiesReader.getProp(CONFIG_FILE, "clientKey");
+        }
         else {
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "apiendpoint");
         }
