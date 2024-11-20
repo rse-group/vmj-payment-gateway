@@ -11,6 +11,10 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
         this.record = record;
     }
 
+    public int callback(Map<String, Object> requestBody){
+        return record.callback(requestBody);
+    }
+
     public Disbursement createDisbursement(Map<String, Object> requestBody){
         return record.createDisbursement(requestBody);
     }
