@@ -37,4 +37,5 @@
 	<feature automatic="selected" name="Flip"/>
 	<feature name="Midtrans"/>
 	<feature name="Oy"/>
+	<feature automatic="selected" name="Xendit"/>
 </configuration>
