@@ -8,7 +8,7 @@
 	<feature manual="selected" name="FixedCurrency"/>
 	<feature automatic="selected" name="IDR"/>
 	<feature manual="selected" name="Agent"/>
-	<feature manual="selected" name="SpecifiedRecipient"/>
+	<feature name="SpecifiedRecipient"/>
 	<feature name="Payment"/>
 	<feature name="PaymentLink"/>
 	<feature name="FlipPaymentLink"/>
@@ -37,4 +37,5 @@
 	<feature automatic="selected" manual="selected" name="Flip"/>
 	<feature name="Midtrans"/>
 	<feature name="Oy"/>
+	<feature name="Xendit"/>
 </configuration>
