@@ -19,19 +19,16 @@
 	],
 	"ExchangeRate": [
 		"paymentgateway.disbursement.international",
-		"paymentgateway.disbursement.internationaldisbursementvalidator",
-		"paymentgateway.disbursement.internationaldisbursement"
+		"paymentgateway.disbursement.internationaldisbursementvalidator"
 	],
 	"FixedCurrency": [
 		"paymentgateway.disbursement.special",
 		"paymentgateway.disbursement.domesticdisbursementvalidator",
-		"paymentgateway.disbursement.internationaldisbursementvalidator",
-		"paymentgateway.disbursement.specialdisbursement"
+		"paymentgateway.disbursement.internationaldisbursementvalidator"
 	],
 	"Agent": [
 		"paymentgateway.disbursement.agent",
-		"paymentgateway.disbursement.domesticdisbursementvalidator",
-		"paymentgateway.disbursement.agentdisbursement"
+		"paymentgateway.disbursement.domesticdisbursementvalidator"
 	],
 	"SpecifiedRecipient": [
 		"paymentgateway.disbursement.specifiedrecipient"

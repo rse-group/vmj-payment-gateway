@@ -47,7 +47,7 @@ public class ConfigImpl extends ConfigComponent {
     	throw new UnsupportedOperationException();
     }
     
-    public Map<String, Object> getCallbackDisbursementRequestBody(VMJExchange vmjExchange){
+    public Map<String, Object> getCallbackDisbursementRequestBody(Map<String, Object> requestBody){
     	throw new UnsupportedOperationException();
     }
 
