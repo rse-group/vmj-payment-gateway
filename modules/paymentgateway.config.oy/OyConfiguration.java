@@ -82,6 +82,16 @@ public class OyConfiguration extends ConfigDecorator{
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         Map<String, Object> paymentData = (Map<String, Object>) rawResponseMap.get("data");
         String status = (String) paymentData.get("status");
+        
+        if(status.equals(PaymentStatus.COMPLETE.getStatus())){
+			status = PaymentStatus.SUCCESSFUL.getStatus();
+		}
+		else if (status.equals(PaymentStatus.CLOSED.getStatus())){
+			status = PaymentStatus.CANCELLED.getStatus();
+		}
+        else if (status.equals(PaymentStatus.FAIL.getStatus())){
+            status = PaymentStatus.FAILED.getStatus();
+        }
 
         response.put("status", status);
         response.put("id", id);

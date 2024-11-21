@@ -59,7 +59,24 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		HttpClient client = HttpClient.newHttpClient();
-        String configUrl = config.getProductEnv("PaymentDetail");
+		final String[] paymentMethodHolder = {""};
+		
+		PaymentRepository.executeQuery(session -> {
+			String sql = String.format("SELECT modulesequence FROM payment_comp WHERE idtransaction ='%s'", Id );
+			String result = (String) session.createNativeQuery(sql).getSingleResult();
+			
+			String[] modules = result.split(",");
+			paymentMethodHolder[0] = modules[modules.length - 1].trim();
+		});
+		
+		String configUrl;
+		if (paymentMethodHolder[0].equals("paymentlink_impl") && vendorName.toLowerCase().equals("midtrans")){
+			configUrl = config.getProductEnv("PaymentStatus");
+		} else {
+			configUrl = config.getProductEnv("PaymentDetail");
+		}
+		
+		System.out.println(configUrl + paymentMethodHolder[0]);
         configUrl = config.getPaymentDetailEndpoint(configUrl, Id);
         HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),config.getHeaderParams()))
 				.uri(URI.create(configUrl))

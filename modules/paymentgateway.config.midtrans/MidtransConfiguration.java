@@ -36,7 +36,23 @@ public class MidtransConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
-        String status = (String) rawResponseMap.get("transaction_status");
+        
+        String status = rawResponseMap.get("transaction_status") != null
+        	    ? (String) rawResponseMap.get("transaction_status")
+        	    : (String) rawResponseMap.get("last_snap_transaction_status");
+        
+        if (status.toLowerCase().equals(PaymentStatus.SETTLEMENT.getStatus()) || status.toLowerCase().equals(PaymentStatus.CAPTURE.getStatus())) {
+            status = PaymentStatus.SUCCESSFUL.getStatus();
+
+        }
+        else if (status.toLowerCase().equals(PaymentStatus.CANCEL.getStatus())){
+            status = PaymentStatus.CANCELLED.getStatus();
+
+        }
+        else if (status.toLowerCase().equals(PaymentStatus.FAIL.getStatus())){
+            status = PaymentStatus.FAILED.getStatus();
+        }
+
         response.put("status", status);
         response.put("id", id);
         return response;
@@ -80,7 +96,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         requestMap.put( "customer_required",true);
 
 
-        String name = (String) requestBody.get("name");
+        String name = (String) requestBody.get("sender_name");
         String email = (String) requestBody.get("email");
         String title = (String) requestBody.get("title");
         String[] arr = name.split(" ", 2);
@@ -319,6 +335,9 @@ public class MidtransConfiguration extends ConfigDecorator{
         } 
         else if (serviceName.equals("PaymentDetail")){
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "paymentdetail");
+        }
+        else if (serviceName.equals("PaymentStatus")){
+            apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "paymentstatus");
         }
         else if (serviceName.equals("CreditCardToken")){
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "token") + "?client_key=" + PropertiesReader.getProp(CONFIG_FILE, "clientKey");
