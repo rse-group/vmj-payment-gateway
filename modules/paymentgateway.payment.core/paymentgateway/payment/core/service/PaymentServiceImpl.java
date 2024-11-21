@@ -69,6 +69,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
+			System.out.println(rawResponse);
             responseMap = config.getPaymentStatusResponse(rawResponse, Id);
 		} catch (Exception e) {
 			e.printStackTrace();
