@@ -20,7 +20,7 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 		this.disbursementServiceImpl = new DisbursementServiceImpl(recordService);
 	}
 
-	@Route(url = "call/disbursement/specified-recipient")
+	@Route(url = "call/specified-recipient")
 	public HashMap<String, Object> disbursement(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")) {
 			Map<String, Object> requestBody = vmjExchange.getPayload(); 
