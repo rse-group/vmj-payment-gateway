@@ -245,7 +245,12 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
-        double amount = Double.parseDouble((String) requestBody.get("amount"));
+        
+        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "amount"
+        );
+        double amount = Double.parseDouble(amountStr);
         String token = (String) requestBody.get("token_id");
 
 
@@ -259,6 +264,40 @@ public class MidtransConfiguration extends ConfigDecorator{
         requestMap.put("transaction_details", transaction_details);
         requestMap.put("id",id);
         return requestMap;
+    }
+
+    public String constructUrlParam(String serviceName, Map<String, Object> requestBody) {
+        String baseUrl = (String) PropertiesReader.getProp(CONFIG_FILE, "base_url");
+        String apiEndpoint = "";
+    
+        // Determine the appropriate endpoint based on the service name
+        if (serviceName.equals("CreditCardToken")){
+            String cardNumber = RequestBodyValidator.stringRequestBodyValidator(
+                requestBody,
+                "card_number"
+            );
+            String cardExpMonth = RequestBodyValidator.stringRequestBodyValidator(
+                requestBody,
+                "card_exp_month"
+            );
+            String cardExpYear = RequestBodyValidator.stringRequestBodyValidator(
+                requestBody,
+                "card_exp_year"
+            );
+            String cardCVV = RequestBodyValidator.stringRequestBodyValidator(
+                requestBody,
+                "card_cvv"
+            );
+
+            apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "token") 
+                + "?client_key=" + PropertiesReader.getProp(CONFIG_FILE, "clientKey") 
+                + "&card_number=" + cardNumber 
+                + "&card_exp_month=" + cardExpMonth 
+                + "&card_exp_year=" + cardExpYear 
+                + "&card_cvv=" + cardCVV;
+        }
+
+        return baseUrl + apiEndpoint;
     }
 
     public Map<String, Object> getMidtransPayoutRequestBody(VMJExchange vmjExchange){

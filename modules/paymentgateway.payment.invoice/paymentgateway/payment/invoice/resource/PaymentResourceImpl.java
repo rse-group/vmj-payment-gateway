@@ -42,7 +42,7 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	}
 
 	
-	@Route(url="call/payment/invoice")
+	@Route(url="call/invoice")
 	public HashMap<String,Object> payment(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")){
 			Map<String, Object> requestBody = vmjExchange.getPayload(); 

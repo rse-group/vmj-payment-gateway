@@ -22,6 +22,9 @@ public interface Config {
     // get header detail per produk nya (ex: flip) dilempar ke delta config
     HashMap<String, String> getHeaderParams();
 
+    // to construct url with query parameter
+    String constructUrlParam(String serviceName, Map<String, Object> requestBody);
+
     // get request body ini juga dilempar ke deltanya.
     Map<String, Object> processRequestMap(VMJExchange vmjExchange, String serviceName);
     

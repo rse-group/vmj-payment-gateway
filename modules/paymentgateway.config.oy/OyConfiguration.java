@@ -4,6 +4,7 @@ import paymentgateway.config.core.ConfigDecorator;
 import paymentgateway.config.core.ConfigComponent;
 import paymentgateway.config.core.PropertiesReader;
 import paymentgateway.config.core.RequestBodyValidator;
+import vmj.routing.route.exceptions.BadRequestException;
 
 import java.util.*;
 import java.lang.reflect.*;
@@ -225,9 +226,29 @@ public class OyConfiguration extends ConfigDecorator{
     public Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         int id = generateId();
-        int amount = (int) (Double.parseDouble((String) requestBody.get("amount")));  
-        int quantity = (int) (Double.parseDouble((String) requestBody.get("quantity")));
-        int pricePerItem = (int) (Double.parseDouble((String) requestBody.get("price_per_item")));
+        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "amount"
+        );
+        int amount = Integer.parseInt(amountStr);
+
+        String quantityStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "quantity"
+        );
+        int quantity = Integer.parseInt(quantityStr);
+        
+        String pricePerItemStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "price_per_item"
+        );
+        int pricePerItem = Integer.parseInt(pricePerItemStr);
+
+        if (pricePerItem * quantity != amount) {
+            throw new BadRequestException(
+                "Jumlah quantity dan price_per_item tidak sesuai dengan amount."
+            );
+        }
       
         Map<String, Object> invoiceMap = new HashMap<>();
         
@@ -250,13 +271,32 @@ public class OyConfiguration extends ConfigDecorator{
         Map<String, Object> requestMap = new HashMap<>();
 
         int id = generateId();
-        int amount = (int) (Double.parseDouble((String) requestBody.get("amount")));
+        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "amount"
+        );
+        int amount = Integer.parseInt(amountStr);
         
-        String recipientAccount = (String) requestBody.get("recipient_account");
-        String recipientBank = (String) requestBody.get("recipient_bank");
-        String recipientAmount = (String) requestBody.get("recipient_amount");
-        String recipientEmail = (String) requestBody.get("recipient_email");
-        String recipientNote = (String) requestBody.get("recipient_note");
+        String recipientAccount = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "recipient_account"
+        );
+        String recipientBank = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "recipient_bank"
+        );
+        String recipientAmount = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "recipient_amount"
+        );
+        String recipientEmail = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "recipient_email"
+        );
+        String recipientNote = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "recipient_note"
+        );
 
         requestMap.put("partner_trx_id", String.valueOf(id));
         requestMap.put("partner_user_id", String.valueOf(id));
