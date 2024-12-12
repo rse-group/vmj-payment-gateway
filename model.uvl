@@ -8,11 +8,7 @@ features
 					International {abstract true}
 						optional
 							ExchangeRate
-								mandatory
-									AutomaticExchangeRate
 							FixedCurrency
-								mandatory
-									IDR
 					Agent
 					SpecifiedRecipient
 			Payment {abstract true}
@@ -59,4 +55,4 @@ constraints
 	OyInvoice | OyPaymentRouting | OyPaymentLink | OyRetailOutlet | OyVirtualAccount | OyEWallet => Oy
 	MidtransCreditCard | MidtransDebitCard | MidtransPaymentLink | MidtransVirtualAccount | MidtransEWallet | MidtransRetailOutlet => Midtrans
 	SpecifiedRecipient => Xendit
-	Agent | ExchangeRate | IDR | AutomaticExchangeRate => Flip
+	Agent | ExchangeRate | FixedCurrency => Flip
