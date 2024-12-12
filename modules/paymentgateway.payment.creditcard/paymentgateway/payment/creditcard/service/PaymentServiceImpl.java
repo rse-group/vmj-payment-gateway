@@ -42,62 +42,21 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return creditCardTransaction;
 	}
 
-//	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
-//		String vendorName = (String) requestBody.get("vendor_name");
-//
-//		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-//		
-//		Gson gson = new Gson();
-//		Map<String, Object> requestMap = config.getCreditCardRequestBody(requestBody);
-//		int id = ((Integer) requestMap.get("id")).intValue();
-//		requestMap.remove("id");
-//		String requestString = config.getRequestString(requestMap);
-//		String configUrl = config.getProductEnv("CreditCard");
-//		System.out.println(configUrl);
-//		HashMap<String, String> headerParams = config.getHeaderParams();
-//		HttpClient client = HttpClient.newHttpClient();
-//		HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),headerParams))
-//				.uri(URI.create(configUrl))
-//				.POST(HttpRequest.BodyPublishers.ofString(requestString))
-//				.build();
-//
-//		Map<String, Object> responseMap = new HashMap<>();
-//		try {
-//			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
-//			String rawResponse = response.body().toString();
-//			System.out.println("rawResponse " + rawResponse);
-//			responseMap = config.getCreditCardResponse(rawResponse, id);
-//		} catch (Exception e) {
-//			System.out.println(e);
-//		}
-//
-//		return responseMap;
-//	}
 	
 	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
 	    String vendorName = (String) requestBody.get("vendor_name");
-	    String cardNumber = (String) requestBody.get("card_number");
-	    String cardExpMonth = (String) requestBody.get("card_exp_month");
-	    String cardExpYear = (String) requestBody.get("card_exp_year");
-	    String cardCVV = (String) requestBody.get("card_cvv");
-
+	    
 	    Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 	    Gson gson = new Gson();
 	    
 	    // Step 1: Get credit card token
-	    String tokenUrl = config.getProductEnv("CreditCardToken");;
+	    String tokenUrl = config.constructUrlParam("CreditCardToken", requestBody);
 	    
-	    String tokenRequestUrl = tokenUrl + 
-	                             "&card_number=" + cardNumber + 
-	                             "&card_exp_month=" + cardExpMonth + 
-	                             "&card_exp_year=" + cardExpYear + 
-	                             "&card_cvv=" + cardCVV;
-	    
-	    HttpRequest tokenRequest = HttpRequest.newBuilder()
-	        .uri(URI.create(tokenRequestUrl))
-	        .header("Accept", "application/json")
-	        .header("Content-Type", "application/json")
-	        .build();
+		HashMap<String, String> headerParams = config.getHeaderParams();
+		HttpRequest tokenRequest = (config.getBuilder(HttpRequest.newBuilder(), headerParams))
+			.uri(URI.create(tokenUrl))
+			.GET()
+			.build();
 	    
 	    String tokenId = null;
 	    try {
@@ -121,7 +80,6 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 	    String configUrl = config.getProductEnv("CreditCard");
 	    System.out.println(configUrl);
 
-	    HashMap<String, String> headerParams = config.getHeaderParams();
 	    HttpRequest transactionRequest = (config.getBuilder(HttpRequest.newBuilder(), headerParams))
 	        .uri(URI.create(configUrl))
 	        .POST(HttpRequest.BodyPublishers.ofString(requestString))

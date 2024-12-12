@@ -54,6 +54,10 @@ public class ConfigImpl extends ConfigComponent {
     public String getProductEnv(String serviceName){
         throw new UnsupportedOperationException();
     }
+    
+    public String constructUrlParam(String serviceName, Map<String, Object> requestBody){
+        throw new UnsupportedOperationException();
+    }
 
     public String getPaymentDetailEndpoint(String configUrl,String id){
         throw new UnsupportedOperationException();

@@ -3,6 +3,7 @@ package paymentgateway.config.midtrans;
 import paymentgateway.config.core.ConfigDecorator;
 import paymentgateway.config.core.ConfigComponent;
 import paymentgateway.config.core.PropertiesReader;
+import paymentgateway.config.core.RequestBodyValidator;
 
 import java.util.*;
 import java.lang.reflect.Type;
@@ -89,7 +90,11 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> transaction_details = new HashMap<String, Object>();
         
         int id = generateId();
-        double amount = Double.parseDouble((String) requestBody.get("amount"));
+        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "amount"
+        );
+        double amount = Double.parseDouble(amountStr);
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
         requestMap.put("transaction_details", transaction_details);
@@ -120,9 +125,15 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
-        double amount = Double.parseDouble((String) requestBody.get("amount"));
-        String store = (String) requestBody.get("retail_outlet");
-
+        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "amount"
+        );
+        double amount = Double.parseDouble(amountStr);
+        String store = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "retail_outlet"
+        );
 
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
@@ -143,8 +154,15 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
-        double amount = Double.parseDouble((String) requestBody.get("amount"));
-        String bank = (String) requestBody.get("bank");
+        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "amount"
+        );
+        double amount = Double.parseDouble(amountStr);
+        String bank = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "bank"
+        );
 
 
         transaction_details.put("order_id", String.valueOf(id));
@@ -166,9 +184,21 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
-        double amount = Double.parseDouble((String) requestBody.get("amount"));
-        String ewallet = (String) requestBody.get("ewallet_type");
-        String phone = (String) requestBody.get("phone");
+        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "amount"
+        );
+            
+        double amount = Double.parseDouble(amountStr);
+        String ewallet = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "ewallet_type"
+        );
+ 
+        String phone = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "phone"
+        );
 
 
         transaction_details.put("order_id", String.valueOf(id));
@@ -215,7 +245,12 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
-        double amount = Double.parseDouble((String) requestBody.get("amount"));
+        
+        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "amount"
+        );
+        double amount = Double.parseDouble(amountStr);
         String token = (String) requestBody.get("token_id");
 
 
@@ -229,6 +264,40 @@ public class MidtransConfiguration extends ConfigDecorator{
         requestMap.put("transaction_details", transaction_details);
         requestMap.put("id",id);
         return requestMap;
+    }
+
+    public String constructUrlParam(String serviceName, Map<String, Object> requestBody) {
+        String baseUrl = (String) PropertiesReader.getProp(CONFIG_FILE, "base_url");
+        String apiEndpoint = "";
+    
+        // Determine the appropriate endpoint based on the service name
+        if (serviceName.equals("CreditCardToken")){
+            String cardNumber = RequestBodyValidator.stringRequestBodyValidator(
+                requestBody,
+                "card_number"
+            );
+            String cardExpMonth = RequestBodyValidator.stringRequestBodyValidator(
+                requestBody,
+                "card_exp_month"
+            );
+            String cardExpYear = RequestBodyValidator.stringRequestBodyValidator(
+                requestBody,
+                "card_exp_year"
+            );
+            String cardCVV = RequestBodyValidator.stringRequestBodyValidator(
+                requestBody,
+                "card_cvv"
+            );
+
+            apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "token") 
+                + "?client_key=" + PropertiesReader.getProp(CONFIG_FILE, "clientKey") 
+                + "&card_number=" + cardNumber 
+                + "&card_exp_month=" + cardExpMonth 
+                + "&card_exp_year=" + cardExpYear 
+                + "&card_cvv=" + cardCVV;
+        }
+
+        return baseUrl + apiEndpoint;
     }
 
     public Map<String, Object> getMidtransPayoutRequestBody(VMJExchange vmjExchange){

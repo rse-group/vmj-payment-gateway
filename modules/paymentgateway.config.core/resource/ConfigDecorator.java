@@ -55,6 +55,10 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getHeaderParams();
     }
 
+    public String constructUrlParam(String serviceName, Map<String, Object> requestBody){
+        return record.constructUrlParam(serviceName, requestBody);
+    }
+
     public Map<String, Object> processRequestMap(VMJExchange vmjExchange, String serviceName){
         return record.processRequestMap(vmjExchange, serviceName);
     }

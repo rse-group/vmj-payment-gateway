@@ -8,6 +8,7 @@ public abstract class ConfigComponent implements Config {
     public abstract String getVendorName();
     public abstract String getProductEnv(String fileName, String serviceName);
     public abstract String getProductEnv(String serviceName);
+    public abstract String constructUrlParam(String serviceName, Map<String, Object> requestBody);
     public abstract String getRequestString(Map<String, Object> requestMap);
     public abstract HttpRequest.Builder getBuilder(HttpRequest.Builder builder, HashMap<String, String> headerParams);
     public abstract HashMap<String, String> getHeaderParams();
