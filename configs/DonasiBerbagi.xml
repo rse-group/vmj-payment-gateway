@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature automatic="selected" name="PaymentGateway"/>
+	<feature automatic="selected" name="Vendor"/>
+	<feature manual="unselected" name="Flip"/>
+	<feature manual="unselected" name="Midtrans"/>
+	<feature manual="selected" name="Oy"/>
+	<feature manual="unselected" name="Xendit"/>
+	<feature name="Disbursement"/>
+	<feature name="International"/>
+	<feature automatic="unselected" name="ExchangeRate"/>
+	<feature automatic="unselected" name="FixedCurrency"/>
+	<feature automatic="unselected" name="Agent"/>
+	<feature automatic="unselected" name="SpecifiedRecipient"/>
+	<feature name="Payment"/>
+	<feature name="PaymentLink"/>
+	<feature name="FlipPaymentLink"/>
+	<feature automatic="unselected" name="MidtransPaymentLink"/>
+	<feature name="OyPaymentLink"/>
+	<feature name="VirtualAccount"/>
+	<feature name="FlipVirtualAccount"/>
+	<feature automatic="unselected" name="MidtransVirtualAccount"/>
+	<feature name="OyVirtualAccount"/>
+	<feature name="RetailOutlet"/>
+	<feature automatic="unselected" name="MidtransRetailOutlet"/>
+	<feature name="OyRetailOutlet"/>
+	<feature name="EWallet"/>
+	<feature name="FlipEWallet"/>
+	<feature automatic="unselected" name="MidtransEWallet"/>
+	<feature name="OyEWallet"/>
+	<feature name="Invoice"/>
+	<feature name="OyInvoice"/>
+	<feature name="PaymentRouting"/>
+	<feature name="OyPaymentRouting"/>
+	<feature automatic="unselected" name="CreditCard"/>
+	<feature automatic="unselected" name="MidtransCreditCard"/>
+	<feature automatic="unselected" name="DebitCard"/>
+	<feature automatic="unselected" name="MidtransDebitCard"/>
+</configuration>

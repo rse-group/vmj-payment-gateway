@@ -3,6 +3,12 @@ namespace PaymentGateway
 features
 	PaymentGateway {abstract true}
 		optional
+			Vendor {abstract true}
+				or
+					Flip
+					Midtrans
+					Oy
+					Xendit
 			Disbursement
 				optional
 					International {abstract true}
@@ -44,12 +50,6 @@ features
 					DebitCard
 						mandatory
 							MidtransDebitCard
-			Vendor {abstract true}
-				or
-					Flip
-					Midtrans
-					Oy
-					Xendit
 
 constraints
 	OyInvoice | OyPaymentRouting | OyPaymentLink | OyRetailOutlet | OyVirtualAccount | OyEWallet => Oy
