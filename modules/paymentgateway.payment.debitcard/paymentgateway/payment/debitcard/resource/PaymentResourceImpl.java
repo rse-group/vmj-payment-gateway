@@ -2,6 +2,7 @@ package paymentgateway.payment.debitcard;
 
 import com.google.gson.Gson;
 
+import vmj.routing.route.RequestMethod;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
@@ -35,14 +36,11 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		paymentServiceImpl = new PaymentServiceImpl(recordService);
 	}
 
-	@Route(url="call/payment/debitcard")
+	@Route(url="call/payment/debitcard", method = RequestMethod.POST)
 	public HashMap<String,Object> payment(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("POST")){
-			Map<String, Object> requestBody = vmjExchange.getPayload(); 
-			Payment result = paymentServiceImpl.createPayment(requestBody);
-			return result.toHashMap();
-		}
-		throw new NotFoundException("Route tidak ditemukan");
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+		Payment result = paymentServiceImpl.createPayment(requestBody);
+		return result.toHashMap();
 	}
 }
 
