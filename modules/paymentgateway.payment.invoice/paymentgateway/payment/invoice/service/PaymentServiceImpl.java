@@ -28,6 +28,8 @@ import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import paymentgateway.config.core.CreatePaymentRequestBody;
+import paymentgateway.config.core.CreateInvoiceRequestBody;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
 	
@@ -35,7 +37,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
         super(record);
     }
 
-	public Payment createPayment(Map<String, Object> requestBody) {
+	public Payment createPayment(CreatePaymentRequestBody requestBody) {
 		Map<String, Object> response = sendTransaction(requestBody);
 
 		int id = (int) response.get("id");
@@ -48,13 +50,13 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return invoiceTransaction;
 	}
 	
-	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
-		String vendorName = (String) requestBody.get("vendor_name");
+	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
+		String vendorName = (String) requestBody.vendorName;
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getInvoiceRequestBody(requestBody);
+		Map<String, Object> requestMap = config.getInvoiceRequestBody((CreateInvoiceRequestBody) requestBody);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String requestString = config.getRequestString(requestMap);

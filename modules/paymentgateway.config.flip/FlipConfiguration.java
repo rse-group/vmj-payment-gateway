@@ -18,6 +18,10 @@ import vmj.routing.route.exceptions.BadRequestException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import paymentgateway.config.core.CreatePaymentLinkRequestBody;
+import paymentgateway.config.core.CreateVirtualAccountPaymentRequestBody;
+import paymentgateway.config.core.CreateEWalletPaymentRequestBody;
+
 public class FlipConfiguration extends ConfigDecorator{
     private String CONFIG_FILE = "flip.properties";
 
@@ -264,22 +268,15 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getVirtualAccountRequestBody(CreateVirtualAccountPaymentRequestBody requestBody){
         int id = generateId();
         Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) requestBody.get("title");
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
-        String senderName = (String) requestBody.get("name");
-        String senderEmail = (String) requestBody.get("email");
-        String senderBank = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "bank"
-        );
-
+        String title = requestBody.title;
+        int amount = (int) requestBody.amount;
+        String senderName = requestBody.name;
+        String senderEmail = requestBody.email;
+        String senderBank = requestBody.bank;
+        
         requestMap.put("id",id);
         requestMap.put("title", title);
         requestMap.put("type", PaymentType.SINGLE.getValue());
@@ -311,27 +308,17 @@ public class FlipConfiguration extends ConfigDecorator{
 
 
     @Override
-    public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getEWalletRequestBody(CreateEWalletPaymentRequestBody requestBody){
         int id = generateId();
         Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) requestBody.get("title");
+        String title = requestBody.title;
 
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
+        int amount = (int) requestBody.amount;
 
-        String senderName = (String) requestBody.get("name");
-        String senderEmail = (String) requestBody.get("email");
-        String senderBank = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "ewallet_type"
-        );
-        String senderPhoneNumber = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "phone"
-        );
+        String senderName = requestBody.name;
+        String senderEmail = requestBody.email;
+        String senderBank = requestBody.ewalletType;
+        String senderPhoneNumber = requestBody.phone;
 
         requestMap.put("id",id);
         requestMap.put("title", title);
@@ -370,17 +357,13 @@ public class FlipConfiguration extends ConfigDecorator{
 
 
     @Override
-    public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getPaymentLinkRequestBody(CreatePaymentLinkRequestBody requestBody){
         int id = generateId();
         Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) requestBody.get("title");
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
-        String senderEmail = (String) requestBody.get("email");
-        String senderName = (String) requestBody.get("sender_name");
+        String title = requestBody.title;
+        int amount = (int) requestBody.amount;
+        String senderEmail = requestBody.email;
+        String senderName = requestBody.senderName;
         
         requestMap.put("id",id);
         requestMap.put("title", title);

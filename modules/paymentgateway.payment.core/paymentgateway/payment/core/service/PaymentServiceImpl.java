@@ -22,12 +22,19 @@ import vmj.routing.route.exceptions.*;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
+import paymentgateway.config.core.CreatePaymentRequestBody;
+import paymentgateway.config.core.CheckPaymentStatusRequestBody;
+import paymentgateway.config.core.GetPaymentRequestBody;
+import paymentgateway.config.core.GetAllPaymentRequestBody;
+import paymentgateway.config.core.UpdatePaymentRequestBody;
+import paymentgateway.config.core.DeletePaymentRequestBody;
+
 public class PaymentServiceImpl extends PaymentServiceComponent {
 	protected PaymentServiceComponent record;
 
-	public Payment createPayment(Map<String, Object> requestBody, int id) {
-		String vendorName = (String) requestBody.get("vendor_name");
-		double amount = Double.parseDouble((String) requestBody.get("amount"));
+	public Payment createPayment(CreatePaymentRequestBody requestBody, int id) {
+		String vendorName = requestBody.vendorName;
+		double amount = requestBody.amount;
 		Payment transaction = PaymentFactory.createPayment("paymentgateway.payment.core.PaymentImpl",
 				id,
 				vendorName,
@@ -37,10 +44,16 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		return transaction;
 	}
 	
-	public Payment createPayment(Map<String, Object> requestBody) {
-		String vendorName = (String) requestBody.get("vendor_name");
-		double amount = Double.parseDouble((String) requestBody.get("amount"));
+	public Payment createPayment(CreatePaymentRequestBody requestBody) {
+		String vendorName = requestBody.vendorName;
+		double amount = requestBody.amount;
+
+		String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
+		String uniqueNo = generateUUIDNo.substring(0,5);
+		int id = Integer.parseInt(uniqueNo);
+
 		Payment transaction = PaymentFactory.createPayment("paymentgateway.payment.core.PaymentImpl",
+				id,		
 				vendorName,
 				amount);
 		sendTransaction(requestBody);
@@ -48,14 +61,14 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		return transaction;
 	}
 
-	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
 		// to do implement this in deltas
-		return requestBody;
+		return null;
 	}
 	
-	public Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody) {
-		String vendorName = (String) requestBody.get("vendor_name");
-		String Id = (String) requestBody.get("id");
+	public Map<String, Object> checkPaymentStatus(CheckPaymentStatusRequestBody requestBody) {
+		String vendorName = requestBody.vendorName;
+		String Id = String.valueOf(requestBody.id);
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		HttpClient client = HttpClient.newHttpClient();
@@ -123,15 +136,15 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		return transformListToHashMap(List);
 	}
 	
-	public HashMap<String, Object> getPayment(Map<String, Object> requestBody){
-		int id = ((Double) requestBody.get("id")).intValue();
+	public HashMap<String, Object> getPayment(GetPaymentRequestBody requestBody){
+		int id = requestBody.id;
 		Payment paymentImpl = this.getObject(id);
 		HashMap<String, Object> paymentDataMap = paymentImpl.toHashMap();
 		return paymentDataMap;
 	}
 	
-	public List<HashMap<String, Object>> getAllPayment(Map<String, Object> requestBody){
-		String table = (String) requestBody.get("table_name");
+	public List<HashMap<String, Object>> getAllPayment(GetAllPaymentRequestBody requestBody){
+		String table = requestBody.tableName;
 		List<Payment> List = PaymentRepository.getAllObject(table);
 		return transformListToHashMap(List);
 	}
@@ -149,9 +162,8 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 	}
 
 
-	public HashMap<String, Object> updatePayment(Map<String, Object> requestBody) {
-
-		int id = ((Double) requestBody.get("id")).intValue();
+	public HashMap<String, Object> updatePayment(UpdatePaymentRequestBody requestBody) {
+		int id = requestBody.id;
 		Payment payment = this.getObject(id);
 
 		try {
@@ -166,12 +178,12 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 
     }
 	
-	public List<HashMap<String, Object>> deletePayment(Map<String, Object> requestBody){
-		int id = ((Double) requestBody.get("id")).intValue();
+	public List<HashMap<String, Object>> deletePayment(DeletePaymentRequestBody requestBody){
+		int id = requestBody.id;
 		Payment payment = this.getObject(id);
 		this.deleteObject(id);
 
-		return getAllPayment(requestBody);
+		return getAllPayment("payment_impl");
 	}
 	
 	public Payment getObject(int id) {

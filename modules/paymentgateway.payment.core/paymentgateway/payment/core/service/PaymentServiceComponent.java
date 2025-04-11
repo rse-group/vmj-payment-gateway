@@ -3,6 +3,13 @@ import java.util.*;
 
 import vmj.hibernate.integrator.RepositoryUtil;
 import vmj.routing.route.VMJExchange;
+
+import paymentgateway.config.core.CreatePaymentRequestBody;
+import paymentgateway.config.core.CheckPaymentStatusRequestBody;
+import paymentgateway.config.core.GetPaymentRequestBody;
+import paymentgateway.config.core.GetAllPaymentRequestBody;
+import paymentgateway.config.core.UpdatePaymentRequestBody;
+import paymentgateway.config.core.DeletePaymentRequestBody;
 //add other required packages
 
 import paymentgateway.payment.core.Payment;
@@ -13,14 +20,14 @@ public abstract class PaymentServiceComponent implements PaymentService{
         this.PaymentRepository = new RepositoryUtil<Payment>(paymentgateway.payment.core.PaymentComponent.class);
     }
     
-    public abstract Payment createPayment(Map<String, Object> requestBody, int id);
-    public abstract Payment createPayment(Map<String, Object> requestBody);
-    public abstract HashMap<String, Object> getPayment(Map<String, Object> requestBody);
-    public abstract List<HashMap<String, Object>> getAllPayment(Map<String, Object> requestBody);
-    public abstract List<HashMap<String, Object>> deletePayment(Map<String, Object> requestBody);
-    public abstract HashMap<String, Object> updatePayment(Map<String, Object> requestBody);
+    public abstract Payment createPayment(CreatePaymentRequestBody requestBody, int id);
+    public abstract Payment createPayment(CreatePaymentRequestBody requestBody);
+    public abstract HashMap<String, Object> getPayment(GetPaymentRequestBody requestBody);
+    public abstract List<HashMap<String, Object>> getAllPayment(GetAllPaymentRequestBody requestBody);
+    public abstract List<HashMap<String, Object>> deletePayment(DeletePaymentRequestBody requestBody);
+    public abstract HashMap<String, Object> updatePayment(UpdatePaymentRequestBody requestBody);
     public abstract List<HashMap<String, Object>> transformListToHashMap(List<Payment> List);
-    public abstract Map<String, Object> sendTransaction(Map<String, Object> requestBody);
-    public abstract Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody);
+    public abstract Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody);
+    public abstract Map<String, Object> checkPaymentStatus(CheckPaymentStatusRequestBody requestBody);
     public abstract HashMap<String, Object> getPaymentById(int id);
 }

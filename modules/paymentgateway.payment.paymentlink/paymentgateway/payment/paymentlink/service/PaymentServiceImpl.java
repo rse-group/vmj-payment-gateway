@@ -23,6 +23,11 @@ import paymentgateway.payment.core.PaymentServiceComponent;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import paymentgateway.config.core.CreatePaymentRequestBody;
+import paymentgateway.config.core.DeletePaymentRequestBody;
+import paymentgateway.config.core.CreatePaymentLinkRequestBody;
+import paymentgateway.config.core.GetPaymentLinksByVendorNameRequestBody;
+import paymentgateway.config.core.GetPaymentLinkByIdRequestBody;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
 	RepositoryUtil<PaymentLinkImpl> paymentLinkRepository;
@@ -32,7 +37,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		this.paymentLinkRepository = new RepositoryUtil<PaymentLinkImpl>(paymentgateway.payment.paymentlink.PaymentLinkImpl.class);
 	}
 
-	public Payment createPayment(Map<String, Object> requestBody) {
+	public Payment createPayment(CreatePaymentRequestBody requestBody) {
 		Map<String, Object> response = sendTransaction(requestBody);
 		String paymentLink = (String) response.get("url");
 		int id = (int) response.get("id");
@@ -44,13 +49,13 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return paymentLinkTransaction;
 	}
 
-	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
-		String vendorName = (String) requestBody.get("vendor_name");
+	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
+		String vendorName = requestBody.vendorName;
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getPaymentLinkRequestBody(requestBody);
+		Map<String, Object> requestMap = config.getPaymentLinkRequestBody((CreatePaymentLinkRequestBody) requestBody);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String configUrl = config.getProductEnv("PaymentLink");
@@ -75,8 +80,8 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return responseMap;
 	}
 	
-	public List<PaymentLinkImpl> getByVendorName(Map<String, Object> requestBody) {
-		String vendorName = (String) requestBody.get("vendor_name");
+	public List<PaymentLinkImpl> getByVendorName(GetPaymentLinksByVendorNameRequestBody requestBody) {
+		String vendorName = requestBody.vendorName;
 		List<PaymentLinkImpl> result = new ArrayList<>();
 		List<PaymentLinkImpl> paymentLink = paymentLinkRepository.getAllObject("paymentlink_impl");
 		for(PaymentLinkImpl payment : paymentLink){
@@ -87,8 +92,8 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return result;
 	}
 	
-	public HashMap<String, Object> getById(Map<String, Object> requestBody) {
-		int id = ((Double) requestBody.get("id")).intValue();
+	public HashMap<String, Object> getById(GetPaymentLinkByIdRequestBody requestBody) {
+		int id = requestBody.id;
 		List<PaymentLinkImpl> paymentLink = paymentLinkRepository.getAllObject("paymentlink_impl");
 		for(PaymentLinkImpl payment : paymentLink){
 			if (payment.getIdTransaction() == id){
@@ -98,8 +103,8 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return null;
 	}
 	
-	public String deletePaymentLinkById(Map<String, Object> requestBody) {
-		int id = ((Double) requestBody.get("id")).intValue();
+	public String deletePaymentLinkById(DeletePaymentRequestBody requestBody) {
+		int id = requestBody.id;
 		List<PaymentLinkImpl> paymentLinks = paymentLinkRepository.getAllObject("paymentlink_impl");
 		for(PaymentLinkImpl payment : paymentLinks){
 			if(payment.getIdTransaction() == id){
@@ -114,7 +119,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return "There is no paymentlink with id: " + id;
 	}
 
-	public List<HashMap<String, Object>> deletePaymentLinkByIdTransaction(Map<String, Object> requestBody) {
+	public List<HashMap<String, Object>> deletePaymentLinkByIdTransaction(DeletePaymentRequestBody requestBody) {
 		return record.deletePayment(requestBody);
 	}
 }

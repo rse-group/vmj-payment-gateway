@@ -30,6 +30,8 @@ import paymentgateway.payment.core.PaymentResourceComponent;
 import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import paymentgateway.config.core.CreatePaymentRequestBody;
+import paymentgateway.config.core.CreateInvoiceRequestBody;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	
@@ -43,9 +45,9 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	}
 
 	
-	@Route(url="call/invoice", method = RequestMethod.POST)
-	public HashMap<String,Object> payment(VMJExchange vmjExchange) {
-		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+	@Route(url="call/invoice", method = RequestMethod.POST, requestBodyClass = CreateInvoiceRequestBody.class)
+	public HashMap<String,Object> payment(VMJExchange<CreatePaymentRequestBody> vmjExchange) {
+		CreatePaymentRequestBody requestBody = vmjExchange.getParsedPayload(); 
 		Payment result = paymentServiceImpl.createPayment(requestBody);
 		return result.toHashMap();
 	}

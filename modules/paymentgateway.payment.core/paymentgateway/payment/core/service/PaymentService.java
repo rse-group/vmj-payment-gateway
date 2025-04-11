@@ -3,14 +3,21 @@ import java.util.*;
 
 import vmj.routing.route.VMJExchange;
 
+import paymentgateway.config.core.CreatePaymentRequestBody;
+import paymentgateway.config.core.CheckPaymentStatusRequestBody;
+import paymentgateway.config.core.GetPaymentRequestBody;
+import paymentgateway.config.core.GetAllPaymentRequestBody;
+import paymentgateway.config.core.UpdatePaymentRequestBody;
+import paymentgateway.config.core.DeletePaymentRequestBody;
+
 public interface PaymentService {
-	Payment createPayment(Map<String, Object> requestBody, int id);	
-	Payment createPayment(Map<String, Object> requestBody);
-    HashMap<String, Object> getPayment(Map<String, Object> requestBody);
-    List<HashMap<String, Object>> getAllPayment(Map<String, Object> requestBody);
-    List<HashMap<String, Object>> deletePayment(Map<String, Object> requestBody);
-    HashMap<String, Object> updatePayment(Map<String, Object> requestBody);
+	Payment createPayment(CreatePaymentRequestBody requestBody, int id);	
+	Payment createPayment(CreatePaymentRequestBody requestBody);
+    HashMap<String, Object> getPayment(GetPaymentRequestBody requestBody);
+    List<HashMap<String, Object>> getAllPayment(GetAllPaymentRequestBody requestBody);
+    List<HashMap<String, Object>> deletePayment(DeletePaymentRequestBody requestBody);
+    HashMap<String, Object> updatePayment(UpdatePaymentRequestBody requestBody);
     List<HashMap<String, Object>> transformListToHashMap(List<Payment> List);
-    Map<String, Object> sendTransaction(Map<String, Object> requestBody);
-    Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody);
+    Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody);
+    Map<String, Object> checkPaymentStatus(CheckPaymentStatusRequestBody requestBody);
 }

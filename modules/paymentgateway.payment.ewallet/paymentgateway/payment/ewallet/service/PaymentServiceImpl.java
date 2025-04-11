@@ -27,6 +27,8 @@ import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import paymentgateway.config.core.CreatePaymentRequestBody;
+import paymentgateway.config.core.CreateEWalletPaymentRequestBody;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
 	// implement this with author
@@ -36,14 +38,14 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
     }
 
 	
-	public Payment createPayment(Map<String, Object> requestBody) {
+	public Payment createPayment(CreatePaymentRequestBody requestBody) {
 		Map<String, Object> response = sendTransaction(requestBody);
 
 		String url = (String) response.get("url");
 		String type = (String) response.get("payment_type");
 		int id = (int) response.get("id");
 
-		String phoneNumber = (String) requestBody.get("phone");
+		String phoneNumber = ((CreateEWalletPaymentRequestBody) requestBody).phone;
 		System.out.println(id);
 		Payment transaction = record.createPayment(requestBody, id);
 		Payment ewalletTransaction =
@@ -58,13 +60,13 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return ewalletTransaction;
 	}
 
-	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
-		String vendorName = (String) requestBody.get("vendor_name");
+	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
+		String vendorName = (String) requestBody.vendorName;
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getEWalletRequestBody(requestBody);
+		Map<String, Object> requestMap = config.getEWalletRequestBody((CreateEWalletPaymentRequestBody) requestBody);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String configUrl = config.getProductEnv("EWallet");

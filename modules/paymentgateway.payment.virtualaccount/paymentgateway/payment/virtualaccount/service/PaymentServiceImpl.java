@@ -26,6 +26,8 @@ import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import paymentgateway.config.core.CreatePaymentRequestBody;
+import paymentgateway.config.core.CreateVirtualAccountPaymentRequestBody;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
 
@@ -33,13 +35,13 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
         super(record);
     }
     
-	public Payment createPayment(Map<String, Object> requestBody) {
+	public Payment createPayment(CreatePaymentRequestBody requestBody) {
 		Map<String, Object> response = sendTransaction(requestBody);
 
 		String vaAccountNumber = (String) response.get("va_number");
 		int id = (int) response.get("id");
 
-		String bankCode = (String) requestBody.get("bank");
+		String bankCode = ((CreateVirtualAccountPaymentRequestBody) requestBody).bank;
 		Payment transaction = record.createPayment(requestBody, id);
 		Payment virtualAccountTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.virtualaccount.VirtualAccountImpl",
@@ -50,13 +52,13 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return virtualAccountTransaction;
 	}
 	
-	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
-		String vendorName = (String) requestBody.get("vendor_name");
+	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
+		String vendorName = (String) requestBody.vendorName;
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getVirtualAccountRequestBody(requestBody);
+		Map<String, Object> requestMap = config.getVirtualAccountRequestBody((CreateVirtualAccountPaymentRequestBody) requestBody);
 		int id = ((Integer) requestMap.get("id")).intValue();
 		System.out.println("id:" + Integer.toString(id));
 		requestMap.remove("id");

@@ -1,5 +1,7 @@
 package paymentgateway.payment.creditcard;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 import vmj.routing.route.Route;
@@ -21,6 +23,8 @@ import paymentgateway.payment.core.PaymentServiceDecorator;
 import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import paymentgateway.config.core.CreatePaymentRequestBody;
+import paymentgateway.config.core.CreateCreditCardPaymentRequestBody;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
 
@@ -28,9 +32,9 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
         super(record);
     }
 
-	public Payment createPayment(Map<String, Object> requestBody) {
+	public Payment createPayment(CreatePaymentRequestBody requestBody) {
 		Map<String, Object> response = sendTransaction(requestBody);
-		String idToken = (String) requestBody.get("token_id");
+		String idToken = ((CreateCreditCardPaymentRequestBody) requestBody).tokenId;
 
 		String statusCreditPayment = (String) response.get("status");
 		int id = (int) response.get("id");
@@ -43,14 +47,17 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 	}
 
 	
-	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
-	    String vendorName = (String) requestBody.get("vendor_name");
+	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
+	    String vendorName = requestBody.vendorName;
 	    
 	    Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 	    Gson gson = new Gson();
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		Map<String, Object> requestBodyMap = objectMapper.convertValue(requestBody, new TypeReference<Map<String, Object>>(){});
 	    
 	    // Step 1: Get credit card token
-	    String tokenUrl = config.constructUrlParam("CreditCardToken", requestBody);
+	    String tokenUrl = config.constructUrlParam("CreditCardToken", requestBodyMap);
 	    
 		HashMap<String, String> headerParams = config.getHeaderParams();
 		HttpRequest tokenRequest = (config.getBuilder(HttpRequest.newBuilder(), headerParams))
@@ -61,7 +68,8 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 	    String tokenId = null;
 	    try {
 	        HttpResponse<String> tokenResponse = HttpClient.newHttpClient().send(tokenRequest, HttpResponse.BodyHandlers.ofString());
-	        Map<String, Object> tokenResponseMap = gson.fromJson(tokenResponse.body(), Map.class);
+	        System.out.println(tokenResponse.body());
+			Map<String, Object> tokenResponseMap = gson.fromJson(tokenResponse.body(), Map.class);
 	        tokenId = (String) tokenResponseMap.get("token_id");
 	        System.out.println(tokenId);
 	    } catch (Exception e) {
@@ -70,7 +78,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 	    }
 	    
 	    // Step 2: Send transaction request
-	    Map<String, Object> requestMap = config.getCreditCardRequestBody(requestBody);
+	    Map<String, Object> requestMap = config.getCreditCardRequestBody((CreateCreditCardPaymentRequestBody) requestBody);
 	    int id = ((Integer) requestMap.get("id")).intValue();
 	    requestMap.remove("id");
 	    requestMap.put("credit_card", Map.of("token_id", tokenId, "authentication", false));

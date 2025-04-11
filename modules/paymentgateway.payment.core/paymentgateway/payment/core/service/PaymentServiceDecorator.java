@@ -4,6 +4,13 @@ import java.util.*;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 
+import paymentgateway.config.core.CreatePaymentRequestBody;
+import paymentgateway.config.core.CheckPaymentStatusRequestBody;
+import paymentgateway.config.core.GetPaymentRequestBody;
+import paymentgateway.config.core.GetAllPaymentRequestBody;
+import paymentgateway.config.core.UpdatePaymentRequestBody;
+import paymentgateway.config.core.DeletePaymentRequestBody;
+
 public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
 	protected PaymentServiceComponent record;
 
@@ -11,27 +18,27 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
         this.record = record;
     }
 
-    public Payment createPayment(Map<String, Object> requestBody, int id){
+    public Payment createPayment(CreatePaymentRequestBody requestBody, int id){
 		return record.createPayment(requestBody, id);
 	}
     
-    public Payment createPayment(Map<String, Object> requestBody){
+    public Payment createPayment(CreatePaymentRequestBody requestBody){
         return record.createPayment(requestBody);
     }
 
-    public HashMap<String, Object> getPayment(Map<String, Object> requestBody){
+    public HashMap<String, Object> getPayment(GetPaymentRequestBody requestBody){
         return record.getPayment(requestBody);
     }
 
-    public List<HashMap<String, Object>> getAllPayment(Map<String, Object> requestBody){
+    public List<HashMap<String, Object>> getAllPayment(GetAllPaymentRequestBody requestBody){
         return record.getAllPayment(requestBody);
     }
 
-    public List<HashMap<String, Object>> deletePayment(Map<String, Object> requestBody){
+    public List<HashMap<String, Object>> deletePayment(DeletePaymentRequestBody requestBody){
         return record.deletePayment(requestBody);
     }
 
-    public HashMap<String, Object> updatePayment(Map<String, Object> requestBody){
+    public HashMap<String, Object> updatePayment(UpdatePaymentRequestBody requestBody){
         return record.updatePayment(requestBody);
     }
 
@@ -39,11 +46,11 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
         return record.transformListToHashMap(List);
     }
     
-    public Map<String, Object> sendTransaction(Map<String, Object> requestBody){
+    public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody){
         return record.sendTransaction(requestBody);
     }
      
-    public Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody){
+    public Map<String, Object> checkPaymentStatus(CheckPaymentStatusRequestBody requestBody){
         return record.checkPaymentStatus(requestBody);
     }
 

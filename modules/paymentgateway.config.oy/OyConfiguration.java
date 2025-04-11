@@ -4,6 +4,12 @@ import paymentgateway.config.core.ConfigDecorator;
 import paymentgateway.config.core.ConfigComponent;
 import paymentgateway.config.core.PropertiesReader;
 import paymentgateway.config.core.RequestBodyValidator;
+import paymentgateway.config.core.CreatePaymentLinkRequestBody;
+import paymentgateway.config.core.CreateRetailOutletPaymentRequestBody;
+import paymentgateway.config.core.CreateVirtualAccountPaymentRequestBody;
+import paymentgateway.config.core.CreateEWalletPaymentRequestBody;
+import paymentgateway.config.core.CreateInvoiceRequestBody;
+import paymentgateway.config.core.CreatePaymentRoutingPaymentRequestBody;
 import vmj.routing.route.exceptions.BadRequestException;
 
 import java.util.*;
@@ -119,18 +125,15 @@ public class OyConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getPaymentLinkRequestBody(CreatePaymentLinkRequestBody requestBody){
         Map<String, Object> requestMap = new HashMap<>();
 
         int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
-        String name = (String) requestBody.get("name");
-        String email = (String) requestBody.get("email");
-        String description = (String) requestBody.get("title");
+
+        int amount = (int) requestBody.amount;
+        String name = requestBody.senderName;
+        String email = requestBody.email;
+        String description = requestBody.title;
 
         requestMap.put("partner_tx_id", String.valueOf(id));
         requestMap.put("amount", amount);
@@ -142,19 +145,12 @@ public class OyConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getRetailOutletRequestBody(CreateRetailOutletPaymentRequestBody requestBody){
         Map<String, Object> requestMap = new HashMap<>();
 
         int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
-        String store = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "retail_outlet"
-        );
+        int amount = (int) requestBody.amount;
+        String store = requestBody.retailOutlet;
 
         requestMap.put("partner_trx_id", String.valueOf(id));
         requestMap.put("customer_id", String.valueOf(id));
@@ -167,18 +163,12 @@ public class OyConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getVirtualAccountRequestBody(CreateVirtualAccountPaymentRequestBody requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
-        String bank = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "bank"
-        );
+
+        int amount = (int) requestBody.amount;
+        String bank = requestBody.bank;
 
         requestMap.put("partner_user_id", String.valueOf(id));
         requestMap.put("bank_code", getOyBankCode().get(bank));
@@ -189,28 +179,16 @@ public class OyConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getEWalletRequestBody(CreateEWalletPaymentRequestBody requestBody){
         Map<String, Object> requestMap = new HashMap<>();
 
 
         int id = generateId();
         String uuid = UUID.randomUUID().toString();
 
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-            
-        String ewallet = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "ewallet_type"
-        );
- 
-        String phone = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "phone"
-        );
-        int amount = (int) (Double.parseDouble(amountStr));
+        String ewallet = requestBody.ewalletType;
+        String phone = requestBody.phone;
+        int amount = (int) requestBody.amount;
 
         requestMap.put("partner_trx_id", String.valueOf(id));
         requestMap.put("customer_id", String.valueOf(id));
@@ -223,26 +201,13 @@ public class OyConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getInvoiceRequestBody(CreateInvoiceRequestBody requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
-
-        String quantityStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "quantity"
-        );
-        int quantity = Integer.parseInt(quantityStr);
-        
-        String pricePerItemStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "price_per_item"
-        );
-        int pricePerItem = Integer.parseInt(pricePerItemStr);
+       
+        int amount = (int) requestBody.amount;
+        int quantity = requestBody.quantity;
+        int pricePerItem = requestBody.pricePerItem;
 
         if (pricePerItem * quantity != amount) {
             throw new BadRequestException(
@@ -267,36 +232,17 @@ public class OyConfiguration extends ConfigDecorator{
     }
     
     @Override
-    public Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getPaymentRoutingRequestBody(CreatePaymentRoutingPaymentRequestBody requestBody){
         Map<String, Object> requestMap = new HashMap<>();
 
         int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
+        int amount = (int) requestBody.amount;
         
-        String recipientAccount = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "recipient_account"
-        );
-        String recipientBank = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "recipient_bank"
-        );
-        String recipientAmount = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "recipient_amount"
-        );
-        String recipientEmail = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "recipient_email"
-        );
-        String recipientNote = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "recipient_note"
-        );
+        String recipientAccount = requestBody.recipientAccount;
+        String recipientBank = requestBody.recipientBank;
+        String recipientAmount = String.valueOf(requestBody.recipientAmount);
+        String recipientEmail = requestBody.recipientEmail;
+        String recipientNote = requestBody.recipientNote;
 
         requestMap.put("partner_trx_id", String.valueOf(id));
         requestMap.put("partner_user_id", String.valueOf(id));
