@@ -23,6 +23,11 @@ import paymentgateway.payment.core.PaymentResourceComponent;
 import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import java.lang.reflect.Type;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	
 	private PaymentServiceImpl paymentServiceImpl;
@@ -36,8 +41,12 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	public HashMap<String,Object> payment(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")){
 			Map<String, Object> requestBody = vmjExchange.getPayload(); 
-			Payment result = paymentServiceImpl.createPayment(requestBody);
-			return result.toHashMap();
+			try {
+				Payment result = paymentServiceImpl.createPayment(requestBody);
+				return result.toHashMap();
+			} catch (IllegalStateException e) {
+				throw new BadRequestException(e.getMessage());
+			}
 		}
 		throw new NotFoundException("Route tidak ditemukan");
 	}

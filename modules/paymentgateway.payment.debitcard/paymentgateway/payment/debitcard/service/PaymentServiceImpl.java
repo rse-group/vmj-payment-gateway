@@ -31,7 +31,12 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 
 	public Payment createPayment(Map<String, Object> requestBody) {
 		Map<String, Object> response = sendTransaction(requestBody);
-
+		
+		System.out.println("response " + response);
+		if (response.containsKey("message")) {
+			throw new IllegalStateException((String) response.get("message"));
+		}
+		
 		String bankCode = (String) response.get("payment_type");
 		int id = (int) response.get("id");
 		String directDebitUrl = (String) response.get("redirect_url");
@@ -80,4 +85,6 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return responseMap;
 	}
 }
+
+
 

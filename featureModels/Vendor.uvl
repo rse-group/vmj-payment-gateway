@@ -1,0 +1,10 @@
+namespace Vendor
+
+features
+	Vendor {abstract true}
+		or
+			Flip
+			Midtrans
+			Oy
+			Xendit
+

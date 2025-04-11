@@ -38,20 +38,29 @@ public class MidtransConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         
+        System.out.println("rawResponseMap" + rawResponseMap);
         String status = rawResponseMap.get("transaction_status") != null
         	    ? (String) rawResponseMap.get("transaction_status")
         	    : (String) rawResponseMap.get("last_snap_transaction_status");
         
-        if (status.toLowerCase().equals(PaymentStatus.SETTLEMENT.getStatus()) || status.toLowerCase().equals(PaymentStatus.CAPTURE.getStatus())) {
-            status = PaymentStatus.SUCCESSFUL.getStatus();
-
+        if (status == null){
+            response.put("status", rawResponseMap.get("status_message"));
+            response.put("id", id);
+            return response;
         }
-        else if (status.toLowerCase().equals(PaymentStatus.CANCEL.getStatus())){
-            status = PaymentStatus.CANCELLED.getStatus();
-
-        }
-        else if (status.toLowerCase().equals(PaymentStatus.FAIL.getStatus())){
-            status = PaymentStatus.FAILED.getStatus();
+        
+        else{
+            if (status.toLowerCase().equals(PaymentStatus.SETTLEMENT.getStatus()) || status.toLowerCase().equals(PaymentStatus.CAPTURE.getStatus())) {
+                status = PaymentStatus.SUCCESSFUL.getStatus();
+    
+            }
+            else if (status.toLowerCase().equals(PaymentStatus.CANCEL.getStatus())){
+                status = PaymentStatus.CANCELLED.getStatus();
+    
+            }
+            else if (status.toLowerCase().equals(PaymentStatus.FAIL.getStatus())){
+                status = PaymentStatus.FAILED.getStatus();
+            }
         }
 
         response.put("status", status);
@@ -328,6 +337,13 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String url = (String) rawResponseMap.get("redirect_url");
         String paymentType = (String) rawResponseMap.get("payment_type");
+        if (paymentType == null) {
+        	String statusMessage = (String) rawResponseMap.get("status_message");
+        	List<String> validationMessages = (List<String>) rawResponseMap.get("validation_messages");
+        	String combinedMessage = statusMessage + ". " + String.join(", ", validationMessages);
+            response.put("message", combinedMessage);
+            return response;
+        }
         response.put("payment_type", paymentType);
         response.put("redirect_url", url);
         response.put("id", id);
@@ -357,6 +373,11 @@ public class MidtransConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String retailPaymentCode = (String) rawResponseMap.get("payment_code");
+        if (retailPaymentCode == null) {
+        	String statusMessage = (String) rawResponseMap.get("status_message");
+        	response.put("message", statusMessage);
+            return response;
+        }
         response.put("retail_payment_code", retailPaymentCode);
         response.put("id", id);
         return response;

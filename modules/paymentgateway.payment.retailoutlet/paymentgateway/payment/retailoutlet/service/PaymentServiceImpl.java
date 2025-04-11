@@ -32,7 +32,12 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		Map<String, Object> response = sendTransaction(requestBody);
 		String retailOutlet = (String) requestBody.get("retail_outlet");
 
+		if (response.containsKey("message")) {
+			throw new IllegalStateException((String) response.get("message"));
+		}
+		
 		String retailPaymentCode = (String) response.get("retail_payment_code");
+		System.out.println("response " + response);
 		int id = (int) response.get("id");
 		
 		Payment transaction = record.createPayment(requestBody, id);
@@ -73,7 +78,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-			System.out.println("rawResponse " + rawResponse);
+			System.out.println("rawResponse: " + rawResponse);
 			responseMap = config.getRetailOutletResponse(rawResponse, id);
 		} catch (Exception e) {
 			System.out.println(e);

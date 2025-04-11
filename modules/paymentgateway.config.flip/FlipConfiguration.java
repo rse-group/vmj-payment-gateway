@@ -24,7 +24,7 @@ public class FlipConfiguration extends ConfigDecorator{
     public FlipConfiguration(ConfigComponent record) {
         super(record);
     }
-
+    
     @Override
     public String getVendorName(){
         return "Flip";

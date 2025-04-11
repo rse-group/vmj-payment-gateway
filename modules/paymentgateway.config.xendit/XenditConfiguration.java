@@ -86,6 +86,12 @@ public class XenditConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
 
+        if (rawResponseMap.containsKey("error_code")) {
+        	String message = (String) rawResponseMap.get("message");
+            response.put("message", message);
+            return response;
+        }
+
         String idString = (String) rawResponseMap.get("reference_id");
         String userIdString = (String) rawResponseMap.get("business_id");
         String accountNumber = (String) ((Map<String, Object>) rawResponseMap.get("channel_properties")).get("account_number");

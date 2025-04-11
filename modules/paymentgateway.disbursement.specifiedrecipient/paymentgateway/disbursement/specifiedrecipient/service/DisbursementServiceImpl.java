@@ -32,7 +32,12 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
         Map<String, Object> response = sendTransaction(validatedRequestBody);
         LOGGER.info("Transaction Response: " + response);
         
-        Disbursement coreDisbursement = RESOURCE.createDisbursement(requestBody);
+		if (response.containsKey("message")) {
+			throw new IllegalStateException((String) response.get("message"));
+		}
+		
+        Disbursement coreDisbursement = RESOURCE.createDisbursement(requestBody, response);
+        
         LOGGER.info("Core Disbursement - Account Number: " + coreDisbursement.getAccountNumber());
         LOGGER.info("Core Disbursement - Bank Code: " + coreDisbursement.getBankCode());
 
