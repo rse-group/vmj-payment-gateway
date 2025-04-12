@@ -167,7 +167,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		Payment payment = this.getObject(id);
 
 		try {
-			//	Implement the update
+			payment.setAmount(requestBody.amount);
 		} catch (Exception e){
 			e.printStackTrace();
 		}
