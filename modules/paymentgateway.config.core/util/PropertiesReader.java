@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.*;
 
 import paymentgateway.config.Constants;
+import vmj.routing.route.exceptions.InternalServerException;
 
 public class PropertiesReader {
     // private static String fileName = Constants.DEFAULT_PRODUCT_FILE;
@@ -20,6 +21,7 @@ public class PropertiesReader {
             prop.load(input);
         } catch (IOException ex) {
             System.out.println(ex);
+            throw new InternalServerException("An error occurred");
         } finally {
             if (input != null) {
                 try {
