@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import java.util.*;
 import java.util.logging.Logger;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -169,7 +170,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 			String rawResponse = response.body().toString();
 			LOGGER.info("Raw Response: " + rawResponse);
 			responseMap = config.getDisbursementResponse(rawResponse);
-		} catch (Exception e) {
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
 

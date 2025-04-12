@@ -196,6 +196,17 @@ public class FlipConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (rawResponseMap.containsKey("errors")) {
+            Map<String, Object> errorResponseMap = new HashMap<>();
+            List<String> errorMessages = new ArrayList<>();
+            List<Map<String, Object>> errorsFromResponse = (List<Map<String, Object>>) rawResponseMap.get("errors");
+            errorsFromResponse.forEach(error -> {
+                errorMessages.add((String) error.get("message"));
+            });
+            String errorMessageString = String.join(", ", errorMessages);
+            throw new RuntimeException(errorMessageString);
+        }
         
         int id = ((Double) rawResponseMap.get("id")).intValue();
         int userId = ((Double) rawResponseMap.get("user_id")).intValue();
