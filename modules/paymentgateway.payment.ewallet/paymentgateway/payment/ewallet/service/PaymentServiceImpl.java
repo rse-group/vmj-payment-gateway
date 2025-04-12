@@ -2,6 +2,7 @@ package paymentgateway.payment.ewallet;
 
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.lang.reflect.*;
 
 import vmj.routing.route.Route;
@@ -88,7 +89,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 			System.out.println("rawResponse " + rawResponse);
 			responseMap = config.getEWalletResponse(rawResponse, id);
 			
-		} catch (Exception e) {
+		} catch (IOException | InterruptedException e) {
 			System.out.println(e);
 		}
 		

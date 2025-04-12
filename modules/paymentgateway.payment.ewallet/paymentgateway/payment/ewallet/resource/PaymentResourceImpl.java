@@ -42,9 +42,13 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 
 	@Route(url="call/ewallet", method = RequestMethod.POST, requestBodyClass = CreateEWalletPaymentRequestBody.class)
 	public HashMap<String,Object> payment(VMJExchange<CreatePaymentRequestBody> vmjExchange) {
-		CreatePaymentRequestBody requestBody = vmjExchange.getParsedPayload(); 
-		Payment result = paymentServiceImpl.createPayment(requestBody);
-		return result.toHashMap();
+		try {
+			CreatePaymentRequestBody requestBody = vmjExchange.getParsedPayload(); 
+			Payment result = paymentServiceImpl.createPayment(requestBody);
+			return result.toHashMap();
+		} catch (RuntimeException e) {
+			throw new BadRequestException(e.getMessage());
+		}
 	}
 }
 

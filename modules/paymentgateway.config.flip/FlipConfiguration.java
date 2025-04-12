@@ -352,6 +352,12 @@ public class FlipConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (rawResponseMap.containsKey("errors")) {
+            String errorMessageString = getErrorMessagesFromResponse(rawResponseMap);
+            throw new RuntimeException(errorMessageString);
+        }
+
         String url = (String) rawResponseMap.get("payment_url");
 
         Map<String, Object> billPayment = (Map<String, Object>) rawResponseMap.get("bill_payment");
@@ -412,5 +418,15 @@ public class FlipConfiguration extends ConfigDecorator{
         flipHeaderParams.put("Authorization",authorization);
         flipHeaderParams.put("Cookie",cookie);
         return flipHeaderParams;
+    }
+
+    private String getErrorMessagesFromResponse(Map<String, Object> rawResponseMap) {
+        List<String> errorMessages = new ArrayList<>();
+        List<Map<String, Object>> errorsFromResponse = (List<Map<String, Object>>) rawResponseMap.get("errors");
+        errorsFromResponse.forEach(error -> {
+            errorMessages.add((String) error.get("message"));
+        });
+        String errorMessageString = String.join(", ", errorMessages);
+        return errorMessageString;
     }
 }
