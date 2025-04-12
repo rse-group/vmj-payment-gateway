@@ -205,7 +205,7 @@ public class FlipConfiguration extends ConfigDecorator{
                 errorMessages.add((String) error.get("message"));
             });
             String errorMessageString = String.join(", ", errorMessages);
-            throw new RuntimeException(errorMessageString);
+            throw new BadRequestException(errorMessageString);
         }
         
         int id = ((Double) rawResponseMap.get("id")).intValue();
@@ -223,6 +223,12 @@ public class FlipConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (rawResponseMap.containsKey("errors")) {
+            String errorMessageString = getErrorMessagesFromResponse(rawResponseMap);
+            throw new BadRequestException(errorMessageString);
+        }
+
         int agentId = ((Double) rawResponseMap.get("agent_id")).intValue();
         String direction = (String) rawResponseMap.get("direction");
         int id = ((Double) rawResponseMap.get("id")).intValue();
@@ -355,7 +361,7 @@ public class FlipConfiguration extends ConfigDecorator{
 
         if (rawResponseMap.containsKey("errors")) {
             String errorMessageString = getErrorMessagesFromResponse(rawResponseMap);
-            throw new RuntimeException(errorMessageString);
+            throw new BadRequestException(errorMessageString);
         }
 
         String url = (String) rawResponseMap.get("payment_url");
