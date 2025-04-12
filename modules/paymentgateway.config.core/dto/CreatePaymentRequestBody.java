@@ -1,8 +1,8 @@
 package paymentgateway.config.core;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.PositiveOrZero;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,6 +12,6 @@ public class CreatePaymentRequestBody {
 	@JsonProperty("vendor_name")
 	public String vendorName;
 	
-	@NotNull(message = "amount must be specified")
+	@PositiveOrZero(message = "amount must not be negative")
 	public double amount;
 }
