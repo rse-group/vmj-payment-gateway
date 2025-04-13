@@ -324,6 +324,13 @@ public class OyConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (!rawResponseMap.containsKey("trx_id")) {
+            Map<String, Object> statusObject = (Map<String, Object>) rawResponseMap.get("status");
+            String errorMessageString = (String) statusObject.get("message");
+            throw new BadRequestException(errorMessageString);
+        }
+
         String paymentType = (String) rawResponseMap.get("ewallet_code");
         String url = (String) rawResponseMap.get("ewallet_url");
         response.put("payment_type", paymentType);
