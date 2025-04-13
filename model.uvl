@@ -4,7 +4,7 @@ features
 	PaymentGateway {abstract true}
 		optional
 			Vendor {abstract true}
-				or
+				optional
 					Flip
 					Midtrans
 					Oy
@@ -12,7 +12,7 @@ features
 			Disbursement
 				optional
 					International {abstract true}
-						optional
+						or
 							ExchangeRate
 							FixedCurrency
 					Agent
@@ -20,39 +20,19 @@ features
 			Payment {abstract true}
 				or
 					PaymentLink
-						or
-							FlipPaymentLink
-							MidtransPaymentLink
-							OyPaymentLink
 					VirtualAccount
-						or
-							FlipVirtualAccount
-							MidtransVirtualAccount
-							OyVirtualAccount
 					RetailOutlet
-						or
-							MidtransRetailOutlet
-							OyRetailOutlet
 					EWallet
-						or
-							FlipEWallet
-							MidtransEWallet
-							OyEWallet
 					Invoice
-						mandatory
-							OyInvoice
 					PaymentRouting
-						mandatory
-							OyPaymentRouting
 					CreditCard
-						mandatory
-							MidtransCreditCard
 					DebitCard
-						mandatory
-							MidtransDebitCard
 
 constraints
-	OyInvoice | OyPaymentRouting | OyPaymentLink | OyRetailOutlet | OyVirtualAccount | OyEWallet => Oy
-	MidtransCreditCard | MidtransDebitCard | MidtransPaymentLink | MidtransVirtualAccount | MidtransEWallet | MidtransRetailOutlet => Midtrans
-	SpecifiedRecipient => Xendit
-	Agent | ExchangeRate | FixedCurrency => Flip
+  Disbursement => Flip | Xendit
+  PaymentLink | EWallet => Oy | Midtrans | Flip
+  VirtualAccount | RetailOutlet => Oy | Midtrans
+  Invoice | PaymentRouting => Oy
+  CreditCard | DebitCard  => Midtrans
+  SpecifiedRecipient => Xendit
+  Agent | ExchangeRate | FixedCurrency => Flip
