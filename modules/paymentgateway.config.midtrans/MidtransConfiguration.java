@@ -15,6 +15,7 @@ import java.util.*;
 import java.lang.reflect.Type;
 
 import vmj.routing.route.VMJExchange;
+import vmj.routing.route.exceptions.BadRequestException;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -298,9 +299,13 @@ public class MidtransConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String statusCode = (String) rawResponseMap.get("status_code");
-        if (statusCode.equals("200")) {
-        	status = "BERHASIL";
+
+        if (!statusCode.equals("200") && !statusCode.equals("201")) {
+        	String errorMessageString = (String) rawResponseMap.get("status_message");
+            throw new BadRequestException(errorMessageString);
         }
+
+        status = "BERHASIL";
         response.put("status", status);
         response.put("id", id);
         return response;

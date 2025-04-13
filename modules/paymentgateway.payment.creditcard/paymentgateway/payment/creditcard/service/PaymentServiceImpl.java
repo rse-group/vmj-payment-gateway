@@ -8,12 +8,14 @@ import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -72,7 +74,16 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 			Map<String, Object> tokenResponseMap = gson.fromJson(tokenResponse.body(), Map.class);
 	        tokenId = (String) tokenResponseMap.get("token_id");
 	        System.out.println(tokenId);
-	    } catch (Exception e) {
+
+			String tokenResponseStatusCode = (String) tokenResponseMap.get("status_code");
+
+			if (tokenResponseStatusCode.equals("400")) {
+				List<String> errorMessages = (List<String>) tokenResponseMap.get("validation_messages");
+				String errorMessageString = String.join(", ", errorMessages);
+				throw new BadRequestException(errorMessageString);
+			}
+
+	    } catch (IOException | InterruptedException e) {
 	        System.out.println("Failed to get token: " + e.getMessage());
 	        return Map.of("error", "Token retrieval failed");
 	    }
@@ -99,7 +110,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 	        String rawResponse = response.body();
 	        System.out.println("Transaction Response: " + rawResponse);
 	        responseMap = config.getCreditCardResponse(rawResponse, id);
-	    } catch (Exception e) {
+	    } catch (IOException | InterruptedException e) {
 	        System.out.println("Transaction failed: " + e.getMessage());
 	    }
 
