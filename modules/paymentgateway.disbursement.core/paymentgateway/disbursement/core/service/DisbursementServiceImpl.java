@@ -19,6 +19,7 @@ import vmj.routing.route.exceptions.*;
 import paymentgateway.disbursement.DisbursementFactory;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import org.hibernate.hql.internal.ast.QuerySyntaxException;
 
 public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	private static final Logger LOGGER = Logger.getLogger(DisbursementServiceImpl.class.getName());
@@ -130,6 +131,13 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	public List<HashMap<String, Object>> deleteDisbursement(Map<String, Object> requestBody){
 		int id = ((Double) requestBody.get("id")).intValue();
 		Disbursement disbursement = this.getObject(id);
+		
+		if (disbursement == null) {
+			HashMap<String, Object> notFoundMap = new HashMap<>();
+			notFoundMap.put("message", "Disbursment with ID " + id + " does not exist");
+			return Collections.singletonList(notFoundMap);
+		}
+		
 		this.deleteObject(id);
 
 		return getAllDisbursement(requestBody);
@@ -190,21 +198,37 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	}
 
 	public List<HashMap<String, Object>> getAllDisbursement(String tableName){
-		List<Disbursement> List = Repository.getAllObject(tableName);
+		List<Disbursement> List  = Repository.getAllObject(tableName);
 		return transformListToHashMap(List);
 	}
 	
 	public HashMap<String, Object> getDisbursement(Map<String, Object> requestBody){
 		int id = ((Double) requestBody.get("id")).intValue();
 		Disbursement disbursementImpl = this.getObject(id);
-		HashMap<String, Object> disbursementDataMap = disbursementImpl.toHashMap();
+		
+		HashMap<String, Object> disbursementDataMap = new HashMap<>();
+
+	    if (disbursementImpl == null) {
+	    	disbursementDataMap.put("message", "Disbursement with id " + id + " not exist");
+	    } else {
+	    	disbursementDataMap = disbursementImpl.toHashMap();
+	    }
+	    
 		return disbursementDataMap;
 	}
 	
 	public List<HashMap<String, Object>> getAllDisbursement(Map<String, Object> requestBody){
 		String table = (String) requestBody.get("table_name");
-		List<Disbursement> List = Repository.getAllObject(table);
-		return transformListToHashMap(List);
+		
+		try {
+			List<Disbursement> list = Repository.getAllObject(table);
+		    return transformListToHashMap(list);
+		} catch (Exception e) {
+		    HashMap<String, Object> errorMap = new HashMap<>();
+		    e.printStackTrace();
+		    errorMap.put("message", "Table name " + table + " is not a valid entity");
+		    return Collections.singletonList(errorMap);
+		}
 	}
 
 	public String getParamsUrlEncoded(Map<String, Object> requestBody){

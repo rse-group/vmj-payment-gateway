@@ -88,6 +88,18 @@ public class OyConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        System.out.println("rawResponseMap" + rawResponseMap);
+
+        Boolean isSuccess = (Boolean) rawResponseMap.get("success");
+
+        if (Boolean.FALSE.equals(isSuccess)) {
+            Map<String, Object> error = (Map<String, Object>) rawResponseMap.get("error");
+            String errorMessage = error != null ? (String) error.get("message") : "Unknown error";
+            response.put("message", errorMessage);
+            response.put("id", id);
+            return response;
+        }
+
         Map<String, Object> paymentData = (Map<String, Object>) rawResponseMap.get("data");
         String status = (String) paymentData.get("status");
         
@@ -313,6 +325,12 @@ public class OyConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String retailPaymentCode = (String) rawResponseMap.get("code");
+        if (retailPaymentCode == null) {
+        	Map<String, Object> status = (Map<String, Object>) rawResponseMap.get("status");
+        	String statusMessage = (String) status.get("message");
+        	response.put("message", statusMessage);
+            return response;
+        }
         response.put("retail_payment_code", retailPaymentCode);
         response.put("id", id);
         return response;

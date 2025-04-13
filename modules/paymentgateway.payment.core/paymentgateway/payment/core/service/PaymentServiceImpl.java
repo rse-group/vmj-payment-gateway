@@ -21,6 +21,7 @@ import vmj.routing.route.exceptions.*;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import javax.persistence.PersistenceException;
 
 import paymentgateway.config.core.CreatePaymentRequestBody;
 import paymentgateway.config.core.CheckPaymentStatusRequestBody;
@@ -74,13 +75,26 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		HttpClient client = HttpClient.newHttpClient();
 		final String[] paymentMethodHolder = {""};
 		
+		Map<String, Object> responseMap = new HashMap<>();
+		
 		PaymentRepository.executeQuery(session -> {
 			String sql = String.format("SELECT modulesequence FROM payment_comp WHERE idtransaction ='%s'", Id );
-			String result = (String) session.createNativeQuery(sql).getSingleResult();
-			
-			String[] modules = result.split(",");
-			paymentMethodHolder[0] = modules[modules.length - 1].trim();
+			try {
+                String result = (String) session.createNativeQuery(sql).getSingleResult();
+                String[] modules = result.split(",");
+                paymentMethodHolder[0] = modules[modules.length - 1].trim();
+            } catch (Exception  e) {
+                paymentMethodHolder[0] = "";
+            }
 		});
+		
+		System.out.println("paymentMethodHolder" + paymentMethodHolder);
+	    if (paymentMethodHolder[0].isEmpty()) {
+	    	responseMap.put("status", "Payment does not exist");
+	    	responseMap.put("id", Id);
+	        return responseMap; 
+	        
+	    }
 		
 		String configUrl;
 		if (paymentMethodHolder[0].equals("paymentlink_impl") && vendorName.toLowerCase().equals("midtrans")){
@@ -95,11 +109,11 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 				.uri(URI.create(configUrl))
 				.GET()
 				.build();
-        Map<String, Object> responseMap = new HashMap<>();
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
             responseMap = config.getPaymentStatusResponse(rawResponse, Id);
+            System.out.println("responseMap" + responseMap);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -139,8 +153,16 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 	public HashMap<String, Object> getPayment(GetPaymentRequestBody requestBody){
 		int id = requestBody.id;
 		Payment paymentImpl = this.getObject(id);
-		HashMap<String, Object> paymentDataMap = paymentImpl.toHashMap();
-		return paymentDataMap;
+		
+		HashMap<String, Object> paymentDataMap = new HashMap<>();
+		
+		if (paymentImpl == null) {
+			paymentDataMap.put("status", "Payment detail does not exist");
+			paymentDataMap.put("id", id);
+	        return paymentDataMap;
+	    }
+		
+		return paymentImpl.toHashMap();
 	}
 	
 	public List<HashMap<String, Object>> getAllPayment(GetAllPaymentRequestBody requestBody){
@@ -181,6 +203,13 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 	public List<HashMap<String, Object>> deletePayment(DeletePaymentRequestBody requestBody){
 		int id = requestBody.id;
 		Payment payment = this.getObject(id);
+		
+		if (payment == null) {
+			HashMap<String, Object> notFoundMap = new HashMap<>();
+			notFoundMap.put("message", "Payment with ID " + id + " does not exist");
+			return Collections.singletonList(notFoundMap);
+		}
+		
 		this.deleteObject(id);
 
 		return getAllPayment("payment_impl");

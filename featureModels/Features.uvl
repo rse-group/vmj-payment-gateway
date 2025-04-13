@@ -1,0 +1,24 @@
+namespace Features
+
+features
+	Features {abstract true}
+		optional
+			Disbursement
+				optional
+					International {abstract true}
+						optional
+							ExchangeRate
+							FixedCurrency
+					Agent
+					SpecifiedRecipient
+			Payment {abstract true}
+				optional
+					PaymentLink
+					VirtualAccount
+					RetailOutlet
+					EWallet
+					Invoice
+					PaymentRouting
+					CreditCard
+					DebitCard
+

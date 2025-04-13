@@ -24,6 +24,11 @@ import paymentgateway.payment.core.PaymentResourceComponent;
 import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import java.lang.reflect.Type;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import paymentgateway.config.core.CreatePaymentRequestBody;
 import paymentgateway.config.core.CreateRetailOutletPaymentRequestBody;
 public class PaymentResourceImpl extends PaymentResourceDecorator {
@@ -38,8 +43,12 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	@Route(url="call/retailoutlet", method = RequestMethod.POST, requestBodyClass = CreateRetailOutletPaymentRequestBody.class)
 	public HashMap<String,Object> payment(VMJExchange<CreatePaymentRequestBody> vmjExchange) {
 		CreatePaymentRequestBody requestBody = vmjExchange.getParsedPayload(); 
-		Payment result = paymentServiceImpl.createPayment(requestBody);
-		return result.toHashMap();
+		try {
+			Payment result = paymentServiceImpl.createPayment(requestBody);
+			return result.toHashMap();
+		} catch (IllegalStateException e) {
+			throw new BadRequestException(e.getMessage());
+		}
 	}
 }
 

@@ -7,6 +7,7 @@ import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
 
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -24,6 +25,7 @@ import paymentgateway.payment.core.PaymentResourceComponent;
 import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import com.google.gson.reflect.TypeToken;
 import paymentgateway.config.core.CreatePaymentRequestBody;
 import paymentgateway.config.core.CreateDebitCardPaymentRequestBody;
 
@@ -41,8 +43,12 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	@Route(url="call/payment/debitcard", method = RequestMethod.POST, requestBodyClass = CreateDebitCardPaymentRequestBody.class)
 	public HashMap<String,Object> payment(VMJExchange<CreatePaymentRequestBody> vmjExchange) {
 		CreatePaymentRequestBody requestBody = vmjExchange.getParsedPayload(); 
-		Payment result = paymentServiceImpl.createPayment(requestBody);
-		return result.toHashMap();
+		try {
+			Payment result = paymentServiceImpl.createPayment(requestBody);
+			return result.toHashMap();
+		} catch (IllegalStateException e) {
+			throw new BadRequestException(e.getMessage());
+		}
 	}
 }
 
