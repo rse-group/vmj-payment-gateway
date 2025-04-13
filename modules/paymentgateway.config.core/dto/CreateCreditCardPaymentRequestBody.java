@@ -3,9 +3,11 @@ package paymentgateway.config.core;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
+@ValidCreditCardMonthAndYearExpiration()
 public class CreateCreditCardPaymentRequestBody extends CreatePaymentRequestBody {
     @NotEmpty(message = "card_number must be specified")
     @CreditCardNumber()
@@ -21,8 +23,7 @@ public class CreateCreditCardPaymentRequestBody extends CreatePaymentRequestBody
     public String cardExpYear;
     
     @NotEmpty(message = "card_cvv must be specified")
-    @Digits(integer = 4, fraction = 0, message = "card_cvv must only contain digits")
-    @Size(min = 3, max = 4, message = "card_cvv must have a length of 3 or 4")
+    @Digits(integer = 4, fraction = 0, message = "card_cvv must only contain digits with length of 3 or 4")
     @JsonProperty("card_cvv")
     public String cardCVV;
     
