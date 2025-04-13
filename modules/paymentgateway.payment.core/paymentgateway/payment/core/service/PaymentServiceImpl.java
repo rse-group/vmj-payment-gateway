@@ -160,7 +160,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 			e.printStackTrace();
 		}
 
-		this.updateObject(payment);
+		PaymentRepository.updateObject(payment);
 		
 		return payment.toHashMap();
 
@@ -169,21 +169,13 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 	public List<HashMap<String, Object>> deletePayment(Map<String, Object> requestBody){
 		int id = ((Double) requestBody.get("id")).intValue();
 		Payment payment = this.getObject(id);
-		this.deleteObject(id);
+		PaymentRepository.deleteObject(id);
 
 		return getAllPayment(requestBody);
 	}
 	
 	public Payment getObject(int id) {
         return PaymentRepository.getObject(id);
-    }
-
-    public void deleteObject(int id) {
-        PaymentRepository.deleteObject(id);
-    }
-
-    public void updateObject(Payment payment) {
-        PaymentRepository.updateObject(payment);
     }
 
     public List<Payment> getAllObject(String tableName) {

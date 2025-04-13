@@ -19,16 +19,16 @@ public abstract class PaymentDecorator extends PaymentComponent{
 		String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
 		String unique_no = generateUUIDNo.substring(0,5);
 		this.record = record;
-		this.idTransaction = Integer.parseInt(unique_no);
+		this.paymentId = Integer.parseInt(unique_no);
 	}
 
 	public PaymentDecorator () {
 	}
-	public int getIdTransaction() {
-		return record.getIdTransaction();
+	public int getPaymentId() {
+		return record.getPaymentId();
 	}
-	public void setIdTransaction(int idTransaction) {
-		record.setIdTransaction(idTransaction);
+	public void setPaymentId(int paymentId) {
+		record.setPaymentId(paymentId);
 	}
 	public double getAmount() {
 		return record.getAmount();

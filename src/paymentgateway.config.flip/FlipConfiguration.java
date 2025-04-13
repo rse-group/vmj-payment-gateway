@@ -268,10 +268,17 @@ public class FlipConfiguration extends ConfigDecorator{
         int id = generateId();
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) requestBody.get("title");
-        int amount = Integer.parseInt((String)requestBody.get("amount"));
+        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "amount"
+        );
+        int amount = Integer.parseInt(amountStr);
         String senderName = (String) requestBody.get("name");
         String senderEmail = (String) requestBody.get("email");
-        String senderBank = (String) requestBody.get("bank");
+        String senderBank = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "bank"
+        );
 
         requestMap.put("id",id);
         requestMap.put("title", title);
@@ -308,11 +315,23 @@ public class FlipConfiguration extends ConfigDecorator{
         int id = generateId();
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) requestBody.get("title");
-        int amount = Integer.parseInt((String)requestBody.get("amount"));
+
+        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "amount"
+        );
+        int amount = Integer.parseInt(amountStr);
+
         String senderName = (String) requestBody.get("name");
         String senderEmail = (String) requestBody.get("email");
-        String senderBank = (String) requestBody.get("ewallet_type");
-        String senderPhoneNumber = (String) requestBody.get("phone");
+        String senderBank = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "ewallet_type"
+        );
+        String senderPhoneNumber = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "phone"
+        );
 
         requestMap.put("id",id);
         requestMap.put("title", title);
@@ -336,7 +355,10 @@ public class FlipConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String url = (String) rawResponseMap.get("payment_url");
-        String paymentType = (String) rawResponseMap.get("bank_code");
+
+        Map<String, Object> billPayment = (Map<String, Object>) rawResponseMap.get("bill_payment");
+
+        String paymentType = (String) billPayment.get("sender_bank");
         String phoneNumber = (String) rawResponseMap.get("user_phone");
         int billId = (int) ((Double) rawResponseMap.get("link_id")).doubleValue();
         response.put("phone_number",phoneNumber);
@@ -352,9 +374,13 @@ public class FlipConfiguration extends ConfigDecorator{
         int id = generateId();
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) requestBody.get("title");
-        int amount = Integer.parseInt((String)requestBody.get("amount"));
+        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "amount"
+        );
+        int amount = Integer.parseInt(amountStr);
         String senderEmail = (String) requestBody.get("email");
-        String senderName = (String) requestBody.get("name");
+        String senderName = (String) requestBody.get("sender_name");
         
         requestMap.put("id",id);
         requestMap.put("title", title);

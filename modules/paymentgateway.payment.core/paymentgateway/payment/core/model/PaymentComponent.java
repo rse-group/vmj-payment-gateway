@@ -16,7 +16,7 @@ import javax.persistence.Table;
 public abstract class PaymentComponent implements Payment {
 
 	@Id
-	protected int idTransaction;
+	protected int paymentId;
 	protected double amount;
 	protected String vendorName;
 	
@@ -29,12 +29,12 @@ public abstract class PaymentComponent implements Payment {
 
 	public abstract void setVendorName(String vendorName);
 
-	public int getIdTransaction() {
-		return this.idTransaction;
+	public int getPaymentId() {
+		return this.paymentId;
 	}
 
-	public void setIdTransaction(int idTransaction) {
-		this.idTransaction = idTransaction;
+	public void setPaymentId(int paymentId) {
+		this.paymentId = paymentId;
 	}
 
 	public abstract HashMap<String, Object> toHashMap();

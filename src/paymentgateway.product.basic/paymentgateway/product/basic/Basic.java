@@ -4,9 +4,14 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.lang.reflect.Type;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import vmj.routing.route.VMJCors;
 import vmj.routing.route.VMJServer;
 import vmj.routing.route.Router;
 import vmj.hibernate.integrator.HibernateUtil;
@@ -33,6 +38,7 @@ public class Basic {
 		String hostAddress= getEnvVariableHostAddress("AMANAH_HOST_BE");
         int portNum = getEnvVariablePortNumber("AMANAH_PORT_BE");
         activateServer(hostAddress, portNum);
+		setCors();
 
 		Configuration configuration = new Configuration();
 		// panggil setter setelah membuat object dari kelas Configuration
@@ -104,114 +110,138 @@ public class Basic {
 			,
 		    UserResourceFactory.createUserResource("vmj.auth.model.core.UserResourceImpl"));
 
-        DisbursementService disbursementDisbursementService = DisbursementServiceFactory
+        DisbursementService disbursementDisbursement2Service = DisbursementServiceFactory
             .createDisbursementService("paymentgateway.disbursement.core.DisbursementServiceImpl"
             	);		
 
-        DisbursementResource disbursementDisbursementResource = DisbursementResourceFactory
+        DisbursementResource disbursementDisbursement2Resource = DisbursementResourceFactory
             .createDisbursementResource("paymentgateway.disbursement.core.DisbursementResourceImpl"
                 );
 			
-        DisbursementService internationalDisbursementService = DisbursementServiceFactory
+        DisbursementService internationalDisbursement2Service = DisbursementServiceFactory
             .createDisbursementService("paymentgateway.disbursement.international.DisbursementServiceImpl"
-            	, disbursementDisbursementService);		
+            	, disbursementDisbursement2Service);		
 
-        DisbursementResource internationalDisbursementResource = DisbursementResourceFactory
+        DisbursementResource internationalDisbursement2Resource = DisbursementResourceFactory
             .createDisbursementResource("paymentgateway.disbursement.international.DisbursementResourceImpl"
-                , disbursementDisbursementResource, disbursementDisbursementService);
-			
-        DisbursementService internationaldisbursementvalidatorDisbursementService = DisbursementServiceFactory
-            .createDisbursementService("paymentgateway.disbursement.internationaldisbursementvalidator.DisbursementServiceImpl"
-            	, internationalDisbursementService);		
-
-        DisbursementResource internationaldisbursementvalidatorDisbursementResource = DisbursementResourceFactory
-            .createDisbursementResource("paymentgateway.disbursement.internationaldisbursementvalidator.DisbursementResourceImpl"
-                , internationalDisbursementResource, internationalDisbursementService);
-			
-        DisbursementService exchangerateDisbursementService = DisbursementServiceFactory
-            .createDisbursementService("paymentgateway.disbursement.exchangerate.DisbursementServiceImpl"
-            	, disbursementDisbursementService);		
-
-        DisbursementResource exchangerateDisbursementResource = DisbursementResourceFactory
-            .createDisbursementResource("paymentgateway.disbursement.exchangerate.DisbursementResourceImpl"
-                , disbursementDisbursementResource, disbursementDisbursementService);
-			
-        DisbursementService specialDisbursementService = DisbursementServiceFactory
-            .createDisbursementService("paymentgateway.disbursement.special.DisbursementServiceImpl"
-            	, disbursementDisbursementService);		
-
-        DisbursementResource specialDisbursementResource = DisbursementResourceFactory
-            .createDisbursementResource("paymentgateway.disbursement.special.DisbursementResourceImpl"
-                , disbursementDisbursementResource, disbursementDisbursementService);
-			
-        DisbursementService domesticdisbursementvalidatorDisbursementService = DisbursementServiceFactory
-            .createDisbursementService("paymentgateway.disbursement.domesticdisbursementvalidator.DisbursementServiceImpl"
-            	, specialDisbursementService);		
-
-        DisbursementResource domesticdisbursementvalidatorDisbursementResource = DisbursementResourceFactory
-            .createDisbursementResource("paymentgateway.disbursement.domesticdisbursementvalidator.DisbursementResourceImpl"
-                , specialDisbursementResource, specialDisbursementService);
+                , disbursementDisbursement2Resource, disbursementDisbursement2Service);
 			
         DisbursementService internationaldisbursementvalidatorDisbursement2Service = DisbursementServiceFactory
             .createDisbursementService("paymentgateway.disbursement.internationaldisbursementvalidator.DisbursementServiceImpl"
-            	, domesticdisbursementvalidatorDisbursementService);		
+            	, internationalDisbursement2Service);		
 
         DisbursementResource internationaldisbursementvalidatorDisbursement2Resource = DisbursementResourceFactory
             .createDisbursementResource("paymentgateway.disbursement.internationaldisbursementvalidator.DisbursementResourceImpl"
-                , domesticdisbursementvalidatorDisbursementResource, domesticdisbursementvalidatorDisbursementService);
+                , internationalDisbursement2Resource, internationalDisbursement2Service);
 			
-        DisbursementService fixedcurrencyDisbursementService = DisbursementServiceFactory
-            .createDisbursementService("paymentgateway.disbursement.fixedcurrency.DisbursementServiceImpl"
-            	, disbursementDisbursementService);		
+        DisbursementService exchangerateDisbursement2Service = DisbursementServiceFactory
+            .createDisbursementService("paymentgateway.disbursement.exchangerate.DisbursementServiceImpl"
+            	, disbursementDisbursement2Service);		
 
-        DisbursementResource fixedcurrencyDisbursementResource = DisbursementResourceFactory
-            .createDisbursementResource("paymentgateway.disbursement.fixedcurrency.DisbursementResourceImpl"
-                , disbursementDisbursementResource, disbursementDisbursementService);
+        DisbursementResource exchangerateDisbursement2Resource = DisbursementResourceFactory
+            .createDisbursementResource("paymentgateway.disbursement.exchangerate.DisbursementResourceImpl"
+                , disbursementDisbursement2Resource, disbursementDisbursement2Service);
 			
-        DisbursementService agentDisbursementService = DisbursementServiceFactory
-            .createDisbursementService("paymentgateway.disbursement.agent.DisbursementServiceImpl"
-            	, disbursementDisbursementService);		
+        DisbursementService specialDisbursement2Service = DisbursementServiceFactory
+            .createDisbursementService("paymentgateway.disbursement.special.DisbursementServiceImpl"
+            	, disbursementDisbursement2Service);		
 
-        DisbursementResource agentDisbursementResource = DisbursementResourceFactory
-            .createDisbursementResource("paymentgateway.disbursement.agent.DisbursementResourceImpl"
-                , disbursementDisbursementResource, disbursementDisbursementService);
+        DisbursementResource specialDisbursement2Resource = DisbursementResourceFactory
+            .createDisbursementResource("paymentgateway.disbursement.special.DisbursementResourceImpl"
+                , disbursementDisbursement2Resource, disbursementDisbursement2Service);
 			
         DisbursementService domesticdisbursementvalidatorDisbursement2Service = DisbursementServiceFactory
             .createDisbursementService("paymentgateway.disbursement.domesticdisbursementvalidator.DisbursementServiceImpl"
-            	, agentDisbursementService);		
+            	, specialDisbursement2Service);		
 
         DisbursementResource domesticdisbursementvalidatorDisbursement2Resource = DisbursementResourceFactory
             .createDisbursementResource("paymentgateway.disbursement.domesticdisbursementvalidator.DisbursementResourceImpl"
-                , agentDisbursementResource, agentDisbursementService);
+                , specialDisbursement2Resource, specialDisbursement2Service);
 			
-        DisbursementService agentdisbursementDisbursementService = DisbursementServiceFactory
+        DisbursementService internationaldisbursementvalidatorDisbursement4Service = DisbursementServiceFactory
+            .createDisbursementService("paymentgateway.disbursement.internationaldisbursementvalidator.DisbursementServiceImpl"
+            	, domesticdisbursementvalidatorDisbursement2Service);		
+
+        DisbursementResource internationaldisbursementvalidatorDisbursement4Resource = DisbursementResourceFactory
+            .createDisbursementResource("paymentgateway.disbursement.internationaldisbursementvalidator.DisbursementResourceImpl"
+                , domesticdisbursementvalidatorDisbursement2Resource, domesticdisbursementvalidatorDisbursement2Service);
+			
+        DisbursementService fixedcurrencyDisbursement2Service = DisbursementServiceFactory
+            .createDisbursementService("paymentgateway.disbursement.fixedcurrency.DisbursementServiceImpl"
+            	, disbursementDisbursement2Service);		
+
+        DisbursementResource fixedcurrencyDisbursement2Resource = DisbursementResourceFactory
+            .createDisbursementResource("paymentgateway.disbursement.fixedcurrency.DisbursementResourceImpl"
+                , disbursementDisbursement2Resource, disbursementDisbursement2Service);
+			
+        DisbursementService agentDisbursement2Service = DisbursementServiceFactory
+            .createDisbursementService("paymentgateway.disbursement.agent.DisbursementServiceImpl"
+            	, disbursementDisbursement2Service);		
+
+        DisbursementResource agentDisbursement2Resource = DisbursementResourceFactory
+            .createDisbursementResource("paymentgateway.disbursement.agent.DisbursementResourceImpl"
+                , disbursementDisbursement2Resource, disbursementDisbursement2Service);
+			
+        DisbursementService domesticdisbursementvalidatorDisbursement4Service = DisbursementServiceFactory
+            .createDisbursementService("paymentgateway.disbursement.domesticdisbursementvalidator.DisbursementServiceImpl"
+            	, agentDisbursement2Service);		
+
+        DisbursementResource domesticdisbursementvalidatorDisbursement4Resource = DisbursementResourceFactory
+            .createDisbursementResource("paymentgateway.disbursement.domesticdisbursementvalidator.DisbursementResourceImpl"
+                , agentDisbursement2Resource, agentDisbursement2Service);
+			
+        DisbursementService agentdisbursementDisbursement2Service = DisbursementServiceFactory
             .createDisbursementService("paymentgateway.disbursement.agentdisbursement.DisbursementServiceImpl"
-            	, disbursementDisbursementService);		
+            	, disbursementDisbursement2Service);		
 
-        DisbursementResource agentdisbursementDisbursementResource = DisbursementResourceFactory
+        DisbursementResource agentdisbursementDisbursement2Resource = DisbursementResourceFactory
             .createDisbursementResource("paymentgateway.disbursement.agentdisbursement.DisbursementResourceImpl"
-                , disbursementDisbursementResource, disbursementDisbursementService);
+                , disbursementDisbursement2Resource, disbursementDisbursement2Service);
 			
-        DisbursementService specifiedrecipientDisbursementService = DisbursementServiceFactory
+        DisbursementService specifiedrecipientDisbursement2Service = DisbursementServiceFactory
             .createDisbursementService("paymentgateway.disbursement.specifiedrecipient.DisbursementServiceImpl"
-            	, disbursementDisbursementService);		
+            	, disbursementDisbursement2Service);		
 
-        DisbursementResource specifiedrecipientDisbursementResource = DisbursementResourceFactory
+        DisbursementResource specifiedrecipientDisbursement2Resource = DisbursementResourceFactory
             .createDisbursementResource("paymentgateway.disbursement.specifiedrecipient.DisbursementResourceImpl"
-                , disbursementDisbursementResource, disbursementDisbursementService);
+                , disbursementDisbursement2Resource, disbursementDisbursement2Service);
 			
 
-		System.out.println("specifiedrecipientDisbursementResource endpoints binding");
-		Router.route(specifiedrecipientDisbursementResource);
+		System.out.println("specifiedrecipientDisbursement2Resource endpoints binding");
+		Router.route(specifiedrecipientDisbursement2Resource);
 		
-		System.out.println("specifiedrecipientDisbursementService endpoints binding");
-		Router.route(specifiedrecipientDisbursementService);
+		System.out.println("specifiedrecipientDisbursement2Service endpoints binding");
+		Router.route(specifiedrecipientDisbursement2Service);
 		
-		System.out.println("agentdisbursementDisbursementResource endpoints binding");
-		Router.route(agentdisbursementDisbursementResource);
+		System.out.println("agentdisbursementDisbursement2Resource endpoints binding");
+		Router.route(agentdisbursementDisbursement2Resource);
 		
-		System.out.println("agentdisbursementDisbursementService endpoints binding");
-		Router.route(agentdisbursementDisbursementService);
+		System.out.println("agentdisbursementDisbursement2Service endpoints binding");
+		Router.route(agentdisbursementDisbursement2Service);
+		
+		System.out.println("domesticdisbursementvalidatorDisbursement4Resource endpoints binding");
+		Router.route(domesticdisbursementvalidatorDisbursement4Resource);
+		
+		System.out.println("domesticdisbursementvalidatorDisbursement4Service endpoints binding");
+		Router.route(domesticdisbursementvalidatorDisbursement4Service);
+		
+		System.out.println("agentDisbursement2Resource endpoints binding");
+		Router.route(agentDisbursement2Resource);
+		
+		System.out.println("agentDisbursement2Service endpoints binding");
+		Router.route(agentDisbursement2Service);
+		
+		System.out.println("fixedcurrencyDisbursement2Resource endpoints binding");
+		Router.route(fixedcurrencyDisbursement2Resource);
+		
+		System.out.println("fixedcurrencyDisbursement2Service endpoints binding");
+		Router.route(fixedcurrencyDisbursement2Service);
+		
+		System.out.println("internationaldisbursementvalidatorDisbursement4Resource endpoints binding");
+		Router.route(internationaldisbursementvalidatorDisbursement4Resource);
+		
+		System.out.println("internationaldisbursementvalidatorDisbursement4Service endpoints binding");
+		Router.route(internationaldisbursementvalidatorDisbursement4Service);
 		
 		System.out.println("domesticdisbursementvalidatorDisbursement2Resource endpoints binding");
 		Router.route(domesticdisbursementvalidatorDisbursement2Resource);
@@ -219,17 +249,17 @@ public class Basic {
 		System.out.println("domesticdisbursementvalidatorDisbursement2Service endpoints binding");
 		Router.route(domesticdisbursementvalidatorDisbursement2Service);
 		
-		System.out.println("agentDisbursementResource endpoints binding");
-		Router.route(agentDisbursementResource);
+		System.out.println("specialDisbursement2Resource endpoints binding");
+		Router.route(specialDisbursement2Resource);
 		
-		System.out.println("agentDisbursementService endpoints binding");
-		Router.route(agentDisbursementService);
+		System.out.println("specialDisbursement2Service endpoints binding");
+		Router.route(specialDisbursement2Service);
 		
-		System.out.println("fixedcurrencyDisbursementResource endpoints binding");
-		Router.route(fixedcurrencyDisbursementResource);
+		System.out.println("exchangerateDisbursement2Resource endpoints binding");
+		Router.route(exchangerateDisbursement2Resource);
 		
-		System.out.println("fixedcurrencyDisbursementService endpoints binding");
-		Router.route(fixedcurrencyDisbursementService);
+		System.out.println("exchangerateDisbursement2Service endpoints binding");
+		Router.route(exchangerateDisbursement2Service);
 		
 		System.out.println("internationaldisbursementvalidatorDisbursement2Resource endpoints binding");
 		Router.route(internationaldisbursementvalidatorDisbursement2Resource);
@@ -237,41 +267,17 @@ public class Basic {
 		System.out.println("internationaldisbursementvalidatorDisbursement2Service endpoints binding");
 		Router.route(internationaldisbursementvalidatorDisbursement2Service);
 		
-		System.out.println("domesticdisbursementvalidatorDisbursementResource endpoints binding");
-		Router.route(domesticdisbursementvalidatorDisbursementResource);
+		System.out.println("internationalDisbursement2Resource endpoints binding");
+		Router.route(internationalDisbursement2Resource);
 		
-		System.out.println("domesticdisbursementvalidatorDisbursementService endpoints binding");
-		Router.route(domesticdisbursementvalidatorDisbursementService);
+		System.out.println("internationalDisbursement2Service endpoints binding");
+		Router.route(internationalDisbursement2Service);
 		
-		System.out.println("specialDisbursementResource endpoints binding");
-		Router.route(specialDisbursementResource);
+		System.out.println("disbursementDisbursement2Resource endpoints binding");
+		Router.route(disbursementDisbursement2Resource);
 		
-		System.out.println("specialDisbursementService endpoints binding");
-		Router.route(specialDisbursementService);
-		
-		System.out.println("exchangerateDisbursementResource endpoints binding");
-		Router.route(exchangerateDisbursementResource);
-		
-		System.out.println("exchangerateDisbursementService endpoints binding");
-		Router.route(exchangerateDisbursementService);
-		
-		System.out.println("internationaldisbursementvalidatorDisbursementResource endpoints binding");
-		Router.route(internationaldisbursementvalidatorDisbursementResource);
-		
-		System.out.println("internationaldisbursementvalidatorDisbursementService endpoints binding");
-		Router.route(internationaldisbursementvalidatorDisbursementService);
-		
-		System.out.println("internationalDisbursementResource endpoints binding");
-		Router.route(internationalDisbursementResource);
-		
-		System.out.println("internationalDisbursementService endpoints binding");
-		Router.route(internationalDisbursementService);
-		
-		System.out.println("disbursementDisbursementResource endpoints binding");
-		Router.route(disbursementDisbursementResource);
-		
-		System.out.println("disbursementDisbursementService endpoints binding");
-		Router.route(disbursementDisbursementService);
+		System.out.println("disbursementDisbursement2Service endpoints binding");
+		Router.route(disbursementDisbursement2Service);
 		
 		System.out.println("authResource endpoints binding");
 		Router.route(userPasswordedResource);
@@ -327,5 +333,27 @@ public class Basic {
             int portNumInt = Integer.parseInt(portNum);
             return portNumInt;
     }
+
+	public static void setCors() {
+    	Properties properties = new Properties();
+        String propertyValue = "";
+        
+        try (FileInputStream fileInput = new FileInputStream("cors.properties")) {
+            properties.load(fileInput);
+            propertyValue = properties.getProperty("allowedMethod");
+            VMJCors.setAllowedMethod(propertyValue);
+            
+            propertyValue = properties.getProperty("allowedOrigin");
+            VMJCors.setAllowedOrigin(propertyValue);
+            
+        } catch (IOException e) {
+			VMJCors.setAllowedMethod("GET, POST, PUT, PATCH, DELETE");
+			VMJCors.setAllowedOrigin("*");
+			System.out.println("Buat file cors.properties terlebih dahulu pada src-gen/(namaProduk) dengan contoh sebagai berikut:");
+			System.out.println("allowedMethod = GET, POST");
+			System.out.println("allowedOrigin = http://example.com");
+        }
+    }
+
 
 }

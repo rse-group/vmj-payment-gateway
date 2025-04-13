@@ -19,8 +19,7 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator{
     public DisbursementResourceImpl(DisbursementResourceComponent recordController, DisbursementServiceComponent recordService) {
         super(recordController);
         this.disbursementServiceImpl = new DisbursementServiceImpl(recordService);
-    }
-	
+    }	
 	@Route(url = "call/exchangerate/callback")
 	public int callback(VMJExchange vmjExchange) {
 		Map<String, Object> requestBody = vmjExchange.getPayload(); 

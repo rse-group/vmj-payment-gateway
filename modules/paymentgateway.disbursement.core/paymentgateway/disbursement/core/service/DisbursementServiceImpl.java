@@ -120,7 +120,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 			e.printStackTrace();
 		}
 
-		this.updateObject(disbursement);
+		Repository.updateObject(disbursement);
 		
 		return disbursement.toHashMap();
 
@@ -129,7 +129,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	public List<HashMap<String, Object>> deleteDisbursement(Map<String, Object> requestBody){
 		int id = ((Double) requestBody.get("id")).intValue();
 		Disbursement disbursement = this.getObject(id);
-		this.deleteObject(id);
+		Repository.deleteObject(id);
 
 		return getAllDisbursement(requestBody);
 	}
@@ -234,19 +234,10 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		
 		return resultList;
 	}
-	
-	
+
 	
 	public Disbursement getObject(int id) {
         return Repository.getObject(id);
-    }
-
-    public void deleteObject(int id) {
-        Repository.deleteObject(id);
-    }
-
-    public void updateObject(Disbursement disbursement) {
-        Repository.updateObject(disbursement);
     }
 
     public List<Disbursement> getAllObject(String tableName) {

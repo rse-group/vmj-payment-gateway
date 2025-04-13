@@ -13,3 +13,4 @@ module paymentgateway.payment.ewallet {
 
 	opens paymentgateway.payment.ewallet to org.hibernate.orm.core, gson;
 }
+	
