@@ -1,3 +1,5 @@
 bin/
 bin-comp/
 .idea
+src/
+.DS_Store
