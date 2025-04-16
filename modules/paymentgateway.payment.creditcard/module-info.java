@@ -4,6 +4,8 @@ module paymentgateway.payment.creditcard {
 
 	requires vmj.routing.route;
 	requires paymentgateway.config.core;
+	requires paymentgateway.config.midtrans;
+
 	requires vmj.hibernate.integrator;
 	requires vmj.auth;
 	requires java.logging;

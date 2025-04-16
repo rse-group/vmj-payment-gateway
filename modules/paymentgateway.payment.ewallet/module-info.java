@@ -1,9 +1,11 @@
 module paymentgateway.payment.ewallet {
 	requires paymentgateway.payment.core;
     exports paymentgateway.payment.ewallet;
+	requires paymentgateway.config.core;
+	requires paymentgateway.config.flip; 
+	requires paymentgateway.config.midtrans;
 
 	requires vmj.routing.route;
-	requires paymentgateway.config.core;
 	requires vmj.hibernate.integrator;
 	requires vmj.auth;
 	requires java.logging;
