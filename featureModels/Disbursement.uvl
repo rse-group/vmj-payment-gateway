@@ -1,0 +1,12 @@
+namespace Disbursement
+
+features
+	Disbursement {abstract true}
+		optional
+			International {abstract true}
+				or
+					ExchangeRate
+					FixedCurrency
+			Agent
+			SpecifiedRecipient
+

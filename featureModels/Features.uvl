@@ -6,7 +6,7 @@ features
 			Disbursement
 				optional
 					International {abstract true}
-						optional
+						or
 							ExchangeRate
 							FixedCurrency
 					Agent
