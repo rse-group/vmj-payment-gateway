@@ -70,7 +70,6 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
 
-
 		Map<String, Object> responseMap = new HashMap<>();
 		
 		try {
