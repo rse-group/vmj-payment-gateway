@@ -87,6 +87,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	
 	public Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response){
 		Map<String, Object> validatedRequestBody = validateRequestBody(requestBody);
+		String vendorName = (String) validatedRequestBody.get("vendor_name");
 		String bank_code = (String) validatedRequestBody.get("bank_code");
 		String account_number = (String) validatedRequestBody.get("account_number");
 		double amount = (Double) validatedRequestBody.get("amount");
@@ -101,7 +102,8 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 			account_number,
 			amount,
 			bank_code,
-			status
+			status,
+			vendorName
 		);
 
 		Repository.saveObject(disbursement);

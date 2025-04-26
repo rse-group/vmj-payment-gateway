@@ -124,4 +124,68 @@ public class XenditConfiguration extends ConfigDecorator{
         xenditHeaderParams.put("Authorization",authorization);
         return xenditHeaderParams;
     }
+
+    @Override
+    public Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody){
+    	// Reference: https://developers.xendit.co/api-reference/payments-api/#virtual-account-creation
+        Map<String, Object> requestMap = new HashMap<>();
+        Map<String, Object> paymentMethod = new HashMap<String, Object>();
+        Map<String, Object> virtualAccount = new HashMap<String, Object>();
+        Map<String, Object> channelProperties = new HashMap<String, Object>();
+
+        int id = generateId();
+        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "amount"
+        );
+        double amount = Double.parseDouble(amountStr);
+        
+        String bank = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "bank"
+        );
+        String name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "name");
+        
+        String uuidString = UUID.randomUUID().toString().replace("-", "");
+        int uniqueInteger = Math.abs(uuidString.hashCode()) % 100000;
+        
+        paymentMethod.put("reference_id", String.format("%05d", uniqueInteger));
+        paymentMethod.put("reusability", "ONE_TIME_USE");
+        paymentMethod.put("type", "VIRTUAL_ACCOUNT");
+        
+        virtualAccount.put("channel_code", bank.toUpperCase());
+        channelProperties.put("customer_name", name);
+        virtualAccount.put("channel_properties", channelProperties);
+        
+        paymentMethod.put("virtual_account", virtualAccount);
+        
+        requestMap.put("reference_id", String.format("%05d", uniqueInteger));
+        requestMap.put("amount", amount);
+        requestMap.put("currency", "IDR");
+        requestMap.put("payment_method", paymentMethod);
+        requestMap.put("id", id);
+       
+        
+        return requestMap;
+    }
+
+    @Override
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id) {
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        Map<String, Object> paymentMethod = (Map<String, Object>) rawResponseMap.get("payment_method");
+        Map<String, Object> virtualAccount = (Map<String, Object>) paymentMethod.get("virtual_account");
+        Map<String, Object> channelProperties = (Map<String, Object>) virtualAccount.get("channel_properties");
+
+
+        String vaNumber = (String) channelProperties.get("virtual_account_number");
+        String Id = (String) rawResponseMap.get("reference_id");
+        response.put("va_number", vaNumber);
+        response.put("id", Integer.parseInt(Id));
+        
+        return response;
+    }
 }

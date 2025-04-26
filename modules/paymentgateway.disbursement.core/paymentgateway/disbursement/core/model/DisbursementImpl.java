@@ -18,8 +18,10 @@ public class DisbursementImpl extends DisbursementComponent {
 		String accountNumber,
 		double amount,
 		String bankCode,
-		String status) {
-		super(id, userId, accountNumber, amount, bankCode, status);
+		String status,
+		String vendorName
+		) {
+		super(id, userId, accountNumber, amount, bankCode, status, vendorName);
 	}
 
 	// read this for more information why default constructor needed
@@ -74,6 +76,14 @@ public class DisbursementImpl extends DisbursementComponent {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	
+	public String getVendorName() {
+		return vendorName;
+	}
+
+	public void setVendorName(String vendorName) {
+		this.vendorName = vendorName;
+	}
 
 	public HashMap<String, Object> toHashMap() {
 		HashMap<String, Object> disbursementHashMap = new HashMap<>();
@@ -82,6 +92,7 @@ public class DisbursementImpl extends DisbursementComponent {
 		disbursementHashMap.put("bank_code", getBankCode());
 		disbursementHashMap.put("account_number", getAccountNumber());
 		disbursementHashMap.put("amount", getAmount());
+		disbursementHashMap.put("vendorName", getVendorName());
 		return disbursementHashMap;
 	}
 }

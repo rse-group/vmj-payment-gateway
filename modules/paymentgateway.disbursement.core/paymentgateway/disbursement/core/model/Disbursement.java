@@ -22,4 +22,7 @@ public interface Disbursement {
 	public void setStatus(String status);
 
 	public HashMap<String, Object> toHashMap();
+	
+	public String getVendorName();
+	public void setVendorName(String vendorName);
 }
