@@ -159,10 +159,10 @@ public class FlipConfiguration extends ConfigDecorator{
             if (!errors.isEmpty()) {
                 Map<String, Object> firstError = errors.get(0);
                 String errorMessage = (String) firstError.get("message");
-                response.put("error", errorMessage);
-                return response;
+                throw new BadRequestException(errorMessage);;
             }
         }
+        
         ArrayList<Object> dataList = (ArrayList<Object>) rawResponseMap.get("data");
         if (!dataList.isEmpty()) {
             Map<String, Object> dataObject = (Map<String, Object>) dataList.get(0);

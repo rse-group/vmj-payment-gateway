@@ -69,7 +69,14 @@ public abstract class DisbursementDecorator extends DisbursementComponent {
 	public void setStatus(String status) {
 		record.setStatus(status);
 	}
-
+	
+	public String getVendorName(){
+		return record.getVendorName();
+	}
+	public void setVendorName(String vendorName){
+		record.setVendorName(vendorName);
+	}
+	
     public DisbursementComponent getRecord() {
         return this.record;
     }
