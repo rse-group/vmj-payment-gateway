@@ -1,14 +1,8 @@
 namespace PaymentGateway
 
-imports
-	featureModels.Vendor as V
-	featureModels.Features as F
-
 features
 	PaymentGateway {abstract true}
 		optional
-			V.Vendor
-			F.Features
 			Vendor {abstract true}
 				optional
 					Flip
