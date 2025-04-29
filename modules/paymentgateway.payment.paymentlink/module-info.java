@@ -10,6 +10,8 @@ module paymentgateway.payment.paymentlink {
 	// https://stackoverflow.com/questions/46488346/error32-13-error-cannot-access-referenceable-class-file-for-javax-naming-re/50568217
 	requires java.naming;
 	requires java.net.http;
+	requires java.validation;
+	requires com.fasterxml.jackson.databind;
 	
 	opens paymentgateway.payment.paymentlink to org.hibernate.orm.core, gson;
 }

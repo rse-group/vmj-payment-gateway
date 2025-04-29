@@ -20,16 +20,15 @@ import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
 
+import paymentgateway.config.ConfigFactory;
+import paymentgateway.config.core.Config;
 import paymentgateway.payment.PaymentFactory;
+import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentResourceComponent;
 import paymentgateway.payment.core.PaymentServiceComponent;
-import paymentgateway.config.core.Config;
-import paymentgateway.config.ConfigFactory;
-import paymentgateway.config.core.CreatePaymentRequestBody;
-import paymentgateway.config.core.CreatePaymentRoutingPaymentRequestBody;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	private PaymentServiceImpl paymentServiceImpl;

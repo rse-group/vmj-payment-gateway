@@ -3,13 +3,6 @@ import java.util.*;
 
 import vmj.routing.route.VMJExchange;
 
-import paymentgateway.config.core.CreatePaymentRequestBody;
-import paymentgateway.config.core.CheckPaymentStatusRequestBody;
-import paymentgateway.config.core.GetPaymentRequestBody;
-import paymentgateway.config.core.GetAllPaymentRequestBody;
-import paymentgateway.config.core.UpdatePaymentRequestBody;
-import paymentgateway.config.core.DeletePaymentRequestBody;
-
 public interface PaymentService {
 	Payment createPayment(CreatePaymentRequestBody requestBody, int id);	
 	Payment createPayment(CreatePaymentRequestBody requestBody);

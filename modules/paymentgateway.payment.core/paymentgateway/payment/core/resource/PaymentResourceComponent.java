@@ -4,13 +4,6 @@ import java.util.*;
 
 import vmj.hibernate.integrator.RepositoryUtil;
 import vmj.routing.route.VMJExchange;
-
-import paymentgateway.config.core.CreatePaymentRequestBody;
-import paymentgateway.config.core.CheckPaymentStatusRequestBody;
-import paymentgateway.config.core.GetPaymentRequestBody;
-import paymentgateway.config.core.GetAllPaymentRequestBody;
-import paymentgateway.config.core.UpdatePaymentRequestBody;
-import paymentgateway.config.core.DeletePaymentRequestBody;
 //add other required packages
 
 import paymentgateway.payment.core.Payment;

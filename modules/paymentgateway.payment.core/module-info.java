@@ -10,6 +10,7 @@ module paymentgateway.payment.core {
 	requires java.naming;
 	requires java.net.http;
 	requires java.validation;
+	requires com.fasterxml.jackson.databind;
 
 	opens paymentgateway.payment.core to org.hibernate.orm.core, gson, vmj.hibernate.integrator;
 }

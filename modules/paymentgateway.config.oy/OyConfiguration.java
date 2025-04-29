@@ -4,12 +4,6 @@ import paymentgateway.config.core.ConfigDecorator;
 import paymentgateway.config.core.ConfigComponent;
 import paymentgateway.config.core.PropertiesReader;
 import paymentgateway.config.core.RequestBodyValidator;
-import paymentgateway.config.core.CreatePaymentLinkRequestBody;
-import paymentgateway.config.core.CreateRetailOutletPaymentRequestBody;
-import paymentgateway.config.core.CreateVirtualAccountPaymentRequestBody;
-import paymentgateway.config.core.CreateEWalletPaymentRequestBody;
-import paymentgateway.config.core.CreateInvoiceRequestBody;
-import paymentgateway.config.core.CreatePaymentRoutingPaymentRequestBody;
 import vmj.routing.route.exceptions.BadRequestException;
 
 import java.util.*;
@@ -137,15 +131,15 @@ public class OyConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getPaymentLinkRequestBody(CreatePaymentLinkRequestBody requestBody){
+    public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
 
         int id = generateId();
 
-        int amount = (int) requestBody.amount;
-        String name = requestBody.senderName;
-        String email = requestBody.email;
-        String description = requestBody.title;
+        int amount = ((Double) requestBody.get("amount")).intValue();
+        String name = (String) requestBody.get("sender_name");
+        String email = (String) requestBody.get("email");
+        String description = (String) requestBody.get("title");
 
         requestMap.put("partner_tx_id", String.valueOf(id));
         requestMap.put("amount", amount);
@@ -157,12 +151,12 @@ public class OyConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getRetailOutletRequestBody(CreateRetailOutletPaymentRequestBody requestBody){
+    public Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
 
         int id = generateId();
-        int amount = (int) requestBody.amount;
-        String store = requestBody.retailOutlet;
+        int amount = ((Double) requestBody.get("amount")).intValue();
+        String store = (String) requestBody.get("retail_outlet");
 
         requestMap.put("partner_trx_id", String.valueOf(id));
         requestMap.put("customer_id", String.valueOf(id));
@@ -175,12 +169,12 @@ public class OyConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getVirtualAccountRequestBody(CreateVirtualAccountPaymentRequestBody requestBody){
+    public Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         int id = generateId();
 
-        int amount = (int) requestBody.amount;
-        String bank = requestBody.bank;
+        int amount = ((Double) requestBody.get("amount")).intValue();
+        String bank = (String) requestBody.get("bank");
 
         requestMap.put("partner_user_id", String.valueOf(id));
         requestMap.put("bank_code", getOyBankCode().get(bank));
@@ -191,16 +185,16 @@ public class OyConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getEWalletRequestBody(CreateEWalletPaymentRequestBody requestBody){
+    public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
 
 
         int id = generateId();
         String uuid = UUID.randomUUID().toString();
 
-        String ewallet = requestBody.ewalletType;
-        String phone = requestBody.phone;
-        int amount = (int) requestBody.amount;
+        String ewallet = (String) requestBody.get("ewallet_type");
+        String phone = (String) requestBody.get("phone");
+        int amount = ((Double) requestBody.get("amount")).intValue();
 
         requestMap.put("partner_trx_id", String.valueOf(id));
         requestMap.put("customer_id", String.valueOf(id));
@@ -213,13 +207,13 @@ public class OyConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getInvoiceRequestBody(CreateInvoiceRequestBody requestBody){
+    public Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         int id = generateId();
        
-        int amount = (int) requestBody.amount;
-        int quantity = requestBody.quantity;
-        int pricePerItem = requestBody.pricePerItem;
+        int amount = ((Double) requestBody.get("amount")).intValue();
+        int quantity = ((Integer) requestBody.get("quantity")).intValue();
+        int pricePerItem = ((Integer) requestBody.get("price_per_item")).intValue();
 
         if (pricePerItem * quantity != amount) {
             throw new BadRequestException(
@@ -244,17 +238,18 @@ public class OyConfiguration extends ConfigDecorator{
     }
     
     @Override
-    public Map<String, Object> getPaymentRoutingRequestBody(CreatePaymentRoutingPaymentRequestBody requestBody){
+    public Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
 
         int id = generateId();
-        int amount = (int) requestBody.amount;
-        
-        String recipientAccount = requestBody.recipientAccount;
-        String recipientBank = requestBody.recipientBank;
-        String recipientAmount = String.valueOf(requestBody.recipientAmount);
-        String recipientEmail = requestBody.recipientEmail;
-        String recipientNote = requestBody.recipientNote;
+        int amount = ((Double) requestBody.get("amount")).intValue();
+        int recipientAmountInt = ((Integer) requestBody.get("recipient_amount")).intValue();
+
+        String recipientAccount = (String) requestBody.get("recipient_account");
+        String recipientBank = (String) requestBody.get("recipient_bank");
+        String recipientAmount = String.valueOf(recipientAmountInt);
+        String recipientEmail = (String) requestBody.get("recipient_email");
+        String recipientNote = (String) requestBody.get("recipient_note");
 
         requestMap.put("partner_trx_id", String.valueOf(id));
         requestMap.put("partner_user_id", String.valueOf(id));

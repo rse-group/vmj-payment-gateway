@@ -4,12 +4,6 @@ import paymentgateway.config.core.ConfigDecorator;
 import paymentgateway.config.core.ConfigComponent;
 import paymentgateway.config.core.PropertiesReader;
 import paymentgateway.config.core.RequestBodyValidator;
-import paymentgateway.config.core.CreatePaymentLinkRequestBody;
-import paymentgateway.config.core.CreateRetailOutletPaymentRequestBody;
-import paymentgateway.config.core.CreateVirtualAccountPaymentRequestBody;
-import paymentgateway.config.core.CreateEWalletPaymentRequestBody;
-import paymentgateway.config.core.CreateDebitCardPaymentRequestBody;
-import paymentgateway.config.core.CreateCreditCardPaymentRequestBody;
 
 import java.util.*;
 import java.lang.reflect.Type;
@@ -100,22 +94,22 @@ public class MidtransConfiguration extends ConfigDecorator{
     
 
     @Override
-    public Map<String, Object> getPaymentLinkRequestBody(CreatePaymentLinkRequestBody requestBody){
+    public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> customer_details = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
         
         int id = generateId();
 
-        double amount = requestBody.amount;
+        double amount = ((Double) requestBody.get("amount")).doubleValue();
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
         requestMap.put("transaction_details", transaction_details);
         requestMap.put( "customer_required",true);
 
-        String name = requestBody.senderName;
-        String email = requestBody.email;
-        String title = requestBody.title;
+        String name = (String) requestBody.get("sender_name");
+        String email = (String) requestBody.get("email");
+        String title = (String) requestBody.get("title");
         String[] arr = name.split(" ", 2);
         if(arr.length > 1){
             customer_details.put("first_name", arr[0]);
@@ -131,14 +125,14 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getRetailOutletRequestBody(CreateRetailOutletPaymentRequestBody requestBody){
+    public Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> cstore = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
-        double amount = requestBody.amount;
-        String store = requestBody.retailOutlet;
+        double amount = ((Double) requestBody.get("amount")).doubleValue();
+        String store = (String) requestBody.get("retail_outlet");
 
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
@@ -153,14 +147,14 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getVirtualAccountRequestBody(CreateVirtualAccountPaymentRequestBody requestBody){
+    public Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> bank_transfer = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
-        double amount = requestBody.amount;
-        String bank = requestBody.bank;
+        double amount = ((Double) requestBody.get("amount")).doubleValue();
+        String bank = (String) requestBody.get("bank");
 
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
@@ -175,16 +169,16 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getEWalletRequestBody(CreateEWalletPaymentRequestBody requestBody){
+    public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> customer_details = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
 
-        double amount = requestBody.amount;
-        String ewallet = requestBody.ewalletType; 
-        String phone = requestBody.phone;
+        double amount = ((Double) requestBody.get("amount")).doubleValue();
+        String ewallet = (String) requestBody.get("ewallet_type"); 
+        String phone = (String) requestBody.get("phone");
 
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
@@ -199,13 +193,13 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getDebitCardRequestBody(CreateDebitCardPaymentRequestBody requestBody){
+    public Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> item_details = new HashMap<>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
-        double amount = requestBody.amount;
+        double amount = ((Double) requestBody.get("amount")).doubleValue();
 
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
@@ -222,15 +216,15 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getCreditCardRequestBody(CreateCreditCardPaymentRequestBody requestBody){
+    public Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> credit_card = new HashMap<>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
         int id = generateId();
         
-        double amount = requestBody.amount;
-        String token = requestBody.tokenId;
+        double amount = ((Double) requestBody.get("amount")).doubleValue();
+        String token = (String) requestBody.get("token_id");
 
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);

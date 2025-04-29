@@ -21,15 +21,14 @@ import java.util.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import paymentgateway.payment.PaymentFactory;
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
+import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentServiceComponent;
-import paymentgateway.config.core.Config;
-import paymentgateway.config.ConfigFactory;
-import paymentgateway.config.core.CreatePaymentRequestBody;
-import paymentgateway.config.core.CreateEWalletPaymentRequestBody;
+import paymentgateway.payment.PaymentFactory;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
 	// implement this with author
@@ -67,7 +66,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getEWalletRequestBody((CreateEWalletPaymentRequestBody) requestBody);
+		Map<String, Object> requestMap = config.getEWalletRequestBody(requestBody.toMap());
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String configUrl = config.getProductEnv("EWallet");

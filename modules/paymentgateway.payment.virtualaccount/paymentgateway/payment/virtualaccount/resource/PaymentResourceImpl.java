@@ -20,16 +20,15 @@ import java.util.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import paymentgateway.payment.PaymentFactory;
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
+import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentResourceComponent;
 import paymentgateway.payment.core.PaymentServiceComponent;
-import paymentgateway.config.core.Config;
-import paymentgateway.config.ConfigFactory;
-import paymentgateway.config.core.CreatePaymentRequestBody;
-import paymentgateway.config.core.CreateVirtualAccountPaymentRequestBody;
+import paymentgateway.payment.PaymentFactory;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	private PaymentServiceImpl paymentServiceImpl;

@@ -52,11 +52,16 @@ public class PaymentImpl extends PaymentComponent {
 		this.vendorName = vendorName;
 	}
 
+	public Date getCreatedAt() {
+		return this.createdAt;
+	}
+
 	public HashMap<String,Object> toHashMap() {
 		HashMap<String,Object> interfaceMap = new HashMap<String,Object>();
 		interfaceMap.put("id", getId());
 		interfaceMap.put("vendorName", getVendorName());
 		interfaceMap.put("amount", getAmount());
+		interfaceMap.put("createdAt", getCreatedAt().toString());
 		return interfaceMap;
 	}
 }

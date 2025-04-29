@@ -1,4 +1,4 @@
-package paymentgateway.config.core;
+package paymentgateway.payment.creditcard;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,7 +21,7 @@ public class ValidCreditCardMonthAndYearExpirationValidator
 
     @Override
     public boolean isValid(CreateCreditCardPaymentRequestBody requestBody, ConstraintValidatorContext context) {
-        if ( requestBody == null ) {
+        if (requestBody == null) {
             return false;
         }
 
@@ -37,9 +37,8 @@ public class ValidCreditCardMonthAndYearExpirationValidator
             System.out.println(e.getMessage());
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(
-                    String.format("invalid card_exp_month and card_exp_year combination", e.getParsedString())
-            )
-            .addConstraintViolation();
+                    String.format("invalid card_exp_month and card_exp_year combination", e.getParsedString()))
+                    .addConstraintViolation();
             return false;
         }
     }

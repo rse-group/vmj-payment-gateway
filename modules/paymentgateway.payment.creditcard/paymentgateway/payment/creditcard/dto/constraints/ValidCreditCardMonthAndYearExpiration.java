@@ -1,4 +1,4 @@
-package paymentgateway.config.core;
+package paymentgateway.payment.creditcard;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -17,7 +17,7 @@ public @interface ValidCreditCardMonthAndYearExpiration {
 
     String message() default "card_exp_month and card_exp_year must be equal or greater than the current month and year";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 }

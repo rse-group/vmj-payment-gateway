@@ -23,13 +23,6 @@ import vmj.routing.route.exceptions.*;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
-import paymentgateway.config.core.CreatePaymentRequestBody;
-import paymentgateway.config.core.CheckPaymentStatusRequestBody;
-import paymentgateway.config.core.GetPaymentRequestBody;
-import paymentgateway.config.core.GetAllPaymentRequestBody;
-import paymentgateway.config.core.UpdatePaymentRequestBody;
-import paymentgateway.config.core.DeletePaymentRequestBody;
-
 public class PaymentResourceImpl extends PaymentResourceComponent {
 	protected PaymentResourceComponent record;
 

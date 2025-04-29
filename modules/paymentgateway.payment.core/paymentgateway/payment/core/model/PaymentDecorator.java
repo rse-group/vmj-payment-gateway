@@ -43,5 +43,9 @@ public abstract class PaymentDecorator extends PaymentComponent{
 	public void setVendorName(String vendorName){
 		record.setVendorName(vendorName);
 	}
+
+	public Date getCreatedAt() {
+		return record.getCreatedAt();
+	}
 }
 

@@ -11,23 +11,19 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 
+import vmj.hibernate.integrator.RepositoryUtil;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
 
-import paymentgateway.payment.PaymentFactory;
+import paymentgateway.config.ConfigFactory;
+import paymentgateway.config.core.Config;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
-import vmj.hibernate.integrator.RepositoryUtil;
 import paymentgateway.payment.core.PaymentServiceComponent;
-
-import paymentgateway.config.core.Config;
-import paymentgateway.config.ConfigFactory;
-import paymentgateway.config.core.CreatePaymentRequestBody;
-import paymentgateway.config.core.DeletePaymentRequestBody;
-import paymentgateway.config.core.CreatePaymentLinkRequestBody;
-import paymentgateway.config.core.GetPaymentLinksByVendorNameRequestBody;
-import paymentgateway.config.core.GetPaymentLinkByIdRequestBody;
+import paymentgateway.payment.core.CreatePaymentRequestBody;
+import paymentgateway.payment.core.DeletePaymentRequestBody;
+import paymentgateway.payment.PaymentFactory;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
 	RepositoryUtil<PaymentLinkImpl> paymentLinkRepository;
@@ -55,7 +51,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getPaymentLinkRequestBody((CreatePaymentLinkRequestBody) requestBody);
+		Map<String, Object> requestMap = config.getPaymentLinkRequestBody(requestBody.toMap());
 		int id = ((Integer) requestMap.get("id")).intValue();
 		requestMap.remove("id");
 		String configUrl = config.getProductEnv("PaymentLink");

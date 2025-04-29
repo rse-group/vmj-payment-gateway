@@ -16,15 +16,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import paymentgateway.payment.PaymentFactory;
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
+import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentResourceComponent;
 import paymentgateway.payment.core.PaymentServiceComponent;
-import paymentgateway.config.core.Config;
-import paymentgateway.config.ConfigFactory;
-import paymentgateway.config.core.CreatePaymentRequestBody;
-import paymentgateway.config.core.CreateCreditCardPaymentRequestBody;
+import paymentgateway.payment.PaymentFactory;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	// implement this to work with authorization module
@@ -36,10 +35,10 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		super(record);
 		paymentServiceImpl = new PaymentServiceImpl(recordService);
 	}
-	
+
 	@Route(url = "call/creditcard", method = RequestMethod.POST, requestBodyClass = CreateCreditCardPaymentRequestBody.class)
 	public HashMap<String, Object> payment(VMJExchange<CreatePaymentRequestBody> vmjExchange) {
-		CreatePaymentRequestBody requestBody = vmjExchange.getParsedPayload(); 
+		CreatePaymentRequestBody requestBody = vmjExchange.getParsedPayload();
 		Payment result = paymentServiceImpl.createPayment(requestBody);
 		return result.toHashMap();
 	}

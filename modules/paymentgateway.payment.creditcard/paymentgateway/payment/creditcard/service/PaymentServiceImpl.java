@@ -19,14 +19,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import paymentgateway.payment.PaymentFactory;
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
+import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
 import paymentgateway.payment.core.PaymentServiceComponent;
-import paymentgateway.config.core.Config;
-import paymentgateway.config.ConfigFactory;
-import paymentgateway.config.core.CreatePaymentRequestBody;
-import paymentgateway.config.core.CreateCreditCardPaymentRequestBody;
+import paymentgateway.payment.PaymentFactory;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
 
@@ -89,7 +88,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 	    }
 	    
 	    // Step 2: Send transaction request
-	    Map<String, Object> requestMap = config.getCreditCardRequestBody((CreateCreditCardPaymentRequestBody) requestBody);
+	    Map<String, Object> requestMap = config.getCreditCardRequestBody(requestBody.toMap());
 	    int id = ((Integer) requestMap.get("id")).intValue();
 	    requestMap.remove("id");
 	    requestMap.put("credit_card", Map.of("token_id", tokenId, "authentication", false));

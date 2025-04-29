@@ -1,10 +1,12 @@
-package paymentgateway.config.core;
+package paymentgateway.payment.invoice;
 
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CreateInvoiceRequestBody extends CreatePaymentRequestBody {    
+import paymentgateway.payment.core.CreatePaymentRequestBody;
+
+public class CreateInvoiceRequestBody extends CreatePaymentRequestBody {
     @NotNull(message = "quantity must be specified")
     public int quantity;
 

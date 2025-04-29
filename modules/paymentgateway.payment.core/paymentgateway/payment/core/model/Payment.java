@@ -12,5 +12,7 @@ public interface Payment {
 	double getAmount();
 	void setAmount(double amount);
 
+	Date getCreatedAt();
+
 	public HashMap<String,Object> toHashMap();
 }

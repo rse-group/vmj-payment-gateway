@@ -44,5 +44,8 @@ public abstract class PaymentComponent implements Payment {
 		this.idTransaction = idTransaction;
 	}
 
+	public abstract Date getCreatedAt();
+
+
 	public abstract HashMap<String, Object> toHashMap();
 }

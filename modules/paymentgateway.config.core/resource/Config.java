@@ -40,14 +40,14 @@ public interface Config {
     Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody);
 
     // Payment Request
-    Map<String, Object> getPaymentLinkRequestBody(CreatePaymentLinkRequestBody requestBody);
-    Map<String, Object> getRetailOutletRequestBody(CreateRetailOutletPaymentRequestBody requestBody);
-    Map<String, Object> getVirtualAccountRequestBody(CreateVirtualAccountPaymentRequestBody requestBody);
-    Map<String, Object> getEWalletRequestBody(CreateEWalletPaymentRequestBody requestBody);
-    Map<String, Object> getDebitCardRequestBody(CreateDebitCardPaymentRequestBody requestBody);
-    Map<String, Object> getCreditCardRequestBody(CreateCreditCardPaymentRequestBody requestBody);
-    Map<String, Object> getInvoiceRequestBody(CreateInvoiceRequestBody requestBody);
-    Map<String, Object> getPaymentRoutingRequestBody(CreatePaymentRoutingPaymentRequestBody requestBody);
+    Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody);
 
     String getPaymentDetailEndpoint(String configUrl,String id);
 

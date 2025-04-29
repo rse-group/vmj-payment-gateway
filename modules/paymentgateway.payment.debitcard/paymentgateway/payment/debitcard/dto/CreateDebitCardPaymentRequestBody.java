@@ -1,10 +1,12 @@
-package paymentgateway.config.core;
+package paymentgateway.payment.debitcard;
 
 import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CreateDebitCardPaymentRequestBody extends CreatePaymentRequestBody {    
+import paymentgateway.payment.core.CreatePaymentRequestBody;
+
+public class CreateDebitCardPaymentRequestBody extends CreatePaymentRequestBody {
     @NotEmpty(message = "token_id must be specified")
     @JsonProperty("token_id")
     public String tokenId;

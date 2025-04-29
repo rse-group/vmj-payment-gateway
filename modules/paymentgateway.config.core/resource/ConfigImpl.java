@@ -107,35 +107,35 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
     
-    public Map<String, Object> getPaymentLinkRequestBody(CreatePaymentLinkRequestBody requestBody){
+    public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getRetailOutletRequestBody(CreateRetailOutletPaymentRequestBody requestBody){
+    public Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getVirtualAccountRequestBody(CreateVirtualAccountPaymentRequestBody requestBody){
+    public Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getEWalletRequestBody(CreateEWalletPaymentRequestBody requestBody){
+    public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getDebitCardRequestBody(CreateDebitCardPaymentRequestBody requestBody){
+    public Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getCreditCardRequestBody(CreateCreditCardPaymentRequestBody requestBody){
+    public Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getInvoiceRequestBody(CreateInvoiceRequestBody requestBody){
+    public Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getPaymentRoutingRequestBody(CreatePaymentRoutingPaymentRequestBody requestBody){
+    public Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
