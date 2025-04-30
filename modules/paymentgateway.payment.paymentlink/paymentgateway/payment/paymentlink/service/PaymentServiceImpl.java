@@ -91,7 +91,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		int id = ((Double) requestBody.get("id")).intValue();
 		List<PaymentLinkImpl> paymentLink = paymentLinkRepository.getAllObject("paymentlink_impl");
 		for(PaymentLinkImpl payment : paymentLink){
-			if (payment.getIdTransaction() == id){
+			if (payment.getPaymentId() == id){
 				return payment.toHashMap();
 			}
 		}
@@ -102,7 +102,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		int id = ((Double) requestBody.get("id")).intValue();
 		List<PaymentLinkImpl> paymentLinks = paymentLinkRepository.getAllObject("paymentlink_impl");
 		for(PaymentLinkImpl payment : paymentLinks){
-			if(payment.getIdTransaction() == id){
+			if(payment.getPaymentId() == id){
 				HashMap<String, Object> paymentMap = payment.toHashMap();
 				int intId = ((Integer) paymentMap.get("idTransaction")).intValue();
 				System.out.println(intId);
