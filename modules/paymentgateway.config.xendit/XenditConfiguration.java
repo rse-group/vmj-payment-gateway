@@ -176,15 +176,98 @@ public class XenditConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
 
+        if (rawResponseMap.containsKey("error_code")) {
+        	String message = (String) rawResponseMap.get("message");
+            response.put("message", message);
+            return response;
+        }
+        
         Map<String, Object> paymentMethod = (Map<String, Object>) rawResponseMap.get("payment_method");
         Map<String, Object> virtualAccount = (Map<String, Object>) paymentMethod.get("virtual_account");
         Map<String, Object> channelProperties = (Map<String, Object>) virtualAccount.get("channel_properties");
-
 
         String vaNumber = (String) channelProperties.get("virtual_account_number");
         String Id = (String) rawResponseMap.get("reference_id");
         response.put("va_number", vaNumber);
         response.put("id", Integer.parseInt(Id));
+        
+        return response;
+    }
+    
+    
+    @Override
+    public Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody){
+        Map<String, Object> requestMap = new HashMap<>();
+        Map<String, Object> paymentMethod = new HashMap<String, Object>();
+        Map<String, Object> overTheCounter = new HashMap<String, Object>();
+        Map<String, Object> channelProperties = new HashMap<String, Object>();
+
+        int id = generateId();
+        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "amount"
+        );
+        int amount = Integer.parseInt(amountStr);
+        String store = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "retail_outlet"
+        );
+        
+        String name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "name");
+        
+        String uuidString = UUID.randomUUID().toString().replace("-", "");
+        int uniqueInteger = Math.abs(uuidString.hashCode()) % 100000;
+
+        paymentMethod.put("reusability", "ONE_TIME_USE");
+        paymentMethod.put("type", "OVER_THE_COUNTER");
+        
+        overTheCounter.put("channel_code", store.toUpperCase());
+        channelProperties.put("customer_name", name);
+        overTheCounter.put("channel_properties", channelProperties);
+        
+        paymentMethod.put("over_the_counter", overTheCounter);
+        
+        requestMap.put("reference_id", String.format("%05d", uniqueInteger));
+        requestMap.put("amount", amount);
+        requestMap.put("currency", "IDR");
+        requestMap.put("country", "ID");
+        requestMap.put("payment_method", paymentMethod);
+        requestMap.put("id", id);
+        return requestMap;
+    }
+
+    @Override
+    public Map<String, Object> getRetailOutletResponse(String rawResponse, int id){
+		Map<String, Object> response = new HashMap<>();
+	    Gson gson = new Gson();
+	    Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+	    Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+	    
+        if (rawResponseMap.containsKey("error_code")) {
+        	String message = (String) rawResponseMap.get("message");
+            response.put("message", message);
+            return response;
+        }
+        
+        Map<String, Object> paymentMethod = (Map<String, Object>) rawResponseMap.get("payment_method");
+        Map<String, Object> overTheCounter = (Map<String, Object>) paymentMethod.get("over_the_counter");
+        Map<String, Object> channelProperties = (Map<String, Object>) overTheCounter.get("channel_properties");
+
+
+        String retailPaymentCode = (String) channelProperties.get("payment_code");
+        String Id = (String) rawResponseMap.get("reference_id");
+        response.put("retail_payment_code", retailPaymentCode);
+        response.put("id", Integer.parseInt(Id));
+        
+        if (retailPaymentCode == null) {
+        	Map<String, Object> status = (Map<String, Object>) rawResponseMap.get("status");
+        	String statusMessage = (String) status.get("message");
+        	response.put("message", statusMessage);
+            return response;
+        }
+        
+        response.put("retail_payment_code", retailPaymentCode);
+        response.put("id", id);
         
         return response;
     }
