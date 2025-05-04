@@ -345,6 +345,11 @@ public class MidtransConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String paymentType = (String) rawResponseMap.get("payment_type");
+        if (paymentType == null) {
+            List<String> errorMessages = (List<String>) rawResponseMap.get("validation_messages");
+			String errorMessageString = String.join(", ", errorMessages);
+        	throw new BadRequestException(errorMessageString);
+        }
         List<Map<String, Object>> actions = (List<Map<String, Object>>) rawResponseMap.get("actions");
         String url = (String) actions.get(0).get("url");
 
