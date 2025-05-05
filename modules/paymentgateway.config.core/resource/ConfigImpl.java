@@ -95,6 +95,8 @@ public class ConfigImpl extends ConfigComponent {
         return vmjExchange.getPayload();
     }
 
+    // Disbursement Request Body
+
     public Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
@@ -107,6 +109,8 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
     
+    // Payment Request Body
+
     public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
@@ -139,6 +143,12 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
+    public Map<String, Object> getQRCodeRequestBody(Map<String, Object> requestBody){
+        throw new UnsupportedOperationException();
+    }
+
+    // Payment Response
+
     public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
         throw new UnsupportedOperationException();
     }
@@ -170,6 +180,12 @@ public class ConfigImpl extends ConfigComponent {
     public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id){
         throw new UnsupportedOperationException();
     }
+
+    public Map<String, Object> getQRCodeResponse(String rawResponse, int id) {
+        throw new UnsupportedOperationException();
+    }
+
+    // Disbursement Response
 
     public Map<String, Object> getDisbursementResponse(String rawResponse){
         throw new UnsupportedOperationException();
