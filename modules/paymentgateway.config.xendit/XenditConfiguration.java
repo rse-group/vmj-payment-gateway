@@ -271,4 +271,100 @@ public class XenditConfiguration extends ConfigDecorator{
         
         return response;
     }
+
+    @Override
+    public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
+        // Note: currently this supports the following ewallet:
+        // DANA, OVO, LINKAJA, ASTRAPAY, JENIUSPAY, SHOPEEPAY, SAKUKU
+        Map<String, Object> requestMap = new HashMap<>();
+        Map<String, Object> paymentMethod = new HashMap<String, Object>();
+        Map<String, Object> ewalletDetailsMap = new HashMap<String, Object>();
+        Map<String, Object> channelProperties = new HashMap<String, Object>();
+        Map<String, Object> customerDetailsMap = new HashMap<String, Object>();
+        Map<String, Object> individualDetailsMap = new HashMap<String, Object>();
+
+        int id = generateId();
+        Double amountDouble = (Double) requestBody.get("amount");
+        int amount = amountDouble.intValue();
+        
+        String ewalletType = (String) requestBody.get("ewallet_type");
+        String name = (String) requestBody.get("name");
+        String email = (String) requestBody.get("email");
+        String phone = (String) requestBody.get("phone");
+        String successReturnUrl = (String) requestBody.get("success_return_url");
+        String failureReturnUrl = (String) requestBody.get("failure_return_url");
+        String cashtag = (String) requestBody.get("cashtag");
+        
+        String uuidString = UUID.randomUUID().toString().replace("-", "");
+        int uniqueInteger = Math.abs(uuidString.hashCode()) % 100000;
+        
+        paymentMethod.put("reusability", "ONE_TIME_USE");
+        paymentMethod.put("type", "EWALLET");
+        
+        ewalletDetailsMap.put("channel_code", ewalletType);
+        if (ewalletType.equals("DANA") || ewalletType.equals("LINKAJA") || ewalletType.equals("SHOPEEPAY") || ewalletType.equals("ASTRAPAY")) {
+            // required for DANA, LINKAJA, SHOPEEPAY, ASTRAPAY if reusability is ONE_TIME_USE
+            channelProperties.put("success_return_url", successReturnUrl);
+        }
+        if (ewalletType.equals("ASTRAPAY")) {
+            // required for ASTRAPAY
+            channelProperties.put("failure_return_url", failureReturnUrl);
+        }
+        if (ewalletType.equals("JENIUSPAY")) {
+            // required for JENIUSPAY if reusability is ONE_TIME_USE
+            channelProperties.put("cashtag", cashtag);
+        }
+        if (ewalletType.equals("OVO")) {
+            // required for OVO if reusability is ONE_TIME_USE
+            channelProperties.put("mobile_number", phone);
+        }
+        ewalletDetailsMap.put("channel_properties", channelProperties);
+        
+        paymentMethod.put("ewallet", ewalletDetailsMap);
+                
+        customerDetailsMap.put("reference_id", String.format("%05d", uniqueInteger));
+        customerDetailsMap.put("type", "INDIVIDUAL");
+        individualDetailsMap.put("given_names", name);
+        customerDetailsMap.put("individual_detail", individualDetailsMap);
+        customerDetailsMap.put("email", email);
+        customerDetailsMap.put("mobile_number", phone);
+        
+        requestMap.put("reference_id", String.format("%05d", uniqueInteger));
+        requestMap.put("amount", amount);
+        requestMap.put("currency", "IDR"); // currently handling only for ID ewallet
+        requestMap.put("payment_method", paymentMethod);
+        if (ewalletType.equals("SHOPEEPAY")) {
+            // required for SHOPEEPAY
+            // (currently handling only for ID ewallet)
+            requestMap.put("country", "ID");
+        }
+        requestMap.put("customer", customerDetailsMap);
+        requestMap.put("id", id);
+
+        return requestMap;
+    }
+
+    @Override
+    public Map<String, Object> getEWalletResponse(String rawResponse, int id) {
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (rawResponseMap.containsKey("error_code")) {
+        	String errorMessage = (String) rawResponseMap.get("message");
+            throw new BadRequestException(errorMessage);
+        }
+        
+        Map<String, Object> paymentMethod = (Map<String, Object>) rawResponseMap.get("payment_method");
+        Map<String, Object> ewalletDetailsMap = (Map<String, Object>) paymentMethod.get("ewallet");
+        String paymentType = (String) ewalletDetailsMap.get("channel_code");
+
+        String Id = (String) rawResponseMap.get("reference_id");
+        response.put("url", "");
+        response.put("payment_type", paymentType);
+        response.put("id", Integer.parseInt(Id));
+        
+        return response;
+    }
 }
