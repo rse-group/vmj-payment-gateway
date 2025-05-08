@@ -123,11 +123,7 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody){
-        throw new UnsupportedOperationException();
-    }
-
-    public Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getCardRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
@@ -143,11 +139,7 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getDebitCardResponse(String rawResponse, int id){
-        throw new UnsupportedOperationException();
-    }
-
-    public Map<String, Object> getCreditCardResponse(String rawResponse, int id){
+    public Map<String, Object> getCardResponse(String rawResponse, int id){
         throw new UnsupportedOperationException();
     }
 

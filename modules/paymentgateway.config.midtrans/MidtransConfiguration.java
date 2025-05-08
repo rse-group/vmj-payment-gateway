@@ -193,30 +193,7 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody){
-        Map<String, Object> requestMap = new HashMap<>();
-        Map<String, Object> item_details = new HashMap<>();
-        Map<String, Object> transaction_details = new HashMap<String, Object>();
-
-        int id = generateId();
-        double amount = ((Double) requestBody.get("amount")).doubleValue();
-
-        transaction_details.put("order_id", String.valueOf(id));
-        transaction_details.put("gross_amount", amount);
-
-        item_details.put("name","test item");
-        item_details.put("quantity",1);
-        item_details.put("price",amount);
-        requestMap.put("item_details",item_details);
-
-        requestMap.put("payment_type", "credit_card"); // documentation: https://docs.midtrans.com/reference/charge-transactions-on-card
-        requestMap.put("transaction_details", transaction_details);
-        requestMap.put("id",id);
-        return requestMap;
-    }
-
-    @Override
-    public Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getCardRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> credit_card = new HashMap<>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
@@ -248,7 +225,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         String cardCVV = (String) requestBody.get("card_cvv");
     
         // Determine the appropriate endpoint based on the service name
-        if (serviceName.equals("CreditCardToken")){
+        if (serviceName.equals("CardToken")){
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "token") 
                 + "?client_key=" + PropertiesReader.getProp(CONFIG_FILE, "clientKey") 
                 + "&card_number=" + cardNumber 
@@ -281,28 +258,7 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getDebitCardResponse(String rawResponse, int id){
-        Map<String, Object> response = new HashMap<>();
-        Gson gson = new Gson();
-        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
-        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
-        String url = (String) rawResponseMap.get("redirect_url");
-        String paymentType = (String) rawResponseMap.get("payment_type");
-        if (paymentType == null) {
-        	String statusMessage = (String) rawResponseMap.get("status_message");
-        	List<String> validationMessages = (List<String>) rawResponseMap.get("validation_messages");
-        	String combinedMessage = statusMessage + ". " + String.join(", ", validationMessages);
-            response.put("message", combinedMessage);
-            return response;
-        }
-        response.put("payment_type", paymentType);
-        response.put("redirect_url", url);
-        response.put("id", id);
-        return response;
-    }
-
-    @Override
-    public Map<String, Object> getCreditCardResponse(String rawResponse, int id){
+    public Map<String, Object> getCardResponse(String rawResponse, int id){
         Map<String, Object> response = new HashMap<>();
         String status = "";
         Gson gson = new Gson();
@@ -389,7 +345,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         else if (serviceName.equals("PaymentStatus")){
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "paymentstatus");
         }
-        else if (serviceName.equals("CreditCardToken")){
+        else if (serviceName.equals("CardToken")){
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "token") + "?client_key=" + PropertiesReader.getProp(CONFIG_FILE, "clientKey");
         }
         else {

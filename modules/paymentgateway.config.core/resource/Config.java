@@ -44,8 +44,7 @@ public interface Config {
     Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody);
-    Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody);
-    Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getCardRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody);
 
@@ -55,8 +54,7 @@ public interface Config {
 
     // Payment Response
     Map<String, Object> getPaymentLinkResponse(String rawResponse, int id);
-    Map<String, Object> getDebitCardResponse(String rawResponse, int id);
-    Map<String, Object> getCreditCardResponse(String rawResponse, int id);
+    Map<String, Object> getCardResponse(String rawResponse, int id);
     Map<String, Object> getInvoiceResponse(String rawResponse, int id);
     Map<String, Object> getEWalletResponse(String rawResponse, int id);
     Map<String, Object> getPaymentRoutingResponse(String rawResponse, int id);
