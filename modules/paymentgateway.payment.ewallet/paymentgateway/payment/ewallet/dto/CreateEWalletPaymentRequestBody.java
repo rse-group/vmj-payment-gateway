@@ -19,9 +19,17 @@ public class CreateEWalletPaymentRequestBody extends CreatePaymentRequestBody {
     public String name;
 
     @NotEmpty(message = "email must be specified")
-    @Email(message = "email must be valid email")
+    @Email(message = "email must be a valid email")
     public String email;
 
     @NotEmpty(message = "phone must be specified")
     public String phone;
+
+    @JsonProperty("success_return_url")
+    public String successReturnUrl;
+
+    @JsonProperty("failure_return_url")
+    public String failureReturnUrl;
+    
+    public String cashtag;
 }
