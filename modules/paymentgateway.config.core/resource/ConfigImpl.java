@@ -127,6 +127,10 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
+    public Map<String, Object> getDirectDebitRequestBody(Map<String, Object> requestBody){
+        throw new UnsupportedOperationException();
+    }
+
     public Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
@@ -140,6 +144,10 @@ public class ConfigImpl extends ConfigComponent {
     }
 
     public Map<String, Object> getCardResponse(String rawResponse, int id){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getDirectDebitResponse(String rawResponse, int id){
         throw new UnsupportedOperationException();
     }
 

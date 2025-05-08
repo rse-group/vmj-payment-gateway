@@ -103,6 +103,10 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getCardRequestBody(requestBody);
     }
 
+    public Map<String, Object> getDirectDebitRequestBody(Map<String, Object> requestBody){
+        return record.getDirectDebitRequestBody(requestBody);
+    }
+
     public Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody){
         return record.getInvoiceRequestBody(requestBody);
     }
@@ -117,6 +121,10 @@ public abstract class ConfigDecorator extends ConfigComponent{
 
     public Map<String, Object> getCardResponse(String rawResponse, int id){
         return record.getCardResponse(rawResponse, id);
+    }
+
+    public Map<String, Object> getDirectDebitResponse(String rawResponse, int id){
+        return record.getDirectDebitResponse(rawResponse, id);
     }
 
     public Map<String, Object> getInvoiceResponse(String rawResponse, int id){

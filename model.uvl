@@ -25,14 +25,14 @@ features
 					EWallet
 					Invoice
 					PaymentRouting
-					CreditCard
-					DebitCard
+					Card
+					DirectDebit
 
 constraints
   Disbursement => Flip | Xendit
   PaymentLink | EWallet => Oy | Midtrans | Flip
   VirtualAccount | RetailOutlet => Oy | Midtrans
   Invoice | PaymentRouting => Oy
-  CreditCard | DebitCard  => Midtrans
-  SpecifiedRecipient => Xendit
+  Card => Midtrans
+  SpecifiedRecipient | DirectDebit => Xendit
   Agent | ExchangeRate | FixedCurrency => Flip

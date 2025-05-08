@@ -367,4 +367,121 @@ public class XenditConfiguration extends ConfigDecorator{
         
         return response;
     }
+
+    @Override
+    public Map<String, Object> getDirectDebitRequestBody(Map<String, Object> requestBody){
+        // Note: currently this supports the following direct debit:
+        // MANDIRI, BRI
+        Map<String, Object> requestMap = new HashMap<>();
+        Map<String, Object> paymentMethod = new HashMap<String, Object>();
+        Map<String, Object> directDebitMap = new HashMap<String, Object>();
+        Map<String, Object> channelProperties = new HashMap<String, Object>();
+        Map<String, Object> customerDetailsMap = new HashMap<String, Object>();
+        Map<String, Object> individualDetailsMap = new HashMap<String, Object>();
+
+        int id = generateId();
+        Double amountDouble = (Double) requestBody.get("amount");
+        int amount = amountDouble.intValue();
+        String bank = RequestBodyValidator.stringRequestBodyValidator(
+            requestBody,
+            "bank"
+        );
+        
+        String name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "name");
+
+        String successReturnUrl = (String) requestBody.get("success_return_url");
+        String failureReturnUrl = (String) requestBody.get("failure_return_url");
+        String email = (String) requestBody.get("email");
+        String phone = (String) requestBody.get("phone");
+        String cardLastFour = (String) requestBody.get("card_last_four");
+        
+        String uuidString = UUID.randomUUID().toString().replace("-", "");
+        int uniqueInteger = Math.abs(uuidString.hashCode()) % 100000;
+
+        paymentMethod.put("reusability", "ONE_TIME_USE");
+        paymentMethod.put("type", "DIRECT_DEBIT");
+        
+        directDebitMap.put("channel_code", bank);
+        if (bank.equals("MANDIRI")) {
+            // required for MANDIRI
+            channelProperties.put("success_return_url", successReturnUrl);
+            channelProperties.put("failure_return_url", failureReturnUrl);
+        }
+        if (bank.equals("BRI")) {
+            // required for BRI
+            channelProperties.put("mobile_number", phone);
+            channelProperties.put("card_last_four", cardLastFour);
+        }
+        directDebitMap.put("channel_properties", channelProperties);
+
+        customerDetailsMap.put("reference_id", String.format("%05d", uniqueInteger));
+        customerDetailsMap.put("type", "INDIVIDUAL");
+        individualDetailsMap.put("given_names", name);
+        customerDetailsMap.put("individual_detail", individualDetailsMap);
+        customerDetailsMap.put("email", email);
+        customerDetailsMap.put("mobile_number", phone);
+        
+        paymentMethod.put("direct_debit", directDebitMap);
+        
+        requestMap.put("reference_id", String.format("%05d", uniqueInteger));
+        requestMap.put("amount", amount);
+        requestMap.put("currency", "IDR");
+        requestMap.put("payment_method", paymentMethod);
+        requestMap.put("customer", customerDetailsMap);
+        requestMap.put("id", id);
+        return requestMap;
+    }
+
+    @Override
+    public Map<String, Object> getDirectDebitResponse(String rawResponse, int id){
+		Map<String, Object> response = new HashMap<>();
+	    Gson gson = new Gson();
+	    Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+	    Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+	    
+        if (rawResponseMap.containsKey("error_code")) {
+        	String message = (String) rawResponseMap.get("message");
+            throw new BadRequestException(message);
+        }
+        
+        Map<String, Object> paymentMethodMap = (Map<String, Object>) rawResponseMap.get("payment_method");
+        Map<String, Object> directDebitMap = (Map<String, Object>) paymentMethodMap.get("direct_debit");
+        Map<String, Object> channelProperties = (Map<String, Object>) directDebitMap.get("channel_properties");
+
+        String paymentType = (String) channelProperties.get("channel_code");
+        String status = (String) paymentMethodMap.get("status");
+
+        List<Map<String, Object>> actionsArray = (List<Map<String, Object>>) rawResponseMap.get("actions");
+
+        if (actionsArray == null) {
+        	Map<String, Object> statusMap = (Map<String, Object>) rawResponseMap.get("status");
+        	String statusMessage = (String) statusMap.get("message");
+        	response.put("message", statusMessage);
+            return response;
+        }
+
+        String directDebitUrl = null;
+
+        for (Map<String, Object> actionMap : actionsArray) {
+            String action = (String) actionMap.get("action");
+            if (action.equals("AUTH")) {
+                directDebitUrl = (String) actionMap.get("url");
+            }
+        }
+
+        if (directDebitUrl == null) {
+        	Map<String, Object> statusMap = (Map<String, Object>) rawResponseMap.get("status");
+        	String statusMessage = (String) statusMap.get("message");
+        	response.put("message", statusMessage);
+            return response;
+        }
+
+        String Id = (String) rawResponseMap.get("reference_id");
+        response.put("payment_type", paymentType);
+        response.put("status", status);
+        response.put("direct_debit_url", directDebitUrl);
+        response.put("id", Integer.parseInt(Id));
+        
+        return response;
+    }
 }

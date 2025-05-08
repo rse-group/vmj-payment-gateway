@@ -30,11 +30,13 @@ public abstract class ConfigComponent implements Config {
     public abstract Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody);
     public abstract Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody);
     public abstract Map<String, Object> getCardRequestBody(Map<String, Object> requestBody);
+    public abstract Map<String, Object> getDirectDebitRequestBody(Map<String, Object> requestBody);
     public abstract Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody);
     public abstract Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody);
     
     public abstract Map<String, Object> getPaymentLinkResponse(String rawResponse, int id);
     public abstract Map<String, Object> getCardResponse(String rawResponse, int id);
+    public abstract Map<String, Object> getDirectDebitResponse(String rawResponse, int id);
     public abstract Map<String, Object> getInvoiceResponse(String rawResponse, int id);
     public abstract Map<String, Object> getEWalletResponse(String rawResponse, int id);
     public abstract Map<String, Object> getPaymentRoutingResponse(String rawResponse, int id);
