@@ -54,6 +54,10 @@ public class ConfigImpl extends ConfigComponent {
     public String getProductEnv(String serviceName){
         throw new UnsupportedOperationException();
     }
+    
+    public String constructUrlParam(String serviceName, Map<String, Object> requestBody){
+        throw new UnsupportedOperationException();
+    }
 
     public String getPaymentDetailEndpoint(String configUrl,String id){
         throw new UnsupportedOperationException();
@@ -119,11 +123,11 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getCardRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getDirectDebitRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
@@ -139,11 +143,11 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getDebitCardResponse(String rawResponse, int id){
+    public Map<String, Object> getCardResponse(String rawResponse, int id){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getCreditCardResponse(String rawResponse, int id){
+    public Map<String, Object> getDirectDebitResponse(String rawResponse, int id){
         throw new UnsupportedOperationException();
     }
 

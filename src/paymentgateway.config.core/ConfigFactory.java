@@ -10,7 +10,7 @@ public class ConfigFactory{
 
     public ConfigFactory()
     {
-
+    
     }
 
     // public static Config createConfig(String fullyQualifiedName, Object ... base)
