@@ -11,8 +11,8 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
         this.record = record;
     }
 
-    public Payment createPayment(CreatePaymentRequestBody requestBody, int id){
-		return record.createPayment(requestBody, id);
+    public Payment createPayment(Map<String, Object> requestBody, String id, String status) {
+		return record.createPayment(requestBody, id, status);
 	}
     
     public Payment createPayment(CreatePaymentRequestBody requestBody){
@@ -39,7 +39,7 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
         return record.transformListToHashMap(List);
     }
     
-    public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody){
+    public Map<String, Object> sendTransaction(Map<String, Object> requestBody){
         return record.sendTransaction(requestBody);
     }
      
@@ -47,7 +47,11 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
         return record.checkPaymentStatus(requestBody);
     }
 
-    public HashMap<String, Object> getPaymentById(int id){
+    public HashMap<String, Object> getPaymentById(String id){
         return record.getPaymentById(id);
+    }
+
+    public void callback(VMJExchange vmjExchange) {
+        record.callback(vmjExchange);
     }
 }

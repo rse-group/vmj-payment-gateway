@@ -35,13 +35,14 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
     }
     
 	public Payment createPayment(CreatePaymentRequestBody requestBody) {
-		Map<String, Object> response = sendTransaction(requestBody);
+		Map<String, Object> response = sendTransaction(requestBody.toMap());
 
 		String vaAccountNumber = (String) response.get("va_number");
-		int id = (int) response.get("id");
+		String id = (String) response.get("id");
+		String status = (String) response.get("status");
 
 		String bankCode = ((CreateVirtualAccountPaymentRequestBody) requestBody).bank;
-		Payment transaction = record.createPayment(requestBody, id);
+		Payment transaction = record.createPayment(requestBody.toMap(), id, status);
 		Payment virtualAccountTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.virtualaccount.VirtualAccountImpl",
 				transaction,
@@ -51,15 +52,15 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return virtualAccountTransaction;
 	}
 	
-	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
-		String vendorName = (String) requestBody.vendorName;
+	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getVirtualAccountRequestBody(requestBody.toMap());
-		int id = ((Integer) requestMap.get("id")).intValue();
-		System.out.println("id:" + Integer.toString(id));
+		Map<String, Object> requestMap = config.getVirtualAccountRequestBody(requestBody);
+		String id = (String) requestMap.get("id");
+		System.out.println("id:" + id);
 		requestMap.remove("id");
 		String requestString = config.getRequestString(requestMap);
 		String configUrl = config.getProductEnv("VirtualAccount");

@@ -19,9 +19,10 @@ import javax.persistence.Column;
 public abstract class PaymentComponent implements Payment {
 
 	@Id
-	protected int idTransaction;
+	protected UUID idTransaction;
 	protected double amount;
 	protected String vendorName;
+	protected String status;
 	
 	@CreationTimestamp
 	@Column(name = "createdAt", updatable = false)
@@ -36,13 +37,17 @@ public abstract class PaymentComponent implements Payment {
 
 	public abstract void setVendorName(String vendorName);
 
-	public int getIdTransaction() {
+	public UUID getIdTransaction() {
 		return this.idTransaction;
 	}
 
-	public void setIdTransaction(int idTransaction) {
+	public void setIdTransaction(UUID idTransaction) {
 		this.idTransaction = idTransaction;
 	}
+
+	public abstract String getStatus();
+
+	public abstract void setStatus(String status);
 
 	public abstract Date getCreatedAt();
 

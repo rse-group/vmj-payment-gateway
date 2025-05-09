@@ -7,8 +7,8 @@ import javax.validation.constraints.PositiveOrZero;
 import vmj.routing.route.dto.BaseRequestBody;
 
 public class UpdatePaymentRequestBody extends BaseRequestBody {
-	@NotNull(message = "id must be specified")
-	public int id;
+	@NotEmpty(message = "id must be specified")
+	public String id;
 
 	@PositiveOrZero(message = "amount must not be negative")
 	public double amount;

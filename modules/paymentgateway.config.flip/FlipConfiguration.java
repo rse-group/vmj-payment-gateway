@@ -276,7 +276,7 @@ public class FlipConfiguration extends ConfigDecorator{
 
     @Override
     public Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody){
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) requestBody.get("title");
         int amount = ((Double) requestBody.get("amount")).intValue();
@@ -298,17 +298,18 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id) {
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, String id) {
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         Map<String, Object> billPayment = (Map<String, Object>) rawResponseMap.get("bill_payment");
         Map<String, Object> receiverBankAccount = (Map<String, Object>) billPayment.get("receiver_bank_account");
+        String status = (String) billPayment.get("status");
         String vaNumber = (String) receiverBankAccount.get("account_number");
-        int billId = (int) ((Double) rawResponseMap.get("link_id")).doubleValue();
         response.put("va_number", vaNumber);
-        response.put("id", billId);
+        response.put("status", status);
+        response.put("id", id);
         
         return response;
     }
@@ -316,7 +317,7 @@ public class FlipConfiguration extends ConfigDecorator{
 
     @Override
     public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) requestBody.get("title");
 
@@ -343,7 +344,7 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getEWalletResponse(String rawResponse, int id){
+    public Map<String, Object> getEWalletResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -359,19 +360,20 @@ public class FlipConfiguration extends ConfigDecorator{
         Map<String, Object> billPayment = (Map<String, Object>) rawResponseMap.get("bill_payment");
 
         String paymentType = (String) billPayment.get("sender_bank");
+        String status = (String) billPayment.get("status");
         String phoneNumber = (String) rawResponseMap.get("user_phone");
-        int billId = (int) ((Double) rawResponseMap.get("link_id")).doubleValue();
         response.put("phone_number",phoneNumber);
         response.put("url", url);
         response.put("payment_type",paymentType);
-        response.put("id", billId);
+        response.put("status", status);
+        response.put("id", id);
         return response;
     }
 
 
     @Override
     public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
         Map<String, Object> requestMap = new HashMap<>();
         String title = (String) requestBody.get("title");
         int amount = ((Double) requestBody.get("amount")).intValue();
@@ -390,15 +392,16 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
+    public Map<String, Object> getPaymentLinkResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String url = (String) rawResponseMap.get("link_url");
-        int billId = (int) ((Double) rawResponseMap.get("link_id")).doubleValue();
+        String status = (String) rawResponseMap.get("status");
         response.put("url", url);
-        response.put("id", billId);
+        response.put("status", status);
+        response.put("id", id);
         return response;
     }
 

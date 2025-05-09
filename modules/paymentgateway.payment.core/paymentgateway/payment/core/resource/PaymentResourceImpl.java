@@ -43,58 +43,7 @@ public class PaymentResourceImpl extends PaymentResourceComponent {
 
 	@Route(url = "call/payment/callback")
 	public int callback(VMJExchange vmjExchange) {
-		String workingDir = System.getProperty("user.dir");
-		List<File> propertyFiles = new ArrayList<>();
-
-		List<String> vendors = new ArrayList<>();
-
-		String[] targetFiles = { "oy.properties", "flip.properties", "midtrans.properties" };
-
-		// Iterate through target files
-		for (String targetFile : targetFiles) {
-			File file = new File(workingDir, targetFile);
-			if (file.exists()) {
-				String fileName = file.getName();
-				String nameBeforeDot = fileName.substring(0, fileName.indexOf('.'));
-				String capitalized = nameBeforeDot.substring(0, 1).toUpperCase() + nameBeforeDot.substring(1);
-				vendors.add(capitalized);
-			}
-		}
-
-		for (String vendor : vendors) {
-			try {
-				Config config = ConfigFactory.createConfig(vendor,
-						ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-				Map<String, Object> requestMap = config.getCallbackPaymentRequestBody(vmjExchange);
-
-				String idStr = (String) requestMap.get("id");
-				String status = (String) requestMap.get("status");
-
-				String hostAddress = paymentServiceImpl.getEnvVariableHostAddress("AMANAH_HOST_BE");
-				int portNum = paymentServiceImpl.getEnvVariablePortNumber("AMANAH_PORT_BE");
-
-				HttpClient client = HttpClient.newHttpClient();
-				String configUrl = String.format("http://%s:%d/call/receivecallback", hostAddress, portNum);
-				// String configUrl = "http://localhost:443/call/receivecallback";
-				String requestString = config.getRequestString(requestMap);
-				HttpRequest request = config.getBuilder(HttpRequest.newBuilder(), config.getHeaderParams())
-						.uri(URI.create(configUrl))
-						.POST(HttpRequest.BodyPublishers.ofString(requestString))
-						.build();
-
-				try {
-					HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-					String rawResponse = response.body();
-				} catch (Exception e) {
-					System.err.println("Failed to send request for vendor: " + vendor);
-					e.printStackTrace();
-				}
-			} catch (Exception e) {
-				System.err.println("Failed to process vendor: " + vendor);
-				e.printStackTrace();
-			}
-		}
-
+		paymentServiceImpl.callback(vmjExchange);
 		return 200;
 	}
 

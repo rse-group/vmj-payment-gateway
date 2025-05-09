@@ -37,26 +37,27 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
     }
 
 	public Payment createPayment(CreatePaymentRequestBody requestBody) {
-		Map<String, Object> response = sendTransaction(requestBody);
+		Map<String, Object> response = sendTransaction(requestBody.toMap());
 
-		int id = (int) response.get("id");
+		String id = (String) response.get("id");
 		String transactionUrl = (String) response.get("url");
+		String status = (String) response.get("status");
 
-		Payment transaction = record.createPayment(requestBody, id);
+		Payment transaction = record.createPayment(requestBody.toMap(), id, status);
 		Payment invoiceTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.invoice.PaymentImpl", transaction, transactionUrl);
 		PaymentRepository.saveObject(invoiceTransaction);
 		return invoiceTransaction;
 	}
 	
-	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
-		String vendorName = (String) requestBody.vendorName;
+	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getInvoiceRequestBody(requestBody.toMap());
-		int id = ((Integer) requestMap.get("id")).intValue();
+		Map<String, Object> requestMap = config.getInvoiceRequestBody(requestBody);
+		String id = (String) requestMap.get("id");
 		requestMap.remove("id");
 		String requestString = config.getRequestString(requestMap);
 		String configUrl = config.getProductEnv("Invoice");

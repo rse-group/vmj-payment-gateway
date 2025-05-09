@@ -115,35 +115,35 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getPaymentRoutingRequestBody(requestBody);
     }
 
-    public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
+    public Map<String, Object> getPaymentLinkResponse(String rawResponse, String id){
         return record.getPaymentLinkResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getCardResponse(String rawResponse, int id){
+    public Map<String, Object> getCardResponse(String rawResponse, String id){
         return record.getCardResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getDirectDebitResponse(String rawResponse, int id){
+    public Map<String, Object> getDirectDebitResponse(String rawResponse, String id){
         return record.getDirectDebitResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getInvoiceResponse(String rawResponse, int id){
+    public Map<String, Object> getInvoiceResponse(String rawResponse, String id){
         return record.getInvoiceResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getEWalletResponse(String rawResponse, int id){
+    public Map<String, Object> getEWalletResponse(String rawResponse, String id){
         return record.getEWalletResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getPaymentRoutingResponse(String rawResponse, int id){
+    public Map<String, Object> getPaymentRoutingResponse(String rawResponse, String id){
         return record.getPaymentRoutingResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getRetailOutletResponse(String rawResponse, int id){
+    public Map<String, Object> getRetailOutletResponse(String rawResponse, String id){
         return record.getRetailOutletResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id){
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, String id){
         return record.getVirtualAccountResponse(rawResponse, id);
     }
 

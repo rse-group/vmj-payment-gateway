@@ -133,12 +133,9 @@ public class XenditConfiguration extends ConfigDecorator{
         Map<String, Object> virtualAccount = new HashMap<String, Object>();
         Map<String, Object> channelProperties = new HashMap<String, Object>();
 
-        int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        double amount = Double.parseDouble(amountStr);
+        String id = UUID.randomUUID().toString();
+        Double amountDouble = (Double) requestBody.get("amount");
+        int amount = amountDouble.intValue();
         
         String bank = RequestBodyValidator.stringRequestBodyValidator(
             requestBody,
@@ -146,10 +143,7 @@ public class XenditConfiguration extends ConfigDecorator{
         );
         String name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "name");
         
-        String uuidString = UUID.randomUUID().toString().replace("-", "");
-        int uniqueInteger = Math.abs(uuidString.hashCode()) % 100000;
-        
-        paymentMethod.put("reference_id", String.format("%05d", uniqueInteger));
+        paymentMethod.put("reference_id", id);
         paymentMethod.put("reusability", "ONE_TIME_USE");
         paymentMethod.put("type", "VIRTUAL_ACCOUNT");
         
@@ -159,7 +153,7 @@ public class XenditConfiguration extends ConfigDecorator{
         
         paymentMethod.put("virtual_account", virtualAccount);
         
-        requestMap.put("reference_id", String.format("%05d", uniqueInteger));
+        requestMap.put("reference_id", id);
         requestMap.put("amount", amount);
         requestMap.put("currency", "IDR");
         requestMap.put("payment_method", paymentMethod);
@@ -170,7 +164,7 @@ public class XenditConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id) {
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, String id) {
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -187,9 +181,12 @@ public class XenditConfiguration extends ConfigDecorator{
         Map<String, Object> channelProperties = (Map<String, Object>) virtualAccount.get("channel_properties");
 
         String vaNumber = (String) channelProperties.get("virtual_account_number");
-        String Id = (String) rawResponseMap.get("reference_id");
+        String referenceId = (String) rawResponseMap.get("reference_id");
+        String status = (String) paymentMethod.get("status");
+        
+        response.put("status", status);
         response.put("va_number", vaNumber);
-        response.put("id", Integer.parseInt(Id));
+        response.put("id", referenceId);
         
         return response;
     }
@@ -202,21 +199,15 @@ public class XenditConfiguration extends ConfigDecorator{
         Map<String, Object> overTheCounter = new HashMap<String, Object>();
         Map<String, Object> channelProperties = new HashMap<String, Object>();
 
-        int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
+        String id = UUID.randomUUID().toString();
+        Double amountDouble = (Double) requestBody.get("amount");
+        int amount = amountDouble.intValue();
         String store = RequestBodyValidator.stringRequestBodyValidator(
             requestBody,
             "retail_outlet"
         );
         
         String name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "name");
-        
-        String uuidString = UUID.randomUUID().toString().replace("-", "");
-        int uniqueInteger = Math.abs(uuidString.hashCode()) % 100000;
 
         paymentMethod.put("reusability", "ONE_TIME_USE");
         paymentMethod.put("type", "OVER_THE_COUNTER");
@@ -227,7 +218,7 @@ public class XenditConfiguration extends ConfigDecorator{
         
         paymentMethod.put("over_the_counter", overTheCounter);
         
-        requestMap.put("reference_id", String.format("%05d", uniqueInteger));
+        requestMap.put("reference_id", id);
         requestMap.put("amount", amount);
         requestMap.put("currency", "IDR");
         requestMap.put("country", "ID");
@@ -237,7 +228,7 @@ public class XenditConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getRetailOutletResponse(String rawResponse, int id){
+    public Map<String, Object> getRetailOutletResponse(String rawResponse, String id) {
 		Map<String, Object> response = new HashMap<>();
 	    Gson gson = new Gson();
 	    Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -255,9 +246,7 @@ public class XenditConfiguration extends ConfigDecorator{
 
 
         String retailPaymentCode = (String) channelProperties.get("payment_code");
-        String Id = (String) rawResponseMap.get("reference_id");
-        response.put("retail_payment_code", retailPaymentCode);
-        response.put("id", Integer.parseInt(Id));
+        String referenceId = (String) rawResponseMap.get("reference_id");
         
         if (retailPaymentCode == null) {
         	Map<String, Object> status = (Map<String, Object>) rawResponseMap.get("status");
@@ -265,7 +254,10 @@ public class XenditConfiguration extends ConfigDecorator{
         	response.put("message", statusMessage);
             return response;
         }
+
+        String status = (String) paymentMethod.get("status");
         
+        response.put("status", status);
         response.put("retail_payment_code", retailPaymentCode);
         response.put("id", id);
         
@@ -273,7 +265,7 @@ public class XenditConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody) {
         // Note: currently this supports the following ewallet:
         // DANA, OVO, LINKAJA, ASTRAPAY, JENIUSPAY, SHOPEEPAY, SAKUKU
         Map<String, Object> requestMap = new HashMap<>();
@@ -283,7 +275,7 @@ public class XenditConfiguration extends ConfigDecorator{
         Map<String, Object> customerDetailsMap = new HashMap<String, Object>();
         Map<String, Object> individualDetailsMap = new HashMap<String, Object>();
 
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
         Double amountDouble = (Double) requestBody.get("amount");
         int amount = amountDouble.intValue();
         
@@ -294,9 +286,6 @@ public class XenditConfiguration extends ConfigDecorator{
         String successReturnUrl = (String) requestBody.get("success_return_url");
         String failureReturnUrl = (String) requestBody.get("failure_return_url");
         String cashtag = (String) requestBody.get("cashtag");
-        
-        String uuidString = UUID.randomUUID().toString().replace("-", "");
-        int uniqueInteger = Math.abs(uuidString.hashCode()) % 100000;
         
         paymentMethod.put("reusability", "ONE_TIME_USE");
         paymentMethod.put("type", "EWALLET");
@@ -322,14 +311,14 @@ public class XenditConfiguration extends ConfigDecorator{
         
         paymentMethod.put("ewallet", ewalletDetailsMap);
                 
-        customerDetailsMap.put("reference_id", String.format("%05d", uniqueInteger));
+        customerDetailsMap.put("reference_id", id);
         customerDetailsMap.put("type", "INDIVIDUAL");
         individualDetailsMap.put("given_names", name);
         customerDetailsMap.put("individual_detail", individualDetailsMap);
         customerDetailsMap.put("email", email);
         customerDetailsMap.put("mobile_number", phone);
         
-        requestMap.put("reference_id", String.format("%05d", uniqueInteger));
+        requestMap.put("reference_id", id);
         requestMap.put("amount", amount);
         requestMap.put("currency", "IDR"); // currently handling only for ID ewallet
         requestMap.put("payment_method", paymentMethod);
@@ -345,7 +334,7 @@ public class XenditConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getEWalletResponse(String rawResponse, int id) {
+    public Map<String, Object> getEWalletResponse(String rawResponse, String id) {
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -359,11 +348,13 @@ public class XenditConfiguration extends ConfigDecorator{
         Map<String, Object> paymentMethod = (Map<String, Object>) rawResponseMap.get("payment_method");
         Map<String, Object> ewalletDetailsMap = (Map<String, Object>) paymentMethod.get("ewallet");
         String paymentType = (String) ewalletDetailsMap.get("channel_code");
+        String status = (String) paymentMethod.get("status");
 
-        String Id = (String) rawResponseMap.get("reference_id");
+        String referenceId = (String) rawResponseMap.get("reference_id");
+        response.put("status", status);
         response.put("url", "");
         response.put("payment_type", paymentType);
-        response.put("id", Integer.parseInt(Id));
+        response.put("id", referenceId);
         
         return response;
     }
@@ -379,7 +370,7 @@ public class XenditConfiguration extends ConfigDecorator{
         Map<String, Object> customerDetailsMap = new HashMap<String, Object>();
         Map<String, Object> individualDetailsMap = new HashMap<String, Object>();
 
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
         Double amountDouble = (Double) requestBody.get("amount");
         int amount = amountDouble.intValue();
         String bank = RequestBodyValidator.stringRequestBodyValidator(
@@ -394,9 +385,6 @@ public class XenditConfiguration extends ConfigDecorator{
         String email = (String) requestBody.get("email");
         String phone = (String) requestBody.get("phone");
         String cardLastFour = (String) requestBody.get("card_last_four");
-        
-        String uuidString = UUID.randomUUID().toString().replace("-", "");
-        int uniqueInteger = Math.abs(uuidString.hashCode()) % 100000;
 
         paymentMethod.put("reusability", "ONE_TIME_USE");
         paymentMethod.put("type", "DIRECT_DEBIT");
@@ -414,7 +402,7 @@ public class XenditConfiguration extends ConfigDecorator{
         }
         directDebitMap.put("channel_properties", channelProperties);
 
-        customerDetailsMap.put("reference_id", String.format("%05d", uniqueInteger));
+        customerDetailsMap.put("reference_id", id);
         customerDetailsMap.put("type", "INDIVIDUAL");
         individualDetailsMap.put("given_names", name);
         customerDetailsMap.put("individual_detail", individualDetailsMap);
@@ -423,7 +411,7 @@ public class XenditConfiguration extends ConfigDecorator{
         
         paymentMethod.put("direct_debit", directDebitMap);
         
-        requestMap.put("reference_id", String.format("%05d", uniqueInteger));
+        requestMap.put("reference_id", id);
         requestMap.put("amount", amount);
         requestMap.put("currency", "IDR");
         requestMap.put("payment_method", paymentMethod);
@@ -433,7 +421,7 @@ public class XenditConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getDirectDebitResponse(String rawResponse, int id){
+    public Map<String, Object> getDirectDebitResponse(String rawResponse, String id){
 		Map<String, Object> response = new HashMap<>();
 	    Gson gson = new Gson();
 	    Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -476,11 +464,11 @@ public class XenditConfiguration extends ConfigDecorator{
             return response;
         }
 
-        String Id = (String) rawResponseMap.get("reference_id");
+        String referenceId = (String) rawResponseMap.get("reference_id");
         response.put("payment_type", paymentType);
         response.put("status", status);
         response.put("direct_debit_url", directDebitUrl);
-        response.put("id", Integer.parseInt(Id));
+        response.put("id", referenceId);
         
         return response;
     }

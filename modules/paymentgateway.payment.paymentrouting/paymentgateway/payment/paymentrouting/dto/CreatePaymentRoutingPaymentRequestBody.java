@@ -22,7 +22,7 @@ public class CreatePaymentRoutingPaymentRequestBody extends CreatePaymentRequest
     public int recipientAmount;
 
     @NotEmpty(message = "recipient_email must be specified")
-    @Email(message = "email must be valid email")
+    @Email(message = "email must be a valid email")
     @JsonProperty("recipient_email")
     public String recipientEmail;
 

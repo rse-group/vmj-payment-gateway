@@ -28,6 +28,9 @@ public class CreateEWalletPaymentRequestBody extends CreatePaymentRequestBody {
     @JsonProperty("success_return_url")
     public String successReturnUrl;
 
+    @JsonProperty("success_redirect_url")
+    public String successRedirectUrl;
+
     @JsonProperty("failure_return_url")
     public String failureReturnUrl;
     

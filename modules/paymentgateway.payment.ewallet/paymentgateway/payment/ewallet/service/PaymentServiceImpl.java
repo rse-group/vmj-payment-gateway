@@ -39,15 +39,16 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 
 	
 	public Payment createPayment(CreatePaymentRequestBody requestBody) {
-		Map<String, Object> response = sendTransaction(requestBody);
+		Map<String, Object> response = sendTransaction(requestBody.toMap());
 
 		String url = (String) response.get("url");
 		String type = (String) response.get("payment_type");
-		int id = (int) response.get("id");
+		String id = (String) response.get("id");
+		String status = (String) response.get("status");
 
 		String phoneNumber = ((CreateEWalletPaymentRequestBody) requestBody).phone;
 		System.out.println(id);
-		Payment transaction = record.createPayment(requestBody, id);
+		Payment transaction = record.createPayment(requestBody.toMap(), id, status);
 		Payment ewalletTransaction =
 			PaymentFactory.createPayment(
 					"paymentgateway.payment.ewallet.EWalletImpl",
@@ -60,14 +61,14 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return ewalletTransaction;
 	}
 
-	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
-		String vendorName = (String) requestBody.vendorName;
+	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getEWalletRequestBody(requestBody.toMap());
-		int id = ((Integer) requestMap.get("id")).intValue();
+		Map<String, Object> requestMap = config.getEWalletRequestBody(requestBody);
+		String id = (String) requestMap.get("id");
 		requestMap.remove("id");
 		String configUrl = config.getProductEnv("EWallet");
 		HashMap<String, String> headerParams = config.getHeaderParams();

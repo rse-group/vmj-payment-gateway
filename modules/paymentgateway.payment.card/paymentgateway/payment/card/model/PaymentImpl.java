@@ -15,12 +15,10 @@ import javax.persistence.Table;
 public class PaymentImpl extends PaymentDecorator {
 
 	protected String idToken;
-	protected String statusCardPayment;
 
-	public PaymentImpl(PaymentComponent record, String idToken, String statusCardPayment) {
+	public PaymentImpl(PaymentComponent record, String idToken) {
 		super(record);
 		this.idToken = idToken;
-		this.statusCardPayment = statusCardPayment;
 	}
 
 	public PaymentImpl() {
@@ -35,18 +33,9 @@ public class PaymentImpl extends PaymentDecorator {
 		this.idToken = idToken;
 	}
 
-	public String getstatusCardPayment() {
-		return this.statusCardPayment;
-	}
-
-	public void setstatusCardPayment(String statusCardPayment) {
-		this.statusCardPayment = statusCardPayment;
-	}
-
 	public HashMap<String, Object> toHashMap() {
 		HashMap<String, Object> cardMap = record.toHashMap();
 		cardMap.put("idToken", getIdToken());
-		cardMap.put("statusCardPayment", getstatusCardPayment());
 		return cardMap;
 	}
 }

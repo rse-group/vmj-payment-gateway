@@ -26,13 +26,14 @@ import javax.persistence.PersistenceException;
 public class PaymentServiceImpl extends PaymentServiceComponent {
 	protected PaymentServiceComponent record;
 
-	public Payment createPayment(CreatePaymentRequestBody requestBody, int id) {
-		String vendorName = requestBody.vendorName;
-		double amount = requestBody.amount;
+	public Payment createPayment(Map<String, Object> requestBody, String id, String status) {
+		String vendorName = (String) requestBody.get("vendor_name");
+		double amount = ((Double) requestBody.get("amount")).doubleValue();
 		Payment transaction = PaymentFactory.createPayment("paymentgateway.payment.core.PaymentImpl",
-				id,
+				UUID.fromString(id),
 				vendorName,
-				amount);
+				amount,
+				status);
 		sendTransaction(requestBody);
 		PaymentRepository.saveObject(transaction);
 		return transaction;
@@ -40,22 +41,22 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 	
 	public Payment createPayment(CreatePaymentRequestBody requestBody) {
 		String vendorName = requestBody.vendorName;
-		double amount = requestBody.amount;
+		double amount = requestBody.amount.doubleValue();
 
-		String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
-		String uniqueNo = generateUUIDNo.substring(0,5);
-		int id = Integer.parseInt(uniqueNo);
+		UUID id = UUID.randomUUID();
+		String status = "MANUALLY_ADDED";
 
 		Payment transaction = PaymentFactory.createPayment("paymentgateway.payment.core.PaymentImpl",
 				id,		
 				vendorName,
-				amount);
-		sendTransaction(requestBody);
+				amount,
+				status);
+		sendTransaction(requestBody.toMap());
 		PaymentRepository.saveObject(transaction);
 		return transaction;
 	}
 
-	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
+	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
 		// to do implement this in deltas
 		return null;
 	}
@@ -144,7 +145,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 	}
 	
 	public HashMap<String, Object> getPayment(GetPaymentRequestBody requestBody){
-		int id = requestBody.id;
+		String id = requestBody.id;
 		Payment paymentImpl = this.getObject(id);
 		
 		HashMap<String, Object> paymentDataMap = new HashMap<>();
@@ -164,10 +165,10 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		return transformListToHashMap(List);
 	}
 	
-	public HashMap<String, Object> getPaymentById(int id){
+	public HashMap<String, Object> getPaymentById(String id){
 		List<HashMap<String, Object>> paymentList = getAllPayment("payment_impl");
 		for (HashMap<String, Object> payment : paymentList){
-			int record_id = ((Double) payment.get("record_id")).intValue();
+			String record_id = (String) payment.get("record_id");
 			if (record_id == id){
 				return payment;
 			}
@@ -178,11 +179,17 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 
 
 	public HashMap<String, Object> updatePayment(UpdatePaymentRequestBody requestBody) {
-		int id = requestBody.id;
+		String id = requestBody.id;
 		Payment payment = this.getObject(id);
 
+		if (payment == null) {
+			HashMap<String, Object> notFoundMap = new HashMap<>();
+			notFoundMap.put("message", "Payment with ID " + id + " does not exist");
+			return notFoundMap;
+		}
+
 		try {
-			payment.setAmount(requestBody.amount);
+			payment.setAmount(requestBody.amount.doubleValue());
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -194,7 +201,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
     }
 	
 	public List<HashMap<String, Object>> deletePayment(DeletePaymentRequestBody requestBody){
-		int id = requestBody.id;
+		String id = requestBody.id;
 		Payment payment = this.getObject(id);
 		
 		if (payment == null) {
@@ -208,12 +215,12 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		return getAllPayment("payment_impl");
 	}
 	
-	public Payment getObject(int id) {
-        return PaymentRepository.getObject(id);
+	public Payment getObject(String id) {
+        return PaymentRepository.getObject(UUID.fromString(id));
     }
 
-    public void deleteObject(int id) {
-        PaymentRepository.deleteObject(id);
+    public void deleteObject(String id) {
+        PaymentRepository.deleteObject(UUID.fromString(id));
     }
 
     public void updateObject(Payment payment) {
@@ -223,4 +230,48 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
     public List<Payment> getAllObject(String tableName) {
         return PaymentRepository.getAllObject(tableName);
     }
+
+	public void callback(VMJExchange vmjExchange) {
+		String workingDir = System.getProperty("user.dir");
+		List<File> propertyFiles = new ArrayList<>();
+
+		List<String> vendors = new ArrayList<>();
+
+		String[] targetFiles = { "oy.properties", "flip.properties", "midtrans.properties", "xendit.properties" };
+
+		// Iterate through target files
+		for (String targetFile : targetFiles) {
+			File file = new File(workingDir, targetFile);
+			if (file.exists()) {
+				String fileName = file.getName();
+				String nameBeforeDot = fileName.substring(0, fileName.indexOf('.'));
+				String capitalized = nameBeforeDot.substring(0, 1).toUpperCase() + nameBeforeDot.substring(1);
+				vendors.add(capitalized);
+			}
+		}
+
+		for (String vendor : vendors) {
+			try {
+				Config config = ConfigFactory.createConfig(vendor,
+						ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+				Map<String, Object> requestMap = config.getCallbackPaymentRequestBody(vmjExchange);
+
+				String idStr = (String) requestMap.get("id");
+				String status = (String) requestMap.get("status");
+
+				Payment payment = this.getObject(idStr);
+
+				try {
+					payment.setStatus(status);
+				} catch (Exception e){
+					e.printStackTrace();
+				}
+		
+				this.updateObject(payment);
+			} catch (Exception e) {
+				System.err.println("Failed to process vendor: " + vendor);
+				e.printStackTrace();
+			}
+		}
+	}
 }

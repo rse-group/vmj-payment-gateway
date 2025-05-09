@@ -14,25 +14,15 @@ import javax.persistence.Table;
 @Table(name = "directdebit_impl")
 public class PaymentImpl extends PaymentDecorator {
 
-	protected String statusDirectDebitPayment;
 	protected String directDebitUrl;
 
-	public PaymentImpl(PaymentComponent record, String statusDirectDebitPayment, String directDebitUrl) {
+	public PaymentImpl(PaymentComponent record, String directDebitUrl) {
 		super(record);
-		this.statusDirectDebitPayment = statusDirectDebitPayment;
 		this.directDebitUrl = directDebitUrl;
 	}
 
 	public PaymentImpl() {
 		super();
-	}
-
-	public String getstatusDirectDebitPayment() {
-		return this.statusDirectDebitPayment;
-	}
-
-	public void setstatusDirectDebitPayment(String statusDirectDebitPayment) {
-		this.statusDirectDebitPayment = statusDirectDebitPayment;
 	}
 
 	public String getdirectDebitUrl() {
@@ -45,7 +35,6 @@ public class PaymentImpl extends PaymentDecorator {
 
 	public HashMap<String, Object> toHashMap() {
 		HashMap<String, Object> directDebitMap = record.toHashMap();
-		directDebitMap.put("statusDirectDebitPayment", getstatusDirectDebitPayment());
 		directDebitMap.put("directDebitUrl", getdirectDebitUrl());
 		return directDebitMap;
 	}

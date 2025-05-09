@@ -99,7 +99,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> customer_details = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
         
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
 
         double amount = ((Double) requestBody.get("amount")).doubleValue();
         transaction_details.put("order_id", String.valueOf(id));
@@ -130,7 +130,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> cstore = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
         double amount = ((Double) requestBody.get("amount")).doubleValue();
         String store = (String) requestBody.get("retail_outlet");
 
@@ -152,7 +152,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> bank_transfer = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
         double amount = ((Double) requestBody.get("amount")).doubleValue();
         String bank = (String) requestBody.get("bank");
 
@@ -174,7 +174,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> customer_details = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
 
         double amount = ((Double) requestBody.get("amount")).doubleValue();
         String ewallet = (String) requestBody.get("ewallet_type"); 
@@ -198,7 +198,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> credit_card = new HashMap<>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
         
         double amount = ((Double) requestBody.get("amount")).doubleValue();
         String token = (String) requestBody.get("token_id");
@@ -246,56 +246,59 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
     
     @Override
-    public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
+    public Map<String, Object> getPaymentLinkResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String url = (String) rawResponseMap.get("payment_url");
+        response.put("status", ""); // no status is provided in the request body
         response.put("url", url);
         response.put("id", id);
         return response;
     }
 
     @Override
-    public Map<String, Object> getCardResponse(String rawResponse, int id){
+    public Map<String, Object> getCardResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         String status = "";
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String statusCode = (String) rawResponseMap.get("status_code");
-
+        
         if (!statusCode.equals("200") && !statusCode.equals("201")) {
-        	String errorMessageString = (String) rawResponseMap.get("status_message");
+            String errorMessageString = (String) rawResponseMap.get("status_message");
             throw new BadRequestException(errorMessageString);
         }
-
-        status = "BERHASIL";
-        response.put("status", status);
+        
+        String transactionStatus = (String) rawResponseMap.get("transaction_status");
+        response.put("status", transactionStatus);
         response.put("id", id);
         return response;
     }
 
     @Override
-    public Map<String, Object> getRetailOutletResponse(String rawResponse, int id){
+    public Map<String, Object> getRetailOutletResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String retailPaymentCode = (String) rawResponseMap.get("payment_code");
         if (retailPaymentCode == null) {
-        	String statusMessage = (String) rawResponseMap.get("status_message");
+            String statusMessage = (String) rawResponseMap.get("status_message");
         	response.put("message", statusMessage);
             return response;
         }
+        String transactionStatus = (String) rawResponseMap.get("transaction_status");
+        response.put("status", transactionStatus);
         response.put("retail_payment_code", retailPaymentCode);
         response.put("id", id);
         return response;
     }
-
+    
     @Override
-    public Map<String, Object> getEWalletResponse(String rawResponse, int id){
+    public Map<String, Object> getEWalletResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -306,9 +309,11 @@ public class MidtransConfiguration extends ConfigDecorator{
 			String errorMessageString = String.join(", ", errorMessages);
         	throw new BadRequestException(errorMessageString);
         }
+        String transactionStatus = (String) rawResponseMap.get("transaction_status");
         List<Map<String, Object>> actions = (List<Map<String, Object>>) rawResponseMap.get("actions");
         String url = (String) actions.get(0).get("url");
 
+        response.put("status", transactionStatus);
         response.put("payment_type", paymentType);
         response.put("url", url);
         response.put("id", id);
@@ -316,7 +321,7 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id){
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -326,6 +331,8 @@ public class MidtransConfiguration extends ConfigDecorator{
             List<Map<String, Object>> vaNums = (List<Map<String, Object>>) rawResponseMap.get("va_numbers");
             vaNumber = (String) vaNums.get(0).get("va_number");
         }
+        String transactionStatus = (String) rawResponseMap.get("transaction_status");
+        response.put("status", transactionStatus);
         response.put("va_number", vaNumber);
         response.put("id", id);
         return response;

@@ -13,7 +13,4 @@ public class GetPaymentLinksByVendorNameRequestBody {
 	@Pattern(regexp = "Flip|Midtrans|Oy|Xendit", message = "Vendor name is invalid; Valid values: Flip, Midtrans, Oy, Xendit")
 	@JsonProperty("vendor_name")
 	public String vendorName;
-
-	@NotNull(message = "id must be specified")
-	public int id;
 }

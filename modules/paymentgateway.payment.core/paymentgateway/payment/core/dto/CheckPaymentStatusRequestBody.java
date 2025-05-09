@@ -15,5 +15,5 @@ public class CheckPaymentStatusRequestBody extends BaseRequestBody {
 	public String vendorName;
 
 	@NotNull(message = "id must be specified")
-	public int id;
+	public String id;
 }

@@ -10,4 +10,6 @@ public class CreateRetailOutletPaymentRequestBody extends CreatePaymentRequestBo
     @NotEmpty(message = "retail_outlet must be specified")
     @JsonProperty("retail_outlet")
     public String retailOutlet;
+
+    public String name;
 }

@@ -31,7 +31,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
     }
 
 	public Payment createPayment(CreatePaymentRequestBody requestBody) {
-		Map<String, Object> response = sendTransaction(requestBody);
+		Map<String, Object> response = sendTransaction(requestBody.toMap());
 		String retailOutlet = ((CreateRetailOutletPaymentRequestBody) requestBody).retailOutlet;
 
 		if (response.containsKey("message")) {
@@ -40,9 +40,10 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		
 		String retailPaymentCode = (String) response.get("retail_payment_code");
 		System.out.println("response " + response);
-		int id = (int) response.get("id");
+		String id = (String) response.get("id");
+		String status = (String) response.get("status");
 		
-		Payment transaction = record.createPayment(requestBody, id);
+		Payment transaction = record.createPayment(requestBody.toMap(), id, status);
 
 		Payment retailOutletChannel =
 				PaymentFactory.createPayment(
@@ -55,14 +56,14 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return retailOutletChannel;
 	}
 	
-	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
-		String vendorName = (String) requestBody.vendorName;
+	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getRetailOutletRequestBody(requestBody.toMap());
-		int id = ((Integer) requestMap.get("id")).intValue();
+		Map<String, Object> requestMap = config.getRetailOutletRequestBody(requestBody);
+		String id = (String) requestMap.get("id");
 		requestMap.remove("id");
 		String requestString = config.getRequestString(requestMap);
 		String configUrl = config.getProductEnv("RetailOutlet");
