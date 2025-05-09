@@ -17,8 +17,8 @@ features
 							FixedCurrency
 					Agent
 					SpecifiedRecipient
-			Payment {abstract true}
-				or
+			Payment
+				optional
 					PaymentLink
 					VirtualAccount
 					RetailOutlet
@@ -29,10 +29,7 @@ features
 					DirectDebit
 
 constraints
-  Disbursement => Flip | Xendit
-  PaymentLink | EWallet => Oy | Midtrans | Flip
-  VirtualAccount | RetailOutlet => Oy | Midtrans
-  Invoice | PaymentRouting => Oy
-  Card => Midtrans
-  SpecifiedRecipient | DirectDebit => Xendit
-  Agent | ExchangeRate | FixedCurrency => Flip
+  PaymentLink | EWallet | VirtualAccount | RetailOutlet | Invoice | PaymentRouting => Oy
+  Card | VirtualAccount | RetailOutlet | PaymentLink | EWallet => Midtrans
+  SpecifiedRecipient | VirtualAccount | RetailOutlet | DirectDebit => Xendit
+  Agent | ExchangeRate | FixedCurrency |  PaymentLink | VirtualAccount => Flip
