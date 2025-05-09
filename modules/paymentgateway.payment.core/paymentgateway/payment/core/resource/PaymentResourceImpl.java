@@ -52,8 +52,8 @@ public class PaymentResourceImpl extends PaymentResourceComponent {
 		return paymentServiceImpl.getAllPayment();
 	}
 
-	@Route(url = "call/payment/detail", method = RequestMethod.GET, requestBodyClass = GetPaymentRequestBody.class)
-	public HashMap<String, Object> getPayment(VMJExchange<GetPaymentRequestBody> vmjExchange) {
+	@Route(url = "call/payment/detail", method = RequestMethod.GET)
+	public HashMap<String, Object> getPayment(VMJExchange vmjExchange) {
 		Map<String, String> queryParamsMap = vmjExchange.queryToMap();
 		String id = queryParamsMap.get("id");
 		return paymentServiceImpl.getPayment(id);

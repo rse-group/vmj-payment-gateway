@@ -16,11 +16,11 @@ public abstract class PaymentResourceDecorator extends PaymentResourceComponent 
         return record.callback(vmjExchange);
     }
 
-    public HashMap<String, Object> getPayment(VMJExchange<GetPaymentRequestBody> vmjExchange) {
+    public HashMap<String, Object> getPayment(VMJExchange vmjExchange) {
         return record.getPayment(vmjExchange);
     }
 
-    public List<HashMap<String, Object>> getAllPayment(VMJExchange<GetAllPaymentRequestBody> vmjExchange) {
+    public List<HashMap<String, Object>> getAllPayment(VMJExchange vmjExchange) {
         return record.getAllPayment(vmjExchange);
     }
 
