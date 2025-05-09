@@ -19,12 +19,12 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
         return record.createPayment(requestBody);
     }
 
-    public HashMap<String, Object> getPayment(GetPaymentRequestBody requestBody){
-        return record.getPayment(requestBody);
+    public HashMap<String, Object> getPayment(String id){
+        return record.getPayment(id);
     }
 
-    public List<HashMap<String, Object>> getAllPayment(GetAllPaymentRequestBody requestBody){
-        return record.getAllPayment(requestBody);
+    public List<HashMap<String, Object>> getAllPayment(){
+        return record.getAllPayment();
     }
 
     public List<HashMap<String, Object>> deletePayment(DeletePaymentRequestBody requestBody){

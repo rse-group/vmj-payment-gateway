@@ -47,16 +47,16 @@ public class PaymentResourceImpl extends PaymentResourceComponent {
 		return 200;
 	}
 
-	@Route(url = "call/payment/list", method = RequestMethod.GET, requestBodyClass = GetAllPaymentRequestBody.class)
-	public List<HashMap<String, Object>> getAllPayment(VMJExchange<GetAllPaymentRequestBody> vmjExchange) {
-		GetAllPaymentRequestBody requestBody = vmjExchange.getParsedPayload();
-		return paymentServiceImpl.getAllPayment(requestBody);
+	@Route(url = "call/payment/list", method = RequestMethod.GET)
+	public List<HashMap<String, Object>> getAllPayment(VMJExchange vmjExchange) {
+		return paymentServiceImpl.getAllPayment();
 	}
 
 	@Route(url = "call/payment/detail", method = RequestMethod.GET, requestBodyClass = GetPaymentRequestBody.class)
 	public HashMap<String, Object> getPayment(VMJExchange<GetPaymentRequestBody> vmjExchange) {
-		GetPaymentRequestBody requestBody = vmjExchange.getParsedPayload();
-		return paymentServiceImpl.getPayment(requestBody);
+		Map<String, String> queryParamsMap = vmjExchange.queryToMap();
+		String id = queryParamsMap.get("id");
+		return paymentServiceImpl.getPayment(id);
 	}
 
 	@Route(url = "call/payment/delete", method = RequestMethod.DELETE, requestBodyClass = DeletePaymentRequestBody.class)

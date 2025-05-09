@@ -139,13 +139,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		return resultList;
 	}
 	
-	public List<HashMap<String, Object>> getAllPayment(String tableName){
-		List<Payment> List = PaymentRepository.getAllObject(tableName);
-		return transformListToHashMap(List);
-	}
-	
-	public HashMap<String, Object> getPayment(GetPaymentRequestBody requestBody){
-		String id = requestBody.id;
+	public HashMap<String, Object> getPayment(String id){
 		Payment paymentImpl = this.getObject(id);
 		
 		HashMap<String, Object> paymentDataMap = new HashMap<>();
@@ -159,14 +153,13 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		return paymentImpl.toHashMap();
 	}
 	
-	public List<HashMap<String, Object>> getAllPayment(GetAllPaymentRequestBody requestBody){
-		String table = requestBody.tableName;
-		List<Payment> List = PaymentRepository.getAllObject(table);
+	public List<HashMap<String, Object>> getAllPayment() {
+		List<Payment> List = PaymentRepository.getAllObject("payment_impl");
 		return transformListToHashMap(List);
 	}
 	
 	public HashMap<String, Object> getPaymentById(String id){
-		List<HashMap<String, Object>> paymentList = getAllPayment("payment_impl");
+		List<HashMap<String, Object>> paymentList = getAllPayment();
 		for (HashMap<String, Object> payment : paymentList){
 			String record_id = (String) payment.get("record_id");
 			if (record_id == id){
@@ -212,7 +205,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		
 		this.deleteObject(id);
 
-		return getAllPayment("payment_impl");
+		return getAllPayment();
 	}
 	
 	public Payment getObject(String id) {

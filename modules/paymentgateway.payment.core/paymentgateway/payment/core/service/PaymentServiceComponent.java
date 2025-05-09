@@ -15,8 +15,8 @@ public abstract class PaymentServiceComponent implements PaymentService{
     
     public abstract Payment createPayment(Map<String, Object> requestBody, String id, String status);
     public abstract Payment createPayment(CreatePaymentRequestBody requestBody);
-    public abstract HashMap<String, Object> getPayment(GetPaymentRequestBody requestBody);
-    public abstract List<HashMap<String, Object>> getAllPayment(GetAllPaymentRequestBody requestBody);
+    public abstract HashMap<String, Object> getPayment(String id);
+    public abstract List<HashMap<String, Object>> getAllPayment();
     public abstract List<HashMap<String, Object>> deletePayment(DeletePaymentRequestBody requestBody);
     public abstract HashMap<String, Object> updatePayment(UpdatePaymentRequestBody requestBody);
     public abstract List<HashMap<String, Object>> transformListToHashMap(List<Payment> List);
