@@ -23,6 +23,7 @@ public abstract class PaymentComponent implements Payment {
 	protected double amount;
 	protected String vendorName;
 	protected String status;
+	protected String vendorGeneratedId;
 	
 	@CreationTimestamp
 	@Column(name = "createdAt", updatable = false)
@@ -48,6 +49,10 @@ public abstract class PaymentComponent implements Payment {
 	public abstract String getStatus();
 
 	public abstract void setStatus(String status);
+
+	public abstract String getVendorGeneratedId();
+
+	public abstract void setVendorGeneratedId(String vendorGeneratedId);
 
 	public abstract Date getCreatedAt();
 

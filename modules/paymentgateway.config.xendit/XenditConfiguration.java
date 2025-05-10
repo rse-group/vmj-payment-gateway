@@ -38,6 +38,18 @@ public class XenditConfiguration extends ConfigDecorator{
     }
 
     @Override
+    public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
+        Map<String, Object> requestMap = new HashMap<>();
+        Map<String, Object> requestBody = vmjExchange.getPayload();
+        String id = (String) requestBody.get("reference_id");
+        String status = (String) requestBody.get("status");
+
+	    requestMap.put("id", id);
+	    requestMap.put("status", status);
+	    return requestMap;
+    }
+
+    @Override
     public Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody) {
         String vendor_name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "vendor_name");
         String bank_code = RequestBodyValidator.stringRequestBodyValidator(requestBody, "bank_code");
@@ -183,9 +195,11 @@ public class XenditConfiguration extends ConfigDecorator{
         String vaNumber = (String) channelProperties.get("virtual_account_number");
         String referenceId = (String) rawResponseMap.get("reference_id");
         String status = (String) rawResponseMap.get("status");
+        String vendorGeneratedId = (String) rawResponseMap.get("id");
         
         response.put("status", status);
         response.put("va_number", vaNumber);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("id", referenceId);
         
         return response;
@@ -256,9 +270,11 @@ public class XenditConfiguration extends ConfigDecorator{
         }
 
         String status = (String) rawResponseMap.get("status");
+        String vendorGeneratedId = (String) rawResponseMap.get("id");
         
         response.put("status", status);
         response.put("retail_payment_code", retailPaymentCode);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("id", id);
         
         return response;
@@ -349,11 +365,13 @@ public class XenditConfiguration extends ConfigDecorator{
         Map<String, Object> ewalletDetailsMap = (Map<String, Object>) paymentMethod.get("ewallet");
         String paymentType = (String) ewalletDetailsMap.get("channel_code");
         String status = (String) rawResponseMap.get("status");
+        String vendorGeneratedId = (String) rawResponseMap.get("id");
 
         String referenceId = (String) rawResponseMap.get("reference_id");
         response.put("status", status);
         response.put("url", "");
         response.put("payment_type", paymentType);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("id", referenceId);
         
         return response;
@@ -465,9 +483,12 @@ public class XenditConfiguration extends ConfigDecorator{
         }
 
         String referenceId = (String) rawResponseMap.get("reference_id");
+        String vendorGeneratedId = (String) rawResponseMap.get("id");
+        
         response.put("payment_type", paymentType);
         response.put("status", status);
         response.put("direct_debit_url", directDebitUrl);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("id", referenceId);
         
         return response;

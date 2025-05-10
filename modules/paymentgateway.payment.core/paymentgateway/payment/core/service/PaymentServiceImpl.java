@@ -26,14 +26,15 @@ import javax.persistence.PersistenceException;
 public class PaymentServiceImpl extends PaymentServiceComponent {
 	protected PaymentServiceComponent record;
 
-	public Payment createPayment(Map<String, Object> requestBody, String id, String status) {
+	public Payment createPayment(Map<String, Object> requestBody, String id, String status, String vendorGeneratedId) {
 		String vendorName = (String) requestBody.get("vendor_name");
 		double amount = ((Double) requestBody.get("amount")).doubleValue();
 		Payment transaction = PaymentFactory.createPayment("paymentgateway.payment.core.PaymentImpl",
 				UUID.fromString(id),
 				vendorName,
 				amount,
-				status);
+				status,
+				vendorGeneratedId);
 		sendTransaction(requestBody);
 		PaymentRepository.saveObject(transaction);
 		return transaction;
@@ -41,16 +42,18 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 	
 	public Payment createPayment(CreatePaymentRequestBody requestBody) {
 		String vendorName = requestBody.vendorName;
-		double amount = requestBody.amount.doubleValue();
+		double amount = requestBody.amount;
 
 		UUID id = UUID.randomUUID();
 		String status = "MANUALLY_ADDED";
+		String vendorGeneratedId = "";
 
 		Payment transaction = PaymentFactory.createPayment("paymentgateway.payment.core.PaymentImpl",
 				id,		
 				vendorName,
 				amount,
-				status);
+				status,
+				vendorGeneratedId);
 		sendTransaction(requestBody.toMap());
 		PaymentRepository.saveObject(transaction);
 		return transaction;
@@ -250,12 +253,23 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 				Map<String, Object> requestMap = config.getCallbackPaymentRequestBody(vmjExchange);
 
 				String idStr = (String) requestMap.get("id");
+				String vendorGeneratedIdStr = (String) requestMap.get("vendor_generated_id");
 				String status = (String) requestMap.get("status");
 
-				Payment payment = this.getObject(idStr);
+				Payment payment;
+				if (idStr != null) {
+					payment = this.getObject(idStr);
+				} else {
+					List<Payment> payments = this.getAllPayment();
+					for (Payment p : payments) {
+						if (p.getVendorGeneratedId().equals(vendorGeneratedIdStr)) {
+							payment = p;
+						}
+					}
+				}
 
 				try {
-					payment.setStatus(status);
+					payment.setStatus(status.toUpperCase());
 				} catch (Exception e){
 					e.printStackTrace();
 				}

@@ -48,11 +48,7 @@ public class OyConfiguration extends ConfigDecorator{
 	        boolean successStatus = ((boolean) payload.get("success"));
 	        if (payload.get("partner_trx_id") != null) {
 	        	id = (String) payload.get("partner_trx_id");
-	        }
-	        else if (payload.get("customer_id") != null) {
-	        	id = (String) payload.get("customer_id");
-	        }
-	        else if (payload.get("partner_user_id")!=null) {
+	        } else if (payload.get("partner_user_id")!=null) {
 	        	id = (String) payload.get("partner_user_id");
 	        }
 	        status = successStatus ? PaymentStatus.SUCCESSFUL.getStatus() : PaymentStatus.FAILED.getStatus();
@@ -60,16 +56,6 @@ public class OyConfiguration extends ConfigDecorator{
 			id = (String) payload.get("partner_tx_id");
 			status = (String) payload.get("status");
 		}
-
-		if(status.equals(PaymentStatus.COMPLETE.getStatus())){
-			status = PaymentStatus.SUCCESSFUL.getStatus();
-		}
-		else if (status.equals(PaymentStatus.CLOSED.getStatus())){
-			status = PaymentStatus.CANCELLED.getStatus();
-		}
-        else if (status.equals(PaymentStatus.FAIL.getStatus())){
-            status = PaymentStatus.FAILED.getStatus();
-        }
 
         requestMap.put("id",id);
         requestMap.put("status", status);
@@ -159,11 +145,11 @@ public class OyConfiguration extends ConfigDecorator{
         String store = (String) requestBody.get("retail_outlet");
 
         requestMap.put("partner_trx_id", id);
-        requestMap.put("customer_id", id);
+        requestMap.put("customer_id", String.join("", id.split("-"))); // this is done because if the raw uuid is used here, there will be error from vendor
         requestMap.put("amount", amount);
         requestMap.put("transaction_type", "CASH_IN");
 //		requestMap.put("offline_channel",store.toUpperCase());
-        requestMap.put("offline_channel","CRM");
+        requestMap.put("offline_channel", store);
         requestMap.put("id",id);
         return requestMap;
     }
@@ -176,7 +162,8 @@ public class OyConfiguration extends ConfigDecorator{
         int amount = ((Double) requestBody.get("amount")).intValue();
         String bank = (String) requestBody.get("bank");
 
-        requestMap.put("partner_user_id", String.valueOf(id));
+        requestMap.put("partner_trx_id", id);
+        requestMap.put("partner_user_id", id);
         requestMap.put("bank_code", getOyBankCode().get(bank));
         requestMap.put("amount", amount);
         requestMap.put("is_open", false);
@@ -195,8 +182,8 @@ public class OyConfiguration extends ConfigDecorator{
         int amount = ((Double) requestBody.get("amount")).intValue();
         String successRedirectUrl = (String) requestBody.get("success_redirect_url");
 
-        requestMap.put("partner_trx_id", String.valueOf(id));
-        requestMap.put("customer_id", String.valueOf(id));
+        requestMap.put("partner_trx_id", id);
+        requestMap.put("customer_id", id);
         requestMap.put("amount", amount);
         requestMap.put("mobile_number",phone);
         requestMap.put("ewallet_code", getOyEWalletCode().get(ewallet.toLowerCase()));
@@ -250,8 +237,8 @@ public class OyConfiguration extends ConfigDecorator{
         String recipientEmail = (String) requestBody.get("recipient_email");
         String recipientNote = (String) requestBody.get("recipient_note");
 
-        requestMap.put("partner_trx_id", String.valueOf(id));
-        requestMap.put("partner_user_id", String.valueOf(id));
+        requestMap.put("partner_trx_id", id);
+        requestMap.put("partner_user_id", id);
         requestMap.put("need_frontend", true);
         
         Map<String, Object> routingMap = new HashMap<>();
@@ -282,8 +269,10 @@ public class OyConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String url = (String) rawResponseMap.get("url");
-        response.put("status", "created");
+        String paymentLinkId = (String) rawResponseMap.get("payment_link_id");
+        response.put("status", "CREATED");
         response.put("url", url);
+        response.put("vendor_generated_id", paymentLinkId);
         response.put("id", id);
         return response;
     }
@@ -295,8 +284,10 @@ public class OyConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String transactionUrl = (String) rawResponseMap.get("url");
-        response.put("status", "created"); 
+        String paymentLinkId = (String) rawResponseMap.get("payment_link_id");
+        response.put("status", "CREATED"); 
         response.put("url", transactionUrl);
+        response.put("vendor_generated_id", paymentLinkId);
         response.put("id", id);
         return response;
     }
@@ -309,8 +300,10 @@ public class OyConfiguration extends ConfigDecorator{
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         Map<String, Object> paymentMap = (Map<String, Object>) rawResponseMap.get("payment_info");
         String url = (String) paymentMap.get("payment_checkout_url");
-        response.put("status", "created");
+        String vendorGeneratedId = (String) rawResponseMap.get("trx_id");
+        response.put("status", "CREATED");
         response.put("payment_checkout_url", url);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("id", id);
         return response;
     }
@@ -325,11 +318,13 @@ public class OyConfiguration extends ConfigDecorator{
         String statusMessage = (String) status.get("message");
         String retailPaymentCode = (String) rawResponseMap.get("code");
         if (retailPaymentCode == null) {
-        	response.put("message", statusMessage);
+            response.put("message", statusMessage);
             return response;
         }
-        response.put("status", statusMessage);
+        String vendorGeneratedId = (String) rawResponseMap.get("tx_id");
+        response.put("status", statusMessage.toUpperCase());
         response.put("retail_payment_code", retailPaymentCode);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("id", id);
         return response;
     }
@@ -348,11 +343,13 @@ public class OyConfiguration extends ConfigDecorator{
         }
 
         String ewalletTrxStatus = (String) rawResponseMap.get("ewallet_trx_status");
+        String vendorGeneratedId = (String) rawResponseMap.get("trx_id");
         String paymentType = (String) rawResponseMap.get("ewallet_code");
         String url = (String) rawResponseMap.get("ewallet_url");
         response.put("status", ewalletTrxStatus);
         response.put("payment_type", paymentType);
         response.put("url", url);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("id", id);
         return response;
     }
@@ -365,8 +362,10 @@ public class OyConfiguration extends ConfigDecorator{
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String vaNumber = (String) rawResponseMap.get("va_number");
         String vaStatus = (String) rawResponseMap.get("va_status");
+        String vendorGeneratedId = (String) rawResponseMap.get("id");
         response.put("status", vaStatus);
         response.put("va_number", vaNumber);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("id", id);
         return response;
     }

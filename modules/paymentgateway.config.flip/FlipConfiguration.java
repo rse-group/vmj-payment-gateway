@@ -46,7 +46,7 @@ public class FlipConfiguration extends ConfigDecorator{
     	status = (String) decodedData.get("status");
     	id = String.valueOf(((Double) decodedData.get("bill_link_id")).intValue());
         if (token.equals(flipToken)) {
-            requestMap.put("id",id);
+            requestMap.put("vendor_generated_id",id);
             requestMap.put("status", status);
         }     
         return requestMap;
@@ -307,8 +307,12 @@ public class FlipConfiguration extends ConfigDecorator{
         Map<String, Object> receiverBankAccount = (Map<String, Object>) billPayment.get("receiver_bank_account");
         String status = (String) billPayment.get("status");
         String vaNumber = (String) receiverBankAccount.get("account_number");
+    	int linkId = ((Double) rawResponseMap.get("link_id")).intValue();
+        String linkIdString = String.valueOf(linkId);
+
         response.put("va_number", vaNumber);
         response.put("status", status);
+        response.put("vendor_generated_id", linkIdString);
         response.put("id", id);
         
         return response;
@@ -362,10 +366,14 @@ public class FlipConfiguration extends ConfigDecorator{
         String paymentType = (String) billPayment.get("sender_bank");
         String status = (String) billPayment.get("status");
         String phoneNumber = (String) rawResponseMap.get("user_phone");
+    	int linkId = ((Double) rawResponseMap.get("link_id")).intValue();
+        String linkIdString = String.valueOf(linkId);
+
         response.put("phone_number",phoneNumber);
         response.put("url", url);
         response.put("payment_type",paymentType);
         response.put("status", status);
+        response.put("vendor_generated_id", linkIdString);
         response.put("id", id);
         return response;
     }
@@ -399,8 +407,12 @@ public class FlipConfiguration extends ConfigDecorator{
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String url = (String) rawResponseMap.get("link_url");
         String status = (String) rawResponseMap.get("status");
+    	int linkId = ((Double) rawResponseMap.get("link_id")).intValue();
+        String linkIdString = String.valueOf(linkId);
+
         response.put("url", url);
         response.put("status", status);
+        response.put("vendor_generated_id", linkIdString);
         response.put("id", id);
         return response;
     }

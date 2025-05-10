@@ -72,23 +72,12 @@ public class MidtransConfiguration extends ConfigDecorator{
     @Override
     public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
-        String id = (String) vmjExchange.getRequestBodyForm("order_id");
-        String status = (String) vmjExchange.getRequestBodyForm("transaction_status");
-        String[] parts = id.split("-");
-        String orderId = parts[0];
-  
-        if (status.equals(PaymentStatus.SETTLEMENT.getStatus()) || status.equals(PaymentStatus.CAPTURE.getStatus())) {
-            status = PaymentStatus.SUCCESSFUL.getStatus();
-        }
-        else if (status.equals(PaymentStatus.CANCEL.getStatus())){
-            status = PaymentStatus.CANCELLED.getStatus();
-        }
-        else if (status.equals(PaymentStatus.FAIL.getStatus())){
-            status = PaymentStatus.FAILED.getStatus();
-        }
+        Map<String, Object> requestBody = vmjExchange.getPayload();
+        String id = (String) requestBody.get("order_id");
+        String status = (String) requestBody.get("transaction_status");
 
-	    requestMap.put("id",orderId);
-	    requestMap.put("status", status);
+	    requestMap.put("id", id);
+	    requestMap.put("status", status.toUpperCase());
 	    return requestMap;
     }
     
@@ -253,6 +242,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String url = (String) rawResponseMap.get("payment_url");
         response.put("status", ""); // no status is provided in the request body
+        response.put("vendor_generated_id", ""); // no transaction id provided in the request body
         response.put("url", url);
         response.put("id", id);
         return response;
@@ -273,7 +263,9 @@ public class MidtransConfiguration extends ConfigDecorator{
         }
         
         String transactionStatus = (String) rawResponseMap.get("transaction_status");
+        String vendorGeneratedId = (String) rawResponseMap.get("transaction_id");
         response.put("status", transactionStatus);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("id", id);
         return response;
     }
@@ -291,7 +283,9 @@ public class MidtransConfiguration extends ConfigDecorator{
             return response;
         }
         String transactionStatus = (String) rawResponseMap.get("transaction_status");
+        String vendorGeneratedId = (String) rawResponseMap.get("transaction_id");
         response.put("status", transactionStatus);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("retail_payment_code", retailPaymentCode);
         response.put("id", id);
         return response;
@@ -313,7 +307,10 @@ public class MidtransConfiguration extends ConfigDecorator{
         List<Map<String, Object>> actions = (List<Map<String, Object>>) rawResponseMap.get("actions");
         String url = (String) actions.get(0).get("url");
 
+        String vendorGeneratedId = (String) rawResponseMap.get("transaction_id");
+
         response.put("status", transactionStatus);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("payment_type", paymentType);
         response.put("url", url);
         response.put("id", id);
@@ -332,7 +329,10 @@ public class MidtransConfiguration extends ConfigDecorator{
             vaNumber = (String) vaNums.get(0).get("va_number");
         }
         String transactionStatus = (String) rawResponseMap.get("transaction_status");
+        String vendorGeneratedId = (String) rawResponseMap.get("transaction_id");
+
         response.put("status", transactionStatus);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("va_number", vaNumber);
         response.put("id", id);
         return response;

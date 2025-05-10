@@ -13,7 +13,7 @@ public abstract class PaymentServiceComponent implements PaymentService{
         this.PaymentRepository = new RepositoryUtil<Payment>(paymentgateway.payment.core.PaymentComponent.class);
     }
     
-    public abstract Payment createPayment(Map<String, Object> requestBody, String id, String status);
+    public abstract Payment createPayment(Map<String, Object> requestBody, String id, String status, String vendorGeneratedId);
     public abstract Payment createPayment(CreatePaymentRequestBody requestBody);
     public abstract HashMap<String, Object> getPayment(String id);
     public abstract List<HashMap<String, Object>> getAllPayment();

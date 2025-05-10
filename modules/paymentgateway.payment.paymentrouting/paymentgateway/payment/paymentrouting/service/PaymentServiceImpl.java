@@ -42,8 +42,9 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		String id = (String) response.get("id");
 		String paymentCheckoutUrl = (String) response.get("payment_checkout_url");
 		String status = (String) response.get("status");
+		String vendorGeneratedId = (String) response.get("vendor_generated_id");
 
-		Payment transaction = record.createPayment(requestBody.toMap(), id, status);
+		Payment transaction = record.createPayment(requestBody.toMap(), id, status, vendorGeneratedId);
 		Payment paymentRoutingTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.paymentrouting.PaymentImpl",
 				transaction,

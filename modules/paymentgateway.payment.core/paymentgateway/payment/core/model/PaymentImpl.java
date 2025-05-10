@@ -19,11 +19,12 @@ import javax.persistence.OneToMany;
 @Table(name="payment_impl")
 public class PaymentImpl extends PaymentComponent {
 
-	public PaymentImpl(UUID idTransaction, String vendorName, double amount, String status) {
+	public PaymentImpl(UUID idTransaction, String vendorName, double amount, String status, String vendorGeneratedId) {
 		this.idTransaction = idTransaction;
 		this.vendorName = vendorName;
 		this.amount = amount;
 		this.status = status;
+		this.vendorGeneratedId = vendorGeneratedId;
 	}
 
 	public  PaymentImpl(){
@@ -65,9 +66,18 @@ public class PaymentImpl extends PaymentComponent {
 		return this.createdAt;
 	}
 
+	public String getVendorGeneratedId() {
+		return this.vendorGeneratedId;
+	}
+
+	public void setVendorGeneratedId(String vendorGeneratedId) {
+		this.vendorGeneratedId = vendorGeneratedId;
+	}
+
 	public HashMap<String,Object> toHashMap() {
 		HashMap<String,Object> interfaceMap = new HashMap<String,Object>();
 		interfaceMap.put("id", getId().toString());
+		interfaceMap.put("vendorGeneratedId", getVendorGeneratedId());
 		interfaceMap.put("vendorName", getVendorName());
 		interfaceMap.put("amount", getAmount());
 		interfaceMap.put("status", getStatus());

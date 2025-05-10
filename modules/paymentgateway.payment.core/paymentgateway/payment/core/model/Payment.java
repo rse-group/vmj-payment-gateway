@@ -15,6 +15,9 @@ public interface Payment {
 	String getStatus();
 	void setStatus(String status);
 
+	String getVendorGeneratedId();
+	void setVendorGeneratedId(String vendorGeneratedId);
+
 	Date getCreatedAt();
 
 	public HashMap<String,Object> toHashMap();

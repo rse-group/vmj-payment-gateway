@@ -50,6 +50,14 @@ public abstract class PaymentDecorator extends PaymentComponent{
 		record.setStatus(status);
 	}
 
+	public String getVendorGeneratedId() {
+		return record.getVendorGeneratedId();
+	}
+
+	public void setVendorGeneratedId(String vendorGeneratedId) {
+		record.setVendorGeneratedId(vendorGeneratedId);
+	}
+
 	public Date getCreatedAt() {
 		return record.getCreatedAt();
 	}

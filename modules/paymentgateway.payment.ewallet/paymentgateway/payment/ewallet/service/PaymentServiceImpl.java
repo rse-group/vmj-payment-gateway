@@ -45,10 +45,11 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		String type = (String) response.get("payment_type");
 		String id = (String) response.get("id");
 		String status = (String) response.get("status");
+		String vendorGeneratedId = (String) response.get("vendor_generated_id");
 
 		String phoneNumber = ((CreateEWalletPaymentRequestBody) requestBody).phone;
 		System.out.println(id);
-		Payment transaction = record.createPayment(requestBody.toMap(), id, status);
+		Payment transaction = record.createPayment(requestBody.toMap(), id, status, vendorGeneratedId);
 		Payment ewalletTransaction =
 			PaymentFactory.createPayment(
 					"paymentgateway.payment.ewallet.EWalletImpl",

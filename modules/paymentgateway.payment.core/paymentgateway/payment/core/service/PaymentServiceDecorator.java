@@ -11,8 +11,8 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
         this.record = record;
     }
 
-    public Payment createPayment(Map<String, Object> requestBody, String id, String status) {
-		return record.createPayment(requestBody, id, status);
+    public Payment createPayment(Map<String, Object> requestBody, String id, String status, String vendorGeneratedId) {
+		return record.createPayment(requestBody, id, status, vendorGeneratedId);
 	}
     
     public Payment createPayment(CreatePaymentRequestBody requestBody){

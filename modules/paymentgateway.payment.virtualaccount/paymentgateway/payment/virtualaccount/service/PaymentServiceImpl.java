@@ -40,9 +40,10 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		String vaAccountNumber = (String) response.get("va_number");
 		String id = (String) response.get("id");
 		String status = (String) response.get("status");
+		String vendorGeneratedId = (String) response.get("vendor_generated_id");
 
 		String bankCode = ((CreateVirtualAccountPaymentRequestBody) requestBody).bank;
-		Payment transaction = record.createPayment(requestBody.toMap(), id, status);
+		Payment transaction = record.createPayment(requestBody.toMap(), id, status, vendorGeneratedId);
 		Payment virtualAccountTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.virtualaccount.VirtualAccountImpl",
 				transaction,

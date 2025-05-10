@@ -4,7 +4,7 @@ import java.util.*;
 import vmj.routing.route.VMJExchange;
 
 public interface PaymentService {
-	Payment createPayment(Map<String, Object> requestBody, String id, String status);	
+	Payment createPayment(Map<String, Object> requestBody, String id, String status, String vendorGeneratedId);	
 	Payment createPayment(CreatePaymentRequestBody requestBody);
     HashMap<String, Object> getPayment(String id);
     List<HashMap<String, Object>> getAllPayment();
