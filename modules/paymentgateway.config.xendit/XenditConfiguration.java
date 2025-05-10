@@ -182,7 +182,7 @@ public class XenditConfiguration extends ConfigDecorator{
 
         String vaNumber = (String) channelProperties.get("virtual_account_number");
         String referenceId = (String) rawResponseMap.get("reference_id");
-        String status = (String) paymentMethod.get("status");
+        String status = (String) rawResponseMap.get("status");
         
         response.put("status", status);
         response.put("va_number", vaNumber);
@@ -255,7 +255,7 @@ public class XenditConfiguration extends ConfigDecorator{
             return response;
         }
 
-        String status = (String) paymentMethod.get("status");
+        String status = (String) rawResponseMap.get("status");
         
         response.put("status", status);
         response.put("retail_payment_code", retailPaymentCode);
@@ -348,7 +348,7 @@ public class XenditConfiguration extends ConfigDecorator{
         Map<String, Object> paymentMethod = (Map<String, Object>) rawResponseMap.get("payment_method");
         Map<String, Object> ewalletDetailsMap = (Map<String, Object>) paymentMethod.get("ewallet");
         String paymentType = (String) ewalletDetailsMap.get("channel_code");
-        String status = (String) paymentMethod.get("status");
+        String status = (String) rawResponseMap.get("status");
 
         String referenceId = (String) rawResponseMap.get("reference_id");
         response.put("status", status);
@@ -437,7 +437,7 @@ public class XenditConfiguration extends ConfigDecorator{
         Map<String, Object> channelProperties = (Map<String, Object>) directDebitMap.get("channel_properties");
 
         String paymentType = (String) channelProperties.get("channel_code");
-        String status = (String) paymentMethodMap.get("status");
+        String status = (String) rawResponseMap.get("status");
 
         List<Map<String, Object>> actionsArray = (List<Map<String, Object>>) rawResponseMap.get("actions");
 
