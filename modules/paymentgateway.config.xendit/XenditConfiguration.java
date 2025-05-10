@@ -41,8 +41,9 @@ public class XenditConfiguration extends ConfigDecorator{
     public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> requestBody = vmjExchange.getPayload();
-        String id = (String) requestBody.get("reference_id");
-        String status = (String) requestBody.get("status");
+        Map<String, Object> dataMap = (Map<String, Object>) requestBody.get("data"); 
+        String id = (String) dataMap.get("reference_id");
+        String status = (String) dataMap.get("status");
 
 	    requestMap.put("id", id);
 	    requestMap.put("status", status);
