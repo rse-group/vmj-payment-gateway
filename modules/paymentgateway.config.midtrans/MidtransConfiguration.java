@@ -77,7 +77,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         String status = (String) requestBody.get("transaction_status");
 
 	    requestMap.put("id", id);
-	    requestMap.put("status", status.toUpperCase());
+	    requestMap.put("status", status);
 	    return requestMap;
     }
     

@@ -33,7 +33,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 				UUID.fromString(id),
 				vendorName,
 				amount,
-				status,
+				status.toUpperCase(),
 				vendorGeneratedId);
 		sendTransaction(requestBody);
 		PaymentRepository.saveObject(transaction);
@@ -52,7 +52,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 				id,		
 				vendorName,
 				amount,
-				status,
+				status.toUpperCase(),
 				vendorGeneratedId);
 		sendTransaction(requestBody.toMap());
 		PaymentRepository.saveObject(transaction);
