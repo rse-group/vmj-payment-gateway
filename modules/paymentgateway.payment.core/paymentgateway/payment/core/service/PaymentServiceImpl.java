@@ -256,7 +256,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 				String vendorGeneratedIdStr = (String) requestMap.get("vendor_generated_id");
 				String status = (String) requestMap.get("status");
 
-				Payment payment;
+				Payment payment = null;
 				if (idStr != null) {
 					payment = this.getObject(idStr);
 				} else {
@@ -266,6 +266,10 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 							payment = p;
 						}
 					}
+				}
+
+				if (payment == null) {
+					throw new BadRequestException("Payment record not found");
 				}
 
 				try {
