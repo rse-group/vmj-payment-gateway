@@ -260,7 +260,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 				if (idStr != null) {
 					payment = this.getObject(idStr);
 				} else {
-					List<Payment> payments = this.getAllPayment();
+					List<Payment> payments = PaymentRepository.getAllObject("payment_impl");
 					for (Payment p : payments) {
 						if (p.getVendorGeneratedId().equals(vendorGeneratedIdStr)) {
 							payment = p;
