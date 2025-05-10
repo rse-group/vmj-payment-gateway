@@ -5,13 +5,16 @@ import vmj.routing.route.VMJExchange;
 
 public interface PaymentService {
 	Payment createPayment(Map<String, Object> requestBody, String id, String status, String vendorGeneratedId);	
-	Payment createPayment(CreatePaymentRequestBody requestBody);
+	Payment createPayment(Map<String, Object> requestBody);
     HashMap<String, Object> getPayment(String id);
     List<HashMap<String, Object>> getAllPayment();
-    List<HashMap<String, Object>> deletePayment(DeletePaymentRequestBody requestBody);
-    HashMap<String, Object> updatePayment(UpdatePaymentRequestBody requestBody);
+    List<HashMap<String, Object>> deletePayment(Map<String, Object> requestBody);
+    HashMap<String, Object> updatePayment(Map<String, Object> requestBody);
     List<HashMap<String, Object>> transformListToHashMap(List<Payment> List);
     Map<String, Object> sendTransaction(Map<String, Object> requestBody);
-    Map<String, Object> checkPaymentStatus(CheckPaymentStatusRequestBody requestBody);
+    Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody);
+    String validateVendorName(String vendorName);
+    double validateAmount(Object amountObject);
+    String validateId(String id);
     void callback(VMJExchange vmjExchange);
 }

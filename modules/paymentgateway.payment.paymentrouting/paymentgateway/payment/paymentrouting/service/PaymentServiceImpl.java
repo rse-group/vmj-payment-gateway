@@ -23,7 +23,6 @@ import vmj.routing.route.exceptions.*;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
-import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
@@ -36,15 +35,19 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
         super(record);
     }
 
-	public Payment createPayment(CreatePaymentRequestBody requestBody) {
-		Map<String, Object> response = sendTransaction(requestBody.toMap());
+	public Payment createPayment(Map<String, Object> requestBody) {
+		record.validateVendorName((String) requestBody.get("vendor_name"));
+		double amount = record.validateAmount(requestBody.get("amount"));
+		requestBody.put("amount", amount);
+
+		Map<String, Object> response = sendTransaction(requestBody);
 
 		String id = (String) response.get("id");
 		String paymentCheckoutUrl = (String) response.get("payment_checkout_url");
 		String status = (String) response.get("status");
 		String vendorGeneratedId = (String) response.get("vendor_generated_id");
 
-		Payment transaction = record.createPayment(requestBody.toMap(), id, status, vendorGeneratedId);
+		Payment transaction = record.createPayment(requestBody, id, status, vendorGeneratedId);
 		Payment paymentRoutingTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.paymentrouting.PaymentImpl",
 				transaction,

@@ -23,7 +23,6 @@ import java.nio.charset.StandardCharsets;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
-import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
@@ -39,9 +38,9 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		paymentServiceImpl = new PaymentServiceImpl(recordService);
 	}
 
-	@Route(url="call/ewallet", method = RequestMethod.POST, requestBodyClass = CreateEWalletPaymentRequestBody.class)
-	public HashMap<String,Object> payment(VMJExchange<CreatePaymentRequestBody> vmjExchange) {
-		CreatePaymentRequestBody requestBody = vmjExchange.getParsedPayload(); 
+	@Route(url="call/ewallet", method = RequestMethod.POST)
+	public HashMap<String,Object> payment(VMJExchange vmjExchange) {
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
 		Payment result = paymentServiceImpl.createPayment(requestBody);
 		return result.toHashMap();
 	}

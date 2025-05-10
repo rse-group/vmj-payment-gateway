@@ -15,7 +15,7 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
 		return record.createPayment(requestBody, id, status, vendorGeneratedId);
 	}
     
-    public Payment createPayment(CreatePaymentRequestBody requestBody){
+    public Payment createPayment(Map<String, Object> requestBody){
         return record.createPayment(requestBody);
     }
 
@@ -27,11 +27,11 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
         return record.getAllPayment();
     }
 
-    public List<HashMap<String, Object>> deletePayment(DeletePaymentRequestBody requestBody){
+    public List<HashMap<String, Object>> deletePayment(Map<String, Object> requestBody){
         return record.deletePayment(requestBody);
     }
 
-    public HashMap<String, Object> updatePayment(UpdatePaymentRequestBody requestBody){
+    public HashMap<String, Object> updatePayment(Map<String, Object> requestBody){
         return record.updatePayment(requestBody);
     }
 
@@ -43,12 +43,24 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
         return record.sendTransaction(requestBody);
     }
      
-    public Map<String, Object> checkPaymentStatus(CheckPaymentStatusRequestBody requestBody){
+    public Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody){
         return record.checkPaymentStatus(requestBody);
     }
 
     public HashMap<String, Object> getPaymentById(String id){
         return record.getPaymentById(id);
+    }
+    
+    public String validateVendorName(String vendorName) {
+        return record.validateVendorName(vendorName);
+    }
+    
+    public double validateAmount(Object amountObject) {
+        return record.validateAmount(amountObject);
+    }
+    
+    public String validateId(String id) {
+        return record.validateId(id);
     }
 
     public void callback(VMJExchange vmjExchange) {

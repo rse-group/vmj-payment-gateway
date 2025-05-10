@@ -18,8 +18,6 @@ import vmj.routing.route.exceptions.*;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
-import paymentgateway.payment.core.CreatePaymentRequestBody;
-import paymentgateway.payment.core.DeletePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentResourceComponent;
@@ -35,28 +33,28 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		paymentServiceImpl = new PaymentServiceImpl(recordService);
 	}
 
-	@Route(url = "call/paymentlink", method = RequestMethod.POST, requestBodyClass = CreatePaymentLinkRequestBody.class)
-	public HashMap<String, Object> payment(VMJExchange<CreatePaymentRequestBody> vmjExchange) {
-		CreatePaymentRequestBody requestBody = vmjExchange.getParsedPayload();
+	@Route(url = "call/paymentlink", method = RequestMethod.POST)
+	public HashMap<String, Object> payment(VMJExchange vmjExchange) {
+		Map<String, Object> requestBody = vmjExchange.getPayload();
 		Payment result = paymentServiceImpl.createPayment(requestBody);
 		return result.toHashMap();
 	}
 
-	@Route(url = "call/paymentlink/vendorname", method = RequestMethod.GET, requestBodyClass = GetPaymentLinksByVendorNameRequestBody.class)
-	public List<PaymentLinkImpl> getByVendorName(VMJExchange<GetPaymentLinksByVendorNameRequestBody> vmjExchange) {
-		GetPaymentLinksByVendorNameRequestBody requestBody = vmjExchange.getParsedPayload();
+	@Route(url = "call/paymentlink/vendorname", method = RequestMethod.GET)
+	public List<PaymentLinkImpl> getByVendorName(VMJExchange vmjExchange) {
+		Map<String, Object> requestBody = vmjExchange.getPayload();
 		return paymentServiceImpl.getByVendorName(requestBody);
 	}
 
-	@Route(url = "call/paymentlink/detail", method = RequestMethod.GET, requestBodyClass = GetPaymentLinkByIdRequestBody.class)
-	public HashMap<String, Object> getById(VMJExchange<GetPaymentLinkByIdRequestBody> vmjExchange) {
-		GetPaymentLinkByIdRequestBody requestBody = vmjExchange.getParsedPayload();
+	@Route(url = "call/paymentlink/detail", method = RequestMethod.GET)
+	public HashMap<String, Object> getById(VMJExchange vmjExchange) {
+		Map<String, Object> requestBody = vmjExchange.getPayload();
 		return paymentServiceImpl.getById(requestBody);
 	}
 
-	@Route(url = "call/paymentlink/delete", method = RequestMethod.DELETE, requestBodyClass = DeletePaymentRequestBody.class)
-	public String deletePaymentLinkById(VMJExchange<DeletePaymentRequestBody> vmjExchange) {
-		DeletePaymentRequestBody requestBody = vmjExchange.getParsedPayload();
+	@Route(url = "call/paymentlink/delete", method = RequestMethod.DELETE)
+	public String deletePaymentLinkById(VMJExchange vmjExchange) {
+		Map<String, Object> requestBody = vmjExchange.getPayload();
 		return paymentServiceImpl.deletePaymentLinkById(requestBody);
 	}
 }

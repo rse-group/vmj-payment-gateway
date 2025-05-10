@@ -296,13 +296,10 @@ public class XenditConfiguration extends ConfigDecorator{
         Double amountDouble = (Double) requestBody.get("amount");
         int amount = amountDouble.intValue();
         
-        String ewalletType = (String) requestBody.get("ewallet_type");
-        String name = (String) requestBody.get("name");
-        String email = (String) requestBody.get("email");
-        String phone = (String) requestBody.get("phone");
-        String successReturnUrl = (String) requestBody.get("success_return_url");
-        String failureReturnUrl = (String) requestBody.get("failure_return_url");
-        String cashtag = (String) requestBody.get("cashtag");
+        String ewalletType = RequestBodyValidator.stringRequestBodyValidator(requestBody, "ewallet_type");
+        String name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "name");
+        String email = RequestBodyValidator.stringRequestBodyValidator(requestBody, "email");
+        String phone = RequestBodyValidator.stringRequestBodyValidator(requestBody, "phone");
         
         paymentMethod.put("reusability", "ONE_TIME_USE");
         paymentMethod.put("type", "EWALLET");
@@ -310,14 +307,17 @@ public class XenditConfiguration extends ConfigDecorator{
         ewalletDetailsMap.put("channel_code", ewalletType);
         if (ewalletType.equals("DANA") || ewalletType.equals("LINKAJA") || ewalletType.equals("SHOPEEPAY") || ewalletType.equals("ASTRAPAY")) {
             // required for DANA, LINKAJA, SHOPEEPAY, ASTRAPAY if reusability is ONE_TIME_USE
+            String successReturnUrl = RequestBodyValidator.stringRequestBodyValidator(requestBody, "success_return_url");
             channelProperties.put("success_return_url", successReturnUrl);
         }
         if (ewalletType.equals("ASTRAPAY")) {
             // required for ASTRAPAY
+            String failureReturnUrl = RequestBodyValidator.stringRequestBodyValidator(requestBody, "failure_return_url");
             channelProperties.put("failure_return_url", failureReturnUrl);
         }
         if (ewalletType.equals("JENIUSPAY")) {
             // required for JENIUSPAY if reusability is ONE_TIME_USE
+            String cashtag = RequestBodyValidator.stringRequestBodyValidator(requestBody, "cashtag");
             channelProperties.put("cashtag", cashtag);
         }
         if (ewalletType.equals("OVO")) {
@@ -398,12 +398,8 @@ public class XenditConfiguration extends ConfigDecorator{
         );
         
         String name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "name");
-
-        String successReturnUrl = (String) requestBody.get("success_return_url");
-        String failureReturnUrl = (String) requestBody.get("failure_return_url");
-        String email = (String) requestBody.get("email");
-        String phone = (String) requestBody.get("phone");
-        String cardLastFour = (String) requestBody.get("card_last_four");
+        String email = RequestBodyValidator.stringRequestBodyValidator(requestBody, "email");
+        String phone = RequestBodyValidator.stringRequestBodyValidator(requestBody, "phone");
 
         paymentMethod.put("reusability", "ONE_TIME_USE");
         paymentMethod.put("type", "DIRECT_DEBIT");
@@ -411,11 +407,14 @@ public class XenditConfiguration extends ConfigDecorator{
         directDebitMap.put("channel_code", bank);
         if (bank.equals("MANDIRI")) {
             // required for MANDIRI
+            String successReturnUrl = RequestBodyValidator.stringRequestBodyValidator(requestBody, "success_return_url");
+            String failureReturnUrl = RequestBodyValidator.stringRequestBodyValidator(requestBody, "failure_return_url");
             channelProperties.put("success_return_url", successReturnUrl);
             channelProperties.put("failure_return_url", failureReturnUrl);
         }
         if (bank.equals("BRI")) {
             // required for BRI
+            String cardLastFour = RequestBodyValidator.stringRequestBodyValidator(requestBody, "card_last_four");
             channelProperties.put("mobile_number", phone);
             channelProperties.put("card_last_four", cardLastFour);
         }

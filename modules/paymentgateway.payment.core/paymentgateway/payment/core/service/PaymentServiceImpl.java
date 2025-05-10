@@ -40,9 +40,9 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		return transaction;
 	}
 	
-	public Payment createPayment(CreatePaymentRequestBody requestBody) {
-		String vendorName = requestBody.vendorName;
-		double amount = requestBody.amount;
+	public Payment createPayment(Map<String, Object> requestBody) {
+		String vendorName = this.validateVendorName((String) requestBody.get("vendor_name"));
+		double amount = this.validateAmount(requestBody.get("amount"));
 
 		UUID id = UUID.randomUUID();
 		String status = "MANUALLY_ADDED";
@@ -54,7 +54,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 				amount,
 				status.toUpperCase(),
 				vendorGeneratedId);
-		sendTransaction(requestBody.toMap());
+		sendTransaction(requestBody);
 		PaymentRepository.saveObject(transaction);
 		return transaction;
 	}
@@ -64,9 +64,9 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		return null;
 	}
 	
-	public Map<String, Object> checkPaymentStatus(CheckPaymentStatusRequestBody requestBody) {
-		String vendorName = requestBody.vendorName;
-		String Id = String.valueOf(requestBody.id);
+	public Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody) {
+		String vendorName = this.validateVendorName((String) requestBody.get("vendor_name"));
+		String Id = this.validateId((String) requestBody.get("id"));
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		HttpClient client = HttpClient.newHttpClient();
@@ -143,13 +143,14 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 	}
 	
 	public HashMap<String, Object> getPayment(String id){
-		Payment paymentImpl = this.getObject(id);
+		String validatedId = this.validateId(id);
+		Payment paymentImpl = this.getObject(validatedId);
 		
 		HashMap<String, Object> paymentDataMap = new HashMap<>();
 		
 		if (paymentImpl == null) {
 			paymentDataMap.put("status", "Payment detail does not exist");
-			paymentDataMap.put("id", id);
+			paymentDataMap.put("id", validatedId);
 	        return paymentDataMap;
 	    }
 		
@@ -174,18 +175,19 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 	}
 
 
-	public HashMap<String, Object> updatePayment(UpdatePaymentRequestBody requestBody) {
-		String id = requestBody.id;
-		Payment payment = this.getObject(id);
+	public HashMap<String, Object> updatePayment(Map<String, Object> requestBody) {
+		String validatedId = this.validateId((String) requestBody.get("id"));
+		Payment payment = this.getObject(validatedId);
 
 		if (payment == null) {
 			HashMap<String, Object> notFoundMap = new HashMap<>();
-			notFoundMap.put("message", "Payment with ID " + id + " does not exist");
+			notFoundMap.put("message", "Payment with ID " + validatedId + " does not exist");
 			return notFoundMap;
 		}
 
+		double amount = ((Double) requestBody.get("amount")).doubleValue();
 		try {
-			payment.setAmount(requestBody.amount.doubleValue());
+			payment.setAmount(amount);
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -196,17 +198,17 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 
     }
 	
-	public List<HashMap<String, Object>> deletePayment(DeletePaymentRequestBody requestBody){
-		String id = requestBody.id;
-		Payment payment = this.getObject(id);
+	public List<HashMap<String, Object>> deletePayment(Map<String, Object> requestBody){
+		String validatedId = this.validateId((String) requestBody.get("id"));
+		Payment payment = this.getObject(validatedId);
 		
 		if (payment == null) {
 			HashMap<String, Object> notFoundMap = new HashMap<>();
-			notFoundMap.put("message", "Payment with ID " + id + " does not exist");
+			notFoundMap.put("message", "Payment with ID " + validatedId + " does not exist");
 			return Collections.singletonList(notFoundMap);
 		}
 		
-		this.deleteObject(id);
+		this.deleteObject(validatedId);
 
 		return getAllPayment();
 	}
@@ -284,5 +286,53 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public String validateVendorName(String vendorName) {
+		if (vendorName == null) {
+			throw new BadRequestException("vendor_name tidak ditemukan pada payload.");
+		}
+		Set<String> vendorNames = new HashSet<>();
+		vendorNames.add("Flip");
+		vendorNames.add("Midtrans");
+		vendorNames.add("Xendit");
+		vendorNames.add("Oy");
+		
+		if (!vendorNames.contains(vendorName)) {
+			throw new BadRequestException("vendor_name tidak valid.");
+		}
+		return vendorName;	
+	}
+
+	public double validateAmount(Object amountObject) {
+		Double amount;
+		if (amountObject == null) {
+			throw new BadRequestException("amount tidak ditemukan pada payload.");
+		}
+		try {
+			amount = ((Double) amountObject);
+		} catch (Exception e) {
+			try {
+				String amountString = (String) amountObject;
+				amount = Double.valueOf(amountString);
+			} catch (Exception ex) {
+				throw new BadRequestException("amount tidak valid.");
+			}
+		}
+
+		return amount.doubleValue();
+	}
+
+	public String validateId(String id) {
+		if (id == null) {
+			throw new BadRequestException("id tidak ditemukan pada payload.");
+		}
+		try {
+			UUID.fromString(id);
+		} catch (Exception e) {
+			throw new BadRequestException("id tidak valid.");
+		}
+
+		return id;
 	}
 }

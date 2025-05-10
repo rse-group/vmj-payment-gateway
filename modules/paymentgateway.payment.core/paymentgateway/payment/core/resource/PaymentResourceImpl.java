@@ -28,16 +28,16 @@ public class PaymentResourceImpl extends PaymentResourceComponent {
 
 	private PaymentServiceImpl paymentServiceImpl = new PaymentServiceImpl();
 
-	@Route(url = "call/payment", method = RequestMethod.POST, requestBodyClass = CreatePaymentRequestBody.class)
-	public HashMap<String, Object> payment(VMJExchange<CreatePaymentRequestBody> vmjExchange) {
-		CreatePaymentRequestBody requestBody = vmjExchange.getParsedPayload();
+	@Route(url = "call/payment", method = RequestMethod.POST)
+	public HashMap<String, Object> payment(VMJExchange vmjExchange) {
+		Map<String, Object> requestBody = vmjExchange.getPayload();
 		Payment result = paymentServiceImpl.createPayment(requestBody);
 		return result.toHashMap();
 	}
 
-	@Route(url = "call/paymentstatus", method = RequestMethod.POST, requestBodyClass = CheckPaymentStatusRequestBody.class)
-	public Map<String, Object> paymentStatus(VMJExchange<CheckPaymentStatusRequestBody> vmjExchange) {
-		CheckPaymentStatusRequestBody requestBody = vmjExchange.getParsedPayload();
+	@Route(url = "call/paymentstatus", method = RequestMethod.POST)
+	public Map<String, Object> paymentStatus(VMJExchange vmjExchange) {
+		Map<String, Object> requestBody = vmjExchange.getPayload();
 		return paymentServiceImpl.checkPaymentStatus(requestBody);
 	}
 
@@ -59,16 +59,16 @@ public class PaymentResourceImpl extends PaymentResourceComponent {
 		return paymentServiceImpl.getPayment(id);
 	}
 
-	@Route(url = "call/payment/delete", method = RequestMethod.DELETE, requestBodyClass = DeletePaymentRequestBody.class)
-	public List<HashMap<String, Object>> deletePayment(VMJExchange<DeletePaymentRequestBody> vmjExchange) {
-		DeletePaymentRequestBody requestBody = vmjExchange.getParsedPayload();
+	@Route(url = "call/payment/delete", method = RequestMethod.DELETE)
+	public List<HashMap<String, Object>> deletePayment(VMJExchange vmjExchange) {
+		Map<String, Object> requestBody = vmjExchange.getPayload();
 		System.out.println(requestBody);
 		return paymentServiceImpl.deletePayment(requestBody);
 	}
 
-	@Route(url = "call/payment/update", method = RequestMethod.PUT, requestBodyClass = UpdatePaymentRequestBody.class)
-	public HashMap<String, Object> updatePayment(VMJExchange<UpdatePaymentRequestBody> vmjExchange) {
-		UpdatePaymentRequestBody requestBody = vmjExchange.getParsedPayload();
+	@Route(url = "call/payment/update", method = RequestMethod.PUT)
+	public HashMap<String, Object> updatePayment(VMJExchange vmjExchange) {
+		Map<String, Object> requestBody = vmjExchange.getPayload();
 		return paymentServiceImpl.updatePayment(requestBody);
 	}
 

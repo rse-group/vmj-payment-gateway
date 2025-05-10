@@ -21,7 +21,6 @@ import java.nio.charset.StandardCharsets;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
-import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
@@ -34,16 +33,20 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
         super(record);
     }
     
-	public Payment createPayment(CreatePaymentRequestBody requestBody) {
-		Map<String, Object> response = sendTransaction(requestBody.toMap());
+	public Payment createPayment(Map<String, Object> requestBody) {
+		record.validateVendorName((String) requestBody.get("vendor_name"));
+		double amount = record.validateAmount(requestBody.get("amount"));
+		requestBody.put("amount", amount);
+		
+		Map<String, Object> response = sendTransaction(requestBody);
 
 		String vaAccountNumber = (String) response.get("va_number");
 		String id = (String) response.get("id");
 		String status = (String) response.get("status");
 		String vendorGeneratedId = (String) response.get("vendor_generated_id");
 
-		String bankCode = ((CreateVirtualAccountPaymentRequestBody) requestBody).bank;
-		Payment transaction = record.createPayment(requestBody.toMap(), id, status, vendorGeneratedId);
+		String bankCode = (String) requestBody.get("bank");
+		Payment transaction = record.createPayment(requestBody, id, status, vendorGeneratedId);
 		Payment virtualAccountTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.virtualaccount.VirtualAccountImpl",
 				transaction,

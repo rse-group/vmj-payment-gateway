@@ -1,9 +1,5 @@
 package paymentgateway.payment.directdebit;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
@@ -22,7 +18,6 @@ import java.util.UUID;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
-import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
 import paymentgateway.payment.core.PaymentServiceComponent;
@@ -34,15 +29,19 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		super(record);
 	}
 
-	public Payment createPayment(CreatePaymentRequestBody requestBody) {
-		Map<String, Object> response = sendTransaction(requestBody.toMap());
+	public Payment createPayment(Map<String, Object> requestBody) {
+		record.validateVendorName((String) requestBody.get("vendor_name"));
+		double amount = record.validateAmount(requestBody.get("amount"));
+		requestBody.put("amount", amount);
+
+		Map<String, Object> response = sendTransaction(requestBody);
 
 		String status = (String) response.get("status");
 		String directDebitUrl = (String) response.get("direct_debit_url");
 		String id = (String) response.get("id");
 		String vendorGeneratedId = (String) response.get("vendor_generated_id");
 
-		Payment transaction = record.createPayment(requestBody.toMap(), id, status, vendorGeneratedId);
+		Payment transaction = record.createPayment(requestBody, id, status, vendorGeneratedId);
 		Payment cardTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.directdebit.PaymentImpl", transaction, directDebitUrl);
 		PaymentRepository.saveObject(cardTransaction);
@@ -54,7 +53,6 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		
-		Gson gson = new Gson();
 		Map<String, Object> requestMap = config.getDirectDebitRequestBody(requestBody);
 		String id = (String) requestMap.get("id");
 		requestMap.remove("id");

@@ -123,9 +123,9 @@ public class OyConfiguration extends ConfigDecorator{
         String id = UUID.randomUUID().toString();
 
         int amount = ((Double) requestBody.get("amount")).intValue();
-        String name = (String) requestBody.get("sender_name");
-        String email = (String) requestBody.get("email");
-        String description = (String) requestBody.get("title");
+        String name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_name");
+        String email = RequestBodyValidator.stringRequestBodyValidator(requestBody, "email");
+        String description = RequestBodyValidator.stringRequestBodyValidator(requestBody, "title");
 
         requestMap.put("partner_tx_id", String.valueOf(id));
         requestMap.put("amount", amount);
@@ -142,7 +142,7 @@ public class OyConfiguration extends ConfigDecorator{
 
         String id = UUID.randomUUID().toString();
         int amount = ((Double) requestBody.get("amount")).intValue();
-        String store = (String) requestBody.get("retail_outlet");
+        String store = RequestBodyValidator.stringRequestBodyValidator(requestBody, "retail_outlet");
 
         requestMap.put("partner_trx_id", id);
         requestMap.put("customer_id", String.join("", id.split("-"))); // this is done because if the raw uuid is used here, there will be error from vendor
@@ -160,7 +160,7 @@ public class OyConfiguration extends ConfigDecorator{
         String id = UUID.randomUUID().toString();
 
         int amount = ((Double) requestBody.get("amount")).intValue();
-        String bank = (String) requestBody.get("bank");
+        String bank = RequestBodyValidator.stringRequestBodyValidator(requestBody, "bank");
 
         requestMap.put("partner_trx_id", id);
         requestMap.put("partner_user_id", id);
@@ -177,8 +177,8 @@ public class OyConfiguration extends ConfigDecorator{
 
         String id = UUID.randomUUID().toString();
 
-        String ewallet = (String) requestBody.get("ewallet_type");
-        String phone = (String) requestBody.get("phone");
+        String ewallet = RequestBodyValidator.stringRequestBodyValidator(requestBody, "ewallet_type");
+        String phone = RequestBodyValidator.stringRequestBodyValidator(requestBody, "phone");
         int amount = ((Double) requestBody.get("amount")).intValue();
         String successRedirectUrl = (String) requestBody.get("success_redirect_url");
 
@@ -198,8 +198,8 @@ public class OyConfiguration extends ConfigDecorator{
         String id = UUID.randomUUID().toString();
        
         int amount = ((Double) requestBody.get("amount")).intValue();
-        int quantity = ((Integer) requestBody.get("quantity")).intValue();
-        int pricePerItem = ((Integer) requestBody.get("price_per_item")).intValue();
+        int quantity = RequestBodyValidator.intRequestBodyValidator(requestBody, "quantity");
+        int pricePerItem = RequestBodyValidator.intRequestBodyValidator(requestBody, "price_per_item");
 
         if (pricePerItem * quantity != amount) {
             throw new BadRequestException(
@@ -229,13 +229,12 @@ public class OyConfiguration extends ConfigDecorator{
 
         String id = UUID.randomUUID().toString();
         int amount = ((Double) requestBody.get("amount")).intValue();
-        int recipientAmountInt = ((Integer) requestBody.get("recipient_amount")).intValue();
-
-        String recipientAccount = (String) requestBody.get("recipient_account");
-        String recipientBank = (String) requestBody.get("recipient_bank");
+        int recipientAmountInt = RequestBodyValidator.intRequestBodyValidator(requestBody, "recipient_amount");
         String recipientAmount = String.valueOf(recipientAmountInt);
-        String recipientEmail = (String) requestBody.get("recipient_email");
-        String recipientNote = (String) requestBody.get("recipient_note");
+        String recipientAccount = RequestBodyValidator.stringRequestBodyValidator(requestBody, "recipient_account");
+        String recipientBank = RequestBodyValidator.stringRequestBodyValidator(requestBody, "recipient_bank");
+        String recipientEmail = RequestBodyValidator.stringRequestBodyValidator(requestBody, "recipient_email");
+        String recipientNote = RequestBodyValidator.stringRequestBodyValidator(requestBody, "recipient_note");
 
         requestMap.put("partner_trx_id", id);
         requestMap.put("partner_user_id", id);

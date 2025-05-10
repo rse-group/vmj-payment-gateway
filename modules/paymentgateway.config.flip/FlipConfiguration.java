@@ -278,11 +278,11 @@ public class FlipConfiguration extends ConfigDecorator{
     public Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody){
         String id = UUID.randomUUID().toString();
         Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) requestBody.get("title");
         int amount = ((Double) requestBody.get("amount")).intValue();
-        String senderName = (String) requestBody.get("name");
-        String senderEmail = (String) requestBody.get("email");
-        String senderBank = (String) requestBody.get("bank");
+        String title = RequestBodyValidator.stringRequestBodyValidator(requestBody, "title");
+        String senderName = RequestBodyValidator.stringRequestBodyValidator(requestBody, "name");
+        String senderEmail = RequestBodyValidator.stringRequestBodyValidator(requestBody, "email");
+        String senderBank = RequestBodyValidator.stringRequestBodyValidator(requestBody, "bank");
         
         requestMap.put("id",id);
         requestMap.put("title", title);
@@ -323,14 +323,13 @@ public class FlipConfiguration extends ConfigDecorator{
     public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
         String id = UUID.randomUUID().toString();
         Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) requestBody.get("title");
 
         int amount = ((Double) requestBody.get("amount")).intValue();
-
-        String senderName = (String) requestBody.get("name");
-        String senderEmail = (String) requestBody.get("email");
-        String senderBank = (String) requestBody.get("ewallet_type");
-        String senderPhoneNumber = (String) requestBody.get("phone");
+        String title = RequestBodyValidator.stringRequestBodyValidator(requestBody, "title");
+        String senderName = RequestBodyValidator.stringRequestBodyValidator(requestBody, "name");
+        String senderEmail = RequestBodyValidator.stringRequestBodyValidator(requestBody, "email");
+        String senderBank = RequestBodyValidator.stringRequestBodyValidator(requestBody, "ewallet_type");
+        String senderPhoneNumber = RequestBodyValidator.stringRequestBodyValidator(requestBody, "phone");
 
         requestMap.put("id",id);
         requestMap.put("title", title);
@@ -383,10 +382,10 @@ public class FlipConfiguration extends ConfigDecorator{
     public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
         String id = UUID.randomUUID().toString();
         Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) requestBody.get("title");
         int amount = ((Double) requestBody.get("amount")).intValue();
-        String senderEmail = (String) requestBody.get("email");
-        String senderName = (String) requestBody.get("sender_name");
+        String title = RequestBodyValidator.stringRequestBodyValidator(requestBody, "title");
+        String senderName = RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_name");
+        String senderEmail = RequestBodyValidator.stringRequestBodyValidator(requestBody, "email");
         
         requestMap.put("id",id);
         requestMap.put("title", title);

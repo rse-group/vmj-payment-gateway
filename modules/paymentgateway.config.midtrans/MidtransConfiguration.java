@@ -96,9 +96,9 @@ public class MidtransConfiguration extends ConfigDecorator{
         requestMap.put("transaction_details", transaction_details);
         requestMap.put( "customer_required",true);
 
-        String name = (String) requestBody.get("sender_name");
-        String email = (String) requestBody.get("email");
-        String title = (String) requestBody.get("title");
+        String name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_name");
+        String email = RequestBodyValidator.stringRequestBodyValidator(requestBody, "email");
+        String title = RequestBodyValidator.stringRequestBodyValidator(requestBody, "title");
         String[] arr = name.split(" ", 2);
         if(arr.length > 1){
             customer_details.put("first_name", arr[0]);
@@ -121,7 +121,7 @@ public class MidtransConfiguration extends ConfigDecorator{
 
         String id = UUID.randomUUID().toString();
         double amount = ((Double) requestBody.get("amount")).doubleValue();
-        String store = (String) requestBody.get("retail_outlet");
+        String store = RequestBodyValidator.stringRequestBodyValidator(requestBody, "retail_outlet");
 
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
@@ -143,7 +143,7 @@ public class MidtransConfiguration extends ConfigDecorator{
 
         String id = UUID.randomUUID().toString();
         double amount = ((Double) requestBody.get("amount")).doubleValue();
-        String bank = (String) requestBody.get("bank");
+        String bank = RequestBodyValidator.stringRequestBodyValidator(requestBody, "bank");
 
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
@@ -166,8 +166,8 @@ public class MidtransConfiguration extends ConfigDecorator{
         String id = UUID.randomUUID().toString();
 
         double amount = ((Double) requestBody.get("amount")).doubleValue();
-        String ewallet = (String) requestBody.get("ewallet_type"); 
-        String phone = (String) requestBody.get("phone");
+        String ewallet = RequestBodyValidator.stringRequestBodyValidator(requestBody, "ewallet_type");
+        String phone = RequestBodyValidator.stringRequestBodyValidator(requestBody, "phone");
 
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
@@ -208,10 +208,10 @@ public class MidtransConfiguration extends ConfigDecorator{
         String baseUrl = (String) PropertiesReader.getProp(CONFIG_FILE, "base_url");
         String apiEndpoint = "";
 
-        String cardNumber = (String) requestBody.get("card_number");
-        String cardExpMonth = (String) requestBody.get("card_exp_month");
-        String cardExpYear = (String) requestBody.get("card_exp_year");
-        String cardCVV = (String) requestBody.get("card_cvv");
+        String cardNumber = RequestBodyValidator.stringRequestBodyValidator(requestBody, "card_number");
+        String cardExpMonth = RequestBodyValidator.stringRequestBodyValidator(requestBody, "card_exp_month");
+        String cardExpYear = RequestBodyValidator.stringRequestBodyValidator(requestBody, "card_exp_year");
+        String cardCVV = RequestBodyValidator.stringRequestBodyValidator(requestBody, "card_cvv");
     
         // Determine the appropriate endpoint based on the service name
         if (serviceName.equals("CardToken")){
