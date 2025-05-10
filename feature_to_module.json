@@ -59,5 +59,8 @@
 	],
 	"VirtualAccount": [
 		"paymentgateway.payment.virtualaccount"
+	],
+	"QRCode": [
+		"paymentgateway.payment.qrcode"
 	]
 }

@@ -32,7 +32,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 
 	public Payment createPayment(CreatePaymentRequestBody requestBody) {
 		Map<String, Object> response = sendTransaction(requestBody);
-		String currency = ((CreateQRCodePaymentRequestBody) requestBody).currency;
+		String currency = ((CreatePaymentRequestBody) requestBody).currency;
 
 		if (response.containsKey("message")) {
 			throw new IllegalStateException((String) response.get("message"));

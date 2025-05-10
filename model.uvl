@@ -1,38 +1,36 @@
 namespace PaymentGateway
 
 features
-	PaymentGateway {abstract true}
-		optional
-			Vendor {abstract true}
-				optional
-					Flip
-					Midtrans
-					Oy
-					Xendit
-			Disbursement
-				optional
-					International {abstract true}
-						or
-							ExchangeRate
-							FixedCurrency
-					Agent
-					SpecifiedRecipient
-			Payment {abstract true}
-				or
-					PaymentLink
-					VirtualAccount
-					RetailOutlet
-					EWallet
-					Invoice
-					PaymentRouting
-					CreditCard
-					DebitCard
+    PaymentGateway {abstract true}
+        optional
+            Vendor {abstract true}
+                optional
+                    Flip
+                    Midtrans
+                    Oy
+                    Xendit
+            Disbursement
+                optional
+                    International {abstract true}
+                        or
+                            ExchangeRate
+                            FixedCurrency
+                    Agent
+                    SpecifiedRecipient
+            Payment
+                optional
+                    PaymentLink
+                    VirtualAccount
+                    RetailOutlet
+                    EWallet
+                    Invoice
+                    PaymentRouting
+                    Card
+                    DirectDebit
+                    QRCode
 
 constraints
-  Disbursement => Flip | Xendit
-  PaymentLink | EWallet => Oy | Midtrans | Flip
-  VirtualAccount | RetailOutlet => Oy | Midtrans
-  Invoice | PaymentRouting => Oy
-  CreditCard | DebitCard  => Midtrans
-  SpecifiedRecipient => Xendit
-  Agent | ExchangeRate | FixedCurrency => Flip
+  Oy => PaymentLink | EWallet | VirtualAccount | RetailOutlet | Invoice | PaymentRouting
+  Midtrans => Card | VirtualAccount | RetailOutlet | PaymentLink | EWallet
+  Xendit => SpecifiedRecipient | VirtualAccount | RetailOutlet | DirectDebit | QRCode
+  Flip => Agent | ExchangeRate | FixedCurrency |  PaymentLink | VirtualAccount

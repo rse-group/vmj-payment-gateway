@@ -1,7 +1,7 @@
 module paymentgateway.payment.qrcode {
     requires paymentgateway.payment.core;
 
-    exports paymentgateway.payment.retailoutlet;
+    exports paymentgateway.payment.qrcode;
 
     requires vmj.routing.route;
     requires paymentgateway.config.core;

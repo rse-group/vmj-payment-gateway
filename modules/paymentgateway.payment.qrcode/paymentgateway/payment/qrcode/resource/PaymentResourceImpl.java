@@ -37,7 +37,7 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		paymentServiceImpl = new PaymentServiceImpl(recordService);
 	}
 
-	@Route(url = "call/qrcode", method = RequestMethod.POST, requestBodyClass = CreateQRCodePaymentRequestBody.class)
+	@Route(url = "call/qrcode", method = RequestMethod.POST, requestBodyClass = CreatePaymentRequestBody.class)
 	public HashMap<String, Object> payment(VMJExchange<CreatePaymentRequestBody> vmjExchange) {
 		CreatePaymentRequestBody requestBody = vmjExchange.getParsedPayload();
 		try {

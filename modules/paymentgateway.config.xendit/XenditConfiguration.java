@@ -280,10 +280,10 @@ public class XenditConfiguration extends ConfigDecorator {
         Map<String, Object> channelProperties = new HashMap<String, Object>();
 
         int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-                requestBody,
-                "amount");
-        int amount = Integer.parseInt(amountStr);
+        // String amountStr = RequestBodyValidator.stringRequestBodyValidator(
+        //         requestBody,
+        //         "amount");
+        int amount = ((Double) requestBody.get("amount")).intValue();
 
         String uuidString = UUID.randomUUID().toString().replace("-", "");
         int uniqueInteger = Math.abs(uuidString.hashCode()) % 100000;
