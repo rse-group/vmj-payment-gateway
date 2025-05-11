@@ -32,23 +32,27 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 
 	public Payment createPayment(CreatePaymentRequestBody requestBody) {
 		Map<String, Object> response = sendTransaction(requestBody);
-		String currency = ((CreatePaymentRequestBody) requestBody).currency;
 
 		if (response.containsKey("message")) {
 			throw new IllegalStateException((String) response.get("message"));
 		}
+		System.out.println("response " + response);
 
 		String qrCodeString = (String) response.get("qr_code_string");
-		System.out.println("response " + response);
 		int id = (int) response.get("id");
 
 		Payment transaction = record.createPayment(requestBody, id);
 
+		String channelCode = (String) response.get("channel_code");
+
+		String expiryDateString = (String) response.get("expires_at");
+
 		Payment qrCodeChannel = PaymentFactory.createPayment(
 				"paymentgateway.payment.qrcode.QRCodeImpl",
 				transaction,
-				currency,
-				qrCodeString);
+				qrCodeString,
+				channelCode,
+				expiryDateString);
 		PaymentRepository.saveObject(qrCodeChannel);
 		return qrCodeChannel;
 	}
@@ -83,7 +87,9 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-
+		System.out.println("==============================================");
+        System.out.println("qr code send transaction response: " + responseMap);
+        System.out.println("==============================================");
 		return responseMap;
 	}
 }

@@ -281,8 +281,8 @@ public class XenditConfiguration extends ConfigDecorator {
 
         int id = generateId();
         // String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-        //         requestBody,
-        //         "amount");
+        // requestBody,
+        // "amount");
         int amount = ((Double) requestBody.get("amount")).intValue();
 
         String uuidString = UUID.randomUUID().toString().replace("-", "");
@@ -320,6 +320,10 @@ public class XenditConfiguration extends ConfigDecorator {
 
         Map<String, Object> paymentMethod = (Map<String, Object>) rawResponseMap.get("payment_method");
         Map<String, Object> qrCode = (Map<String, Object>) paymentMethod.get("qr_code");
+
+        String channelCode = (String) qrCode.get("channel_code");
+        response.put("channel_code", channelCode);
+
         Map<String, Object> channelProperties = (Map<String, Object>) qrCode.get("channel_properties");
 
         String qrCodeString = (String) channelProperties.get("qr_string");
