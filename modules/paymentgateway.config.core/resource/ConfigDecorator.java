@@ -161,20 +161,20 @@ public abstract class ConfigDecorator extends ConfigComponent{
 
     // Disbursement Response
 
-    public Map<String, Object> getDisbursementResponse(String rawResponse){
-        return record.getDisbursementResponse(rawResponse);
+    public Map<String, Object> getDisbursementResponse(String rawResponse, String id){
+        return record.getDisbursementResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse){
-        return record.getSpecialDisbursementResponse(rawResponse);
+    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse, String id){
+        return record.getSpecialDisbursementResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse){
-        return record.getInternationalDisbursementResponse(rawResponse);
+    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse, String id){
+        return record.getInternationalDisbursementResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getAgentDisbursementResponse(String rawResponse){
-        return record.getAgentDisbursementResponse(rawResponse);
+    public Map<String, Object> getAgentDisbursementResponse(String rawResponse, String id){
+        return record.getAgentDisbursementResponse(rawResponse, id);
     }
     
 }

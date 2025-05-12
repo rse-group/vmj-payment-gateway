@@ -14,5 +14,5 @@ public interface DisbursementService {
     HashMap<String, Object> updateDisbursement(Map<String, Object> requestBody);
     List<HashMap<String, Object>> transformListToHashMap(List<Disbursement> List);
     Map<String, Object> sendTransaction(Map<String, Object> requestBody);
-    HashMap<String, Object> getDisbursementById(int id);
+    HashMap<String, Object> getDisbursementById(String id);
 }

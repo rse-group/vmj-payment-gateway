@@ -187,7 +187,7 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getDisbursementResponse(String rawResponse){
+    public Map<String, Object> getDisbursementResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -198,17 +198,19 @@ public class FlipConfiguration extends ConfigDecorator{
             throw new BadRequestException(errorMessageString);
         }
         
-        int id = ((Double) rawResponseMap.get("id")).intValue();
+        int vendorGeneratedId = ((Double) rawResponseMap.get("id")).intValue();
+        String vendorGeneratedIdString = String.valueOf(vendorGeneratedId);
         int userId = ((Double) rawResponseMap.get("user_id")).intValue();
         String status = (String) rawResponseMap.get("status");
         response.put("status", status);
         response.put("user_id", userId);
+        response.put("vendor_generated_id", vendorGeneratedIdString);
         response.put("id", id);
         return response;
     }
 
     @Override
-    public Map<String, Object> getAgentDisbursementResponse(String rawResponse){
+    public Map<String, Object> getAgentDisbursementResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -221,9 +223,11 @@ public class FlipConfiguration extends ConfigDecorator{
 
         int agentId = ((Double) rawResponseMap.get("agent_id")).intValue();
         String direction = (String) rawResponseMap.get("direction");
-        int id = ((Double) rawResponseMap.get("id")).intValue();
+        int vendorGeneratedId = ((Double) rawResponseMap.get("id")).intValue();
+        String vendorGeneratedIdString = String.valueOf(vendorGeneratedId);
         String status = (String) rawResponseMap.get("status");
         response.put("status", status);
+        response.put("vendor_generated_id", vendorGeneratedIdString);
         response.put("id", id);
         response.put("agent_id", agentId);
         response.put("user_id", agentId);
@@ -232,8 +236,8 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse){
-        Map<String, Object> response = getDisbursementResponse(rawResponse);
+    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse, String id){
+        Map<String, Object> response = getDisbursementResponse(rawResponse, id);
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
@@ -253,8 +257,8 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse){
-        Map<String, Object> response = getDisbursementResponse(rawResponse);
+    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse, String id){
+        Map<String, Object> response = getDisbursementResponse(rawResponse, id);
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);

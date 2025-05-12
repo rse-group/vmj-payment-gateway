@@ -91,19 +91,21 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		String bank_code = (String) validatedRequestBody.get("bank_code");
 		String account_number = (String) validatedRequestBody.get("account_number");
 		double amount = (Double) validatedRequestBody.get("amount");
-		int id = (int) response.get("id");
+		String id = (String) response.get("id");
 		int userId = (int) response.get("user_id");
 		String status = (String) response.get("status");
+		String vendorGeneratedId = (String) response.get("vendor_generated_id");
 		
 		Disbursement disbursement = DisbursementFactory.createDisbursement(
 			"paymentgateway.disbursement.core.DisbursementImpl",
-			id,
+			UUID.fromString(id),
 			userId,
 			account_number,
 			amount,
 			bank_code,
-			status,
-			vendorName
+			status.toUpperCase(),
+			vendorName,
+			vendorGeneratedId
 		);
 
 		Repository.saveObject(disbursement);
@@ -113,7 +115,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	
 	public HashMap<String, Object> updateDisbursement(Map<String, Object> requestBody) {
 
-		int id = ((Double) requestBody.get("id")).intValue();
+		String id = (String) requestBody.get("id");
 		Disbursement disbursement = this.getObject(id);
 
 		try {
@@ -131,7 +133,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
     }
 	
 	public List<HashMap<String, Object>> deleteDisbursement(Map<String, Object> requestBody){
-		int id = ((Double) requestBody.get("id")).intValue();
+		String id = (String) requestBody.get("id");
 		Disbursement disbursement = this.getObject(id);
 		
 		if (disbursement == null) {
@@ -157,6 +159,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	}
 
 	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+		String id = UUID.randomUUID().toString();
         String vendorName = (String) requestBody.get("vendor_name");
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
@@ -179,7 +182,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
 			LOGGER.info("Raw Response: " + rawResponse);
-			responseMap = config.getDisbursementResponse(rawResponse);
+			responseMap = config.getDisbursementResponse(rawResponse, id);
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -187,10 +190,10 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		return responseMap;
 	}
 	
-	public HashMap<String, Object> getDisbursementById(int id){
+	public HashMap<String, Object> getDisbursementById(String id){
 		List<HashMap<String, Object>> disbursementList = getAllDisbursement("disbursement_impl");
 		for (HashMap<String, Object> disbursement : disbursementList){
-			int record_id = ((Double) disbursement.get("record_id")).intValue();
+			String record_id = (String) disbursement.get("record_id");
 			if (record_id == id){
 				return disbursement;
 			}
@@ -205,7 +208,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	}
 	
 	public HashMap<String, Object> getDisbursement(Map<String, Object> requestBody){
-		int id = ((Double) requestBody.get("id")).intValue();
+		String id = (String) requestBody.get("id");
 		Disbursement disbursementImpl = this.getObject(id);
 		
 		HashMap<String, Object> disbursementDataMap = new HashMap<>();
@@ -264,12 +267,12 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	
 	
 	
-	public Disbursement getObject(int id) {
-        return Repository.getObject(id);
+	public Disbursement getObject(String id) {
+        return Repository.getObject(UUID.fromString(id));
     }
 
-    public void deleteObject(int id) {
-        Repository.deleteObject(id);
+    public void deleteObject(String id) {
+        Repository.deleteObject(UUID.fromString(id));
     }
 
     public void updateObject(Disbursement disbursement) {

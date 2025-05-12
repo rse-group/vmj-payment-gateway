@@ -45,8 +45,8 @@ public abstract class ConfigComponent implements Config {
     public abstract Map<String, Object> getVirtualAccountResponse(String rawResponse, String id);
     public abstract Map<String, Object> getQRCodeResponse(String rawResponse, String id);
 
-    public abstract Map<String, Object> getDisbursementResponse(String rawResponse);
-    public abstract Map<String, Object> getSpecialDisbursementResponse(String rawResponse);
-    public abstract Map<String, Object> getInternationalDisbursementResponse(String rawResponse);
-    public abstract Map<String, Object> getAgentDisbursementResponse(String rawResponse);
+    public abstract Map<String, Object> getDisbursementResponse(String rawResponse, String id);
+    public abstract Map<String, Object> getSpecialDisbursementResponse(String rawResponse, String id);
+    public abstract Map<String, Object> getInternationalDisbursementResponse(String rawResponse, String id);
+    public abstract Map<String, Object> getAgentDisbursementResponse(String rawResponse, String id);
 }

@@ -187,19 +187,19 @@ public class ConfigImpl extends ConfigComponent {
 
     // Disbursement Response
 
-    public Map<String, Object> getDisbursementResponse(String rawResponse){
+    public Map<String, Object> getDisbursementResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse){
+    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse){
+    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getAgentDisbursementResponse(String rawResponse){
+    public Map<String, Object> getAgentDisbursementResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 }
