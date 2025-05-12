@@ -48,6 +48,7 @@ public interface Config {
     Map<String, Object> getDirectDebitRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getQRCodeRequestBody(Map<String, Object> requestBody);
 
     String getPaymentDetailEndpoint(String configUrl,String id);
 
@@ -62,6 +63,7 @@ public interface Config {
     Map<String, Object> getPaymentRoutingResponse(String rawResponse, String id);
     Map<String, Object> getRetailOutletResponse(String rawResponse, String id);
     Map<String, Object> getVirtualAccountResponse(String rawResponse, String id);
+    Map<String, Object> getQRCodeResponse(String rawResponse, String id);
 
     // Disbursement Response
     Map<String, Object> getDisbursementResponse(String rawResponse);

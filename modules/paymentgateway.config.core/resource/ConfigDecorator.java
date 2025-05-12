@@ -71,6 +71,7 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.generateId();    
     }
 
+    // Disbursement Request Body
     public Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody){
         return record.getDisbursementRequestBody(requestBody);
     }
@@ -82,6 +83,8 @@ public abstract class ConfigDecorator extends ConfigComponent{
     public Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody){
         return record.getInternationalDisbursementRequestBody(requestBody);
     }
+
+    // Payment Request Body
 
     public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
         return record.getPaymentLinkRequestBody(requestBody);
@@ -115,6 +118,11 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getPaymentRoutingRequestBody(requestBody);
     }
 
+    public Map<String, Object> getQRCodeRequestBody(Map<String, Object> requestBody) {
+        return record.getQRCodeRequestBody(requestBody);
+    }
+
+    // Payment Response
     public Map<String, Object> getPaymentLinkResponse(String rawResponse, String id){
         return record.getPaymentLinkResponse(rawResponse, id);
     }
@@ -146,6 +154,12 @@ public abstract class ConfigDecorator extends ConfigComponent{
     public Map<String, Object> getVirtualAccountResponse(String rawResponse, String id){
         return record.getVirtualAccountResponse(rawResponse, id);
     }
+
+    public Map<String, Object> getQRCodeResponse(String rawResponse, String id){
+        return record.getQRCodeResponse(rawResponse, id);
+    }
+
+    // Disbursement Response
 
     public Map<String, Object> getDisbursementResponse(String rawResponse){
         return record.getDisbursementResponse(rawResponse);
