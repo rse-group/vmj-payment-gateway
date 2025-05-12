@@ -27,9 +27,10 @@ features
 					PaymentRouting
 					Card
 					DirectDebit
+                    QRCode
 
 constraints
-  PaymentLink | EWallet | VirtualAccount | RetailOutlet | Invoice | PaymentRouting => Oy
-  Card | VirtualAccount | RetailOutlet | PaymentLink | EWallet => Midtrans
-  SpecifiedRecipient | VirtualAccount | RetailOutlet | DirectDebit => Xendit
-  Agent | ExchangeRate | FixedCurrency |  PaymentLink | VirtualAccount => Flip
+  Oy => PaymentLink | EWallet | VirtualAccount | RetailOutlet | Invoice | PaymentRouting
+  Midtrans => Card | VirtualAccount | RetailOutlet | PaymentLink | EWallet
+  Xendit => SpecifiedRecipient | VirtualAccount | RetailOutlet | DirectDebit | QRCode
+  Flip => Agent | ExchangeRate | FixedCurrency |  PaymentLink | VirtualAccount

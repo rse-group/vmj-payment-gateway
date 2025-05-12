@@ -33,6 +33,7 @@ public abstract class ConfigComponent implements Config {
     public abstract Map<String, Object> getDirectDebitRequestBody(Map<String, Object> requestBody);
     public abstract Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody);
     public abstract Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody);
+    public abstract Map<String, Object> getQRCodeRequestBody(Map<String, Object> requestBody);
     
     public abstract Map<String, Object> getPaymentLinkResponse(String rawResponse, String id);
     public abstract Map<String, Object> getCardResponse(String rawResponse, String id);
@@ -42,6 +43,7 @@ public abstract class ConfigComponent implements Config {
     public abstract Map<String, Object> getPaymentRoutingResponse(String rawResponse, String id);
     public abstract Map<String, Object> getRetailOutletResponse(String rawResponse, String id);
     public abstract Map<String, Object> getVirtualAccountResponse(String rawResponse, String id);
+    public abstract Map<String, Object> getQRCodeResponse(String rawResponse, int id);
 
     public abstract Map<String, Object> getDisbursementResponse(String rawResponse);
     public abstract Map<String, Object> getSpecialDisbursementResponse(String rawResponse);
