@@ -141,8 +141,36 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 			notFoundMap.put("message", "Disbursment with ID " + id + " does not exist");
 			return Collections.singletonList(notFoundMap);
 		}
+
+		final String[] disbursementHolder = {null};
+		Repository.executeQuery(session -> {
+			String sql = String.format("SELECT modulesequence FROM disbursement_comp WHERE id ='%s'", id );
+			try {
+				String result = (String) session.createNativeQuery(sql).getSingleResult();
+				String[] modules = result.split(",");
+				disbursementHolder[0] = modules[modules.length - 1].trim();
+			} catch (Exception e) {
+				disbursementHolder[0] = "";
+			}
+		});
+
+		if (disbursementHolder[0].isEmpty()) {
+			throw new BadRequestException("Disbursement not found");
+		}
+
+		if (disbursementHolder[0].equals("disbursement_impl")) {
+			this.deleteObject(id);
+			return getAllDisbursement(requestBody);
+		}
+
+		final String[] targetId = {""};
+		Repository.executeQuery(session -> {
+			String sql = String.format("SELECT cast(id as varchar) FROM %s WHERE base_component_id = '%s'", disbursementHolder[0], id);
+			targetId[0] = (String) session.createNativeQuery(sql).getSingleResult();
+		});
+
 		
-		this.deleteObject(id);
+		this.deleteObject(targetId[0]);
 
 		return getAllDisbursement(requestBody);
 	}
