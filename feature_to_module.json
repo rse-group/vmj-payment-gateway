@@ -37,7 +37,7 @@
 		"paymentgateway.payment.core"
 	],
 	"Card": [
-		"paymentgateway.payment.creditcard"
+		"paymentgateway.payment.card"
 	],
 	"DirectDebit": [
 		"paymentgateway.payment.directdebit"
