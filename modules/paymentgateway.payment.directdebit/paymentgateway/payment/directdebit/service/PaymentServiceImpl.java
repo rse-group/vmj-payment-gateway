@@ -1,9 +1,5 @@
 package paymentgateway.payment.directdebit;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
@@ -18,10 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
-import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
 import paymentgateway.payment.core.PaymentServiceComponent;
@@ -33,28 +29,32 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		super(record);
 	}
 
-	public Payment createPayment(CreatePaymentRequestBody requestBody) {
+	public Payment createPayment(Map<String, Object> requestBody) {
+		record.validateVendorName((String) requestBody.get("vendor_name"));
+		double amount = record.validateAmount(requestBody.get("amount"));
+		requestBody.put("amount", amount);
+
 		Map<String, Object> response = sendTransaction(requestBody);
 
-		String statusDirectDebitPayment = (String) response.get("status");
+		String status = (String) response.get("status");
 		String directDebitUrl = (String) response.get("direct_debit_url");
-		int id = (int) response.get("id");
+		String id = (String) response.get("id");
+		String vendorGeneratedId = (String) response.get("vendor_generated_id");
 
-		Payment transaction = record.createPayment(requestBody, id);
+		Payment transaction = record.createPayment(requestBody, id, status, vendorGeneratedId);
 		Payment cardTransaction = PaymentFactory.createPayment(
-				"paymentgateway.payment.directdebit.PaymentImpl", transaction, statusDirectDebitPayment, directDebitUrl);
+				"paymentgateway.payment.directdebit.PaymentImpl", transaction, directDebitUrl);
 		PaymentRepository.saveObject(cardTransaction);
 		return cardTransaction;
 	}
 
-	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
-		String vendorName = (String) requestBody.vendorName;
+	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		
-		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getDirectDebitRequestBody(requestBody.toMap());
-		int id = ((Integer) requestMap.get("id")).intValue();
+		Map<String, Object> requestMap = config.getDirectDebitRequestBody(requestBody);
+		String id = (String) requestMap.get("id");
 		requestMap.remove("id");
 		String configUrl = config.getProductEnv("DirectDebit");
 		HashMap<String, String> headerParams = config.getHeaderParams();

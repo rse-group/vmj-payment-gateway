@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Random;
 
 import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 import vmj.routing.route.Route;
@@ -21,7 +23,6 @@ import vmj.routing.route.exceptions.*;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
-import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
@@ -34,13 +35,19 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
         super(record);
     }
 
-	public Payment createPayment(CreatePaymentRequestBody requestBody) {
+	public Payment createPayment(Map<String, Object> requestBody) {
+		record.validateVendorName((String) requestBody.get("vendor_name"));
+		double amount = record.validateAmount(requestBody.get("amount"));
+		requestBody.put("amount", amount);
+
 		Map<String, Object> response = sendTransaction(requestBody);
 
-		int id = (int) response.get("id");
+		String id = (String) response.get("id");
 		String paymentCheckoutUrl = (String) response.get("payment_checkout_url");
+		String status = (String) response.get("status");
+		String vendorGeneratedId = (String) response.get("vendor_generated_id");
 
-		Payment transaction = record.createPayment(requestBody, id);
+		Payment transaction = record.createPayment(requestBody, id, status, vendorGeneratedId);
 		Payment paymentRoutingTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.paymentrouting.PaymentImpl",
 				transaction,
@@ -51,14 +58,14 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return paymentRoutingTransaction;
 	}
 	
-	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
-		String vendorName = (String) requestBody.vendorName;
+	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getPaymentRoutingRequestBody(requestBody.toMap());
-		int id = ((Integer) requestMap.get("id")).intValue();
+		Map<String, Object> requestMap = config.getPaymentRoutingRequestBody(requestBody);
+		String id = (String) requestMap.get("id");
 		requestMap.remove("id");
 		String requestString = config.getRequestString(requestMap);
 		String configUrl = config.getProductEnv("PaymentRouting");
@@ -77,7 +84,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 			String rawResponse = response.body().toString();
 			System.out.println("rawResponse " + rawResponse);
 			responseMap = config.getPaymentRoutingResponse(rawResponse, id);
-		} catch (Exception e) {
+		} catch (IOException | InterruptedException e) {
 			System.out.println(e);
 		}
 

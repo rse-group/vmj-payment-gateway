@@ -2,6 +2,7 @@ package paymentgateway.payment.paymentlink;
 
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -21,8 +22,6 @@ import paymentgateway.config.core.Config;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
 import paymentgateway.payment.core.PaymentServiceComponent;
-import paymentgateway.payment.core.CreatePaymentRequestBody;
-import paymentgateway.payment.core.DeletePaymentRequestBody;
 import paymentgateway.payment.PaymentFactory;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
@@ -33,26 +32,33 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		this.paymentLinkRepository = new RepositoryUtil<PaymentLinkImpl>(paymentgateway.payment.paymentlink.PaymentLinkImpl.class);
 	}
 
-	public Payment createPayment(CreatePaymentRequestBody requestBody) {
+	public Payment createPayment(Map<String, Object> requestBody) {
+		record.validateVendorName((String) requestBody.get("vendor_name"));
+		double amount = record.validateAmount(requestBody.get("amount"));
+		requestBody.put("amount", amount);
+
 		Map<String, Object> response = sendTransaction(requestBody);
 		String paymentLink = (String) response.get("url");
-		int id = (int) response.get("id");
-		Payment transaction = record.createPayment(requestBody, id);
+		String id = (String) response.get("id");
+		String status = (String) response.get("status");
+		String vendorGeneratedId = (String) response.get("vendor_generated_id");
+
+		Payment transaction = record.createPayment(requestBody, id, status, vendorGeneratedId);
 		Payment paymentLinkTransaction =
 			PaymentFactory.createPayment("paymentgateway.payment.paymentlink.PaymentLinkImpl",
-			transaction,id, paymentLink);
+			transaction, UUID.fromString(id), paymentLink);
 		PaymentRepository.saveObject(paymentLinkTransaction);
 		return paymentLinkTransaction;
 	}
 
-	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
-		String vendorName = requestBody.vendorName;
+	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getPaymentLinkRequestBody(requestBody.toMap());
-		int id = ((Integer) requestMap.get("id")).intValue();
+		Map<String, Object> requestMap = config.getPaymentLinkRequestBody(requestBody);
+		String id = (String) requestMap.get("id");
 		requestMap.remove("id");
 		String configUrl = config.getProductEnv("PaymentLink");
 		HashMap<String, String> headerParams = config.getHeaderParams();
@@ -69,15 +75,15 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 			String rawResponse = response.body().toString();
 			System.out.println("rawResponse " + rawResponse);
 			responseMap = config.getPaymentLinkResponse(rawResponse, id);
-		} catch (Exception e) {
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
 
 		return responseMap;
 	}
 	
-	public List<PaymentLinkImpl> getByVendorName(GetPaymentLinksByVendorNameRequestBody requestBody) {
-		String vendorName = requestBody.vendorName;
+	public List<PaymentLinkImpl> getByVendorName(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
 		List<PaymentLinkImpl> result = new ArrayList<>();
 		List<PaymentLinkImpl> paymentLink = paymentLinkRepository.getAllObject("paymentlink_impl");
 		for(PaymentLinkImpl payment : paymentLink){
@@ -88,34 +94,28 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return result;
 	}
 	
-	public HashMap<String, Object> getById(GetPaymentLinkByIdRequestBody requestBody) {
-		int id = requestBody.id;
+	public HashMap<String, Object> getById(Map<String, Object> requestBody) {
+		String id = (String) requestBody.get("id");
 		List<PaymentLinkImpl> paymentLink = paymentLinkRepository.getAllObject("paymentlink_impl");
 		for(PaymentLinkImpl payment : paymentLink){
-			if (payment.getIdTransaction() == id){
+			if (payment.getIdTransaction().toString().equals(id)){
 				return payment.toHashMap();
 			}
 		}
 		return null;
 	}
 	
-	public String deletePaymentLinkById(DeletePaymentRequestBody requestBody) {
-		int id = requestBody.id;
+	public String deletePaymentLinkById(Map<String, Object> requestBody) {
+		String id = (String) requestBody.get("id");
 		List<PaymentLinkImpl> paymentLinks = paymentLinkRepository.getAllObject("paymentlink_impl");
 		for(PaymentLinkImpl payment : paymentLinks){
-			if(payment.getIdTransaction() == id){
-				HashMap<String, Object> paymentMap = payment.toHashMap();
-				int intId = ((Integer) paymentMap.get("idTransaction")).intValue();
-				System.out.println(intId);
-				paymentLinkRepository.deleteObject(intId);
+			if(payment.getId().toString().equals(id)){
+				System.out.println(payment.getId());
+				paymentLinkRepository.deleteObject(payment.getId());
 				return "SUCCESS";
 			}
 		}
 
 		return "There is no paymentlink with id: " + id;
-	}
-
-	public List<HashMap<String, Object>> deletePaymentLinkByIdTransaction(DeletePaymentRequestBody requestBody) {
-		return record.deletePayment(requestBody);
 	}
 }

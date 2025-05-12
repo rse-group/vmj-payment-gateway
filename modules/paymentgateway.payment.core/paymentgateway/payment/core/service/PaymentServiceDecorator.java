@@ -11,27 +11,27 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
         this.record = record;
     }
 
-    public Payment createPayment(CreatePaymentRequestBody requestBody, int id){
-		return record.createPayment(requestBody, id);
+    public Payment createPayment(Map<String, Object> requestBody, String id, String status, String vendorGeneratedId) {
+		return record.createPayment(requestBody, id, status, vendorGeneratedId);
 	}
     
-    public Payment createPayment(CreatePaymentRequestBody requestBody){
+    public Payment createPayment(Map<String, Object> requestBody){
         return record.createPayment(requestBody);
     }
 
-    public HashMap<String, Object> getPayment(GetPaymentRequestBody requestBody){
-        return record.getPayment(requestBody);
+    public HashMap<String, Object> getPayment(String id){
+        return record.getPayment(id);
     }
 
-    public List<HashMap<String, Object>> getAllPayment(GetAllPaymentRequestBody requestBody){
-        return record.getAllPayment(requestBody);
+    public List<HashMap<String, Object>> getAllPayment(){
+        return record.getAllPayment();
     }
 
-    public List<HashMap<String, Object>> deletePayment(DeletePaymentRequestBody requestBody){
+    public List<HashMap<String, Object>> deletePayment(Map<String, Object> requestBody){
         return record.deletePayment(requestBody);
     }
 
-    public HashMap<String, Object> updatePayment(UpdatePaymentRequestBody requestBody){
+    public HashMap<String, Object> updatePayment(Map<String, Object> requestBody){
         return record.updatePayment(requestBody);
     }
 
@@ -39,15 +39,31 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
         return record.transformListToHashMap(List);
     }
     
-    public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody){
+    public Map<String, Object> sendTransaction(Map<String, Object> requestBody){
         return record.sendTransaction(requestBody);
     }
      
-    public Map<String, Object> checkPaymentStatus(CheckPaymentStatusRequestBody requestBody){
+    public Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody){
         return record.checkPaymentStatus(requestBody);
     }
 
-    public HashMap<String, Object> getPaymentById(int id){
+    public HashMap<String, Object> getPaymentById(String id){
         return record.getPaymentById(id);
+    }
+    
+    public String validateVendorName(String vendorName) {
+        return record.validateVendorName(vendorName);
+    }
+    
+    public double validateAmount(Object amountObject) {
+        return record.validateAmount(amountObject);
+    }
+    
+    public String validateId(String id) {
+        return record.validateId(id);
+    }
+
+    public void callback(VMJExchange vmjExchange) {
+        record.callback(vmjExchange);
     }
 }

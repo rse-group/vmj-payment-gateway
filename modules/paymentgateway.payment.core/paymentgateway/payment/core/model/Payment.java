@@ -4,13 +4,19 @@ import vmj.routing.route.VMJExchange;
 import java.util.*;
 
 public interface Payment {
-	int getIdTransaction();
-	void setIdTransaction(int idTransaction);
+	UUID getIdTransaction();
+	void setIdTransaction(UUID idTransaction);
 	String getVendorName();
 	void setVendorName(String vendorName);
 	
 	double getAmount();
 	void setAmount(double amount);
+
+	String getStatus();
+	void setStatus(String status);
+
+	String getVendorGeneratedId();
+	void setVendorGeneratedId(String vendorGeneratedId);
 
 	Date getCreatedAt();
 

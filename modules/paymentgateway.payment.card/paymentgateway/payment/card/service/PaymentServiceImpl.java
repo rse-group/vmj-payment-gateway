@@ -1,7 +1,5 @@
 package paymentgateway.payment.card;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 import vmj.routing.route.Route;
@@ -18,10 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
-import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
 import paymentgateway.payment.core.PaymentServiceComponent;
@@ -33,34 +31,34 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		super(record);
 	}
 
-	public Payment createPayment(CreatePaymentRequestBody requestBody) {
+	public Payment createPayment(Map<String, Object> requestBody) {
+		record.validateVendorName((String) requestBody.get("vendor_name"));
+		double amount = record.validateAmount(requestBody.get("amount"));
+		requestBody.put("amount", amount);
+
 		Map<String, Object> response = sendTransaction(requestBody);
-		String idToken = ((CreateCardPaymentRequestBody) requestBody).tokenId;
+		String idToken = (String) response.get("token_id");
 
-		String statusCardPayment = (String) response.get("status");
-		int id = (int) response.get("id");
+		String status = (String) response.get("status");
+		String id = (String) response.get("id");
+		String vendorGeneratedId = (String) response.get("vendor_generated_id");
 
-		Payment transaction = record.createPayment(requestBody, id);
+		Payment transaction = record.createPayment(requestBody, id, status, vendorGeneratedId);
 		Payment cardTransaction = PaymentFactory.createPayment(
-				"paymentgateway.payment.card.PaymentImpl", transaction, idToken, statusCardPayment);
+				"paymentgateway.payment.card.PaymentImpl", transaction, idToken);
 		PaymentRepository.saveObject(cardTransaction);
 		return cardTransaction;
 	}
 
-	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
-		String vendorName = requestBody.vendorName;
+	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
 
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		Gson gson = new Gson();
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		Map<String, Object> requestBodyMap = objectMapper.convertValue(requestBody,
-				new TypeReference<Map<String, Object>>() {
-				});
-
 		// Step 1: Get card token
-		String tokenUrl = config.constructUrlParam("CardToken", requestBodyMap);
+		String tokenUrl = config.constructUrlParam("CardToken", requestBody);
 
 		HashMap<String, String> headerParams = config.getHeaderParams();
 		HttpRequest tokenRequest = (config.getBuilder(HttpRequest.newBuilder(), headerParams))
@@ -91,8 +89,8 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		}
 
 		// Step 2: Send transaction request
-		Map<String, Object> requestMap = config.getCardRequestBody(requestBody.toMap());
-		int id = ((Integer) requestMap.get("id")).intValue();
+		Map<String, Object> requestMap = config.getCardRequestBody(requestBody);
+		String id = (String) requestMap.get("id");
 		requestMap.remove("id");
 		requestMap.put("credit_card", Map.of("token_id", tokenId, "authentication", false));
 		requestMap.put("payment_type", "credit_card");
@@ -116,6 +114,8 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		} catch (IOException | InterruptedException e) {
 			System.out.println("Transaction failed: " + e.getMessage());
 		}
+
+		responseMap.put("token_id", tokenId);
 
 		return responseMap;
 	}

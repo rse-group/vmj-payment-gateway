@@ -21,7 +21,6 @@ import java.nio.charset.StandardCharsets;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
-import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
@@ -34,14 +33,20 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
         super(record);
     }
     
-	public Payment createPayment(CreatePaymentRequestBody requestBody) {
+	public Payment createPayment(Map<String, Object> requestBody) {
+		record.validateVendorName((String) requestBody.get("vendor_name"));
+		double amount = record.validateAmount(requestBody.get("amount"));
+		requestBody.put("amount", amount);
+		
 		Map<String, Object> response = sendTransaction(requestBody);
 
 		String vaAccountNumber = (String) response.get("va_number");
-		int id = (int) response.get("id");
+		String id = (String) response.get("id");
+		String status = (String) response.get("status");
+		String vendorGeneratedId = (String) response.get("vendor_generated_id");
 
-		String bankCode = ((CreateVirtualAccountPaymentRequestBody) requestBody).bank;
-		Payment transaction = record.createPayment(requestBody, id);
+		String bankCode = (String) requestBody.get("bank");
+		Payment transaction = record.createPayment(requestBody, id, status, vendorGeneratedId);
 		Payment virtualAccountTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.virtualaccount.VirtualAccountImpl",
 				transaction,
@@ -51,15 +56,15 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return virtualAccountTransaction;
 	}
 	
-	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
-		String vendorName = (String) requestBody.vendorName;
+	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getVirtualAccountRequestBody(requestBody.toMap());
-		int id = ((Integer) requestMap.get("id")).intValue();
-		System.out.println("id:" + Integer.toString(id));
+		Map<String, Object> requestMap = config.getVirtualAccountRequestBody(requestBody);
+		String id = (String) requestMap.get("id");
+		System.out.println("id:" + id);
 		requestMap.remove("id");
 		String requestString = config.getRequestString(requestMap);
 		String configUrl = config.getProductEnv("VirtualAccount");

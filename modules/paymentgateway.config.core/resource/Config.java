@@ -54,14 +54,14 @@ public interface Config {
     Map<String, Object> getPaymentStatusResponse(String rawResponse, String id);
 
     // Payment Response
-    Map<String, Object> getPaymentLinkResponse(String rawResponse, int id);
-    Map<String, Object> getCardResponse(String rawResponse, int id);
-    Map<String, Object> getDirectDebitResponse(String rawResponse, int id);
-    Map<String, Object> getInvoiceResponse(String rawResponse, int id);
-    Map<String, Object> getEWalletResponse(String rawResponse, int id);
-    Map<String, Object> getPaymentRoutingResponse(String rawResponse, int id);
-    Map<String, Object> getRetailOutletResponse(String rawResponse, int id);
-    Map<String, Object> getVirtualAccountResponse(String rawResponse, int id);
+    Map<String, Object> getPaymentLinkResponse(String rawResponse, String id);
+    Map<String, Object> getCardResponse(String rawResponse, String id);
+    Map<String, Object> getDirectDebitResponse(String rawResponse, String id);
+    Map<String, Object> getInvoiceResponse(String rawResponse, String id);
+    Map<String, Object> getEWalletResponse(String rawResponse, String id);
+    Map<String, Object> getPaymentRoutingResponse(String rawResponse, String id);
+    Map<String, Object> getRetailOutletResponse(String rawResponse, String id);
+    Map<String, Object> getVirtualAccountResponse(String rawResponse, String id);
 
     // Disbursement Response
     Map<String, Object> getDisbursementResponse(String rawResponse);

@@ -15,13 +15,13 @@ public abstract class PaymentResourceComponent implements PaymentResource {
 
     public abstract int callback(VMJExchange vmjExchange);
 
-    public abstract HashMap<String, Object> getPayment(VMJExchange<GetPaymentRequestBody> vmjExchange);
+    public abstract HashMap<String, Object> getPayment(VMJExchange vmjExchange);
 
-    public abstract List<HashMap<String, Object>> getAllPayment(VMJExchange<GetAllPaymentRequestBody> vmjExchange);
+    public abstract List<HashMap<String, Object>> getAllPayment(VMJExchange vmjExchange);
 
-    public abstract List<HashMap<String, Object>> deletePayment(VMJExchange<DeletePaymentRequestBody> vmjExchange);
+    public abstract List<HashMap<String, Object>> deletePayment(VMJExchange vmjExchange);
 
-    public abstract HashMap<String, Object> updatePayment(VMJExchange<UpdatePaymentRequestBody> vmjExchange);
+    public abstract HashMap<String, Object> updatePayment(VMJExchange vmjExchange);
 
-    public abstract HashMap<String, Object> payment(VMJExchange<CreatePaymentRequestBody> vmjExchange);
+    public abstract HashMap<String, Object> payment(VMJExchange vmjExchange);
 }

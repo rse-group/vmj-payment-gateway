@@ -24,7 +24,6 @@ import vmj.routing.route.exceptions.*;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
-import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
@@ -44,9 +43,9 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	}
 
 	
-	@Route(url="call/invoice", method = RequestMethod.POST, requestBodyClass = CreateInvoiceRequestBody.class)
-	public HashMap<String,Object> payment(VMJExchange<CreatePaymentRequestBody> vmjExchange) {
-		CreatePaymentRequestBody requestBody = vmjExchange.getParsedPayload(); 
+	@Route(url="call/invoice", method = RequestMethod.POST)
+	public HashMap<String,Object> payment(VMJExchange vmjExchange) {
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
 		Payment result = paymentServiceImpl.createPayment(requestBody);
 		return result.toHashMap();
 	}
