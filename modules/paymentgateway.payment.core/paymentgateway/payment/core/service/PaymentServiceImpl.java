@@ -218,7 +218,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 
 		final String[] targetId = {""};
 		PaymentRepository.executeQuery(session -> {
-			String sql = String.format("SELECT cast(pl.idtransaction as varchar) FROM payment_comp p join %s pl ON p.idtransaction = pl.record_idtransaction where p.idtransaction = '%s'", paymentMethodHolder[0], validatedId );
+			String sql = String.format("SELECT cast(delta.idtransaction as varchar) FROM payment_comp p join %s delta ON p.idtransaction = delta.record_idtransaction where p.idtransaction = '%s'", paymentMethodHolder[0], validatedId );
 			targetId[0] = (String) session.createNativeQuery(sql).getSingleResult();
 		});
 
