@@ -63,7 +63,7 @@ public interface Config {
     Map<String, Object> getPaymentRoutingResponse(String rawResponse, String id);
     Map<String, Object> getRetailOutletResponse(String rawResponse, String id);
     Map<String, Object> getVirtualAccountResponse(String rawResponse, String id);
-    Map<String, Object> getQRCodeResponse(String rawResponse, int id);
+    Map<String, Object> getQRCodeResponse(String rawResponse, String id);
 
     // Disbursement Response
     Map<String, Object> getDisbursementResponse(String rawResponse);

@@ -51,19 +51,6 @@ public class XenditConfiguration extends ConfigDecorator {
     }
 
     @Override
-    public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
-        Map<String, Object> requestMap = new HashMap<>();
-        Map<String, Object> requestBody = vmjExchange.getPayload();
-        Map<String, Object> dataMap = (Map<String, Object>) requestBody.get("data"); 
-        String id = (String) dataMap.get("reference_id");
-        String status = (String) dataMap.get("status");
-
-	    requestMap.put("id", id);
-	    requestMap.put("status", status);
-	    return requestMap;
-    }
-
-    @Override
     public Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody) {
         String vendor_name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "vendor_name");
         String bank_code = RequestBodyValidator.stringRequestBodyValidator(requestBody, "bank_code");
@@ -302,7 +289,7 @@ public class XenditConfiguration extends ConfigDecorator {
         Map<String, Object> qrCode = new HashMap<String, Object>();
         Map<String, Object> channelProperties = new HashMap<String, Object>();
 
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
         // String amountStr = RequestBodyValidator.stringRequestBodyValidator(
         // requestBody,
         // "amount");
@@ -318,7 +305,7 @@ public class XenditConfiguration extends ConfigDecorator {
 
         paymentMethod.put("qr_code", qrCode);
 
-        requestMap.put("reference_id", String.format("%05d", uniqueInteger));
+        requestMap.put("reference_id", id);
         requestMap.put("amount", amount);
         requestMap.put("currency", "IDR");
         requestMap.put("country", "ID");
@@ -328,7 +315,7 @@ public class XenditConfiguration extends ConfigDecorator {
     }
 
     @Override
-    public Map<String, Object> getQRCodeResponse(String rawResponse, int id) {
+    public Map<String, Object> getQRCodeResponse(String rawResponse, String id) {
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {
@@ -352,14 +339,18 @@ public class XenditConfiguration extends ConfigDecorator {
         String qrCodeString = (String) channelProperties.get("qr_string");
         String expiryDateString = (String) channelProperties.get("expires_at");
 
-        String Id = (String) rawResponseMap.get("reference_id");
-        response.put("qr_string", qrCodeString);
-        response.put("expires_at", expiryDateString);
+        // String referenceId = (String) rawResponseMap.get("reference_id");
+        String status = (String) rawResponseMap.get("status");
+        String vendorGeneratedId = (String) rawResponseMap.get("id");
 
+        response.put("qr_code_string", qrCodeString);
+        response.put("expires_at", expiryDateString);
+        response.put("vendor_generated_id", vendorGeneratedId);
+        response.put("status", status);
         response.put("id", id);
         if (qrCodeString == null) {
-            Map<String, Object> status = (Map<String, Object>) rawResponseMap.get("status");
-            String statusMessage = (String) status.get("message");
+            Map<String, Object> statusMap = (Map<String, Object>) rawResponseMap.get("status");
+            String statusMessage = (String) statusMap.get("message");
             response.put("message", statusMessage);
             return response;
         }

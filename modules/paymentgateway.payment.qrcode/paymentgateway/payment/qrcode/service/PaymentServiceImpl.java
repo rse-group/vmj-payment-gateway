@@ -17,7 +17,6 @@ import java.util.Random;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
-import paymentgateway.payment.core.CreatePaymentRequestBody;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
@@ -30,7 +29,11 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		super(record);
 	}
 
-	public Payment createPayment(CreatePaymentRequestBody requestBody) {
+	public Payment createPayment(Map<String, Object> requestBody) {
+		record.validateVendorName((String) requestBody.get("vendor_name"));
+		double amount = record.validateAmount(requestBody.get("amount"));
+		requestBody.put("amount", amount);
+		
 		Map<String, Object> response = sendTransaction(requestBody);
 
 		if (response.containsKey("message")) {
@@ -39,13 +42,13 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		System.out.println("response " + response);
 
 		String qrCodeString = (String) response.get("qr_code_string");
-		int id = (int) response.get("id");
-
-		Payment transaction = record.createPayment(requestBody, id);
-
+		String id = (String) response.get("id");
+		String status = (String) response.get("status");
+		String vendorGeneratedId = (String) response.get("vendor_generated_id");
+		String expiryDateString = (String) response.get("expires_at");
 		String channelCode = (String) response.get("channel_code");
 
-		String expiryDateString = (String) response.get("expires_at");
+		Payment transaction = record.createPayment(requestBody, id, status, vendorGeneratedId);		
 
 		Payment qrCodeChannel = PaymentFactory.createPayment(
 				"paymentgateway.payment.qrcode.QRCodeImpl",
@@ -57,15 +60,15 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return qrCodeChannel;
 	}
 
-	public Map<String, Object> sendTransaction(CreatePaymentRequestBody requestBody) {
-		String vendorName = (String) requestBody.vendorName;
+	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+		String vendorName = (String) requestBody.get("vendor_name");
 
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
 		Gson gson = new Gson();
-		Map<String, Object> requestMap = config.getQRCodeRequestBody(requestBody.toMap());
-		int id = ((Integer) requestMap.get("id")).intValue();
+		Map<String, Object> requestMap = config.getQRCodeRequestBody(requestBody);
+		String id = (String) requestMap.get("id");
 		requestMap.remove("id");
 		String requestString = config.getRequestString(requestMap);
 		String configUrl = config.getProductEnv("QRCode");

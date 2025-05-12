@@ -123,7 +123,7 @@ public abstract class ConfigDecorator extends ConfigComponent{
     }
 
     // Payment Response
-    public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
+    public Map<String, Object> getPaymentLinkResponse(String rawResponse, String id){
         return record.getPaymentLinkResponse(rawResponse, id);
     }
 
@@ -155,7 +155,7 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getVirtualAccountResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getQRCodeResponse(String rawResponse, int id){
+    public Map<String, Object> getQRCodeResponse(String rawResponse, String id){
         return record.getQRCodeResponse(rawResponse, id);
     }
 

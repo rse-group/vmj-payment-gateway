@@ -27,7 +27,7 @@ features
 					PaymentRouting
 					Card
 					DirectDebit
-                    QRCode
+					QRCode
 
 constraints
   Oy => PaymentLink | EWallet | VirtualAccount | RetailOutlet | Invoice | PaymentRouting

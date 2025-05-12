@@ -181,7 +181,7 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getQRCodeResponse(String rawResponse, int id) {
+    public Map<String, Object> getQRCodeResponse(String rawResponse, String id) {
         throw new UnsupportedOperationException();
     }
 
