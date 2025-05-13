@@ -28,7 +28,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		String workingDir = System.getProperty("user.dir");
 		List<File> propertyFiles = new ArrayList<>();
 		List<String> vendors = new ArrayList<>();
-		String[] targetFiles = {"oy.properties", "flip.properties", "midtrans.properties"};
+		String[] targetFiles = {"oy.properties", "flip.properties", "midtrans.properties", "xendit.properties"};
 
 		// Iterate through target files
 		for (String targetFile : targetFiles) {
@@ -47,30 +47,37 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	            Map<String, Object> requestMap = config.getCallbackDisbursementRequestBody(requestBody);
 
 	            String idStr = (String) requestMap.get("id");
+				String vendorGeneratedIdStr = (String) requestMap.get("vendor_generated_id");
 	            String status = (String) requestMap.get("status");
 
 	            LOGGER.info("Processing Vendor: " + vendor);
 	            LOGGER.info("ID: " + idStr);
+				LOGGER.info("Vendor Generated ID: " + vendorGeneratedIdStr);
 	            LOGGER.info("Status: " + status);
 
-				String hostAddress = getEnvVariableHostAddress("AMANAH_HOST_BE");
-        		int portNum = getEnvVariablePortNumber("AMANAH_PORT_BE");
-	            HttpClient client = HttpClient.newHttpClient();
-				String configUrl = String.format("http://%s:%d/call/receivedisbursementcallback", hostAddress, portNum);
-	            String requestString = config.getRequestString(requestMap);
-	            HttpRequest request = config.getBuilder(HttpRequest.newBuilder(), config.getHeaderParams())
-	                                       .uri(URI.create(configUrl))
-	                                       .POST(HttpRequest.BodyPublishers.ofString(requestString))
-	                                       .build();
-				
-	            try {
-	                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-	                String rawResponse = response.body();
-	                LOGGER.info("Raw Response: " + rawResponse);
-	            } catch (Exception e) {
-	                System.err.println("Failed to send request for vendor: " + vendor);
-	                e.printStackTrace();
-	            }
+				Disbursement disbursement = null;
+				if (idStr != null) {
+					disbursement = this.getObject(idStr);
+				} else {
+					List<Disbursement> disbursements = Repository.getAllObject("disbursement_impl");
+					for (Disbursement d : disbursements) {
+						if (d.getVendorGeneratedId().equals(vendorGeneratedIdStr)) {
+							disbursement = d;
+						}
+					}
+				}
+
+				if (disbursement == null) {
+					throw new BadRequestException("Payment record not found");
+				}
+
+				try {
+					disbursement.setStatus(status.toUpperCase());
+				} catch (Exception e){
+					e.printStackTrace();
+				}
+		
+				this.updateObject(disbursement);
 	        } catch (Exception e) {
 	            System.err.println("Failed to process vendor: " + vendor);
 	            e.printStackTrace();

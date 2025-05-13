@@ -31,10 +31,13 @@ public class XenditConfiguration extends ConfigDecorator {
     @Override
     public Map<String, Object> getCallbackDisbursementRequestBody(Map<String, Object> requestBody) {
         Map<String, Object> requestMap = new HashMap<>();
+        Map<String, Object> dataMap = (Map<String, Object>) requestBody.get("data"); 
+        String id = (String) dataMap.get("reference_id");
+        String status = (String) dataMap.get("status");
 
-        // TODO: implement disbursement callback handler
-
-        return requestMap;
+	    requestMap.put("id", id);
+	    requestMap.put("status", status);
+	    return requestMap;
     }
 
     @Override

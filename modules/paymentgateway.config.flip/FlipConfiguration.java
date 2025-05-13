@@ -67,7 +67,7 @@ public class FlipConfiguration extends ConfigDecorator{
     	status = (String) decodedData.get("status");
     	id = String.valueOf(((Double) decodedData.get("id")).intValue());
         if (token.equals(flipToken)) {
-            requestMap.put("id",id);
+            requestMap.put("vendor_generated_id",id);
             requestMap.put("status", status);
         }
 
