@@ -165,9 +165,11 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 			throw new BadRequestException("Disbursement not found");
 		}
 
+		String tableName = (String) requestBody.get("table_name");
+
 		if (disbursementHolder[0].equals("disbursement_impl")) {
 			this.deleteObject(id);
-			return getAllDisbursement(requestBody);
+			return getAllDisbursement(tableName);
 		}
 
 		final String[] targetId = {""};
@@ -179,7 +181,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		
 		this.deleteObject(targetId[0]);
 
-		return getAllDisbursement(requestBody);
+		return getAllDisbursement(tableName);
 	}
 	
 	public String getEnvVariableHostAddress(String varname_host){
@@ -242,8 +244,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		return transformListToHashMap(List);
 	}
 	
-	public HashMap<String, Object> getDisbursement(Map<String, Object> requestBody){
-		String id = (String) requestBody.get("id");
+	public HashMap<String, Object> getDisbursement(String id) {
 		Disbursement disbursementImpl = this.getObject(id);
 		
 		HashMap<String, Object> disbursementDataMap = new HashMap<>();
@@ -257,8 +258,8 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		return disbursementDataMap;
 	}
 	
-	public List<HashMap<String, Object>> getAllDisbursement(Map<String, Object> requestBody){
-		String table = (String) requestBody.get("table_name");
+	public List<HashMap<String, Object>> getAllDisbursement(Map<String, String> queryParams){
+		String table = (String) queryParams.get("table_name");
 		
 		try {
 			List<Disbursement> list = Repository.getAllObject(table);
