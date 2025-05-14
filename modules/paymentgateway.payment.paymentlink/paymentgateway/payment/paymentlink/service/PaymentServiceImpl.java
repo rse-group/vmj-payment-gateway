@@ -82,8 +82,9 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return responseMap;
 	}
 	
-	public List<PaymentLinkImpl> getByVendorName(Map<String, Object> requestBody) {
-		String vendorName = (String) requestBody.get("vendor_name");
+	public List<PaymentLinkImpl> getByVendorName(Map<String, String> queryParams) {
+		String vendorName = (String) queryParams.get("vendor_name");
+		record.validateVendorName(vendorName);
 		List<PaymentLinkImpl> result = new ArrayList<>();
 		List<PaymentLinkImpl> paymentLink = paymentLinkRepository.getAllObject("paymentlink_impl");
 		for(PaymentLinkImpl payment : paymentLink){
@@ -94,11 +95,12 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return result;
 	}
 	
-	public HashMap<String, Object> getById(Map<String, Object> requestBody) {
-		String id = (String) requestBody.get("id");
+	public HashMap<String, Object> getById(Map<String, String> queryParams) {
+		String id = (String) queryParams.get("id");
+		String validatedId = record.validateId(id);
 		List<PaymentLinkImpl> paymentLink = paymentLinkRepository.getAllObject("paymentlink_impl");
 		for(PaymentLinkImpl payment : paymentLink){
-			if (payment.getIdTransaction().toString().equals(id)){
+			if (payment.getIdTransaction().toString().equals(validatedId)){
 				return payment.toHashMap();
 			}
 		}
