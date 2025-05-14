@@ -31,10 +31,13 @@ public class XenditConfiguration extends ConfigDecorator {
     @Override
     public Map<String, Object> getCallbackDisbursementRequestBody(Map<String, Object> requestBody) {
         Map<String, Object> requestMap = new HashMap<>();
+        Map<String, Object> dataMap = (Map<String, Object>) requestBody.get("data"); 
+        String id = (String) dataMap.get("reference_id");
+        String status = (String) dataMap.get("status");
 
-        // TODO: implement disbursement callback handler
-
-        return requestMap;
+	    requestMap.put("id", id);
+	    requestMap.put("status", status);
+	    return requestMap;
     }
 
     @Override
@@ -52,6 +55,7 @@ public class XenditConfiguration extends ConfigDecorator {
 
     @Override
     public Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody) {
+        String id = UUID.randomUUID().toString();
         String vendor_name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "vendor_name");
         String bank_code = RequestBodyValidator.stringRequestBodyValidator(requestBody, "bank_code");
         String account_number = RequestBodyValidator.stringRequestBodyValidator(requestBody, "account_number");
@@ -74,10 +78,7 @@ public class XenditConfiguration extends ConfigDecorator {
         channelPropertiesMap.put("account_holder_name", account_holder_name);
         channelPropertiesMap.put("account_number", account_number);
         requestMap.put("channel_properties", channelPropertiesMap);
-
-        String uuidString = UUID.randomUUID().toString().replace("-", "");
-        int uniqueInteger = Math.abs(uuidString.hashCode()) % 100000;
-        requestMap.put("reference_id", String.format("%05d", uniqueInteger));
+        requestMap.put("reference_id", id);
 
         return requestMap;
     }
@@ -94,7 +95,7 @@ public class XenditConfiguration extends ConfigDecorator {
     }
 
     @Override
-    public Map<String, Object> getDisbursementResponse(String rawResponse) {
+    public Map<String, Object> getDisbursementResponse(String rawResponse, String id) {
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {
@@ -107,19 +108,19 @@ public class XenditConfiguration extends ConfigDecorator {
             return response;
         }
 
-        String idString = (String) rawResponseMap.get("reference_id");
+        String referenceId = (String) rawResponseMap.get("reference_id");
         String userIdString = (String) rawResponseMap.get("business_id");
         String accountNumber = (String) ((Map<String, Object>) rawResponseMap.get("channel_properties"))
                 .get("account_number");
         String accountHolderName = (String) ((Map<String, Object>) rawResponseMap.get("channel_properties"))
                 .get("account_holder_name");
         double amount = ((Number) rawResponseMap.get("amount")).doubleValue();
-
-        int id = Integer.parseInt(idString);
         int userId = Integer.parseInt(userIdString.substring(0, 5).replaceAll("[^0-9]", ""));
+        String vendorGeneratedId = (String) rawResponseMap.get("id");
 
         response.put("user_id", userId);
-        response.put("id", id);
+        response.put("id", referenceId);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("amount", amount);
         response.put("account_number", accountNumber);
         response.put("account_holder_name", accountHolderName);

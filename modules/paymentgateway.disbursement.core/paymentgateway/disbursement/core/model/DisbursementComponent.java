@@ -16,13 +16,14 @@ import javax.persistence.Column;
 @Inheritance(strategy = InheritanceType.JOINED)	
 public abstract class DisbursementComponent implements Disbursement {
 	@Id
-	protected  int id;
+	protected UUID id;
 	protected int userId;
 	protected String accountNumber;
 	protected String bankCode;
 	protected double amount;
 	protected String status;
 	protected String vendorName;
+	protected String vendorGeneratedId;
 	
 	@CreationTimestamp
 	@Column(name = "createdAt", updatable = false)
@@ -31,13 +32,14 @@ public abstract class DisbursementComponent implements Disbursement {
 	public DisbursementComponent() { }
 
 	public DisbursementComponent(
-		int id, 
+		UUID id, 
 		int userId, 
 		String accountNumber, 
 		double amount, 
 		String bankCode,
 		String status,
-		String vendorName
+		String vendorName,
+		String vendorGeneratedId
 	) {
 		this.id = id;
 		this.userId = userId;
@@ -46,10 +48,11 @@ public abstract class DisbursementComponent implements Disbursement {
 		this.bankCode = bankCode;
 		this.status = status;
 		this.vendorName = vendorName;
+		this.vendorGeneratedId = vendorGeneratedId;
 	}
 
-	public abstract int getId();
-	public abstract void setId(int id);
+	public abstract UUID getId();
+	public abstract void setId(UUID id);
 
 	public abstract int getUserId();
 	public abstract void setUserId(int userId);
@@ -72,6 +75,9 @@ public abstract class DisbursementComponent implements Disbursement {
 	
 //	public abstract Date getCreatedAt();
 //	public abstract void setCreatedAt(Date createdAt);
+
+	public abstract String getVendorGeneratedId();
+	public abstract void setVendorGeneratedId(String vendorGeneratedId);
 
 	public abstract HashMap<String, Object> toHashMap();
 }

@@ -207,8 +207,36 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 			notFoundMap.put("message", "Payment with ID " + validatedId + " does not exist");
 			return Collections.singletonList(notFoundMap);
 		}
+
+		final String[] paymentMethodHolder = {null};
+		PaymentRepository.executeQuery(session -> {
+			String sql = String.format("SELECT modulesequence FROM payment_comp WHERE idtransaction ='%s'", validatedId );
+			try {
+				String result = (String) session.createNativeQuery(sql).getSingleResult();
+				String[] modules = result.split(",");
+				paymentMethodHolder[0] = modules[modules.length - 1].trim();
+			} catch (Exception e) {
+				paymentMethodHolder[0] = "";
+			}
+		});
+
+		if (paymentMethodHolder[0].isEmpty()) {
+			throw new BadRequestException("Payment not found");
+		}
+
+		if (paymentMethodHolder[0].equals("payment_impl")) {
+			this.deleteObject(validatedId);
+			return getAllPayment();
+		}
+
+		final String[] targetId = {""};
+		PaymentRepository.executeQuery(session -> {
+			String sql = String.format("SELECT cast(idtransaction as varchar) FROM %s WHERE base_component_id = '%s'", paymentMethodHolder[0], validatedId );
+			targetId[0] = (String) session.createNativeQuery(sql).getSingleResult();
+		});
+
 		
-		this.deleteObject(validatedId);
+		this.deleteObject(targetId[0]);
 
 		return getAllPayment();
 	}

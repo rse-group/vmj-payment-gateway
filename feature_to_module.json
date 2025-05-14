@@ -36,11 +36,11 @@
 	"Payment": [
 		"paymentgateway.payment.core"
 	],
-	"CreditCard": [
-		"paymentgateway.payment.creditcard"
+	"Card": [
+		"paymentgateway.payment.card"
 	],
-	"DebitCard": [
-		"paymentgateway.payment.debitcard"
+	"DirectDebit": [
+		"paymentgateway.payment.directdebit"
 	],
 	"EWallet": [
 		"paymentgateway.payment.ewallet"

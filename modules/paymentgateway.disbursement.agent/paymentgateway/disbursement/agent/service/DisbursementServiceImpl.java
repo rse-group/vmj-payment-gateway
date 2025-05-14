@@ -11,6 +11,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import paymentgateway.disbursement.DisbursementFactory;
@@ -48,6 +49,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 	}
 
 	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
+		String id = UUID.randomUUID().toString();
 		String vendorName = (String) requestBody.get("vendor_name");
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
@@ -70,7 +72,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
 			LOGGER.info("Raw Response: " + rawResponse);
-			responseMap = config.getAgentDisbursementResponse(rawResponse);
+			responseMap = config.getAgentDisbursementResponse(rawResponse, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -14,19 +14,17 @@ public abstract class DisbursementDecorator extends DisbursementComponent {
     protected DisbursementComponent record;
 
     public DisbursementDecorator(DisbursementComponent record) {
-        String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
-        String unique_no = generateUUIDNo.substring(0,5);
-        this.id = Integer.parseInt(unique_no);
+        this.id = UUID.randomUUID();
         this.record = record;
     }
 
     public DisbursementDecorator() { }
 
-    public int getId() {
+    public UUID getId() {
         return record.getId();
     }
 
-    public void setId(int id){
+    public void setId(UUID id){
         record.setId(id);
     }
 
@@ -75,6 +73,13 @@ public abstract class DisbursementDecorator extends DisbursementComponent {
 	}
 	public void setVendorName(String vendorName){
 		record.setVendorName(vendorName);
+	}
+
+    public String getVendorGeneratedId(){
+		return record.getVendorGeneratedId();
+	}
+	public void setVendorGeneratedId(String vendorGeneratedId){
+		record.setVendorGeneratedId(vendorGeneratedId);
 	}
 	
     public DisbursementComponent getRecord() {

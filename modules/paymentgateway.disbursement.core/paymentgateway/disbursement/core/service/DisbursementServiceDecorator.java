@@ -47,7 +47,7 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
         return record.sendTransaction(requestBody);
     }
 
-    public HashMap<String, Object> getDisbursementById(int id){
+    public HashMap<String, Object> getDisbursementById(String id){
         return record.getDisbursementById(id);
     }
 }

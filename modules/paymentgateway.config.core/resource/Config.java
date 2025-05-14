@@ -66,8 +66,8 @@ public interface Config {
     Map<String, Object> getQRCodeResponse(String rawResponse, String id);
 
     // Disbursement Response
-    Map<String, Object> getDisbursementResponse(String rawResponse);
-    Map<String, Object> getSpecialDisbursementResponse(String rawResponse);
-    Map<String, Object> getInternationalDisbursementResponse(String rawResponse);
-    Map<String, Object> getAgentDisbursementResponse(String rawResponse);
+    Map<String, Object> getDisbursementResponse(String rawResponse, String id);
+    Map<String, Object> getSpecialDisbursementResponse(String rawResponse, String id);
+    Map<String, Object> getInternationalDisbursementResponse(String rawResponse, String id);
+    Map<String, Object> getAgentDisbursementResponse(String rawResponse, String id);
 }
