@@ -2,7 +2,7 @@ namespace Features
 
 features
 	Features {abstract true}
-		optional
+		or
 			Disbursement
 				optional
 					International {abstract true}
@@ -12,13 +12,14 @@ features
 					Agent
 					SpecifiedRecipient
 			Payment {abstract true}
-				optional
+				or
 					PaymentLink
 					VirtualAccount
 					RetailOutlet
 					EWallet
 					Invoice
 					PaymentRouting
-					CreditCard
-					DebitCard
+					Card
+					DirectDebit
+					QRCode
 
