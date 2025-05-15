@@ -768,7 +768,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/call/fixedcurrency/list?table_nane=special_impl",
+					"raw": "{{BASE_URL}}/call/fixedcurrency/list?table_name=special_impl",
 					"host": [
 						"{{BASE_URL}}"
 					],
@@ -779,7 +779,7 @@
 					],
 					"query": [
 						{
-							"key": "table_nane",
+							"key": "table_name",
 							"value": "special_impl"
 						}
 					]
