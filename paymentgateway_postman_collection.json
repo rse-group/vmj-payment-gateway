@@ -182,7 +182,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\":{{id}},\r\n    \"amount\":220000,\r\n    \"account_number\":\"1010101010\",\r\n    \"bank_code\":\"test\"\r\n}",
+					"raw": "{\r\n    \"id\":\"{{id}}\",\r\n    \"amount\":220000,\r\n    \"account_number\":\"1010101010\",\r\n    \"bank_code\":\"test\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -224,7 +224,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": {{id}},\r\n    \"table_name\": \"disbursement_impl\"\r\n}",
+					"raw": "{\r\n    \"id\": \"{{id}}\",\r\n    \"table_name\": \"disbursement_impl\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -411,7 +411,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\":{{id}},\r\n    \"amount\":1000,\r\n    \"account_number\":\"1010101010\",\r\n    \"bank_code\":\"1\"\r\n}",
+					"raw": "{\r\n    \"id\":\"{{id}}\",\r\n    \"amount\":1000,\r\n    \"account_number\":\"1010101010\",\r\n    \"bank_code\":\"1\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -453,7 +453,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"table_name\": \"agent_impl\",\r\n    \"id\":{{id}}\r\n}",
+					"raw": "{\r\n    \"table_name\": \"agent_impl\",\r\n    \"id\":\"{{id}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -640,7 +640,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\":{{id}},\r\n    \"amount\":10000,\r\n    \"account_number\":\"1010101010\",\r\n    \"bank_code\":\"test\"\r\n}",
+					"raw": "{\r\n    \"id\":\"{{id}}\",\r\n    \"amount\":10000,\r\n    \"account_number\":\"1010101010\",\r\n    \"bank_code\":\"test\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -682,7 +682,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\":{{id}},\r\n    \"table_name\": \"international_impl\"\r\n}",
+					"raw": "{\r\n    \"id\":\"{{id}}\",\r\n    \"table_name\": \"international_impl\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -879,7 +879,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\":{{id}},\r\n    \"amount\":20000,\r\n    \"account_number\":\"1010101010\",\r\n    \"bank_code\":\"test\"\r\n}",
+					"raw": "{\r\n    \"id\":\"{{id}}\",\r\n    \"amount\":20000,\r\n    \"account_number\":\"1010101010\",\r\n    \"bank_code\":\"test\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -921,7 +921,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\":{{id}},\r\n    \"table_name\": \"special_impl\"\r\n}",
+					"raw": "{\r\n    \"id\":\"{{id}}\",\r\n    \"table_name\": \"special_impl\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1036,38 +1036,6 @@
 			"response": []
 		},
 		{
-			"name": "Check Payment Status",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test('Should receive success response', function() {\r",
-							"    pm.response.to.have.status(200)\r",
-							"})"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"vendor_name\": \"Flip\",\r\n    \"id\": \"062bfdb0-6eb6-489b-bbd6-fdcf9bb4d012\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": "{{BASE_URL}}/call/paymentstatus"
-			},
-			"response": []
-		},
-		{
 			"name": "Get Payment Detail",
 			"event": [
 				{
@@ -1147,7 +1115,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": {{id}},\r\n    \"amount\": 30000\r\n}",
+					"raw": "{\r\n    \"id\": \"{{id}}\",\r\n    \"amount\": 30000\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1189,7 +1157,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": {{id}}\r\n}",
+					"raw": "{\r\n    \"id\": \"{{id}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1447,7 +1415,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": {{id}}\r\n}",
+					"raw": "{\r\n    \"id\": \"{{id}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1581,6 +1549,7 @@
 					"script": {
 						"exec": [
 							"pm.test('Should receive success response', function() {\r",
+							"    pm.environment.set(\"id\", pm.response.json().data.id)\r",
 							"    pm.response.to.have.status(200)\r",
 							"})"
 						],
@@ -1594,7 +1563,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"vendor_name\": \"Midtrans\",\r\n    \"amount\": \"10000\",\r\n    \"retail_outlet\": \"Alfamart\"\r\n\r\n}",
+					"raw": "{\r\n    \"vendor_name\": \"Midtrans\",\r\n    \"amount\": \"10000\",\r\n    \"retail_outlet\": \"Alfamart\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1602,6 +1571,48 @@
 					}
 				},
 				"url": "{{BASE_URL}}/call/retailoutlet"
+			},
+			"response": []
+		},
+		{
+			"name": "Check Payment Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Midtrans\",\r\n    \"id\": \"{{id}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/paymentstatus"
 			},
 			"response": []
 		},
