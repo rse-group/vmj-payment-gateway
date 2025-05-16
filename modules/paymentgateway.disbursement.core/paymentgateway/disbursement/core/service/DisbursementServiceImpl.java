@@ -125,6 +125,10 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		String id = (String) requestBody.get("id");
 		Disbursement disbursement = this.getObject(id);
 
+		if (disbursement == null) {
+			throw new BadRequestException(String.format("Disbursement with ID %s does not exist", id));
+		}
+
 		try {
 			disbursement.setAmount((Double) requestBody.get("amount"));
 			disbursement.setAccountNumber((String) requestBody.get("account_number"));
