@@ -30,8 +30,14 @@ public class XenditConfiguration extends ConfigDecorator {
 
     @Override
     public Map<String, Object> getCallbackDisbursementRequestBody(Map<String, Object> requestBody) {
+        String webhookVerificationToken = PropertiesReader.getProp(CONFIG_FILE, "webhookVerficationToken");;
+        String callbackToken = (String) requestBody.get("x-callback-token");
+        if (!callbackToken.equals(webhookVerificationToken)) {
+            throw new BadRequestException("Invalid callback token");
+        }
+
         Map<String, Object> requestMap = new HashMap<>();
-        Map<String, Object> dataMap = (Map<String, Object>) requestBody.get("data"); 
+        Map<String, Object> dataMap = (Map<String, Object>) requestBody.get("data");
         String id = (String) dataMap.get("reference_id");
         String status = (String) dataMap.get("status");
 
@@ -42,6 +48,12 @@ public class XenditConfiguration extends ConfigDecorator {
 
     @Override
     public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
+        String webhookVerificationToken = PropertiesReader.getProp(CONFIG_FILE, "webhookVerficationToken");
+        String callbackToken = vmjExchange.getHttpExchange().getRequestHeaders().getFirst("x-callback-token");
+        if (!callbackToken.equals(webhookVerificationToken)) {
+            throw new BadRequestException("Invalid callback token");
+        }
+
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> requestBody = vmjExchange.getPayload();
         Map<String, Object> dataMap = (Map<String, Object>) requestBody.get("data"); 

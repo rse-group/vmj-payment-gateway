@@ -45,10 +45,11 @@ public class FlipConfiguration extends ConfigDecorator{
     	Map<String, Object> decodedData = gson.fromJson(data, Map.class);
     	status = (String) decodedData.get("status");
     	id = String.valueOf(((Double) decodedData.get("bill_link_id")).intValue());
-        if (token.equals(flipToken)) {
-            requestMap.put("vendor_generated_id",id);
-            requestMap.put("status", status);
-        }     
+        if (!token.equals(flipToken)) {
+            throw new BadRequestException("Invalid callback token");
+        }
+        requestMap.put("vendor_generated_id",id);
+        requestMap.put("status", status);
         return requestMap;
     }
     
@@ -66,10 +67,11 @@ public class FlipConfiguration extends ConfigDecorator{
     	Map<String, Object> decodedData = gson.fromJson(data, Map.class);
     	status = (String) decodedData.get("status");
     	id = String.valueOf(((Double) decodedData.get("id")).intValue());
-        if (token.equals(flipToken)) {
-            requestMap.put("vendor_generated_id",id);
-            requestMap.put("status", status);
+        if (!token.equals(flipToken)) {
+            throw new BadRequestException("Invalid callback token");
         }
+        requestMap.put("vendor_generated_id",id);
+            requestMap.put("status", status);
 
         return requestMap;
     }
