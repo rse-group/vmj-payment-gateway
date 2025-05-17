@@ -49,7 +49,7 @@ public class XenditConfiguration extends ConfigDecorator {
 
     @Override
     public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
-        String webhookVerificationToken = PropertiesReader.getProp(CONFIG_FILE, "webhookVerficationToken");
+        String webhookVerificationToken = PropertiesReader.getProp(CONFIG_FILE, "webhookVerificationToken");
         String callbackToken = vmjExchange.getHttpExchange().getRequestHeaders().getFirst(CALLBACK_TOKEN_HEADER_NAME);
         if (!callbackToken.equals(webhookVerificationToken)) {
             throw new BadRequestException("Invalid callback token");
