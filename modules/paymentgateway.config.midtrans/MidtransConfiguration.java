@@ -78,7 +78,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> requestBody = vmjExchange.getPayload();
         String id = (String) requestBody.get("order_id");
         String statusCode = (String) requestBody.get("status_code");
-        String grossAmount = String.valueOf(requestBody.get("grossAmount"));
+        String grossAmount = String.valueOf(requestBody.get("gross_amount"));
         String merchantServerKey = PropertiesReader.getProp(CONFIG_FILE, "serverKey");
         String status = (String) requestBody.get("transaction_status");
 
