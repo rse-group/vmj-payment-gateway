@@ -31,7 +31,7 @@ public class XenditConfiguration extends ConfigDecorator {
 
     @Override
     public Map<String, Object> getCallbackDisbursementRequestBody(Map<String, Object> requestBody) {
-        String webhookVerificationToken = PropertiesReader.getProp(CONFIG_FILE, "webhookVerficationToken");;
+        String webhookVerificationToken = PropertiesReader.getProp(CONFIG_FILE, "webhookVerificationToken");
         String callbackToken = (String) requestBody.get(CALLBACK_TOKEN_HEADER_NAME);
         if (!callbackToken.equals(webhookVerificationToken)) {
             throw new BadRequestException("Invalid callback token");
