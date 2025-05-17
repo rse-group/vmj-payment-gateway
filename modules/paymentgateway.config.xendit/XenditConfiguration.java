@@ -18,6 +18,7 @@ import vmj.routing.route.exceptions.BadRequestException;
 
 public class XenditConfiguration extends ConfigDecorator {
     private String CONFIG_FILE = "xendit.properties";
+    private String CALLBACK_TOKEN_HEADER_NAME = "X-CALLBACK-TOKEN";
 
     public XenditConfiguration(ConfigComponent record) {
         super(record);
@@ -31,7 +32,7 @@ public class XenditConfiguration extends ConfigDecorator {
     @Override
     public Map<String, Object> getCallbackDisbursementRequestBody(Map<String, Object> requestBody) {
         String webhookVerificationToken = PropertiesReader.getProp(CONFIG_FILE, "webhookVerficationToken");;
-        String callbackToken = (String) requestBody.get("x-callback-token");
+        String callbackToken = (String) requestBody.get(CALLBACK_TOKEN_HEADER_NAME);
         if (!callbackToken.equals(webhookVerificationToken)) {
             throw new BadRequestException("Invalid callback token");
         }
@@ -49,7 +50,7 @@ public class XenditConfiguration extends ConfigDecorator {
     @Override
     public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
         String webhookVerificationToken = PropertiesReader.getProp(CONFIG_FILE, "webhookVerficationToken");
-        String callbackToken = vmjExchange.getHttpExchange().getRequestHeaders().getFirst("x-callback-token");
+        String callbackToken = vmjExchange.getHttpExchange().getRequestHeaders().getFirst(CALLBACK_TOKEN_HEADER_NAME);
         if (!callbackToken.equals(webhookVerificationToken)) {
             throw new BadRequestException("Invalid callback token");
         }

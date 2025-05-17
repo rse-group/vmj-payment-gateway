@@ -18,9 +18,9 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent{
 	public int callback(VMJExchange vmjExchange) {
 		Map<String, Object> requestBody = vmjExchange.getPayload();
 		// handles callback token from Xendit
-		String callbackToken = vmjExchange.getHttpExchange().getRequestHeaders().getFirst("x-callback-token");
+		String callbackToken = vmjExchange.getHttpExchange().getRequestHeaders().getFirst("X-CALLBACK-TOKEN");
 		if (callbackToken != null) {
-			requestBody.put("x-callback-token", callbackToken);
+			requestBody.put("X-CALLBACK-TOKEN", callbackToken);
 		}
 		return disbursementServiceImpl.callback(requestBody);
 	}
