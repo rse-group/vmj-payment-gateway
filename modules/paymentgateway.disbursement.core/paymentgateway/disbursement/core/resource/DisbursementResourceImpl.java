@@ -16,20 +16,26 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent{
 	
 	@Route(url = "call/disbursement/callback")
 	public int callback(VMJExchange vmjExchange) {
-		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+		Map<String, Object> requestBody = vmjExchange.getPayload();
+		// handles callback token from Xendit
+		String callbackToken = vmjExchange.getHttpExchange().getRequestHeaders().getFirst("X-CALLBACK-TOKEN");
+		if (callbackToken != null) {
+			requestBody.put("X-CALLBACK-TOKEN", callbackToken);
+		}
 		return disbursementServiceImpl.callback(requestBody);
 	}
 
 	@Route(url="call/disbursement/detail")
 	public HashMap<String, Object> getDisbursement(VMJExchange vmjExchange){
-		Map<String, Object> requestBody = vmjExchange.getPayload(); 
-		return disbursementServiceImpl.getDisbursement(requestBody);
+		Map<String, String> queryParamsMap = vmjExchange.queryToMap();
+		String id = queryParamsMap.get("id");
+		return disbursementServiceImpl.getDisbursement(id);
 	}
 
 	@Route(url="call/disbursement/list")
 	public List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange){
-		Map<String, Object> requestBody = vmjExchange.getPayload(); 
-		return disbursementServiceImpl.getAllDisbursement(requestBody);
+		Map<String, String> queryParams = vmjExchange.queryToMap(); 
+		return disbursementServiceImpl.getAllDisbursement(queryParams);
 	}
 
 	@Route(url="call/disbursement/delete")

@@ -177,6 +177,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 
 	public HashMap<String, Object> updatePayment(Map<String, Object> requestBody) {
 		String validatedId = this.validateId((String) requestBody.get("id"));
+		double amount = this.validateAmount(requestBody.get("amount"));
 		Payment payment = this.getObject(validatedId);
 
 		if (payment == null) {
@@ -185,7 +186,6 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 			return notFoundMap;
 		}
 
-		double amount = ((Double) requestBody.get("amount")).doubleValue();
 		try {
 			payment.setAmount(amount);
 		} catch (Exception e){
@@ -346,6 +346,10 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 			} catch (Exception ex) {
 				throw new BadRequestException("amount tidak valid.");
 			}
+		}
+
+		if (amount < 0) {
+			throw new BadRequestException("amount tidak boleh negatif.");
 		}
 
 		return amount.doubleValue();

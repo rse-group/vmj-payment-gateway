@@ -103,7 +103,10 @@ public class OyConfiguration extends ConfigDecorator{
                 "bca", "014",
                 "mandiri", "008",
                 "bri", "002",
-                "permata", "013");
+                "permata", "013",
+                "cimb", "022",
+                "smbc", "213",
+                "bsi", "451");
         Map<String, String> bankCodes = new HashMap<>(immutableMap);
         return bankCodes;
     }
@@ -180,7 +183,7 @@ public class OyConfiguration extends ConfigDecorator{
         String ewallet = RequestBodyValidator.stringRequestBodyValidator(requestBody, "ewallet_type");
         String phone = RequestBodyValidator.stringRequestBodyValidator(requestBody, "phone");
         int amount = ((Double) requestBody.get("amount")).intValue();
-        String successRedirectUrl = (String) requestBody.get("success_redirect_url");
+        String successRedirectUrl = RequestBodyValidator.stringRequestBodyValidator(requestBody, "success_redirect_url");
 
         requestMap.put("partner_trx_id", id);
         requestMap.put("customer_id", id);
@@ -233,6 +236,7 @@ public class OyConfiguration extends ConfigDecorator{
         String recipientAmount = String.valueOf(recipientAmountInt);
         String recipientAccount = RequestBodyValidator.stringRequestBodyValidator(requestBody, "recipient_account");
         String recipientBank = RequestBodyValidator.stringRequestBodyValidator(requestBody, "recipient_bank");
+        String recipientBankCode = getOyBankCode().get(recipientBank);
         String recipientEmail = RequestBodyValidator.stringRequestBodyValidator(requestBody, "recipient_email");
         String recipientNote = RequestBodyValidator.stringRequestBodyValidator(requestBody, "recipient_note");
 
@@ -243,7 +247,7 @@ public class OyConfiguration extends ConfigDecorator{
         Map<String, Object> routingMap = new HashMap<>();
         
         routingMap.put("recipient_account", recipientAccount);
-        routingMap.put("recipient_bank", recipientBank);
+        routingMap.put("recipient_bank", recipientBankCode);
         routingMap.put("recipient_amount", recipientAmount);
         routingMap.put("recipient_email", recipientEmail);
         routingMap.put("recipient_note", recipientNote);

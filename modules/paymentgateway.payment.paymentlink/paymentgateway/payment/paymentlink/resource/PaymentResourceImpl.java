@@ -42,14 +42,14 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 
 	@Route(url = "call/paymentlink/vendorname", method = RequestMethod.GET)
 	public List<PaymentLinkImpl> getByVendorName(VMJExchange vmjExchange) {
-		Map<String, Object> requestBody = vmjExchange.getPayload();
-		return paymentServiceImpl.getByVendorName(requestBody);
+		Map<String, String> queryParams = vmjExchange.queryToMap();
+		return paymentServiceImpl.getByVendorName(queryParams);
 	}
 
 	@Route(url = "call/paymentlink/detail", method = RequestMethod.GET)
 	public HashMap<String, Object> getById(VMJExchange vmjExchange) {
-		Map<String, Object> requestBody = vmjExchange.getPayload();
-		return paymentServiceImpl.getById(requestBody);
+		Map<String, String> queryParams = vmjExchange.queryToMap();
+		return paymentServiceImpl.getById(queryParams);
 	}
 
 	@Route(url = "call/paymentlink/delete", method = RequestMethod.DELETE)
