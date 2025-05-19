@@ -1,0 +1,13 @@
+vendor_name = Midtrans
+base_url = https://api.sandbox.midtrans.com
+authorization =
+clientKey =
+serverKey =
+apiendpoint = /v2/charge
+token = /v2/token
+paymentlink = /v1/payment-links
+paymentstatus = /v1/payment-links/[id]
+paymentdetail = /v2/[id]/status
+
+content_type = application/json
+accept = application/json
