@@ -176,9 +176,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		Payment payment = this.getObject(validatedId);
 
 		if (payment == null) {
-			HashMap<String, Object> notFoundMap = new HashMap<>();
-			notFoundMap.put("message", "Payment with ID " + validatedId + " does not exist");
-			return notFoundMap;
+			throw new BadRequestException("Payment dengan ID " + validatedId + " tidak ditemukan");
 		}
 
 		try {

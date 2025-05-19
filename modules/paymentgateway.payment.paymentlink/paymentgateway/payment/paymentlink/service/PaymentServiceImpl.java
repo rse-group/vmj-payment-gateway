@@ -104,7 +104,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 				return payment.toHashMap();
 			}
 		}
-		return null;
+		throw new BadRequestException("Payment link dengan ID " + validatedId + " tidak ditemukan");
 	}
 	
 	public String deletePaymentLinkById(Map<String, Object> requestBody) {
@@ -119,6 +119,6 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 			}
 		}
 
-		return "There is no paymentlink with id: " + id;
+		throw new BadRequestException("Payment link dengan ID " + validatedId + " tidak ditemukan");
 	}
 }
