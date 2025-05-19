@@ -87,7 +87,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		
 		System.out.println("paymentMethodHolder" + paymentMethodHolder);
 	    if (paymentMethodHolder[0].isEmpty()) {
-	    	 throw new BadRequestException("Payment dengan ID " + id + " tidak ditemukan");
+	    	 throw new BadRequestException("Payment dengan ID " + Id + " tidak ditemukan");
 	    }
 		
 		String configUrl;
@@ -146,7 +146,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		HashMap<String, Object> paymentDataMap = new HashMap<>();
 		
 		if (paymentImpl == null) {
-	        throw new BadRequestException("Payment dengan ID " + id + " tidak ditemukan");
+	        throw new BadRequestException("Payment dengan ID " + validatedId + " tidak ditemukan");
 	    }
 		
 		return paymentImpl.toHashMap();
@@ -198,7 +198,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		Payment payment = this.getObject(validatedId);
 		
 		if (payment == null) {
-			throw new BadRequestException("Payment dengan ID " + id + " tidak ditemukan");
+			throw new BadRequestException("Payment dengan ID " + validatedId + " tidak ditemukan");
 		}
 
 		final String[] paymentMethodHolder = {null};
