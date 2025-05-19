@@ -2,6 +2,7 @@ package paymentgateway.disbursement.specifiedrecipient;
 
 import java.util.*;
 
+import vmj.routing.route.RequestMethod;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
@@ -20,17 +21,10 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 		this.disbursementServiceImpl = new DisbursementServiceImpl(recordService);
 	}
 
-	@Route(url = "call/specified-recipient")
+	@Route(url = "call/specified-recipient", method = RequestMethod.POST)
 	public HashMap<String, Object> disbursement(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("POST")) {
-			Map<String, Object> requestBody = vmjExchange.getPayload(); 
-			try {
-				Disbursement result = disbursementServiceImpl.createDisbursement(requestBody);
-				return result.toHashMap();
-			} catch (IllegalStateException e) {
-				throw new BadRequestException(e.getMessage());
-			}
-		}
-		throw new NotFoundException("Route tidak ditemukan");
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+		Disbursement result = disbursementServiceImpl.createDisbursement(requestBody);
+		return result.toHashMap();
 	}
 }

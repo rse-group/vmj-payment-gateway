@@ -286,4 +286,51 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
         return config.getDisbursementRequestBody(requestBody);
 	}
+
+	public String validateVendorName(String vendorName) {
+		if (vendorName == null) {
+			throw new BadRequestException("vendor_name tidak ditemukan pada payload");
+		}
+		// Provide vendor name that supports dibursement only
+		Set<String> vendorNames = new HashSet<>();
+		vendorNames.add("Flip");
+		vendorNames.add("Xendit");
+
+		if (!vendorNames.contains(vendorName)) {
+			throw new BadRequestException("vendor_name tidak valid.");
+		}
+		return vendorName;
+	}
+
+	public double validateAmount(Object amountObject) {
+		Double amount;
+		if (amountObject == null) {
+			throw new BadRequestException("amount tidak ditemukan pada payload.");
+		}
+		try {
+			amount = ((Double) amountObject);
+		} catch (Exception e) {
+			try {
+				String amountString = (String) amountObject;
+				amount = Double.valueOf(amountString);
+			} catch (Exception ex) {
+				throw new BadRequestException("amount tidak valid.");
+			}
+		}
+
+		return amount.doubleValue();
+	}
+
+	public String validateId(String id) {
+		if (id == null) {
+			throw new BadRequestException("id tidak ditemukan pada payload.");
+		}
+		try {
+			UUID.fromString(id);
+		} catch (Exception e) {
+			throw new BadRequestException("id tidak valid.");
+		}
+
+		return id;
+	}
 }
