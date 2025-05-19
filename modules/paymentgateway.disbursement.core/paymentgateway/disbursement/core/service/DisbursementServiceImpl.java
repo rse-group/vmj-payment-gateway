@@ -148,9 +148,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		Disbursement disbursement = this.getObject(id);
 		
 		if (disbursement == null) {
-			HashMap<String, Object> notFoundMap = new HashMap<>();
-			notFoundMap.put("message", "Disbursment with ID " + id + " does not exist");
-			return Collections.singletonList(notFoundMap);
+			throw new BadRequestException("Disbursment dengan ID " + id + " tidak ditemukan");
 		}
 
 		final String[] disbursementHolder = {null};
@@ -250,16 +248,12 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	
 	public HashMap<String, Object> getDisbursement(String id) {
 		Disbursement disbursementImpl = this.getObject(id);
-		
-		HashMap<String, Object> disbursementDataMap = new HashMap<>();
 
 	    if (disbursementImpl == null) {
-	    	disbursementDataMap.put("message", "Disbursement with id " + id + " not exist");
-	    } else {
-	    	disbursementDataMap = disbursementImpl.toHashMap();
+	    	throw new BadRequestException("Disbursement dengan ID " + id + " tidak ditemukan");
 	    }
 	    
-		return disbursementDataMap;
+		return disbursementImpl.toHashMap();
 	}
 	
 	public List<HashMap<String, Object>> getAllDisbursement(Map<String, String> queryParams){
@@ -269,10 +263,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 			List<Disbursement> list = Repository.getAllObject(table);
 		    return transformListToHashMap(list);
 		} catch (Exception e) {
-		    HashMap<String, Object> errorMap = new HashMap<>();
-		    e.printStackTrace();
-		    errorMap.put("message", "Table name " + table + " is not a valid entity");
-		    return Collections.singletonList(errorMap);
+			throw new BadRequestException("Table name " + table + " bukan entity yang valid");
 		}
 	}
 
