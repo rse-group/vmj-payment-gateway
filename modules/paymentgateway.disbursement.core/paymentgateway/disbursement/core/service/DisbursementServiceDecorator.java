@@ -23,12 +23,12 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
         return record.createDisbursement(requestBody, response);
     }
 
-    public HashMap<String, Object> getDisbursement(Map<String, Object> requestBody){
-        return record.getDisbursement(requestBody);
+    public HashMap<String, Object> getDisbursement(String id){
+        return record.getDisbursement(id);
     }
 
-    public List<HashMap<String, Object>> getAllDisbursement(Map<String, Object> requestBody){
-        return record.getAllDisbursement(requestBody);
+    public List<HashMap<String, Object>> getAllDisbursement(Map<String, String> queryParams){
+        return record.getAllDisbursement(queryParams);
     }
 
     public List<HashMap<String, Object>> deleteDisbursement(Map<String, Object> requestBody){
@@ -47,7 +47,7 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
         return record.sendTransaction(requestBody);
     }
 
-    public HashMap<String, Object> getDisbursementById(int id){
+    public HashMap<String, Object> getDisbursementById(String id){
         return record.getDisbursementById(id);
     }
 }

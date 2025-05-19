@@ -1,0 +1,2116 @@
+{
+	"info": {
+		"_postman_id": "9273d0e2-7f0f-4fee-abd9-fa07e051b10b",
+		"name": "VMJ Payment Gateway Postman Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "29921448"
+	},
+	"item": [
+		{
+			"name": "Create Disbursement",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.environment.set(\"id\", pm.response.json().data.id)\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\":\"Flip\",\r\n    \"amount\":\"20000\",\r\n    \"bank_code\":\"bca\",\r\n    \"account_number\":\"101010101010\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/disbursement"
+			},
+			"response": []
+		},
+		{
+			"name": "Get List of Disbursements",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/call/disbursement/list?table_name=disbursement_impl",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"disbursement",
+						"list"
+					],
+					"query": [
+						{
+							"key": "table_name",
+							"value": "disbursement_impl"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Disbursement Detail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/call/disbursement/detail?id={{id}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"disbursement",
+						"detail"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Disbursement Detail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"{{id}}\",\r\n    \"amount\":220000,\r\n    \"account_number\":\"1010101010\",\r\n    \"bank_code\":\"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/disbursement/update"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Disbursement",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"{{id}}\",\r\n    \"table_name\": \"disbursement_impl\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/disbursement/delete"
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Create Agent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.environment.set(\"id\", pm.response.json().data.id)\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\":\"Flip\",\r\n    \"agent_id\": 611,\r\n    \"direction\":\"DOMESTIC_SPECIAL_TRANSFER\",\r\n    \"amount\":\"10000\",\r\n    \"bank_code\":\"bca\",\r\n    \"account_number\":\"1287685466\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/agent"
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Get List of Agents",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/call/agent/list?table_name=agent_impl",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"agent",
+						"list"
+					],
+					"query": [
+						{
+							"key": "table_name",
+							"value": "agent_impl"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Get Agent Detail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/call/agent/detail?id={{id}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"agent",
+						"detail"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Update Agent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"{{id}}\",\r\n    \"amount\":1000,\r\n    \"account_number\":\"1010101010\",\r\n    \"bank_code\":\"1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/agent/update"
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Delete Agent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"table_name\": \"agent_impl\",\r\n    \"id\":\"{{id}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/agent/delete"
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Create Exchange Rate Disbursement",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.environment.set(\"id\", pm.response.json().data.id)\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Flip\",\r\n    \"destination_country\": \"SGP\",\r\n    \"source_country\": \"IDN\",\r\n    \"transaction_type\": \"C2B\",\r\n    \"amount\": \"2000\",\r\n    \"beneficiary_account_number\": \"12435236235\",\r\n    \"beneficiary_bank_id\": \"859\",\r\n    \"beneficiary_full_name\": \"Beneficiary Test User\",\r\n    \"beneficiary_bank_name\": \"Master Card\",\r\n    \"beneficiary_nationality\": \"UK\",\r\n    \"beneficiary_province\": \"Manchester\",\r\n    \"beneficiary_city\": \"Manchester\",\r\n    \"beneficiary_address\": \"Manchester\",\r\n    \"beneficiary_relationship\": \"FRIEND\",\r\n    \"beneficiary_source_of_funds\": \"BUSINESS\",\r\n    \"beneficiary_remittance_purposes\": \"TRAVEL\",\r\n    \"sender_name\": \"SENDER TEST USER\",\r\n    \"sender_country\": \"100252\",\r\n    \"sender_place_of_birth\": \"100252\",\r\n    \"sender_date_of_birth\": \"1989-03-17\",\r\n    \"sender_address\": \"A Address\",\r\n    \"sender_identity_type\": \"nat_id\",\r\n    \"sender_identity_number\": \"124252634634634\",\r\n    \"sender_job\": \"private_employee\",\r\n    \"sender_email\": \"sendertestuser@gmail.com\",\r\n    \"sender_city\": \"Jakarta\",\r\n    \"sender_phone_number\": \"+628123456789\",\r\n    \"beneficiary_sort_code\": \"506967\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/exchangerate"
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Get List of Exchange Rate Disbursements",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/call/exchangerate/list?table_name=international_impl",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"exchangerate",
+						"list"
+					],
+					"query": [
+						{
+							"key": "table_name",
+							"value": "international_impl"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Get Exchange Rate Disbursement Detail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/call/exchangerate/detail?id={{id}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"exchangerate",
+						"detail"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Update Exchange Rate Disbursement Detail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"{{id}}\",\r\n    \"amount\":10000,\r\n    \"account_number\":\"1010101010\",\r\n    \"bank_code\":\"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/exchangerate/update"
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Delete Exchange Rate Disbursement",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"{{id}}\",\r\n    \"table_name\": \"international_impl\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/exchangerate/delete"
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Create Fixed Currency Disbursement",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.environment.set(\"id\", pm.response.json().data.id)\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Flip\",\r\n    \"account_number\": \"98359135235\",\r\n    \"amount\": \"100000\",\r\n    \"bank_code\": \"bca\",\r\n    \"sender_name\": \"SENDER TEST USER\",\r\n    \"sender_country\": \"100252\",\r\n    \"sender_address\": \"A Address\",\r\n    \"sender_job\": \"private_employee\",\r\n    \"direction\": \"DOMESTIC_SPECIAL_TRANSFER\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/fixedcurrency"
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Get List of Fixed Currency Disbursements",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/call/fixedcurrency/list?table_name=special_impl",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"fixedcurrency",
+						"list"
+					],
+					"query": [
+						{
+							"key": "table_name",
+							"value": "special_impl"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Get Fixed Currency Disbursement Detail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/call/fixedcurrency/detail?id={{id}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"fixedcurrency",
+						"detail"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Update Fixed Currency Disbursement Detail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"{{id}}\",\r\n    \"amount\":20000,\r\n    \"account_number\":\"1010101010\",\r\n    \"bank_code\":\"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/fixedcurrency/update"
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Delete Fixed Currency Disbursement",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"{{id}}\",\r\n    \"table_name\": \"special_impl\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/fixedcurrency/delete"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create Specified Recipient Disbursement",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"account_number\": \"9835913523521\",\r\n    \"amount\": \"10000\",\r\n    \"bank_code\": \"ID_BCA\",\r\n    \"account_holder_name\": \"SENDER TEST USER\",\r\n    \"currency\": \"IDR\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/specified-recipient"
+			},
+			"response": []
+		},
+		{
+			"name": "Get List of Payments",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/payment/list"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.environment.set(\"id\", pm.response.json().data.id)\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Flip\",\r\n    \"amount\": \"28000\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/payment"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Payment Detail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/call/payment/detail?id={{id}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"payment",
+						"detail"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Payment Detail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"{{id}}\",\r\n    \"amount\": 30000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/payment/update"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"{{id}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/payment/delete"
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Create Virtual Account Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Flip\",\r\n    \"bank\": \"bca\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"15000\",\r\n    \"name\": \"test sender\", \r\n    \"email\": \"testsender@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/virtualaccount"
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Create E-Wallet Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Flip\",\r\n    \"ewallet_type\": \"ovo\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"15000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@test.com\",\r\n    \"phone\": \"0812312312\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Create Payment Link",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.environment.set(\"id\", pm.response.json().data.id)\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Flip\",\r\n    \"amount\": \"10000\",\r\n    \"title\": \"Pembayaran\",\r\n    \"sender_name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/paymentlink"
+			},
+			"response": []
+		},
+		{
+			"name": "Flip Get Payment Links by Vendor Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/call/paymentlink/vendorname?vendor_name=Flip",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"paymentlink",
+						"vendorname"
+					],
+					"query": [
+						{
+							"key": "vendor_name",
+							"value": "Flip"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Payment Link Detail",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/call/paymentlink/detail?id={{id}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"paymentlink",
+						"detail"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Payment Link",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"{{id}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/paymentlink/delete"
+			},
+			"response": []
+		},
+		{
+			"name": "Midtrans Create Payment Link",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Midtrans\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"100000\",\r\n    \"sender_name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/paymentlink"
+			},
+			"response": []
+		},
+		{
+			"name": "Midtrans Get Payment Links by Vendor Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/call/paymentlink/vendorname?vendor_name=Midtrans",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"paymentlink",
+						"vendorname"
+					],
+					"query": [
+						{
+							"key": "vendor_name",
+							"value": "Midtrans"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Midtrans Create Card Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Midtrans\",\r\n    \"amount\": \"100000\", \r\n    \"card_number\":\"4097661111111113\",\r\n    \"card_exp_month\":\"12\",\r\n    \"card_exp_year\":\"2025\",\r\n    \"card_cvv\":\"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/card"
+			},
+			"response": []
+		},
+		{
+			"name": "Midtrans Create Retail Outlet Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.environment.set(\"id\", pm.response.json().data.id)\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Midtrans\",\r\n    \"amount\": \"10000\",\r\n    \"retail_outlet\": \"Alfamart\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/retailoutlet"
+			},
+			"response": []
+		},
+		{
+			"name": "Check Payment Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Midtrans\",\r\n    \"id\": \"{{id}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/paymentstatus"
+			},
+			"response": []
+		},
+		{
+			"name": "Midtrans Create E-Wallet Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Midtrans\",\r\n    \"ewallet_type\": \"gopay\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"100000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"085892025984\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
+			"name": "Midtrans Create Virtual Account Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Midtrans\",\r\n    \"bank\": \"bca\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"10000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"085892025984\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/virtualaccount"
+			},
+			"response": []
+		},
+		{
+			"name": "Oy Create Virtual Account Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Oy\",\r\n    \"bank\": \"bca\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"100000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"085892025984\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/virtualaccount"
+			},
+			"response": []
+		},
+		{
+			"name": "Oy Create E-Wallet Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Oy\",\r\n    \"ewallet_type\": \"ovo\",\r\n    \"title\": \"test\",\r\n    \"amount\": \"100000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"085892025984\",\r\n    \"success_redirect_url\": \"http://localhost:3001/done\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
+			"name": "Oy Create Payment Link",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Oy\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"100000\",\r\n    \"sender_name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/paymentlink"
+			},
+			"response": []
+		},
+		{
+			"name": "Oy Get Payment Links by Vendor Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/call/paymentlink/vendorname?vendor_name=Oy",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"paymentlink",
+						"vendorname"
+					],
+					"query": [
+						{
+							"key": "vendor_name",
+							"value": "Oy"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Oy Create Retail Outlet Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Oy\",\r\n    \"retail_outlet\": \"CRM\",\r\n    \"amount\": \"100000\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/retailoutlet"
+			},
+			"response": []
+		},
+		{
+			"name": "Oy Create Invoice",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Oy\",\r\n    \"amount\":\"20000\",\r\n    \"quantity\":\"10\",\r\n    \"price_per_item\":\"2000\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/invoice"
+			},
+			"response": []
+		},
+		{
+			"name": "Oy Create Payment Routing",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Oy\",\r\n    \"amount\" : \"100000\",\r\n    \"recipient_account\": \"1234567890\",\r\n    \"recipient_bank\": \"014\",\r\n    \"recipient_amount\": \"100000\",\r\n    \"recipient_email\" : \"test@test.com\",\r\n    \"recipient_note\" : \"note\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/paymentrouting"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create E-Wallet Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"ewallet_type\": \"OVO\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": 20000,\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+628123123123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create Direct Debit Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"bank\": \"MANDIRI\",\r\n    \"amount\": \"100000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+62812312312\",\r\n    \"success_return_url\": \"http://localhost:3001/done\",\r\n    \"failure_return_url\": \"http://localhost:3001/fail\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/directdebit"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create Virtual Account Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"bank\": \"bni\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"100000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"085892025984\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/virtualaccount"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create Retail Outlet Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"amount\": \"10000\",\r\n    \"retail_outlet\": \"Indomaret\",\r\n    \"name\": \"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/retailoutlet"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create QR Code Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"amount\": \"10000\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/qrcode"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:7776",
+			"type": "string"
+		}
+	]
+}
