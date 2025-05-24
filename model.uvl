@@ -17,7 +17,7 @@ features
 							FixedCurrency
 					Agent
 					SpecifiedRecipient
-			Payment
+			Payment {abstract true}
 				optional
 					PaymentLink
 					VirtualAccount
@@ -30,7 +30,7 @@ features
 					QRCode
 
 constraints
-  Oy => PaymentLink | EWallet | VirtualAccount | RetailOutlet | Invoice | PaymentRouting
-  Midtrans => Card | VirtualAccount | RetailOutlet | PaymentLink | EWallet
-  Xendit => SpecifiedRecipient | VirtualAccount | RetailOutlet | DirectDebit | QRCode
-  Flip => Agent | ExchangeRate | FixedCurrency |  PaymentLink | VirtualAccount
+	Oy => PaymentLink | EWallet | VirtualAccount | RetailOutlet | Invoice | PaymentRouting
+	Midtrans => Card | VirtualAccount | RetailOutlet | PaymentLink | EWallet
+	Xendit => SpecifiedRecipient | VirtualAccount | RetailOutlet | DirectDebit | QRCode
+	Flip => Agent | ExchangeRate | FixedCurrency | PaymentLink | VirtualAccount | EWallet
