@@ -203,8 +203,7 @@ public class XenditConfiguration extends ConfigDecorator {
 
         if (rawResponseMap.containsKey("error_code")) {
             String message = (String) rawResponseMap.get("message");
-            response.put("message", message);
-            return response;
+            throw new BadRequestException(message);
         }
 
         Map<String, Object> paymentMethod = (Map<String, Object>) rawResponseMap.get("payment_method");

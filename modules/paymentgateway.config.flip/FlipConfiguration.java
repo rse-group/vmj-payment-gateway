@@ -257,6 +257,12 @@ public class FlipConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        
+        if (rawResponseMap.containsKey("errors")) {
+            String errorMessageString = getErrorMessagesFromResponse(rawResponseMap);
+            throw new BadRequestException(errorMessageString);
+        }
+        
         Map<String, Object> senderMap = (Map<String, Object>) rawResponseMap.get("sender");
         String senderName = (String) senderMap.get("sender_name");
         String senderAddress = (String) senderMap.get("sender_address");
@@ -278,6 +284,12 @@ public class FlipConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        
+        if (rawResponseMap.containsKey("errors")) {
+            String errorMessageString = getErrorMessagesFromResponse(rawResponseMap);
+            throw new BadRequestException(errorMessageString);
+        }
+        
         double exchangeRate = (double) rawResponseMap.get("exchange_rate");
         double fee = (double) rawResponseMap.get("fee");
         double amount = (double) rawResponseMap.get("amount");
@@ -323,6 +335,12 @@ public class FlipConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (rawResponseMap.containsKey("errors")) {
+            String errorMessageString = getErrorMessagesFromResponse(rawResponseMap);
+            throw new BadRequestException(errorMessageString);
+        }
+
         Map<String, Object> billPayment = (Map<String, Object>) rawResponseMap.get("bill_payment");
         Map<String, Object> receiverBankAccount = (Map<String, Object>) billPayment.get("receiver_bank_account");
         String status = (String) billPayment.get("status");
@@ -424,6 +442,12 @@ public class FlipConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (rawResponseMap.containsKey("errors")) {
+            String errorMessageString = getErrorMessagesFromResponse(rawResponseMap);
+            throw new BadRequestException(errorMessageString);
+        }
+        
         String url = (String) rawResponseMap.get("link_url");
         String status = (String) rawResponseMap.get("status");
     	int linkId = ((Double) rawResponseMap.get("link_id")).intValue();

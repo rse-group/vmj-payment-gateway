@@ -238,6 +238,13 @@ public class MidtransConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (rawResponseMap.containsKey("error_messages")) {
+            List<String> errorMessages = (List<String>) rawResponseMap.get("error_messages");
+			String errorMessageString = String.join(", ", errorMessages);
+        	throw new BadRequestException(errorMessageString);
+        }
+
         String url = (String) rawResponseMap.get("payment_url");
         response.put("status", ""); // no status is provided in the request body
         response.put("vendor_generated_id", ""); // no transaction id provided in the request body
