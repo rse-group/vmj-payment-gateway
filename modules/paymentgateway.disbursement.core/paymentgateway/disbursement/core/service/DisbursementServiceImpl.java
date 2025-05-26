@@ -68,14 +68,10 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 				}
 
 				if (disbursement == null) {
-					throw new BadRequestException("Payment record not found");
+					throw new BadRequestException("Disbursement record not found");
 				}
 
-				try {
-					disbursement.setStatus(status.toUpperCase());
-				} catch (Exception e){
-					e.printStackTrace();
-				}
+				disbursement.setStatus(status.toUpperCase());
 		
 				this.updateObject(disbursement);
 	        } catch (Exception e) {
@@ -121,7 +117,6 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	}
 	
 	public HashMap<String, Object> updateDisbursement(Map<String, Object> requestBody) {
-
 		String id = (String) requestBody.get("id");
 		Disbursement disbursement = this.getObject(id);
 
@@ -129,13 +124,12 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 			throw new BadRequestException(String.format("Disbursement with ID %s does not exist", id));
 		}
 
-		try {
-			disbursement.setAmount((Double) requestBody.get("amount"));
-			disbursement.setAccountNumber((String) requestBody.get("account_number"));
-			disbursement.setBankCode((String) requestBody.get("bank_code"));
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+		double amount = ((Double) requestBody.get("amount")).doubleValue();
+		String accountNumber = this.validateRequiredStringField(requestBody, "account_number");
+		String bankCode = this.validateRequiredStringField(requestBody, "bank_code");
+		disbursement.setAmount(amount);
+		disbursement.setAccountNumber(accountNumber);
+		disbursement.setBankCode(bankCode);
 
 		this.updateObject(disbursement);
 		
@@ -163,15 +157,9 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 			}
 		});
 
-		if (disbursementHolder[0].isEmpty()) {
-			throw new BadRequestException("Disbursement not found");
-		}
-
-		String tableName = (String) requestBody.get("table_name");
-
 		if (disbursementHolder[0].equals("disbursement_impl")) {
 			this.deleteObject(id);
-			return getAllDisbursement(tableName);
+			return getAllDisbursement(disbursementHolder[0]);
 		}
 
 		final String[] targetId = {""};
@@ -183,7 +171,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		
 		this.deleteObject(targetId[0]);
 
-		return getAllDisbursement(tableName);
+		return getAllDisbursement(disbursementHolder[0]);
 	}
 	
 	public String getEnvVariableHostAddress(String varname_host){
@@ -320,4 +308,14 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
         return config.getDisbursementRequestBody(requestBody);
 	}
+
+	public String validateRequiredStringField(Map<String, Object> requestBody, String key) {
+		Object field = requestBody.get(key);
+		if (field == null) {
+			throw new BadRequestException(String.format("%s tidak ditemukan pada payload.", key));
+		}
+
+		return (String) field;
+	}
+
 }

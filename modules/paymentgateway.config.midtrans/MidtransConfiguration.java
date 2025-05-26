@@ -52,21 +52,6 @@ public class MidtransConfiguration extends ConfigDecorator{
             response.put("id", id);
             return response;
         }
-        
-        else{
-            if (status.toLowerCase().equals(PaymentStatus.SETTLEMENT.getStatus()) || status.toLowerCase().equals(PaymentStatus.CAPTURE.getStatus())) {
-                status = PaymentStatus.SUCCESSFUL.getStatus();
-    
-            }
-            else if (status.toLowerCase().equals(PaymentStatus.CANCEL.getStatus())){
-                status = PaymentStatus.CANCELLED.getStatus();
-    
-            }
-            else if (status.toLowerCase().equals(PaymentStatus.FAIL.getStatus())){
-                status = PaymentStatus.FAILED.getStatus();
-            }
-        }
-
         response.put("status", status);
         response.put("id", id);
         return response;

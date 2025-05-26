@@ -99,6 +99,20 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
+    public Map<String, Object> getAgentDisbursementRequestBody(Map<String, Object> requestBody) {
+        if (!requestBody.containsKey("agent_id")) {
+            throw new BadRequestException("agent_id tidak ditemukan pada payload.");
+        }
+
+        int agentId = RequestBodyValidator.intRequestBodyValidator(requestBody, "agent_id");
+
+        Map<String, Object> requestMap = getDisbursementRequestBody(requestBody);
+        requestMap.put("agent_id", agentId);
+
+        return requestMap;
+    }
+
+    @Override
     public Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody) {
         if (!requestBody.containsKey("direction")) {
             throw new BadRequestException("direction tidak ditemukan pada payload.");
