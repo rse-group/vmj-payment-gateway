@@ -5,6 +5,7 @@ import vmj.routing.route.VMJExchange;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -74,7 +75,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 			String rawResponse = response.body().toString();
 			LOGGER.info("Raw Response: " + rawResponse);
 			responseMap = config.getAgentDisbursementResponse(rawResponse, id);
-		} catch (Exception e) {
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
 
