@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature automatic="selected" manual="selected" name="PaymentGateway"/>
+	<feature automatic="selected" manual="selected" name="V.Vendor"/>
+	<feature manual="selected" name="V.Flip"/>
+	<feature manual="selected" name="V.Midtrans"/>
+	<feature manual="selected" name="V.Oy"/>
+	<feature manual="selected" name="V.Xendit"/>
+	<feature automatic="selected" manual="selected" name="F.Features"/>
+	<feature automatic="selected" name="F.Disbursement"/>
+	<feature automatic="selected" name="F.International"/>
+	<feature manual="selected" name="F.ExchangeRate"/>
+	<feature manual="selected" name="F.FixedCurrency"/>
+	<feature manual="selected" name="F.Agent"/>
+	<feature manual="selected" name="F.SpecifiedRecipient"/>
+	<feature automatic="selected" manual="selected" name="F.Payment"/>
+	<feature manual="selected" name="F.PaymentLink"/>
+	<feature manual="selected" name="F.VirtualAccount"/>
+	<feature name="F.RetailOutlet"/>
+	<feature name="F.EWallet"/>
+	<feature manual="selected" name="F.Invoice"/>
+	<feature name="F.PaymentRouting"/>
+	<feature manual="selected" name="F.Card"/>
+	<feature manual="selected" name="F.DirectDebit"/>
+	<feature manual="selected" name="F.QRCode"/>
+</configuration>
