@@ -64,9 +64,14 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		return null;
 	}
 	
-	public Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody) {
-		String vendorName = this.validateVendorName((String) requestBody.get("vendor_name"));
-		String Id = this.validateId((String) requestBody.get("id"));
+	public Map<String, Object> checkPaymentStatus(String id) {
+		String validatedId = this.validateId(id);
+		Payment payment = this.getObject(validatedId);
+		if (payment == null) {
+			throw new BadRequestException("Payment dengan ID " + validatedId + " tidak ditemukan");
+		}
+
+		String vendorName = payment.getVendorName();
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		HttpClient client = HttpClient.newHttpClient();
@@ -75,7 +80,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		Map<String, Object> responseMap = new HashMap<>();
 		
 		PaymentRepository.executeQuery(session -> {
-			String sql = String.format("SELECT modulesequence FROM payment_comp WHERE idtransaction ='%s'", Id );
+			String sql = String.format("SELECT modulesequence FROM payment_comp WHERE idtransaction ='%s'", validatedId );
 			try {
                 String result = (String) session.createNativeQuery(sql).getSingleResult();
                 String[] modules = result.split(",");
@@ -87,7 +92,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		
 		System.out.println("paymentMethodHolder" + paymentMethodHolder);
 	    if (paymentMethodHolder[0].isEmpty()) {
-	    	 throw new BadRequestException("Payment dengan ID " + Id + " tidak ditemukan");
+	    	 throw new BadRequestException("Payment dengan ID " + validatedId + " tidak ditemukan");
 	    }
 		
 		String configUrl;
@@ -98,7 +103,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		}
 		
 		System.out.println(configUrl + paymentMethodHolder[0]);
-        configUrl = config.getPaymentDetailEndpoint(configUrl, Id);
+        configUrl = config.getPaymentDetailEndpoint(configUrl, validatedId);
         HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),config.getHeaderParams()))
 				.uri(URI.create(configUrl))
 				.GET()
@@ -106,7 +111,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-            responseMap = config.getPaymentStatusResponse(rawResponse, Id);
+            responseMap = config.getPaymentStatusResponse(rawResponse, validatedId);
             System.out.println("responseMap" + responseMap);
 		} catch (Exception e) {
 			e.printStackTrace();

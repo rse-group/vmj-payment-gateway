@@ -35,10 +35,11 @@ public class PaymentResourceImpl extends PaymentResourceComponent {
 		return result.toHashMap();
 	}
 
-	@Route(url = "call/paymentstatus", method = RequestMethod.POST)
+	@Route(url = "call/paymentstatus", method = RequestMethod.GET)
 	public Map<String, Object> paymentStatus(VMJExchange vmjExchange) {
-		Map<String, Object> requestBody = vmjExchange.getPayload();
-		return paymentServiceImpl.checkPaymentStatus(requestBody);
+		Map<String, String> queryParamsMap = vmjExchange.queryToMap();
+		String id = queryParamsMap.get("id");
+		return paymentServiceImpl.checkPaymentStatus(id);
 	}
 
 	@Route(url = "call/payment/callback")
