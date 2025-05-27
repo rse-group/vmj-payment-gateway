@@ -157,13 +157,6 @@ public class FlipConfiguration extends ConfigDecorator{
 
         return requestMap;
     }
-    
-    @Override
-    public String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap){
-        String id = (String) paymentMap.get("vendorGeneratedId");
-        configUrl = configUrl.replace("[id]", id);
-        return configUrl;
-    }
 
     @Override
     public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){

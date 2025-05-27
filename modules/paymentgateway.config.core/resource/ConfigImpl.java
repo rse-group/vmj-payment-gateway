@@ -38,6 +38,10 @@ public class ConfigImpl extends ConfigComponent {
         String baseUrl = (String) PropertiesReader.getProp(fileName, "base_url");
         String apiEndpoint = (String) PropertiesReader.getProp(fileName, serviceName);
 
+        if (apiEndpoint == null) {
+            return null;
+        }
+
         url = baseUrl + apiEndpoint;
 
         return url;
@@ -60,7 +64,24 @@ public class ConfigImpl extends ConfigComponent {
     }
 
     public String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap){
-        throw new UnsupportedOperationException();
+        // Reference: https://stackoverflow.com/a/12595052
+        System.out.println(configUrl);
+        String idFormat = configUrl.substring(configUrl.indexOf("["));
+        idFormat = idFormat.substring(0, idFormat.indexOf("]") + 1);
+
+        String id;
+
+        switch (idFormat) {
+            case "[vendorGeneratedId]":
+                id = (String) paymentMap.get("vendorGeneratedId");
+                break;
+            default:
+                id = (String) paymentMap.get("id");
+                break;
+        }
+
+        configUrl = configUrl.replace(idFormat, id);
+        return configUrl;
     }
 
     public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){

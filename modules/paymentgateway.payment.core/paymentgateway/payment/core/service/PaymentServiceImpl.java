@@ -90,24 +90,21 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
                 paymentMethodHolder[0] = "";
             }
 		});
+
+		String tableName = paymentMethodHolder[0];
 		
 		System.out.println("paymentMethodHolder" + paymentMethodHolder);
-		
-		String configUrl;
-		if (paymentMethodHolder[0].equals("paymentlink_impl") && (
-			vendorName.toLowerCase().equals("midtrans") || vendorName.toLowerCase().equals("flip")
-		)){
-			configUrl = config.getProductEnv("PaymentStatus");
-		} else {
-			configUrl = config.getProductEnv("PaymentDetail");
-		}
-		
-		System.out.println(configUrl + paymentMethodHolder[0]);
-
 		Map<String, Object> paymentMap = new HashMap<>();
 		paymentMap.put("id", payment.getIdTransaction().toString());
 		paymentMap.put("vendorGeneratedId", payment.getVendorGeneratedId());
 
+		String featureName = tableName.replace("_impl", "");
+        String propertyName = String.format("%s_payment_detail", featureName);
+		
+		String configUrl = config.getProductEnv(propertyName);
+		if (configUrl == null) {
+			throw new BadRequestException("Payment detail URL is not configured");
+		}
         configUrl = config.getPaymentDetailEndpoint(configUrl, paymentMap);
         HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),config.getHeaderParams()))
 				.uri(URI.create(configUrl))

@@ -30,13 +30,6 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap){
-        String id = (String) paymentMap.get("id");
-        configUrl = configUrl.replace("[id]", id);
-        return configUrl;
-    }    
-
-    @Override
     public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
@@ -366,6 +359,9 @@ public class MidtransConfiguration extends ConfigDecorator{
         }
         else if (serviceName.equals("CardToken")){
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "token") + "?client_key=" + PropertiesReader.getProp(CONFIG_FILE, "clientKey");
+        }
+        else if (serviceName.endsWith("payment_detail")) {
+            apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, serviceName);
         }
         else {
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "apiendpoint");

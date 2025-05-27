@@ -32,13 +32,6 @@ public class OyConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap){
-        String id = (String) paymentMap.get("id");
-        configUrl = configUrl.replace("[id]", id);
-        return configUrl;
-    }
-     
-    @Override
     public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
 	    Map<String, Object> requestMap = new HashMap<>();
 	    Map<String, Object> payload = vmjExchange.getPayload();
@@ -80,7 +73,19 @@ public class OyConfiguration extends ConfigDecorator{
         }
 
         Map<String, Object> paymentData = (Map<String, Object>) rawResponseMap.get("data");
-        String status = (String) paymentData.get("status");
+        
+        String status;
+        if (paymentData != null) {
+            // for payment link, invoice, payment routing
+            status = (String) paymentData.get("status");
+        } else {
+            // for ewallet payment
+            status = (String) rawResponseMap.get("ewallet_trx_status");
+            if (status == null) {
+                // for virtual account
+                status = (String) rawResponseMap.get("va_status");
+            }
+        }       
 
         response.put("status", status);
         response.put("id", id);
