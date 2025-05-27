@@ -25,9 +25,6 @@ import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.payment.PaymentFactory;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
-	// implement this to work with authorization module
-	protected String apiKey;
-	protected String apiEndpoint;
 	private PaymentServiceImpl paymentServiceImpl;
 
 	public PaymentResourceImpl(PaymentResourceComponent record, PaymentServiceComponent recordService) {
