@@ -6,6 +6,7 @@ import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -36,10 +37,6 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		
 		Map<String, Object> response = sendTransaction(requestBody);
 		String retailOutlet = (String) requestBody.get("retail_outlet");
-
-		if (response.containsKey("message")) {
-			throw new IllegalStateException((String) response.get("message"));
-		}
 		
 		String retailPaymentCode = (String) response.get("retail_payment_code");
 		System.out.println("response " + response);
@@ -87,7 +84,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 			String rawResponse = response.body().toString();
 			System.out.println("rawResponse: " + rawResponse);
 			responseMap = config.getRetailOutletResponse(rawResponse, id);
-		} catch (Exception e) {
+		} catch (IOException | InterruptedException e) {
 			System.out.println(e);
 		}
 

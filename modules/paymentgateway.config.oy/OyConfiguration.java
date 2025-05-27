@@ -76,9 +76,7 @@ public class OyConfiguration extends ConfigDecorator{
         if (Boolean.FALSE.equals(isSuccess)) {
             Map<String, Object> error = (Map<String, Object>) rawResponseMap.get("error");
             String errorMessage = error != null ? (String) error.get("message") : "Unknown error";
-            response.put("message", errorMessage);
-            response.put("id", id);
-            return response;
+            throw new BadRequestException(errorMessage);
         }
 
         Map<String, Object> paymentData = (Map<String, Object>) rawResponseMap.get("data");
@@ -333,8 +331,7 @@ public class OyConfiguration extends ConfigDecorator{
         String statusMessage = (String) status.get("message");
         String retailPaymentCode = (String) rawResponseMap.get("code");
         if (retailPaymentCode == null) {
-            response.put("message", statusMessage);
-            return response;
+            throw new BadRequestException(statusMessage);
         }
         String vendorGeneratedId = (String) rawResponseMap.get("tx_id");
         response.put("status", statusMessage.toUpperCase());

@@ -31,10 +31,6 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
         
         Map<String, Object> response = sendTransaction(validatedRequestBody);
         LOGGER.info("Transaction Response: " + response);
-        
-		if (response.containsKey("message")) {
-			throw new IllegalStateException((String) response.get("message"));
-		}
 		
         Disbursement coreDisbursement = RESOURCE.createDisbursement(requestBody, response);
         
