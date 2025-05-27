@@ -59,7 +59,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
     }
 
     private Map<String, Object> validateRequestBody(Map<String, Object> requestBody) {
-        String vendorName = (String) requestBody.get("vendor_name");
+        String vendorName = record.validateVendorName((String) requestBody.get("vendor_name"));
         Config config = ConfigFactory.createConfig(vendorName,
             ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
         Map<String, Object> validatedBody = config.getDisbursementRequestBody(requestBody);

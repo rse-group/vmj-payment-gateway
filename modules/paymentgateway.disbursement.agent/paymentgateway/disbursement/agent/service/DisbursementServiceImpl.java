@@ -51,7 +51,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 
 	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
 		String id = UUID.randomUUID().toString();
-		String vendorName = (String) requestBody.get("vendor_name");
+		String vendorName = record.validateVendorName((String) requestBody.get("vendor_name"));
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		config.getAgentDisbursementRequestBody(requestBody);

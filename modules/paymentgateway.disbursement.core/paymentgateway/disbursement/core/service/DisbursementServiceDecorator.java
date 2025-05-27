@@ -51,6 +51,18 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
         return record.getDisbursementById(id);
     }
 
+    public String validateVendorName(String vendorName) {
+        return record.validateVendorName(vendorName);
+    }
+    
+    public double validateAmount(Object amountObject) {
+        return record.validateAmount(amountObject);
+    }
+    
+    public String validateId(Object idObject) {
+        return record.validateId(idObject);
+    }
+    
     public String validateRequiredStringField(Map<String, Object> requestBody, String key) {
         return record.validateRequiredStringField(requestBody, key);
     }

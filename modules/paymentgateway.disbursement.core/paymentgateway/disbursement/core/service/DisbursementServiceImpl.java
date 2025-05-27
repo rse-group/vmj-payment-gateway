@@ -84,16 +84,15 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	}
 
     public Disbursement createDisbursement(Map<String, Object> requestBody) {
-        Map<String, Object> response = sendTransaction(validateRequestBody(requestBody));
+        Map<String, Object> response = sendTransaction(requestBody);
         return createDisbursement(requestBody, response);
     }
 	
 	public Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response){
-		Map<String, Object> validatedRequestBody = validateRequestBody(requestBody);
-		String vendorName = (String) validatedRequestBody.get("vendor_name");
-		String bank_code = (String) validatedRequestBody.get("bank_code");
-		String account_number = (String) validatedRequestBody.get("account_number");
-		double amount = (Double) validatedRequestBody.get("amount");
+		String vendorName = this.validateVendorName((String) requestBody.get("vendor_name"));
+		String bank_code = ((String) requestBody.get("bank_code"));
+		String account_number = (String) requestBody.get("account_number");
+		double amount = this.validateAmount(requestBody.get("amount"));
 		String id = (String) response.get("id");
 		int userId = (int) response.get("user_id");
 		String status = (String) response.get("status");
@@ -117,14 +116,14 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	}
 	
 	public HashMap<String, Object> updateDisbursement(Map<String, Object> requestBody) {
-		String id = (String) requestBody.get("id");
+		String id = this.validateId(requestBody.get("id"));
 		Disbursement disbursement = this.getObject(id);
 
 		if (disbursement == null) {
 			throw new BadRequestException(String.format("Disbursement with ID %s does not exist", id));
 		}
 
-		double amount = ((Double) requestBody.get("amount")).doubleValue();
+		double amount = this.validateAmount(requestBody.get("amount"));
 		String accountNumber = this.validateRequiredStringField(requestBody, "account_number");
 		String bankCode = this.validateRequiredStringField(requestBody, "bank_code");
 		disbursement.setAmount(amount);
@@ -138,7 +137,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
     }
 	
 	public List<HashMap<String, Object>> deleteDisbursement(Map<String, Object> requestBody){
-		String id = (String) requestBody.get("id");
+		String id = this.validateId(requestBody.get("id"));
 		Disbursement disbursement = this.getObject(id);
 		
 		if (disbursement == null) {
@@ -187,7 +186,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 
 	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
 		String id = UUID.randomUUID().toString();
-        String vendorName = (String) requestBody.get("vendor_name");
+        String vendorName = this.validateVendorName((String) requestBody.get("vendor_name"));
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 
@@ -303,12 +302,61 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
     }
 
 	private Map<String, Object> validateRequestBody(Map<String, Object> requestBody) {
-		String vendorName = (String) requestBody.get("vendor_name");
+		String vendorName = validateVendorName((String) requestBody.get("vendor_name"));
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
         return config.getDisbursementRequestBody(requestBody);
 	}
 
+	public String validateVendorName(String vendorName) {
+		if (vendorName == null) {
+			throw new BadRequestException("vendor_name tidak ditemukan pada payload");
+		}
+		try {
+			// Provide vendor name that supports dibursement only
+			System.out.println("Vendor Name:" + vendorName);
+			Set<String> vendorNames = new HashSet<>();
+			vendorNames.add("Flip");
+			vendorNames.add("Xendit");
+			
+			if (!vendorNames.contains(vendorName)) {
+				throw new BadRequestException("vendor_name tidak valid.");
+			}
+			return vendorName;
+		} catch (Exception e) {
+			throw new BadRequestException("vendor_name tidak valid");
+		}
+
+	}
+
+	public double validateAmount(Object amountObject) {
+		Double amount;
+		if (amountObject == null) {
+			throw new BadRequestException("amount tidak ditemukan pada payload.");
+		}
+		try {
+			amount = ((Double) amountObject);
+			return amount;
+		} catch (Exception e) {
+			throw new BadRequestException("amount tidak valid.");
+		}
+
+	}
+
+	public String validateId(Object idObject) {
+		String id;
+		if (idObject == null) {
+			throw new BadRequestException("id tidak ditemukan pada payload.");
+		}
+		try {
+			id = ((String) idObject);
+			UUID.fromString(id);
+			return id;
+		} catch (Exception e) {
+			throw new BadRequestException("id tidak valid.");
+		}
+	}
+	
 	public String validateRequiredStringField(Map<String, Object> requestBody, String key) {
 		Object field = requestBody.get(key);
 		if (field == null) {
