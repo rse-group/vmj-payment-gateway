@@ -6,6 +6,7 @@ import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -83,7 +84,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 			String rawResponse = response.body().toString();
 			System.out.println("rawResponse " + rawResponse);
 			responseMap = config.getVirtualAccountResponse(rawResponse, id);
-		} catch (Exception e) {
+		} catch (IOException | InterruptedException e) {
 			System.out.println(e);
 		}
 		

@@ -18,4 +18,5 @@ public interface DisbursementService {
     String validateVendorName(String vendorName);
     double validateAmount(Object amountObject);
     String validateId(Object idObject);
+    String validateRequiredStringField(Map<String, Object> requestBody, String key);
 }

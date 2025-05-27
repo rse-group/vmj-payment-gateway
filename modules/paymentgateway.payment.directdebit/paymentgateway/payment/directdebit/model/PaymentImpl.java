@@ -25,17 +25,17 @@ public class PaymentImpl extends PaymentDecorator {
 		super();
 	}
 
-	public String getdirectDebitUrl() {
+	public String getDirectDebitUrl() {
 		return this.directDebitUrl;
 	}
 
-	public void setdirectDebitUrl(String directDebitUrl) {
+	public void setDirectDebitUrl(String directDebitUrl) {
 		this.directDebitUrl = directDebitUrl;
 	}
 
 	public HashMap<String, Object> toHashMap() {
 		HashMap<String, Object> directDebitMap = record.toHashMap();
-		directDebitMap.put("directDebitUrl", getdirectDebitUrl());
+		directDebitMap.put("directDebitUrl", getDirectDebitUrl());
 		return directDebitMap;
 	}
 }

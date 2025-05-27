@@ -28,4 +28,5 @@ public abstract class DisbursementServiceComponent implements DisbursementServic
     public abstract String validateVendorName(String vendorName);
     public abstract double validateAmount(Object amountObject);
     public abstract String validateId(Object idObject);
+    public abstract String validateRequiredStringField(Map<String, Object> requestBody, String key);
 }

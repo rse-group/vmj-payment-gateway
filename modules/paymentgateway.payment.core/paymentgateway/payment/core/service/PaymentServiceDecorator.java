@@ -43,8 +43,8 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
         return record.sendTransaction(requestBody);
     }
      
-    public Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody){
-        return record.checkPaymentStatus(requestBody);
+    public Map<String, Object> checkPaymentStatus(String id){
+        return record.checkPaymentStatus(id);
     }
 
     public HashMap<String, Object> getPaymentById(String id){

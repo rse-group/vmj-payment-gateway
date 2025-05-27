@@ -76,6 +76,10 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getDisbursementRequestBody(requestBody);
     }
 
+    public Map<String, Object> getAgentDisbursementRequestBody(Map<String, Object> requestBody) {
+        return record.getAgentDisbursementRequestBody(requestBody);
+    }
+
     public Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody){
         return record.getDomesticDisbursementRequestBody(requestBody);
     }

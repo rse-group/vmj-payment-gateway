@@ -42,10 +42,10 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		String vendorGeneratedId = (String) response.get("vendor_generated_id");
 
 		Payment transaction = record.createPayment(requestBody, id, status, vendorGeneratedId);
-		Payment cardTransaction = PaymentFactory.createPayment(
+		Payment directDebitTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.directdebit.PaymentImpl", transaction, directDebitUrl);
-		PaymentRepository.saveObject(cardTransaction);
-		return cardTransaction;
+		PaymentRepository.saveObject(directDebitTransaction);
+		return directDebitTransaction;
 	}
 
 	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {

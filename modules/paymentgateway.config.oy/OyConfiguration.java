@@ -271,6 +271,13 @@ public class OyConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        
+        if (!rawResponseMap.containsKey("payment_link_id")) {
+            Map<String, Object> statusObject = (Map<String, Object>) rawResponseMap.get("status");
+            String errorMessageString = (String) statusObject.get("message");
+            throw new BadRequestException(errorMessageString);
+        
+        }
         String url = (String) rawResponseMap.get("url");
         String paymentLinkId = (String) rawResponseMap.get("payment_link_id");
         response.put("status", "CREATED");
@@ -288,6 +295,13 @@ public class OyConfiguration extends ConfigDecorator{
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String transactionUrl = (String) rawResponseMap.get("url");
         String paymentLinkId = (String) rawResponseMap.get("payment_link_id");
+        
+        if (!rawResponseMap.containsKey("transactionUrl")) {
+            Map<String, Object> statusObject = (Map<String, Object>) rawResponseMap.get("status");
+            String errorMessageString = (String) statusObject.get("message");
+            throw new BadRequestException(errorMessageString);
+        }
+
         response.put("status", "CREATED"); 
         response.put("url", transactionUrl);
         response.put("vendor_generated_id", paymentLinkId);
@@ -301,6 +315,13 @@ public class OyConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        
+        if (!rawResponseMap.containsKey("trx_id")) {
+            Map<String, Object> statusObject = (Map<String, Object>) rawResponseMap.get("status");
+            String errorMessageString = (String) statusObject.get("message");
+            throw new BadRequestException(errorMessageString);
+        }
+        
         Map<String, Object> paymentMap = (Map<String, Object>) rawResponseMap.get("payment_info");
         String url = (String) paymentMap.get("payment_checkout_url");
         String vendorGeneratedId = (String) rawResponseMap.get("trx_id");
@@ -363,6 +384,13 @@ public class OyConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        
+        if (!rawResponseMap.containsKey("trx_id")) {
+            Map<String, Object> statusObject = (Map<String, Object>) rawResponseMap.get("status");
+            String errorMessageString = (String) statusObject.get("message");
+            throw new BadRequestException(errorMessageString);
+        }
+
         String vaNumber = (String) rawResponseMap.get("va_number");
         String vaStatus = (String) rawResponseMap.get("va_status");
         String vendorGeneratedId = (String) rawResponseMap.get("id");
