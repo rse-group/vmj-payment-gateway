@@ -8,6 +8,7 @@ PaymentLink = /pwf/bill
 VirtualAccount = /pwf/bill
 EWallet = /pwf/bill
 PaymentDetail = /pwf/[id]/payment
+PaymentStatus = /pwf/[id]/bill
 token =
 
 content_type = application/x-www-form-urlencoded

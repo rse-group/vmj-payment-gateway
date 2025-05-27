@@ -6,6 +6,7 @@ RetailOutlet = /payment_requests
 DirectDebit = /payment_requests
 QRCode = /payment_requests
 EWallet = /payment_requests
+PaymentDetail = /payment_requests/[id]
 
 content_type = application/json
 authorization =
