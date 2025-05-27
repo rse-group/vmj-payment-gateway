@@ -375,14 +375,15 @@ public class OyConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
-        
-        if (!rawResponseMap.containsKey("trx_id")) {
+
+        String vaNumber = (String) rawResponseMap.get("va_number");
+
+        if (vaNumber == null) {
             Map<String, Object> statusObject = (Map<String, Object>) rawResponseMap.get("status");
             String errorMessageString = (String) statusObject.get("message");
             throw new BadRequestException(errorMessageString);
         }
 
-        String vaNumber = (String) rawResponseMap.get("va_number");
         String vaStatus = (String) rawResponseMap.get("va_status");
         String vendorGeneratedId = (String) rawResponseMap.get("id");
         response.put("status", vaStatus);
