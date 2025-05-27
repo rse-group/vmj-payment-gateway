@@ -328,6 +328,13 @@ public class MidtransConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        String statusCode = (String) rawResponseMap.get("status_code");
+        if (!statusCode.equals("200")) {
+            String errorMessageString = (String) rawResponseMap.get("status_message");
+            throw new BadRequestException(errorMessageString);
+        }
+
         String vaNumber = (String) rawResponseMap.get("permata_va_number");
         if (vaNumber == null) {
             List<Map<String, Object>> vaNums = (List<Map<String, Object>>) rawResponseMap.get("va_numbers");
