@@ -10,6 +10,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -110,7 +111,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 			String rawResponse = response.body().toString();
             responseMap = config.getPaymentStatusResponse(rawResponse, validatedId);
             System.out.println("responseMap" + responseMap);
-		} catch (Exception e) {
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
         return responseMap;

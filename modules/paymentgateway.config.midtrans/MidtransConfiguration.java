@@ -48,10 +48,10 @@ public class MidtransConfiguration extends ConfigDecorator{
         	    : (String) rawResponseMap.get("last_snap_transaction_status");
         
         if (status == null){
-            response.put("status", rawResponseMap.get("status_message"));
-            response.put("id", id);
-            return response;
+        	String errorMessageString = (String) rawResponseMap.get("status_message");
+        	throw new BadRequestException(errorMessageString);
         }
+        
         response.put("status", status);
         response.put("id", id);
         return response;
@@ -284,8 +284,7 @@ public class MidtransConfiguration extends ConfigDecorator{
         String retailPaymentCode = (String) rawResponseMap.get("payment_code");
         if (retailPaymentCode == null) {
             String statusMessage = (String) rawResponseMap.get("status_message");
-        	response.put("message", statusMessage);
-            return response;
+            throw new BadRequestException(statusMessage);
         }
         String transactionStatus = (String) rawResponseMap.get("transaction_status");
         String vendorGeneratedId = (String) rawResponseMap.get("transaction_id");

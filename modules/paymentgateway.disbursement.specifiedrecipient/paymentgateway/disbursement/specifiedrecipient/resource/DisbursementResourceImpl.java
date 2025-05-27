@@ -24,12 +24,8 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 	public HashMap<String, Object> disbursement(VMJExchange vmjExchange) {
 		if (vmjExchange.getHttpMethod().equals("POST")) {
 			Map<String, Object> requestBody = vmjExchange.getPayload(); 
-			try {
-				Disbursement result = disbursementServiceImpl.createDisbursement(requestBody);
-				return result.toHashMap();
-			} catch (IllegalStateException e) {
-				throw new BadRequestException(e.getMessage());
-			}
+			Disbursement result = disbursementServiceImpl.createDisbursement(requestBody);
+			return result.toHashMap();
 		}
 		throw new NotFoundException("Route tidak ditemukan");
 	}

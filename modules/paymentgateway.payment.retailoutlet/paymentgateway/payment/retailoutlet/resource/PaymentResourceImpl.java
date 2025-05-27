@@ -39,12 +39,8 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 	@Route(url="call/retailoutlet", method = RequestMethod.POST)
 	public HashMap<String,Object> payment(VMJExchange vmjExchange) {
 		Map<String, Object> requestBody = vmjExchange.getPayload(); 
-		try {
-			Payment result = paymentServiceImpl.createPayment(requestBody);
-			return result.toHashMap();
-		} catch (IllegalStateException e) {
-			throw new BadRequestException(e.getMessage());
-		}
+		Payment result = paymentServiceImpl.createPayment(requestBody);
+		return result.toHashMap();
 	}
 }
 

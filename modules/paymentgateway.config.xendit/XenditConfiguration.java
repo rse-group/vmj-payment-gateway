@@ -117,8 +117,7 @@ public class XenditConfiguration extends ConfigDecorator {
 
         if (rawResponseMap.containsKey("error_code")) {
             String message = (String) rawResponseMap.get("message");
-            response.put("message", message);
-            return response;
+            throw new BadRequestException(message);
         }
 
         String referenceId = (String) rawResponseMap.get("reference_id");
@@ -266,8 +265,7 @@ public class XenditConfiguration extends ConfigDecorator {
 	    
         if (rawResponseMap.containsKey("error_code")) {
             String message = (String) rawResponseMap.get("message");
-            response.put("message", message);
-            return response;
+            throw new BadRequestException(message);
         }
 
         Map<String, Object> paymentMethod = (Map<String, Object>) rawResponseMap.get("payment_method");
@@ -280,8 +278,7 @@ public class XenditConfiguration extends ConfigDecorator {
         if (retailPaymentCode == null) {
             Map<String, Object> status = (Map<String, Object>) rawResponseMap.get("status");
             String statusMessage = (String) status.get("message");
-            response.put("message", statusMessage);
-            return response;
+            throw new BadRequestException(statusMessage);
         }
 
         String status = (String) rawResponseMap.get("status");
@@ -337,8 +334,7 @@ public class XenditConfiguration extends ConfigDecorator {
 
         if (rawResponseMap.containsKey("error_code")) {
             String message = (String) rawResponseMap.get("message");
-            response.put("message", message);
-            return response;
+            throw new BadRequestException(message);
         }
 
         Map<String, Object> paymentMethod = (Map<String, Object>) rawResponseMap.get("payment_method");

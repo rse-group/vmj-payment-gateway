@@ -15,6 +15,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 import vmj.routing.route.Route;
@@ -79,7 +81,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 			String rawResponse = response.body().toString();
 			System.out.println("rawResponse " + rawResponse);
 			responseMap = config.getInvoiceResponse(rawResponse, id);
-		} catch (Exception e) {
+		} catch (IOException | InterruptedException e) {
 			System.out.println(e);
 		}
 
