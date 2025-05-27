@@ -542,6 +542,7 @@ public class XenditConfiguration extends ConfigDecorator {
             String action = (String) actionMap.get("action");
             if (action.equals("AUTH")) {
                 directDebitUrl = (String) actionMap.get("url");
+                break;
             }
         }
         
