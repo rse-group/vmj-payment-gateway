@@ -15,4 +15,7 @@ public interface DisbursementService {
     List<HashMap<String, Object>> transformListToHashMap(List<Disbursement> List);
     Map<String, Object> sendTransaction(Map<String, Object> requestBody);
     HashMap<String, Object> getDisbursementById(String id);
+    String validateVendorName(String vendorName);
+    double validateAmount(Object amountObject);
+    String validateId(Object idObject);
 }

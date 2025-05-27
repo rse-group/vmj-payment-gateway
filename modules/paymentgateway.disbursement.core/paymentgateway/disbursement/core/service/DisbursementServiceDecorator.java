@@ -50,4 +50,16 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
     public HashMap<String, Object> getDisbursementById(String id){
         return record.getDisbursementById(id);
     }
+
+    public String validateVendorName(String vendorName) {
+        return record.validateVendorName(vendorName);
+    }
+    
+    public double validateAmount(Object amountObject) {
+        return record.validateAmount(amountObject);
+    }
+    
+    public String validateId(Object idObject) {
+        return record.validateId(idObject);
+    }
 }

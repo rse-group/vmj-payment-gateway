@@ -37,7 +37,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		double fee = (double) response.get("fee");
 		String source_country = (String) response.get("source_country");
 		String destination_country = (String) response.get("destination_country");
-		double amount_in_sender_currency = (double) response.get("amount");
+		double amount_in_sender_currency = record.validateAmount(response.get("amount"));
 		String beneficiary_currency_code = (String) response.get("beneficiary_currency_code");
 
 		Disbursement internationalTransaction = DisbursementFactory.createDisbursement(
@@ -58,7 +58,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 
 	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
 		String id = UUID.randomUUID().toString();
-        String vendorName = (String) requestBody.get("vendor_name");
+        String vendorName = record.validateVendorName((String) requestBody.get("vendor_name"));
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		

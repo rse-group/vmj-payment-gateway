@@ -25,4 +25,7 @@ public abstract class DisbursementServiceComponent implements DisbursementServic
     public abstract List<HashMap<String, Object>> transformListToHashMap(List<Disbursement> List);
     public abstract Map<String, Object> sendTransaction(Map<String, Object> requestBody);
     public abstract HashMap<String, Object> getDisbursementById(String id);
+    public abstract String validateVendorName(String vendorName);
+    public abstract double validateAmount(Object amountObject);
+    public abstract String validateId(Object idObject);
 }

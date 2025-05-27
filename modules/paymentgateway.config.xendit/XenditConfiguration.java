@@ -301,21 +301,12 @@ public class XenditConfiguration extends ConfigDecorator {
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> paymentMethod = new HashMap<String, Object>();
         Map<String, Object> qrCode = new HashMap<String, Object>();
-        Map<String, Object> channelProperties = new HashMap<String, Object>();
 
         String id = UUID.randomUUID().toString();
-        // String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-        // requestBody,
-        // "amount");
         int amount = ((Double) requestBody.get("amount")).intValue();
-
-        String uuidString = UUID.randomUUID().toString().replace("-", "");
-        int uniqueInteger = Math.abs(uuidString.hashCode()) % 100000;
 
         paymentMethod.put("reusability", "ONE_TIME_USE");
         paymentMethod.put("type", "QR_CODE");
-
-        // Does qr code needs its body?
 
         paymentMethod.put("qr_code", qrCode);
 
@@ -353,7 +344,6 @@ public class XenditConfiguration extends ConfigDecorator {
         String qrCodeString = (String) channelProperties.get("qr_string");
         String expiryDateString = (String) channelProperties.get("expires_at");
 
-        // String referenceId = (String) rawResponseMap.get("reference_id");
         String status = (String) rawResponseMap.get("status");
         String vendorGeneratedId = (String) rawResponseMap.get("id");
 
