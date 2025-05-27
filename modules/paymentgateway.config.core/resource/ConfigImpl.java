@@ -101,6 +101,10 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
+    public Map<String, Object> getAgentDisbursementRequestBody(Map<String, Object> requestBody) {
+        throw new UnsupportedOperationException();
+    }
+
     public Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }

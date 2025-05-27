@@ -22,6 +22,7 @@ public abstract class ConfigComponent implements Config {
     public abstract Map<String, Object> getPaymentStatusResponse(String rawResponse, String id);
 
     public abstract Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody);
+    public abstract Map<String, Object> getAgentDisbursementRequestBody(Map<String, Object> requestBody);
     public abstract Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody);
     public abstract Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody);
 

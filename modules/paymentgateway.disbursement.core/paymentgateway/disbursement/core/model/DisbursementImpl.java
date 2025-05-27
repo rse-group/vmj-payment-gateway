@@ -94,6 +94,10 @@ public class DisbursementImpl extends DisbursementComponent {
 		this.vendorGeneratedId = vendorGeneratedId;
 	}
 
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
 	public HashMap<String, Object> toHashMap() {
 		HashMap<String, Object> disbursementHashMap = new HashMap<>();
 		disbursementHashMap.put("id", getId().toString());
@@ -104,6 +108,7 @@ public class DisbursementImpl extends DisbursementComponent {
 		disbursementHashMap.put("vendorName", getVendorName());
 		disbursementHashMap.put("status", getStatus());
 		disbursementHashMap.put("vendor_generated_id", getVendorGeneratedId());
+		disbursementHashMap.put("createdAt", getCreatedAt());
 		return disbursementHashMap;
 	}
 }

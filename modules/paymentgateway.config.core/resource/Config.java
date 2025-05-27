@@ -36,6 +36,7 @@ public interface Config {
 
     // Disbursement Request
     Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getAgentDisbursementRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody);
 

@@ -91,9 +91,6 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		});
 		
 		System.out.println("paymentMethodHolder" + paymentMethodHolder);
-	    if (paymentMethodHolder[0].isEmpty()) {
-	    	 throw new BadRequestException("Payment dengan ID " + validatedId + " tidak ditemukan");
-	    }
 		
 		String configUrl;
 		if (paymentMethodHolder[0].equals("paymentlink_impl") && vendorName.toLowerCase().equals("midtrans")){
@@ -184,11 +181,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 			throw new BadRequestException("Payment dengan ID " + validatedId + " tidak ditemukan");
 		}
 
-		try {
-			payment.setAmount(amount);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+		payment.setAmount(amount);
 
 		this.updateObject(payment);
 		
@@ -215,10 +208,6 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 				paymentMethodHolder[0] = "";
 			}
 		});
-
-		if (paymentMethodHolder[0].isEmpty()) {
-			throw new BadRequestException("Payment not found");
-		}
 
 		if (paymentMethodHolder[0].equals("payment_impl")) {
 			this.deleteObject(validatedId);
@@ -298,11 +287,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 					throw new BadRequestException("Payment record not found");
 				}
 
-				try {
-					payment.setStatus(status.toUpperCase());
-				} catch (Exception e){
-					e.printStackTrace();
-				}
+				payment.setStatus(status.toUpperCase());
 		
 				this.updateObject(payment);
 			} catch (Exception e) {

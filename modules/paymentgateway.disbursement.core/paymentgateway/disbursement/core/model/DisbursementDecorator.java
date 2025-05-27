@@ -81,6 +81,10 @@ public abstract class DisbursementDecorator extends DisbursementComponent {
 	public void setVendorGeneratedId(String vendorGeneratedId){
 		record.setVendorGeneratedId(vendorGeneratedId);
 	}
+
+    public Date getCreatedAt() {
+        return record.getCreatedAt();
+    }
 	
     public DisbursementComponent getRecord() {
         return this.record;

@@ -79,5 +79,7 @@ public abstract class DisbursementComponent implements Disbursement {
 	public abstract String getVendorGeneratedId();
 	public abstract void setVendorGeneratedId(String vendorGeneratedId);
 
+	public abstract Date getCreatedAt();
+
 	public abstract HashMap<String, Object> toHashMap();
 }

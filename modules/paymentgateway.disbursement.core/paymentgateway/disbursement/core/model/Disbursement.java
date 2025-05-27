@@ -28,4 +28,6 @@ public interface Disbursement {
 
 	public String getVendorGeneratedId();
 	public void setVendorGeneratedId(String vendorGeneratedId);
+
+	public Date getCreatedAt();
 }

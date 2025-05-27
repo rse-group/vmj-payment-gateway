@@ -203,8 +203,7 @@ public class XenditConfiguration extends ConfigDecorator {
 
         if (rawResponseMap.containsKey("error_code")) {
             String message = (String) rawResponseMap.get("message");
-            response.put("message", message);
-            return response;
+            throw new BadRequestException(message);
         }
 
         Map<String, Object> paymentMethod = (Map<String, Object>) rawResponseMap.get("payment_method");
@@ -476,7 +475,6 @@ public class XenditConfiguration extends ConfigDecorator {
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> paymentMethod = new HashMap<String, Object>();
         Map<String, Object> directDebitMap = new HashMap<String, Object>();
-        Map<String, Object> channelProperties = new HashMap<String, Object>();
         Map<String, Object> customerDetailsMap = new HashMap<String, Object>();
         Map<String, Object> individualDetailsMap = new HashMap<String, Object>();
 
@@ -496,19 +494,7 @@ public class XenditConfiguration extends ConfigDecorator {
         paymentMethod.put("type", "DIRECT_DEBIT");
         
         directDebitMap.put("channel_code", bank);
-        if (bank.equals("MANDIRI")) {
-            // required for MANDIRI
-            String successReturnUrl = RequestBodyValidator.stringRequestBodyValidator(requestBody, "success_return_url");
-            String failureReturnUrl = RequestBodyValidator.stringRequestBodyValidator(requestBody, "failure_return_url");
-            channelProperties.put("success_return_url", successReturnUrl);
-            channelProperties.put("failure_return_url", failureReturnUrl);
-        }
-        if (bank.equals("BRI")) {
-            // required for BRI
-            String cardLastFour = RequestBodyValidator.stringRequestBodyValidator(requestBody, "card_last_four");
-            channelProperties.put("mobile_number", phone);
-            channelProperties.put("card_last_four", cardLastFour);
-        }
+        Map<String, Object> channelProperties = handleDirectDebitChannelProperties(requestBody, bank, phone);
         directDebitMap.put("channel_properties", channelProperties);
 
         customerDetailsMap.put("reference_id", id);
@@ -550,29 +536,16 @@ public class XenditConfiguration extends ConfigDecorator {
 
         List<Map<String, Object>> actionsArray = (List<Map<String, Object>>) rawResponseMap.get("actions");
 
-        if (actionsArray == null) {
-        	Map<String, Object> statusMap = (Map<String, Object>) rawResponseMap.get("status");
-        	String statusMessage = (String) statusMap.get("message");
-        	response.put("message", statusMessage);
-            return response;
-        }
-
         String directDebitUrl = null;
 
         for (Map<String, Object> actionMap : actionsArray) {
             String action = (String) actionMap.get("action");
             if (action.equals("AUTH")) {
                 directDebitUrl = (String) actionMap.get("url");
+                break;
             }
         }
-
-        if (directDebitUrl == null) {
-        	Map<String, Object> statusMap = (Map<String, Object>) rawResponseMap.get("status");
-        	String statusMessage = (String) statusMap.get("message");
-        	response.put("message", statusMessage);
-            return response;
-        }
-
+        
         String referenceId = (String) rawResponseMap.get("reference_id");
         String vendorGeneratedId = (String) rawResponseMap.get("id");
         
@@ -583,5 +556,23 @@ public class XenditConfiguration extends ConfigDecorator {
         response.put("id", referenceId);
         
         return response;
+    }
+
+    private Map<String, Object> handleDirectDebitChannelProperties(Map<String, Object> requestBody, String bank, String phone) {
+        Map<String, Object> channelProperties = new HashMap<String, Object>();
+        if (bank.equals("MANDIRI")) {
+            // required for MANDIRI
+            String successReturnUrl = RequestBodyValidator.stringRequestBodyValidator(requestBody, "success_return_url");
+            String failureReturnUrl = RequestBodyValidator.stringRequestBodyValidator(requestBody, "failure_return_url");
+            channelProperties.put("success_return_url", successReturnUrl);
+            channelProperties.put("failure_return_url", failureReturnUrl);
+        }
+        if (bank.equals("BRI")) {
+            // required for BRI
+            String cardLastFour = RequestBodyValidator.stringRequestBodyValidator(requestBody, "card_last_four");
+            channelProperties.put("mobile_number", phone);
+            channelProperties.put("card_last_four", cardLastFour);
+        }
+        return channelProperties;
     }
 }

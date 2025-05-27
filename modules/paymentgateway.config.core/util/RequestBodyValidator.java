@@ -36,12 +36,15 @@ public class RequestBodyValidator {
     public static int intRequestBodyValidator(Map<String, Object> requestBody, String key) {
         if (requestBody.containsKey(key)) {
             try {
-                return Integer.parseInt((String) requestBody.get(key));
-            } catch (NumberFormatException e) {
-                throw new BadRequestException(String.format("%s tidak valid.", key));
+                return ((Double) requestBody.get(key)).intValue();
+            } catch (ClassCastException e) {
+                try {
+                    return Double.valueOf((String) requestBody.get(key)).intValue();
+                } catch (NumberFormatException ex) {
+                    throw new BadRequestException(String.format("%s tidak valid.", key));
+                }
             }
         }
-
         throw new BadRequestException(
             String.format(
                 "%s tidak ditemukan pada payload.",
@@ -56,7 +59,11 @@ public class RequestBodyValidator {
                 try {
                     return Integer.parseInt((String) requestBody.get(keys[i]));
                 } catch (NumberFormatException e) {
-                    throw new BadRequestException(String.format("%s tidak valid.", keys[i]));
+                    try {
+                        return Integer.parseInt(String.valueOf((Double) requestBody.get(keys[i])));
+                    } catch (Exception ex) {
+                        throw new BadRequestException(String.format("%s tidak valid.", keys[i]));
+                    }
                 }
             }
         }
