@@ -51,7 +51,7 @@ public interface Config {
     Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getQRCodeRequestBody(Map<String, Object> requestBody);
 
-    String getPaymentDetailEndpoint(String configUrl,String id);
+    String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap);
 
     Map<String, Object> getPaymentStatusResponse(String rawResponse, String id);
 

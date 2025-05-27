@@ -159,7 +159,8 @@ public class FlipConfiguration extends ConfigDecorator{
     }
     
     @Override
-    public String getPaymentDetailEndpoint(String configUrl,String id){
+    public String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap){
+        String id = (String) paymentMap.get("vendorGeneratedId");
         configUrl = configUrl.replace("[id]", id);
         return configUrl;
     }
@@ -180,15 +181,21 @@ public class FlipConfiguration extends ConfigDecorator{
         }
         
         ArrayList<Object> dataList = (ArrayList<Object>) rawResponseMap.get("data");
-        if (!dataList.isEmpty()) {
-            Map<String, Object> dataObject = (Map<String, Object>) dataList.get(0);
-            String status = (String) dataObject.get("status");
+
+        if (dataList == null) {
+            String status = (String) rawResponseMap.get("status");
             response.put("status", status);
-            response.put("id", id);
         } else {
-            response.put("id", id);
-            response.put("status", PaymentStatus.PENDING.getStatus());
+            if (!dataList.isEmpty()) {
+                Map<String, Object> dataObject = (Map<String, Object>) dataList.get(0);
+                String status = (String) dataObject.get("status");
+                response.put("status", status);
+            } else {
+                throw new BadRequestException("Status not found");
+            }
         }
+
+        response.put("id", id);
         return response;
     }
 

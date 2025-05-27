@@ -97,9 +97,30 @@ public class XenditConfiguration extends ConfigDecorator {
     }
 
     @Override
-    public String getPaymentDetailEndpoint(String configUrl, String id) {
+    public String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap) {
+        String id = (String) paymentMap.get("vendorGeneratedId");
         configUrl = configUrl.replace("[id]", id);
         return configUrl;
+    }
+
+    @Override
+    public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
+        Map<String, Object> response = new HashMap<>();
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        
+        if (rawResponseMap.containsKey("error_code")) {
+            String message = (String) rawResponseMap.get("message");
+            throw new BadRequestException(message);
+        }
+    
+        String status = (String) rawResponseMap.get("status"); 
+
+        response.put("id", id);
+        response.put("status", status);
+        
+        return response;
     }
 
     @Override

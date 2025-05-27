@@ -59,7 +59,7 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public String getPaymentDetailEndpoint(String configUrl,String id){
+    public String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap){
         throw new UnsupportedOperationException();
     }
 

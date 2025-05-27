@@ -32,8 +32,9 @@ public class OyConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public String getPaymentDetailEndpoint(String configUrl,String Id){
-        configUrl = configUrl.replace("[id]", Id);
+    public String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap){
+        String id = (String) paymentMap.get("id");
+        configUrl = configUrl.replace("[id]", id);
         return configUrl;
     }
      
@@ -82,16 +83,6 @@ public class OyConfiguration extends ConfigDecorator{
 
         Map<String, Object> paymentData = (Map<String, Object>) rawResponseMap.get("data");
         String status = (String) paymentData.get("status");
-        
-        if(status.equals(PaymentStatus.COMPLETE.getStatus())){
-			status = PaymentStatus.SUCCESSFUL.getStatus();
-		}
-		else if (status.equals(PaymentStatus.CLOSED.getStatus())){
-			status = PaymentStatus.CANCELLED.getStatus();
-		}
-        else if (status.equals(PaymentStatus.FAIL.getStatus())){
-            status = PaymentStatus.FAILED.getStatus();
-        }
 
         response.put("status", status);
         response.put("id", id);

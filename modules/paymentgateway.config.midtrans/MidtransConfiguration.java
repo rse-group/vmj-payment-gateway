@@ -30,8 +30,9 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public String getPaymentDetailEndpoint(String configUrl,String Id){
-        configUrl = configUrl.replace("[id]", Id);
+    public String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap){
+        String id = (String) paymentMap.get("id");
+        configUrl = configUrl.replace("[id]", id);
         return configUrl;
     }    
 
