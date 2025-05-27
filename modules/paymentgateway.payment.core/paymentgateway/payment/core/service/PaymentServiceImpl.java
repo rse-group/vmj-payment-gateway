@@ -10,6 +10,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -93,14 +94,21 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		System.out.println("paymentMethodHolder" + paymentMethodHolder);
 		
 		String configUrl;
-		if (paymentMethodHolder[0].equals("paymentlink_impl") && vendorName.toLowerCase().equals("midtrans")){
+		if (paymentMethodHolder[0].equals("paymentlink_impl") && (
+			vendorName.toLowerCase().equals("midtrans") || vendorName.toLowerCase().equals("flip")
+		)){
 			configUrl = config.getProductEnv("PaymentStatus");
 		} else {
 			configUrl = config.getProductEnv("PaymentDetail");
 		}
 		
 		System.out.println(configUrl + paymentMethodHolder[0]);
-        configUrl = config.getPaymentDetailEndpoint(configUrl, validatedId);
+
+		Map<String, Object> paymentMap = new HashMap<>();
+		paymentMap.put("id", payment.getIdTransaction().toString());
+		paymentMap.put("vendorGeneratedId", payment.getVendorGeneratedId());
+
+        configUrl = config.getPaymentDetailEndpoint(configUrl, paymentMap);
         HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),config.getHeaderParams()))
 				.uri(URI.create(configUrl))
 				.GET()
@@ -110,7 +118,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 			String rawResponse = response.body().toString();
             responseMap = config.getPaymentStatusResponse(rawResponse, validatedId);
             System.out.println("responseMap" + responseMap);
-		} catch (Exception e) {
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
         return responseMap;
