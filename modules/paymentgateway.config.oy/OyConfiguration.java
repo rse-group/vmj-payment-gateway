@@ -285,7 +285,7 @@ public class OyConfiguration extends ConfigDecorator{
         String transactionUrl = (String) rawResponseMap.get("url");
         String paymentLinkId = (String) rawResponseMap.get("payment_link_id");
         
-        if (!rawResponseMap.containsKey("transactionUrl")) {
+        if (transactionUrl == null) {
             Map<String, Object> statusObject = (Map<String, Object>) rawResponseMap.get("status");
             String errorMessageString = (String) statusObject.get("message");
             throw new BadRequestException(errorMessageString);
