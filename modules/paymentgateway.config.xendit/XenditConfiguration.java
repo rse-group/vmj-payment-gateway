@@ -536,13 +536,6 @@ public class XenditConfiguration extends ConfigDecorator {
 
         List<Map<String, Object>> actionsArray = (List<Map<String, Object>>) rawResponseMap.get("actions");
 
-        if (actionsArray == null) {
-        	Map<String, Object> statusMap = (Map<String, Object>) rawResponseMap.get("status");
-        	String statusMessage = (String) statusMap.get("message");
-        	response.put("message", statusMessage);
-            return response;
-        }
-
         String directDebitUrl = null;
 
         for (Map<String, Object> actionMap : actionsArray) {
@@ -551,14 +544,7 @@ public class XenditConfiguration extends ConfigDecorator {
                 directDebitUrl = (String) actionMap.get("url");
             }
         }
-
-        if (directDebitUrl == null) {
-        	Map<String, Object> statusMap = (Map<String, Object>) rawResponseMap.get("status");
-        	String statusMessage = (String) statusMap.get("message");
-        	response.put("message", statusMessage);
-            return response;
-        }
-
+        
         String referenceId = (String) rawResponseMap.get("reference_id");
         String vendorGeneratedId = (String) rawResponseMap.get("id");
         
