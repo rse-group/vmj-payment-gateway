@@ -17,6 +17,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
+import vmj.hibernate.integrator.RepositoryUtil;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
@@ -25,14 +26,15 @@ import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
-import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.payment.PaymentFactory;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
+	RepositoryUtil<PaymentImpl> paymentRoutingRepository;
 	
 	public PaymentServiceImpl (PaymentServiceComponent record) {
         super(record);
+		this.paymentRoutingRepository = new RepositoryUtil<PaymentImpl>(paymentgateway.payment.paymentrouting.PaymentImpl.class);
     }
 
 	public Payment createPayment(Map<String, Object> requestBody) {
@@ -91,5 +93,29 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		return responseMap;
 	}
 
+	public List<PaymentImpl> getByVendorName(Map<String, String> queryParams) {
+		String vendorName = (String) queryParams.get("vendor_name");
+		record.validateVendorName(vendorName);
+		List<PaymentImpl> result = new ArrayList<>();
+		List<PaymentImpl> paymentRoutings = paymentRoutingRepository.getAllObject("paymentrouting_impl");
+		for(PaymentImpl paymentRouting : paymentRoutings){
+			if (paymentRouting.getVendorName().equals(vendorName)){
+				result.add(paymentRouting);
+			}
+		}
+		return result;
+	}
+
+	public HashMap<String, Object> getById(Map<String, String> queryParams) {
+		String id = (String) queryParams.get("id");
+		String validatedId = record.validateId(id);
+		List<PaymentImpl> paymentRoutings = paymentRoutingRepository.getAllObject("paymentrouting_impl");
+		for(PaymentImpl paymentRouting : paymentRoutings){
+			if (paymentRouting.getIdTransaction().toString().equals(validatedId)){
+				return paymentRouting.toHashMap();
+			}
+		}
+		throw new BadRequestException("Payment routing dengan ID " + validatedId + " tidak ditemukan");
+	}
 }
 

@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
+import vmj.hibernate.integrator.RepositoryUtil;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
@@ -27,14 +28,15 @@ import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
-import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.payment.PaymentFactory;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
+	RepositoryUtil<PaymentImpl> invoiceRepository;
 	
 	public PaymentServiceImpl (PaymentServiceComponent record) {
         super(record);
+		this.invoiceRepository = new RepositoryUtil<PaymentImpl>(paymentgateway.payment.invoice.PaymentImpl.class);
     }
 
 	public Payment createPayment(Map<String, Object> requestBody) {
@@ -105,6 +107,31 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		}
 		String encodedURL = String.join("&",paramList);
 		return encodedURL;
+	}
+
+	public List<PaymentImpl> getByVendorName(Map<String, String> queryParams) {
+		String vendorName = (String) queryParams.get("vendor_name");
+		record.validateVendorName(vendorName);
+		List<PaymentImpl> result = new ArrayList<>();
+		List<PaymentImpl> invoices = invoiceRepository.getAllObject("invoice_impl");
+		for(PaymentImpl invoice : invoices){
+			if (invoice.getVendorName().equals(vendorName)){
+				result.add(invoice);
+			}
+		}
+		return result;
+	}
+
+	public HashMap<String, Object> getById(Map<String, String> queryParams) {
+		String id = (String) queryParams.get("id");
+		String validatedId = record.validateId(id);
+		List<PaymentImpl> invoices = invoiceRepository.getAllObject("invoice_impl");
+		for(PaymentImpl invoice : invoices){
+			if (invoice.getIdTransaction().toString().equals(validatedId)){
+				return invoice.toHashMap();
+			}
+		}
+		throw new BadRequestException("Invoice dengan ID " + validatedId + " tidak ditemukan");
 	}
 }
 

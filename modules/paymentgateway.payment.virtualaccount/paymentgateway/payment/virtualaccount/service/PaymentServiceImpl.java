@@ -2,6 +2,7 @@ package paymentgateway.payment.virtualaccount;
 
 import com.google.gson.Gson;
 
+import vmj.hibernate.integrator.RepositoryUtil;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
@@ -29,9 +30,11 @@ import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.payment.PaymentFactory;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
+	RepositoryUtil<VirtualAccountImpl> virtualAccountPaymentRepository;
 
 	public PaymentServiceImpl (PaymentServiceComponent record) {
         super(record);
+		this.virtualAccountPaymentRepository = new RepositoryUtil<VirtualAccountImpl>(paymentgateway.payment.virtualaccount.VirtualAccountImpl.class);
     }
     
 	public Payment createPayment(Map<String, Object> requestBody) {
@@ -89,6 +92,31 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		}
 		
 		return responseMap;
+	}
+
+	public List<VirtualAccountImpl> getByVendorName(Map<String, String> queryParams) {
+		String vendorName = (String) queryParams.get("vendor_name");
+		record.validateVendorName(vendorName);
+		List<VirtualAccountImpl> result = new ArrayList<>();
+		List<VirtualAccountImpl> virtualAccountPayments = virtualAccountPaymentRepository.getAllObject("virtualaccount_impl");
+		for(VirtualAccountImpl virtualAccount : virtualAccountPayments){
+			if (virtualAccount.getVendorName().equals(vendorName)){
+				result.add(virtualAccount);
+			}
+		}
+		return result;
+	}
+
+	public HashMap<String, Object> getById(Map<String, String> queryParams) {
+		String id = (String) queryParams.get("id");
+		String validatedId = record.validateId(id);
+		List<VirtualAccountImpl> virtualAccountPayments = virtualAccountPaymentRepository.getAllObject("virtualaccount_impl");
+		for(VirtualAccountImpl virtualAccount : virtualAccountPayments){
+			if (virtualAccount.getIdTransaction().toString().equals(validatedId)){
+				return virtualAccount.toHashMap();
+			}
+		}
+		throw new BadRequestException("Virtual account payment dengan ID " + validatedId + " tidak ditemukan");
 	}
 }
 

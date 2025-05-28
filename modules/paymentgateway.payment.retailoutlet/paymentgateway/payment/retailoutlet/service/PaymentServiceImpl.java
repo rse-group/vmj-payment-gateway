@@ -2,6 +2,7 @@ package paymentgateway.payment.retailoutlet;
 
 import com.google.gson.Gson;
 
+import vmj.hibernate.integrator.RepositoryUtil;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
@@ -13,6 +14,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
@@ -25,9 +28,11 @@ import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.payment.PaymentFactory;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
+	RepositoryUtil<RetailOutletImpl> retailOutletPaymentRepository;
 
 	public PaymentServiceImpl (PaymentServiceComponent record) {
         super(record);
+		this.retailOutletPaymentRepository = new RepositoryUtil<RetailOutletImpl>(paymentgateway.payment.retailoutlet.RetailOutletImpl.class);
     }
 
 	public Payment createPayment(Map<String, Object> requestBody) {
@@ -89,6 +94,31 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		}
 
 		return responseMap;
+	}
+
+	public List<RetailOutletImpl> getByVendorName(Map<String, String> queryParams) {
+		String vendorName = (String) queryParams.get("vendor_name");
+		record.validateVendorName(vendorName);
+		List<RetailOutletImpl> result = new ArrayList<>();
+		List<RetailOutletImpl> retailOutletPayments = retailOutletPaymentRepository.getAllObject("retailoutlet_impl");
+		for(RetailOutletImpl retailOutletPayment : retailOutletPayments){
+			if (retailOutletPayment.getVendorName().equals(vendorName)){
+				result.add(retailOutletPayment);
+			}
+		}
+		return result;
+	}
+
+	public HashMap<String, Object> getById(Map<String, String> queryParams) {
+		String id = (String) queryParams.get("id");
+		String validatedId = record.validateId(id);
+		List<RetailOutletImpl> retailOutletPayments = retailOutletPaymentRepository.getAllObject("retailoutlet_impl");
+		for(RetailOutletImpl retailOutletPayment : retailOutletPayments){
+			if (retailOutletPayment.getIdTransaction().toString().equals(validatedId)){
+				return retailOutletPayment.toHashMap();
+			}
+		}
+		throw new BadRequestException("Retail outlet payment dengan ID " + validatedId + " tidak ditemukan");
 	}
 }
 

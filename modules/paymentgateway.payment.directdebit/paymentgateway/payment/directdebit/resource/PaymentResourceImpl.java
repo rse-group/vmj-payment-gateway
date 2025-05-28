@@ -13,6 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -37,5 +38,17 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		Map<String, Object> requestBody = vmjExchange.getPayload();
 		Payment result = paymentServiceImpl.createPayment(requestBody);
 		return result.toHashMap();
+	}
+
+	@Route(url = "call/directdebit/vendorname", method = RequestMethod.GET)
+	public List<PaymentImpl> getByVendorName(VMJExchange vmjExchange) {
+		Map<String, String> queryParams = vmjExchange.queryToMap();
+		return paymentServiceImpl.getByVendorName(queryParams);
+	}
+
+	@Route(url = "call/directdebit/detail", method = RequestMethod.GET)
+	public HashMap<String, Object> getById(VMJExchange vmjExchange) {
+		Map<String, String> queryParams = vmjExchange.queryToMap();
+		return paymentServiceImpl.getById(queryParams);
 	}
 }

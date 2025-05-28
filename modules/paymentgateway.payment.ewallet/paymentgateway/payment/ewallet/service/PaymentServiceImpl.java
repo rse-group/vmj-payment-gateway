@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.lang.reflect.*;
 
+import vmj.hibernate.integrator.RepositoryUtil;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
@@ -13,10 +14,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 import java.util.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -32,8 +29,11 @@ import paymentgateway.payment.PaymentFactory;
 public class PaymentServiceImpl extends PaymentServiceDecorator {
 	// implement this with author
 
+	RepositoryUtil<EWalletImpl> ewalletPaymentRepository;
+
 	public PaymentServiceImpl (PaymentServiceComponent record) {
         super(record);
+		this.ewalletPaymentRepository = new RepositoryUtil<EWalletImpl>(paymentgateway.payment.ewallet.EWalletImpl.class);
     }
 
 	
@@ -98,6 +98,31 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		}
 		
 		return responseMap;
+	}
+
+	public List<EWalletImpl> getByVendorName(Map<String, String> queryParams) {
+		String vendorName = (String) queryParams.get("vendor_name");
+		record.validateVendorName(vendorName);
+		List<EWalletImpl> result = new ArrayList<>();
+		List<EWalletImpl> ewalletPayments = ewalletPaymentRepository.getAllObject("ewallet_impl");
+		for(EWalletImpl payment : ewalletPayments){
+			if (payment.getVendorName().equals(vendorName)){
+				result.add(payment);
+			}
+		}
+		return result;
+	}
+
+	public HashMap<String, Object> getById(Map<String, String> queryParams) {
+		String id = (String) queryParams.get("id");
+		String validatedId = record.validateId(id);
+		List<EWalletImpl> ewalletPayments = ewalletPaymentRepository.getAllObject("ewallet_impl");
+		for(EWalletImpl payment : ewalletPayments){
+			if (payment.getIdTransaction().toString().equals(validatedId)){
+				return payment.toHashMap();
+			}
+		}
+		throw new BadRequestException("E-wallet payment dengan ID " + validatedId + " tidak ditemukan");
 	}
 }
 

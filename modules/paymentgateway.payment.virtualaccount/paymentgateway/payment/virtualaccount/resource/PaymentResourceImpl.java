@@ -43,7 +43,17 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		Payment result = paymentServiceImpl.createPayment(requestBody);
 		return result.toHashMap();
 	}
-
 	
+	@Route(url = "call/virtualaccount/vendorname", method = RequestMethod.GET)
+	public List<VirtualAccountImpl> getByVendorName(VMJExchange vmjExchange) {
+		Map<String, String> queryParams = vmjExchange.queryToMap();
+		return paymentServiceImpl.getByVendorName(queryParams);
+	}
+
+	@Route(url = "call/virtualaccount/detail", method = RequestMethod.GET)
+	public HashMap<String, Object> getById(VMJExchange vmjExchange) {
+		Map<String, String> queryParams = vmjExchange.queryToMap();
+		return paymentServiceImpl.getById(queryParams);
+	}
 }
 

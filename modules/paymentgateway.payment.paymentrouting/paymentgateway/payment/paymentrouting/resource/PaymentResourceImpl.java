@@ -25,7 +25,6 @@ import paymentgateway.config.core.Config;
 import paymentgateway.payment.PaymentFactory;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
-import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentResourceComponent;
 import paymentgateway.payment.core.PaymentServiceComponent;
 
@@ -44,5 +43,16 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		return result.toHashMap();
 	}
 
+	@Route(url = "call/paymentrouting/vendorname", method = RequestMethod.GET)
+	public List<PaymentImpl> getByVendorName(VMJExchange vmjExchange) {
+		Map<String, String> queryParams = vmjExchange.queryToMap();
+		return paymentServiceImpl.getByVendorName(queryParams);
+	}
+
+	@Route(url = "call/paymentrouting/detail", method = RequestMethod.GET)
+	public HashMap<String, Object> getById(VMJExchange vmjExchange) {
+		Map<String, String> queryParams = vmjExchange.queryToMap();
+		return paymentServiceImpl.getById(queryParams);
+	}
 }
 

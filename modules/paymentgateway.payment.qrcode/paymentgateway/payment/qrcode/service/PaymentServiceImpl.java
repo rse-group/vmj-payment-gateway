@@ -2,6 +2,7 @@ package paymentgateway.payment.qrcode;
 
 import com.google.gson.Gson;
 
+import vmj.hibernate.integrator.RepositoryUtil;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
@@ -13,6 +14,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
@@ -25,9 +28,11 @@ import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.payment.PaymentFactory;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
+	RepositoryUtil<QRCodeImpl> qrCodePaymentRepository;
 
 	public PaymentServiceImpl(PaymentServiceComponent record) {
 		super(record);
+		this.qrCodePaymentRepository = new RepositoryUtil<QRCodeImpl>(paymentgateway.payment.qrcode.QRCodeImpl.class);
 	}
 
 	public Payment createPayment(Map<String, Object> requestBody) {
@@ -92,5 +97,30 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
         System.out.println("qr code send transaction response: " + responseMap);
         System.out.println("==============================================");
 		return responseMap;
+	}
+
+	public List<QRCodeImpl> getByVendorName(Map<String, String> queryParams) {
+		String vendorName = (String) queryParams.get("vendor_name");
+		record.validateVendorName(vendorName);
+		List<QRCodeImpl> result = new ArrayList<>();
+		List<QRCodeImpl> qrCodePayments = qrCodePaymentRepository.getAllObject("qrcode_impl");
+		for(QRCodeImpl qrCodePayment : qrCodePayments){
+			if (qrCodePayment.getVendorName().equals(vendorName)){
+				result.add(qrCodePayment);
+			}
+		}
+		return result;
+	}
+
+	public HashMap<String, Object> getById(Map<String, String> queryParams) {
+		String id = (String) queryParams.get("id");
+		String validatedId = record.validateId(id);
+		List<QRCodeImpl> qrCodePayments = qrCodePaymentRepository.getAllObject("qrcode_impl");
+		for(QRCodeImpl qrCodePayment : qrCodePayments){
+			if (qrCodePayment.getIdTransaction().toString().equals(validatedId)){
+				return qrCodePayment.toHashMap();
+			}
+		}
+		throw new BadRequestException("QR Code payment dengan ID " + validatedId + " tidak ditemukan");
 	}
 }

@@ -2,6 +2,7 @@ package paymentgateway.payment.card;
 
 import com.google.gson.Gson;
 
+import vmj.hibernate.integrator.RepositoryUtil;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
@@ -11,6 +12,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -26,9 +28,11 @@ import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.payment.PaymentFactory;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
+	RepositoryUtil<PaymentImpl> cardPaymentRepository;
 
 	public PaymentServiceImpl(PaymentServiceComponent record) {
 		super(record);
+		this.cardPaymentRepository = new RepositoryUtil<PaymentImpl>(paymentgateway.payment.card.PaymentImpl.class);
 	}
 
 	public Payment createPayment(Map<String, Object> requestBody) {
@@ -118,6 +122,31 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		responseMap.put("token_id", tokenId);
 
 		return responseMap;
+	}
+
+	public List<PaymentImpl> getByVendorName(Map<String, String> queryParams) {
+		String vendorName = (String) queryParams.get("vendor_name");
+		record.validateVendorName(vendorName);
+		List<PaymentImpl> result = new ArrayList<>();
+		List<PaymentImpl> cardPayments = cardPaymentRepository.getAllObject("card_impl");
+		for(PaymentImpl payment : cardPayments){
+			if (payment.getVendorName().equals(vendorName)){
+				result.add(payment);
+			}
+		}
+		return result;
+	}
+
+	public HashMap<String, Object> getById(Map<String, String> queryParams) {
+		String id = (String) queryParams.get("id");
+		String validatedId = record.validateId(id);
+		List<PaymentImpl> cardPayments = cardPaymentRepository.getAllObject("card_impl");
+		for(PaymentImpl payment : cardPayments){
+			if (payment.getIdTransaction().toString().equals(validatedId)){
+				return payment.toHashMap();
+			}
+		}
+		throw new BadRequestException("Card payment dengan ID " + validatedId + " tidak ditemukan");
 	}
 
 }
