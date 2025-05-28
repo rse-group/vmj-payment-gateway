@@ -336,13 +336,22 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		}
 		try {
 			amount = ((Double) amountObject);
-			return amount;
 		} catch (Exception e) {
-			throw new BadRequestException("amount tidak valid.");
+			try {
+				String amountString = (String) amountObject;
+				amount = Double.valueOf(amountString);
+			} catch (Exception ex) {
+				throw new BadRequestException("amount tidak valid.");
+			}
 		}
 
-	}
+		if (amount < 0) {
+			throw new BadRequestException("amount tidak boleh negatif.");
+		}
 
+		return amount.doubleValue();
+	}
+	
 	public String validateId(Object idObject) {
 		String id;
 		if (idObject == null) {
