@@ -7,7 +7,12 @@ import vmj.routing.route.exceptions.BadRequestException;
 public class RequestBodyValidator {
     public static String stringRequestBodyValidator(Map<String, Object> requestBody, String key) {
         if (requestBody.containsKey(key)) {
-            return (String) requestBody.get(key);
+            String stringField = (String) requestBody.get(key);
+            if (stringField.length() == 0) {
+                throw new BadRequestException(String.format("%s tidak boleh berupa string kosong.", key));
+            } 
+
+            return stringField;
         }
         
         throw new BadRequestException(
@@ -21,7 +26,12 @@ public class RequestBodyValidator {
     public static String stringRequestBodyValidator(Map<String, Object> requestBody, String[] keys) {
         for (int i = 0; i < keys.length; i++) {
             if (requestBody.containsKey(keys[i])) {
-                return (String) requestBody.get(keys[i]);
+                String stringField = (String) requestBody.get(keys[i]);
+                if (stringField.length() == 0) {
+                    throw new BadRequestException(String.format("%s tidak boleh berupa string kosong.", keys[i]));
+                } 
+
+            return stringField;
             }
         }
 

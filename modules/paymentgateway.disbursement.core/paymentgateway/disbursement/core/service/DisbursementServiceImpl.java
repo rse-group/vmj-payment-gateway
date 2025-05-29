@@ -372,7 +372,13 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 			throw new BadRequestException(String.format("%s tidak ditemukan pada payload.", key));
 		}
 
-		return (String) field;
+		
+		String stringField = (String) field;
+		if (stringField.length() == 0) {
+			throw new BadRequestException(String.format("%s tidak boleh berupa string kosong.", key));
+		} 
+
+		return stringField;
 	}
 
 }
