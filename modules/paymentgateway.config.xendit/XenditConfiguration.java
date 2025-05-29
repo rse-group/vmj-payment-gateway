@@ -475,7 +475,7 @@ public class XenditConfiguration extends ConfigDecorator {
         paymentMethod.put("type", "DIRECT_DEBIT");
         
         directDebitMap.put("channel_code", bank);
-        Map<String, Object> channelProperties = handleDirectDebitChannelProperties(requestBody, bank, phone);
+        Map<String, Object> channelProperties = handleDirectDebitChannelProperties(requestBody, bank, phone, email);
         directDebitMap.put("channel_properties", channelProperties);
 
         customerDetailsMap.put("reference_id", id);
@@ -564,7 +564,7 @@ public class XenditConfiguration extends ConfigDecorator {
         return channelProperties;
     }
 
-    private Map<String, Object> handleDirectDebitChannelProperties(Map<String, Object> requestBody, String bank, String phone) {
+    private Map<String, Object> handleDirectDebitChannelProperties(Map<String, Object> requestBody, String bank, String phone, String email) {
         Map<String, Object> channelProperties = new HashMap<String, Object>();
         if (bank.equals("MANDIRI")) {
             // required for MANDIRI
@@ -578,6 +578,7 @@ public class XenditConfiguration extends ConfigDecorator {
             String cardLastFour = RequestBodyValidator.stringRequestBodyValidator(requestBody, "card_last_four");
             channelProperties.put("mobile_number", phone);
             channelProperties.put("card_last_four", cardLastFour);
+            channelProperties.put("email", email);
         }
         return channelProperties;
     }
