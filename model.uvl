@@ -13,5 +13,5 @@ features
 constraints
     V.Oy => F.PaymentLink | F.EWallet | F.VirtualAccount | F.RetailOutlet | F.Invoice | F.PaymentRouting
     V.Midtrans => F.Card | F.VirtualAccount | F.RetailOutlet | F.PaymentLink | F.EWallet
-    V.Xendit => F.SpecifiedRecipient | F.VirtualAccount | F.RetailOutlet | F.DirectDebit | F.QRCode
+    V.Xendit => F.SpecifiedRecipient | F.VirtualAccount | F.RetailOutlet | F.DirectDebit | F.QRCode | F.EWallet
     V.Flip => F.Agent | F.ExchangeRate | F.FixedCurrency |  F.PaymentLink | F.VirtualAccount | F.EWallet
