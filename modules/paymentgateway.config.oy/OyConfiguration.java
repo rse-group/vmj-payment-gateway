@@ -267,10 +267,8 @@ public class OyConfiguration extends ConfigDecorator{
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         
         if (!rawResponseMap.containsKey("payment_link_id")) {
-            Map<String, Object> statusObject = (Map<String, Object>) rawResponseMap.get("status");
-            String errorMessageString = (String) statusObject.get("message");
+            String errorMessageString = (String) rawResponseMap.get("message");
             throw new BadRequestException(errorMessageString);
-        
         }
         String url = (String) rawResponseMap.get("url");
         String paymentLinkId = (String) rawResponseMap.get("payment_link_id");
