@@ -378,7 +378,6 @@ public class XenditConfiguration extends ConfigDecorator {
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> paymentMethod = new HashMap<String, Object>();
         Map<String, Object> ewalletDetailsMap = new HashMap<String, Object>();
-        Map<String, Object> channelProperties = new HashMap<String, Object>();
         Map<String, Object> customerDetailsMap = new HashMap<String, Object>();
         Map<String, Object> individualDetailsMap = new HashMap<String, Object>();
 
@@ -395,25 +394,7 @@ public class XenditConfiguration extends ConfigDecorator {
         paymentMethod.put("type", "EWALLET");
         
         ewalletDetailsMap.put("channel_code", ewalletType);
-        if (ewalletType.equals("DANA") || ewalletType.equals("LINKAJA") || ewalletType.equals("SHOPEEPAY") || ewalletType.equals("ASTRAPAY")) {
-            // required for DANA, LINKAJA, SHOPEEPAY, ASTRAPAY if reusability is ONE_TIME_USE
-            String successReturnUrl = RequestBodyValidator.stringRequestBodyValidator(requestBody, "success_return_url");
-            channelProperties.put("success_return_url", successReturnUrl);
-        }
-        if (ewalletType.equals("ASTRAPAY")) {
-            // required for ASTRAPAY
-            String failureReturnUrl = RequestBodyValidator.stringRequestBodyValidator(requestBody, "failure_return_url");
-            channelProperties.put("failure_return_url", failureReturnUrl);
-        }
-        if (ewalletType.equals("JENIUSPAY")) {
-            // required for JENIUSPAY if reusability is ONE_TIME_USE
-            String cashtag = RequestBodyValidator.stringRequestBodyValidator(requestBody, "cashtag");
-            channelProperties.put("cashtag", cashtag);
-        }
-        if (ewalletType.equals("OVO")) {
-            // required for OVO if reusability is ONE_TIME_USE
-            channelProperties.put("mobile_number", phone);
-        }
+        Map<String, Object> channelProperties = handleEWalletChannelProperties(requestBody, ewalletType, phone);
         ewalletDetailsMap.put("channel_properties", channelProperties);
         
         paymentMethod.put("ewallet", ewalletDetailsMap);
@@ -556,6 +537,31 @@ public class XenditConfiguration extends ConfigDecorator {
         response.put("id", referenceId);
         
         return response;
+    }
+
+    private Map<String, Object> handleEWalletChannelProperties(Map<String, Object> requestBody, String ewalletType, String phone) {
+        Map<String, Object> channelProperties = new HashMap<String, Object>();
+        if (ewalletType.equals("DANA") || ewalletType.equals("LINKAJA") || ewalletType.equals("SHOPEEPAY") || ewalletType.equals("ASTRAPAY")) {
+            // required for DANA, LINKAJA, SHOPEEPAY, ASTRAPAY if reusability is ONE_TIME_USE
+            String successReturnUrl = RequestBodyValidator.stringRequestBodyValidator(requestBody, "success_return_url");
+            channelProperties.put("success_return_url", successReturnUrl);
+        }
+        if (ewalletType.equals("ASTRAPAY")) {
+            // required for ASTRAPAY
+            String failureReturnUrl = RequestBodyValidator.stringRequestBodyValidator(requestBody, "failure_return_url");
+            channelProperties.put("failure_return_url", failureReturnUrl);
+        }
+        if (ewalletType.equals("JENIUSPAY")) {
+            // required for JENIUSPAY if reusability is ONE_TIME_USE
+            String cashtag = RequestBodyValidator.stringRequestBodyValidator(requestBody, "cashtag");
+            channelProperties.put("cashtag", cashtag);
+        }
+        if (ewalletType.equals("OVO")) {
+            // required for OVO if reusability is ONE_TIME_USE
+            channelProperties.put("mobile_number", phone);
+        }
+
+        return channelProperties;
     }
 
     private Map<String, Object> handleDirectDebitChannelProperties(Map<String, Object> requestBody, String bank, String phone) {
