@@ -133,6 +133,10 @@ public class ConfigImpl extends ConfigComponent {
     public Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
+
+    public Map<String, Object> validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
+        throw new UnsupportedOperationException();
+    }
     
     // Payment Request Body
 

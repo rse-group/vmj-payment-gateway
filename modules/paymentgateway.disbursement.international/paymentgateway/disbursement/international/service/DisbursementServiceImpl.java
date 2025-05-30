@@ -62,19 +62,8 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
         String vendorName = record.validateVendorName((String) requestBody.get("vendor_name"));
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-		record.validateRequiredStringField(requestBody, "destination_country");
-		record.validateRequiredStringField(requestBody, "source_country");
-		record.validateRequiredStringField(requestBody, "transaction_type");
-		record.validateRequiredStringField(requestBody, "beneficiary_account_number");
-		record.validateRequiredStringField(requestBody, "beneficiary_bank_id");
-		record.validateRequiredStringField(requestBody, "beneficiary_full_name");
-		record.validateRequiredStringField(requestBody, "sender_place_of_birth");
-		record.validateRequiredStringField(requestBody, "sender_date_of_birth");
-		record.validateRequiredStringField(requestBody, "sender_identity_type");
-		record.validateRequiredStringField(requestBody, "sender_identity_number");
-		record.validateRequiredStringField(requestBody, "sender_email");
-		record.validateRequiredStringField(requestBody, "sender_city");
-		record.validateRequiredStringField(requestBody, "sender_phone_number");
+
+		config.validateBaseInternationalDisbursementRequestBody(requestBody);
 		
 		String configUrl = config.getProductEnv("InternationalDisbursement");
 		HashMap<String, String> headerParams = config.getHeaderParams();

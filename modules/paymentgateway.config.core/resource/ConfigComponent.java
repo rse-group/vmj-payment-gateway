@@ -49,5 +49,6 @@ public abstract class ConfigComponent implements Config {
     public abstract Map<String, Object> getDisbursementResponse(String rawResponse, String id);
     public abstract Map<String, Object> getSpecialDisbursementResponse(String rawResponse, String id);
     public abstract Map<String, Object> getInternationalDisbursementResponse(String rawResponse, String id);
+    public abstract Map<String, Object> validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody);
     public abstract Map<String, Object> getAgentDisbursementResponse(String rawResponse, String id);
 }

@@ -62,8 +62,4 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
     public String validateId(Object idObject) {
         return record.validateId(idObject);
     }
-    
-    public String validateRequiredStringField(Map<String, Object> requestBody, String key) {
-        return record.validateRequiredStringField(requestBody, key);
-    }
 }

@@ -70,5 +70,6 @@ public interface Config {
     Map<String, Object> getDisbursementResponse(String rawResponse, String id);
     Map<String, Object> getSpecialDisbursementResponse(String rawResponse, String id);
     Map<String, Object> getInternationalDisbursementResponse(String rawResponse, String id);
+    Map<String, Object> validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getAgentDisbursementResponse(String rawResponse, String id);
 }

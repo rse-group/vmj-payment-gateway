@@ -87,6 +87,10 @@ public abstract class ConfigDecorator extends ConfigComponent{
     public Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody){
         return record.getInternationalDisbursementRequestBody(requestBody);
     }
+    
+    public Map<String, Object> validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
+        return record.validateBaseInternationalDisbursementRequestBody(requestBody);
+    }
 
     // Payment Request Body
 
