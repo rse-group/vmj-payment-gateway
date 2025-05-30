@@ -361,12 +361,18 @@ public class FlipConfiguration extends ConfigDecorator{
         String destinationCountry = (String) rawResponseMap.get("destination_country");
         String beneficiaryCurrencyCode = (String) rawResponseMap.get("beneficiary_currency_code");
 
+        Map<String, Object> beneficiaryMap = (Map<String, Object>) rawResponseMap.get("beneficiary");
+        String beneficiaryBankName = (String) beneficiaryMap.get("bank");
+        String beneficiaryBankAccountNumber = (String) beneficiaryMap.get("bank_account_number");
+
         response.put("exchange_rate", exchangeRate);
         response.put("fee", fee);
         response.put("amount", amount);
         response.put("source_country", sourceCountry);
         response.put("destination_country", destinationCountry);
         response.put("beneficiary_currency_code", beneficiaryCurrencyCode);
+        response.put("bank", beneficiaryBankName);
+        response.put("bank_account_number", beneficiaryBankAccountNumber);
         return response;
     }
 

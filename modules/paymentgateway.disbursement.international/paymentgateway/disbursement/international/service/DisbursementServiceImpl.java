@@ -41,6 +41,12 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		String destination_country = (String) response.get("destination_country");
 		double amount_in_sender_currency = record.validateAmount(response.get("amount"));
 		String beneficiary_currency_code = (String) response.get("beneficiary_currency_code");
+		
+		String beneficiaryBankName = (String) response.get("bank");
+		String beneficiaryBankAccountNumber = (String) response.get("bank_account_number");
+
+		requestBody.put("bank_code", beneficiaryBankName);
+		requestBody.put("account_number", beneficiaryBankAccountNumber);
 
 		Disbursement internationalTransaction = DisbursementFactory.createDisbursement(
 			"paymentgateway.disbursement.international.InternationalImpl",
