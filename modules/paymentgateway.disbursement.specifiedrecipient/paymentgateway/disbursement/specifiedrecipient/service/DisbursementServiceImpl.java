@@ -3,6 +3,8 @@ package paymentgateway.disbursement.specifiedrecipient;
 import vmj.routing.route.VMJExchange;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -75,4 +77,8 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
     public Map<String, Object> sendTransaction(Map<String, Object> validatedRequestBody) {
         return RESOURCE.sendTransaction(validatedRequestBody);
     }
+
+    public List<HashMap<String, Object>> getAllDisbursement() {
+		return RESOURCE.getAllDisbursement("specifiedrecipient_impl");
+	}
 }
