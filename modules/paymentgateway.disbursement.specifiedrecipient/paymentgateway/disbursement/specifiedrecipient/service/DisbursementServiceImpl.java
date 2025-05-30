@@ -81,4 +81,9 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
     public List<HashMap<String, Object>> getAllDisbursement() {
 		return RESOURCE.getAllDisbursement("specifiedrecipient_impl");
 	}
+
+    public HashMap<String, Object> getDisbursement(String id) {
+		List<HashMap<String, Object>> disbursements = getAllDisbursement();
+		return RESOURCE.findById(disbursements, id);
+	}
 }

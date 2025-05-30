@@ -228,6 +228,17 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		return null;
 	}
 
+	public HashMap<String, Object> findById(List<HashMap<String, Object>> disbursements, String id) {
+		for (HashMap<String, Object> disbursement : disbursements){
+			String disbursementId = (String) disbursement.get("id");
+			if (disbursementId.equals(id)){
+				return disbursement;
+			}
+		}
+
+		throw new BadRequestException("Disbursement dengan ID " + id + " tidak ditemukan");
+	}
+
 	public List<HashMap<String, Object>> getAllDisbursement(){
 		return this.getAllDisbursement("disbursement_impl");
 	}

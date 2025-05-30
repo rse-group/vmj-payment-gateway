@@ -96,4 +96,9 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		return record.getAllDisbursement("international_impl");
 	}
 
+	public HashMap<String, Object> getDisbursement(String id) {
+		List<HashMap<String, Object>> disbursements = getAllDisbursement();
+		return record.findById(disbursements, id);
+	}
+
 }
