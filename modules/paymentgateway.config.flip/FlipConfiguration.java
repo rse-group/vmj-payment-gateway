@@ -295,6 +295,12 @@ public class FlipConfiguration extends ConfigDecorator{
             throw new BadRequestException(errorMessageString);
         }
 
+        
+        if (rawResponseMap.containsKey("message")) {
+            String errorMessageString = (String) rawResponseMap.get("message");
+            throw new BadRequestException(errorMessageString);
+        }
+        
         int agentId = ((Double) rawResponseMap.get("agent_id")).intValue();
         String direction = (String) rawResponseMap.get("direction");
         int vendorGeneratedId = ((Double) rawResponseMap.get("id")).intValue();
