@@ -32,4 +32,11 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 	public List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange){
 		return disbursementServiceImpl.getAllDisbursement();
 	}
+
+	@Route(url = "call/specified-recipient/detail", method = RequestMethod.GET)
+	public HashMap<String, Object> getDisbursement(VMJExchange vmjExchange){
+		Map<String, String> queryParamsMap = vmjExchange.queryToMap();
+		String id = queryParamsMap.get("id");
+		return disbursementServiceImpl.getDisbursement(id);
+	}
 }
