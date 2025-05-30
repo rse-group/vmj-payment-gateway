@@ -27,8 +27,12 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
         return record.getDisbursement(id);
     }
 
-    public List<HashMap<String, Object>> getAllDisbursement(Map<String, String> queryParams){
-        return record.getAllDisbursement(queryParams);
+    public List<HashMap<String, Object>> getAllDisbursement(){
+        return record.getAllDisbursement();
+    }
+
+    public List<HashMap<String, Object>> getAllDisbursement(String tableName) {
+        return record.getAllDisbursement(tableName);
     }
 
     public List<HashMap<String, Object>> deleteDisbursement(Map<String, Object> requestBody){

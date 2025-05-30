@@ -9,7 +9,8 @@ public interface DisbursementService {
     Disbursement createDisbursement(Map<String, Object> requestBody);
     Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response);
     HashMap<String, Object> getDisbursement(String id);
-    List<HashMap<String, Object>> getAllDisbursement(Map<String, String> queryParams);
+    List<HashMap<String, Object>> getAllDisbursement();
+    List<HashMap<String, Object>> getAllDisbursement(String tableName);
     List<HashMap<String, Object>> deleteDisbursement(Map<String, Object> requestBody);
     HashMap<String, Object> updateDisbursement(Map<String, Object> requestBody);
     List<HashMap<String, Object>> transformListToHashMap(List<Disbursement> List);

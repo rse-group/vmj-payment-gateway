@@ -228,9 +228,8 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		return null;
 	}
 
-	public List<HashMap<String, Object>> getAllDisbursement(String tableName){
-		List<Disbursement> List  = Repository.getAllObject(tableName);
-		return transformListToHashMap(List);
+	public List<HashMap<String, Object>> getAllDisbursement(){
+		return this.getAllDisbursement("disbursement_impl");
 	}
 	
 	public HashMap<String, Object> getDisbursement(String id) {
@@ -243,14 +242,13 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		return disbursementImpl.toHashMap();
 	}
 	
-	public List<HashMap<String, Object>> getAllDisbursement(Map<String, String> queryParams){
-		String table = (String) queryParams.get("table_name");
+	public List<HashMap<String, Object>> getAllDisbursement(String tableName){
 		
 		try {
-			List<Disbursement> list = Repository.getAllObject(table);
+			List<Disbursement> list = Repository.getAllObject(tableName);
 		    return transformListToHashMap(list);
 		} catch (Exception e) {
-			throw new BadRequestException("Table name " + table + " bukan entity yang valid");
+			throw new BadRequestException("Table name " + tableName + " bukan entity yang valid");
 		}
 	}
 
