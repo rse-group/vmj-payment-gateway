@@ -86,7 +86,7 @@ public class InternationalImpl extends DisbursementDecorator {
 	public HashMap<String, Object> toHashMap() {
 		HashMap<String, Object> disbursementMap = record.toHashMap();
 		disbursementMap.put("exchange_rate", getExchangeRate());
-		disbursementMap.put("fee", getExchangeRate());
+		disbursementMap.put("fee", getFee());
 		disbursementMap.put("source_country", getSourceCountry());
 		disbursementMap.put("destination_country", getDestinationCountry());
 		disbursementMap.put("amount_in_sender_currency", getAmountInSenderCurrency());
