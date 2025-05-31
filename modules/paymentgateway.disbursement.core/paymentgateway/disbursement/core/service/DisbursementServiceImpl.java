@@ -141,7 +141,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		Disbursement disbursement = this.getObject(id);
 		
 		if (disbursement == null) {
-			throw new BadRequestException("Disbursment dengan ID " + id + " tidak ditemukan");
+			throw new BadRequestException("Disbursement dengan ID " + id + " tidak ditemukan");
 		}
 
 		final String[] disbursementHolder = {null};
