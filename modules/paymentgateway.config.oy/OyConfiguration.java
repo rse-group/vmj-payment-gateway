@@ -62,9 +62,12 @@ public class OyConfiguration extends ConfigDecorator{
     public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
         HttpRequest request = null;
         
-        if (tableName.equals("ewallet_impl")) {
+        if (tableName.equals("ewallet_impl") || tableName.equals("retailoutlet_impl")) {
             Map<String, Object> requestBodyMap = new HashMap<>(); 
             requestBodyMap.put("partner_trx_id", (String) paymentMap.get("id"));
+            if (tableName.equals("retailoutlet_impl")) {
+                requestBodyMap.put("send_callback", "false");
+            }
             
             String requestString = this.getRequestString(requestBodyMap);
             
@@ -111,7 +114,12 @@ public class OyConfiguration extends ConfigDecorator{
                 // for virtual account
                 status = (String) rawResponseMap.get("va_status");
             }
-        }       
+            if (status == null) {
+                // for retail outlet
+                Map<String, Object> statusMap = (Map<String, Object>) rawResponseMap.get("status");
+                status = (String) statusMap.get("message");
+            }
+        }
 
         response.put("status", status);
         response.put("id", id);

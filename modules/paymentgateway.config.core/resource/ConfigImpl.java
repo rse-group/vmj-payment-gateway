@@ -66,6 +66,9 @@ public class ConfigImpl extends ConfigComponent {
     public String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap){
         // Reference: https://stackoverflow.com/a/12595052
         System.out.println(configUrl);
+        if (!configUrl.contains("[id]") && !configUrl.contains("[vendorGeneratedId]")) {
+            return configUrl;
+        }
         String idFormat = configUrl.substring(configUrl.indexOf("["));
         idFormat = idFormat.substring(0, idFormat.indexOf("]") + 1);
 
