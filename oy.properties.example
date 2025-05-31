@@ -5,9 +5,14 @@ content_type = application/json
 
 api_username =
 PaymentLink = /payment-checkout/create-v2
+paymentlink_payment_detail = /payment-checkout/status?partner_tx_id=[id]&send_callback=false
 PaymentRouting = /payment-routing/create-transaction
+paymentrouting_payment_detail = /payment-checkout/status?partner_tx_id=[id]&send_callback=false
 EWallet = /e-wallet-aggregator/create-transaction
+ewallet_payment_detail = /e-wallet-aggregator/check-status?partner_trx_id=[id]
 RetailOutlet = /offline-create
 Invoice = /payment-checkout/create-invoice
+invoice_payment_detail = /payment-checkout/status?partner_tx_id=[id]&send_callback=false
 VirtualAccount = /generate-static-va
+virtualaccount_payment_detail = /static-virtual-account/[vendorGeneratedId]
 PaymentDetail = /payment-checkout/status?partner_tx_id=[id]&send_callback=false
