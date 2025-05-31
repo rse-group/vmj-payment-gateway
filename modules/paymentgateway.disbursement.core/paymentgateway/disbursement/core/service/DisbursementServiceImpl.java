@@ -90,8 +90,8 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	
 	public Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response){
 		String vendorName = this.validateVendorName((String) requestBody.get("vendor_name"));
-		String bank_code = ((String) requestBody.get("bank_code"));
-		String account_number = (String) requestBody.get("account_number");
+		String bank_code = this.validateRequiredStringField(requestBody, "bank_code");
+		String account_number = this.validateRequiredStringField(requestBody, "account_number");
 		double amount = this.validateAmount(requestBody.get("amount"));
 		String id = (String) response.get("id");
 		int userId = (int) response.get("user_id");
