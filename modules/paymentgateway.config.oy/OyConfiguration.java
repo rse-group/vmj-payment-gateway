@@ -6,6 +6,8 @@ import paymentgateway.config.core.PropertiesReader;
 import paymentgateway.config.core.RequestBodyValidator;
 import vmj.routing.route.exceptions.BadRequestException;
 
+import java.net.http.HttpRequest;
+import java.net.URI;
 import java.util.*;
 import java.lang.reflect.*;
 
@@ -54,6 +56,30 @@ public class OyConfiguration extends ConfigDecorator{
         requestMap.put("id",id);
         requestMap.put("status", status);
         return requestMap;
+    }
+
+    @Override
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
+        HttpRequest request = null;
+        
+        if (tableName.equals("ewallet_impl")) {
+            Map<String, Object> requestBodyMap = new HashMap<>(); 
+            requestBodyMap.put("partner_trx_id", (String) paymentMap.get("id"));
+            
+            String requestString = this.getRequestString(requestBodyMap);
+            
+            request = (this.getBuilder(HttpRequest.newBuilder(), this.getHeaderParams()))
+                .uri(URI.create(configUrl))
+                .POST(HttpRequest.BodyPublishers.ofString(requestString))
+                .build();
+        } else {
+            request = (this.getBuilder(HttpRequest.newBuilder(), this.getHeaderParams()))
+                .uri(URI.create(configUrl))
+                .GET()
+                .build();
+        }
+        
+        return request;
     }
      
     @Override

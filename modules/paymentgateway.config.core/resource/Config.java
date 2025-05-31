@@ -53,6 +53,7 @@ public interface Config {
 
     String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap);
 
+    HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName);
     Map<String, Object> getPaymentStatusResponse(String rawResponse, String id);
 
     // Payment Response

@@ -84,6 +84,10 @@ public class ConfigImpl extends ConfigComponent {
         return configUrl;
     }
 
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
+        throw new UnsupportedOperationException();
+    }
+
     public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }

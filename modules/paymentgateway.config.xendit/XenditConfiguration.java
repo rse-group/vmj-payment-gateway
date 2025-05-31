@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import java.net.http.HttpRequest;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -94,6 +96,16 @@ public class XenditConfiguration extends ConfigDecorator {
         requestMap.put("reference_id", id);
 
         return requestMap;
+    }
+
+    @Override
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
+        HttpRequest request = (this.getBuilder(HttpRequest.newBuilder(), this.getHeaderParams()))
+				.uri(URI.create(configUrl))
+				.GET()
+				.build();
+        
+        return request;
     }
 
     @Override

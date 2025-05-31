@@ -7,6 +7,8 @@ import paymentgateway.config.core.RequestBodyValidator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.net.http.HttpRequest;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -214,6 +216,16 @@ public class FlipConfiguration extends ConfigDecorator{
         );
 
         return requestBody;
+    }
+
+    @Override
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
+        HttpRequest request = (this.getBuilder(HttpRequest.newBuilder(), this.getHeaderParams()))
+				.uri(URI.create(configUrl))
+				.GET()
+				.build();
+        
+        return request;
     }
 
     @Override

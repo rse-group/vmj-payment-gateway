@@ -5,6 +5,8 @@ import paymentgateway.config.core.ConfigComponent;
 import paymentgateway.config.core.PropertiesReader;
 import paymentgateway.config.core.RequestBodyValidator;
 
+import java.net.http.HttpRequest;
+import java.net.URI;
 import java.util.*;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
@@ -27,6 +29,16 @@ public class MidtransConfiguration extends ConfigDecorator{
     @Override
     public String getVendorName(){
         return "Midtrans";
+    }
+
+    @Override
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
+        HttpRequest request = (this.getBuilder(HttpRequest.newBuilder(), this.getHeaderParams()))
+				.uri(URI.create(configUrl))
+				.GET()
+				.build();
+        
+        return request;
     }
 
     @Override

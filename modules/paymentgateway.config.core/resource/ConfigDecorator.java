@@ -39,6 +39,10 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getPaymentDetailEndpoint(configUrl, paymentMap);
     }
 
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
+        return record.createPaymentDetailEndpointRequestObject(configUrl, paymentMap, tableName); 
+    }
+
     public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
         return record.getPaymentStatusResponse(rawResponse,id);
     }

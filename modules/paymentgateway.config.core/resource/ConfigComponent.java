@@ -19,6 +19,7 @@ public abstract class ConfigComponent implements Config {
     public abstract Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange);
     public abstract Map<String, Object> getCallbackDisbursementRequestBody(Map<String, Object> requestBody);
 
+    public abstract HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName);
     public abstract Map<String, Object> getPaymentStatusResponse(String rawResponse, String id);
 
     public abstract Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody);
