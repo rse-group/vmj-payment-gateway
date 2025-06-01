@@ -84,6 +84,10 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	}
 
     public Disbursement createDisbursement(Map<String, Object> requestBody) {
+		this.validateVendorName((String) requestBody.get("vendor_name"));
+		this.validateRequiredStringField(requestBody, "bank_code");
+		this.validateRequiredStringField(requestBody, "account_number");
+		this.validateAmount(requestBody.get("amount"));
         Map<String, Object> response = sendTransaction(requestBody);
         return createDisbursement(requestBody, response);
     }
