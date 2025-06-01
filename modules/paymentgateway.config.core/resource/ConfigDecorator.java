@@ -80,8 +80,8 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getDisbursementRequestBody(requestBody);
     }
 
-    public Map<String, Object> getAgentDisbursementRequestBody(Map<String, Object> requestBody) {
-        return record.getAgentDisbursementRequestBody(requestBody);
+    public void validateBaseAgentDisbursementRequestBody(Map<String, Object> requestBody) {
+        record.validateBaseAgentDisbursementRequestBody(requestBody);
     }
 
     public Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody){
@@ -92,8 +92,8 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getInternationalDisbursementRequestBody(requestBody);
     }
     
-    public Map<String, Object> validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
-        return record.validateBaseInternationalDisbursementRequestBody(requestBody);
+    public void validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
+        record.validateBaseInternationalDisbursementRequestBody(requestBody);
     }
 
     // Payment Request Body

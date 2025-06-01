@@ -55,7 +55,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		String vendorName = record.validateVendorName((String) requestBody.get("vendor_name"));
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-		config.getAgentDisbursementRequestBody(requestBody);
+		config.validateBaseAgentDisbursementRequestBody(requestBody);
 
 		String configUrl = config.getProductEnv("AgentDisbursement");
 		HashMap<String, String> headerParams = config.getHeaderParams();

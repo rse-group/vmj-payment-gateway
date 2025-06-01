@@ -101,17 +101,8 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getAgentDisbursementRequestBody(Map<String, Object> requestBody) {
-        if (!requestBody.containsKey("agent_id")) {
-            throw new BadRequestException("agent_id tidak ditemukan pada payload.");
-        }
-
-        int agentId = RequestBodyValidator.intRequestBodyValidator(requestBody, "agent_id");
-
-        Map<String, Object> requestMap = getDisbursementRequestBody(requestBody);
-        requestMap.put("agent_id", agentId);
-
-        return requestMap;
+    public void validateBaseAgentDisbursementRequestBody(Map<String, Object> requestBody) {
+        RequestBodyValidator.intRequestBodyValidator(requestBody, "agent_id");
     }
 
     @Override
@@ -161,61 +152,20 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
-        String destinationCountry = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "destination_country"
-        );
-        String sourceCountry = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "source_country"
-        );
-        String transactionType = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "transaction_type"
-        );
-        String beneficiaryAccountNumber = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "beneficiary_account_number"
-        );
-        String beneficiaryBankId = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "beneficiary_bank_id"
-        );
-        String beneficiaryFullName = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "beneficiary_full_name"
-        );
-        String senderPlaceOfBirth = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "sender_place_of_birth"
-        );
-        String senderDateOfBirth = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "sender_date_of_birth"
-        );
-        String senderIdentityType = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "sender_identity_type"
-        );
-        String senderIdentityNumber = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "sender_identity_number"
-        );
-        String senderEmail = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "sender_email"
-        );
-        String senderCity = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "sender_city"
-        );
-        String senderPhoneNumber = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "sender_phone_number"
-        );
-
-        return requestBody;
+    public void validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "destination_country");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "source_country");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "transaction_type");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "beneficiary_account_number");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "beneficiary_bank_id");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "beneficiary_full_name");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_place_of_birth");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_date_of_birth");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_identity_type");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_identity_number");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_email");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_city");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_phone_number");
     }
 
     @Override

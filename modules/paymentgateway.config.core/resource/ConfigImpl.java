@@ -129,7 +129,7 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getAgentDisbursementRequestBody(Map<String, Object> requestBody) {
+    public void validateBaseAgentDisbursementRequestBody(Map<String, Object> requestBody) {
         throw new UnsupportedOperationException();
     }
 
@@ -141,7 +141,7 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
+    public void validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
         throw new UnsupportedOperationException();
     }
     
