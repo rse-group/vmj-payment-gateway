@@ -248,7 +248,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	}
 	
 	public HashMap<String, Object> getDisbursement(String id) {
-		this.validateId(requestBody.get("id"));
+		this.validateId(id);
 		Disbursement disbursementImpl = this.getObject(id);
 
 	    if (disbursementImpl == null) {
