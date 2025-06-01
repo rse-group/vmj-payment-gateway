@@ -89,7 +89,7 @@ public class FlipConfiguration extends ConfigDecorator{
             requestBody,
             new String[]{ "account_number", "beneficiary_account_number" }
         );
-        double amount = RequestBodyValidator.doubleRequestBodyValidator(requestBody, "amount");
+        double amount = RequestBodyValidator.nonNegativeDoubleRequestBodyValidator(requestBody, "amount");
 
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("vendor_name", vendor_name);

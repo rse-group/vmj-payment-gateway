@@ -77,7 +77,7 @@ public class XenditConfiguration extends ConfigDecorator {
         String account_holder_name = RequestBodyValidator.stringRequestBodyValidator(requestBody,
                 "account_holder_name");
         String currency = RequestBodyValidator.stringRequestBodyValidator(requestBody, "currency");
-        double amount = RequestBodyValidator.doubleRequestBodyValidator(requestBody, "amount");
+        double amount = RequestBodyValidator.nonNegativeDoubleRequestBodyValidator(requestBody, "amount");
 
         DisbursementCurrency.validate(currency);
 
