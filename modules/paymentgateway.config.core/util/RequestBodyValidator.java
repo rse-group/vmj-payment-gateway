@@ -88,17 +88,24 @@ public class RequestBodyValidator {
 
     public static double doubleRequestBodyValidator(Map<String, Object> requestBody, String key) {
         if (requestBody.containsKey(key)) {
+            Double doubleField;
             try {
-                return ((Double) (requestBody.get(key))).doubleValue();
+                doubleField = ((Double) (requestBody.get(key)));
             } catch (Exception e) {
                 try {
-                    return Double.valueOf((String) requestBody.get(key));
+                    doubleField = Double.valueOf((String) requestBody.get(key));
                 } catch (Exception ex) {
                     throw new BadRequestException(
                         String.format("%s tidak valid.", key)
                     );
                 }
             }
+
+            if (doubleField < 0) {
+                throw new BadRequestException(String.format("%s tidak boleh negatif.", key));
+            }
+
+            return doubleField.doubleValue();
         }
 
         throw new BadRequestException(
@@ -111,17 +118,24 @@ public class RequestBodyValidator {
 
     public static double doubleRequestBodyValidator(Map<String, Object> requestBody, String[] keys) {
         for (int i = 0; i < keys.length; i++) {
+            Double doubleField;
             try {
-                return ((Double) (requestBody.get(keys[i]))).doubleValue();
+                doubleField = ((Double) (requestBody.get(keys[i])));
             } catch (Exception e) {
                 try {
-                    return Double.valueOf((String) requestBody.get(keys[i]));
+                    doubleField = Double.valueOf((String) requestBody.get(keys[i]));
                 } catch (Exception ex) {
                     throw new BadRequestException(
                         String.format("%s tidak valid.", keys[i])
                     );
                 }
             }
+
+            if (doubleField < 0) {
+                throw new BadRequestException(String.format("%s tidak boleh negatif.", keys[i]));
+            }
+
+            return doubleField.doubleValue();
         }
 
         throw new BadRequestException(
