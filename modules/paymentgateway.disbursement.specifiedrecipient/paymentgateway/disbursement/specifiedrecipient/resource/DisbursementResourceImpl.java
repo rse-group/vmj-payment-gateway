@@ -27,4 +27,16 @@ public class DisbursementResourceImpl extends DisbursementResourceDecorator {
 		Disbursement result = disbursementServiceImpl.createDisbursement(requestBody);
 		return result.toHashMap();
 	}
+
+	@Route(url = "call/specified-recipient/list", method = RequestMethod.GET)
+	public List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange){
+		return disbursementServiceImpl.getAllDisbursement();
+	}
+
+	@Route(url = "call/specified-recipient/detail", method = RequestMethod.GET)
+	public HashMap<String, Object> getDisbursement(VMJExchange vmjExchange){
+		Map<String, String> queryParamsMap = vmjExchange.queryToMap();
+		String id = queryParamsMap.get("id");
+		return disbursementServiceImpl.getDisbursement(id);
+	}
 }

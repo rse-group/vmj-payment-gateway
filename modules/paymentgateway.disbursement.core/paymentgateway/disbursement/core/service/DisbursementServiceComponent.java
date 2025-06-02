@@ -19,14 +19,15 @@ public abstract class DisbursementServiceComponent implements DisbursementServic
     public abstract Disbursement createDisbursement(Map<String, Object> requestBody);
     public abstract Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response);
     public abstract HashMap<String, Object> getDisbursement(String id);
-    public abstract List<HashMap<String, Object>> getAllDisbursement(Map<String, String> queryParams);
+    public abstract List<HashMap<String, Object>> getAllDisbursement();
+    public abstract List<HashMap<String, Object>> getAllDisbursement(String tableName);
     public abstract List<HashMap<String, Object>> deleteDisbursement(Map<String, Object> requestBody);
     public abstract HashMap<String, Object> updateDisbursement(Map<String, Object> requestBody);
     public abstract List<HashMap<String, Object>> transformListToHashMap(List<Disbursement> List);
     public abstract Map<String, Object> sendTransaction(Map<String, Object> requestBody);
     public abstract HashMap<String, Object> getDisbursementById(String id);
+    public abstract HashMap<String, Object> findById(List<HashMap<String, Object>> disbursements, String id);
     public abstract String validateVendorName(String vendorName);
     public abstract double validateAmount(Object amountObject);
     public abstract String validateId(Object idObject);
-    public abstract String validateRequiredStringField(Map<String, Object> requestBody, String key);
 }

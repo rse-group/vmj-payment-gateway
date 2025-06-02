@@ -84,14 +84,18 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 	}
 
     public Disbursement createDisbursement(Map<String, Object> requestBody) {
+		this.validateVendorName((String) requestBody.get("vendor_name"));
+		this.validateRequiredStringField(requestBody, "bank_code");
+		this.validateRequiredStringField(requestBody, "account_number");
+		this.validateAmount(requestBody.get("amount"));
         Map<String, Object> response = sendTransaction(requestBody);
         return createDisbursement(requestBody, response);
     }
 	
 	public Disbursement createDisbursement(Map<String, Object> requestBody, Map<String, Object> response){
 		String vendorName = this.validateVendorName((String) requestBody.get("vendor_name"));
-		String bank_code = ((String) requestBody.get("bank_code"));
-		String account_number = (String) requestBody.get("account_number");
+		String bank_code = this.validateRequiredStringField(requestBody, "bank_code");
+		String account_number = this.validateRequiredStringField(requestBody, "account_number");
 		double amount = this.validateAmount(requestBody.get("amount"));
 		String id = (String) response.get("id");
 		int userId = (int) response.get("user_id");
@@ -141,7 +145,7 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		Disbursement disbursement = this.getObject(id);
 		
 		if (disbursement == null) {
-			throw new BadRequestException("Disbursment dengan ID " + id + " tidak ditemukan");
+			throw new BadRequestException("Disbursement dengan ID " + id + " tidak ditemukan");
 		}
 
 		final String[] disbursementHolder = {null};
@@ -228,12 +232,23 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		return null;
 	}
 
-	public List<HashMap<String, Object>> getAllDisbursement(String tableName){
-		List<Disbursement> List  = Repository.getAllObject(tableName);
-		return transformListToHashMap(List);
+	public HashMap<String, Object> findById(List<HashMap<String, Object>> disbursements, String id) {
+		for (HashMap<String, Object> disbursement : disbursements){
+			String disbursementId = (String) disbursement.get("id");
+			if (disbursementId.equals(id)){
+				return disbursement;
+			}
+		}
+
+		throw new BadRequestException("Disbursement dengan ID " + id + " tidak ditemukan");
+	}
+
+	public List<HashMap<String, Object>> getAllDisbursement(){
+		return this.getAllDisbursement("disbursement_impl");
 	}
 	
 	public HashMap<String, Object> getDisbursement(String id) {
+		this.validateId(id);
 		Disbursement disbursementImpl = this.getObject(id);
 
 	    if (disbursementImpl == null) {
@@ -243,14 +258,13 @@ public class DisbursementServiceImpl extends DisbursementServiceComponent {
 		return disbursementImpl.toHashMap();
 	}
 	
-	public List<HashMap<String, Object>> getAllDisbursement(Map<String, String> queryParams){
-		String table = (String) queryParams.get("table_name");
+	public List<HashMap<String, Object>> getAllDisbursement(String tableName){
 		
 		try {
-			List<Disbursement> list = Repository.getAllObject(table);
+			List<Disbursement> list = Repository.getAllObject(tableName);
 		    return transformListToHashMap(list);
 		} catch (Exception e) {
-			throw new BadRequestException("Table name " + table + " bukan entity yang valid");
+			throw new BadRequestException("Table name " + tableName + " bukan entity yang valid");
 		}
 	}
 

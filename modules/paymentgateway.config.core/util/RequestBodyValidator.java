@@ -88,7 +88,17 @@ public class RequestBodyValidator {
 
     public static double doubleRequestBodyValidator(Map<String, Object> requestBody, String key) {
         if (requestBody.containsKey(key)) {
-            return Double.parseDouble((String) requestBody.get(key));
+            try {
+                return ((Double) (requestBody.get(key))).doubleValue();
+            } catch (Exception e) {
+                try {
+                    return Double.valueOf((String) requestBody.get(key)).doubleValue();
+                } catch (Exception ex) {
+                    throw new BadRequestException(
+                        String.format("%s tidak valid.", key)
+                    );
+                }
+            }
         }
 
         throw new BadRequestException(
@@ -101,8 +111,16 @@ public class RequestBodyValidator {
 
     public static double doubleRequestBodyValidator(Map<String, Object> requestBody, String[] keys) {
         for (int i = 0; i < keys.length; i++) {
-            if (requestBody.containsKey(keys[i])) {
-                return Double.parseDouble((String) requestBody.get(keys[i]));
+            try {
+                return ((Double) (requestBody.get(keys[i]))).doubleValue();
+            } catch (Exception e) {
+                try {
+                    return Double.valueOf((String) requestBody.get(keys[i])).doubleValue();
+                } catch (Exception ex) {
+                    throw new BadRequestException(
+                        String.format("%s tidak valid.", keys[i])
+                    );
+                }
             }
         }
 
@@ -112,5 +130,13 @@ public class RequestBodyValidator {
                 String.join(", ", keys)
             )
         );
+    }
+
+    public static double nonNegativeDoubleRequestBodyValidator(Map<String, Object> requestBody, String key) {
+        double doubleValue = doubleRequestBodyValidator(requestBody, key);
+        if (doubleValue < 0) {
+            throw new BadRequestException(String.format("%s tidak boleh negatif.", key));
+        }
+        return doubleValue;
     }
 }

@@ -35,8 +35,7 @@ public class DisbursementResourceImpl extends DisbursementResourceComponent{
 
 	@Route(url="call/disbursement/list", method = RequestMethod.GET)
 	public List<HashMap<String, Object>> getAllDisbursement(VMJExchange vmjExchange){
-		Map<String, String> queryParams = vmjExchange.queryToMap(); 
-		return disbursementServiceImpl.getAllDisbursement(queryParams);
+		return disbursementServiceImpl.getAllDisbursement();
 	}
 
 	@Route(url="call/disbursement/delete", method = RequestMethod.DELETE)

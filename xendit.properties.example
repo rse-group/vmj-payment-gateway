@@ -2,10 +2,15 @@ vendor_name = Xendit
 base_url = https://api.xendit.co
 Disbursement  = /v2/payouts
 VirtualAccount = /payment_requests
+virtualaccount_payment_detail = /payment_requests/[vendorGeneratedId]
 RetailOutlet = /payment_requests
+retailoutlet_payment_detail = /payment_requests/[vendorGeneratedId]
 DirectDebit = /payment_requests
+directdebit_payment_detail = /payment_requests/[vendorGeneratedId]
 QRCode = /payment_requests
+qrcode_payment_detail = /payment_requests/[vendorGeneratedId]
 EWallet = /payment_requests
+ewallet_payment_detail = /payment_requests/[vendorGeneratedId]
 PaymentDetail = /payment_requests/[id]
 
 content_type = application/json

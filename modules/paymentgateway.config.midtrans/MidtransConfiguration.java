@@ -5,6 +5,8 @@ import paymentgateway.config.core.ConfigComponent;
 import paymentgateway.config.core.PropertiesReader;
 import paymentgateway.config.core.RequestBodyValidator;
 
+import java.net.http.HttpRequest;
+import java.net.URI;
 import java.util.*;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
@@ -30,6 +32,16 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
+        HttpRequest request = (this.getBuilder(HttpRequest.newBuilder(), this.getHeaderParams()))
+				.uri(URI.create(configUrl))
+				.GET()
+				.build();
+        
+        return request;
+    }
+
+    @Override
     public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
@@ -40,11 +52,6 @@ public class MidtransConfiguration extends ConfigDecorator{
         String status = rawResponseMap.get("transaction_status") != null
         	    ? (String) rawResponseMap.get("transaction_status")
         	    : (String) rawResponseMap.get("last_snap_transaction_status");
-        
-        if (status == null){
-        	String errorMessageString = (String) rawResponseMap.get("status_message");
-        	throw new BadRequestException(errorMessageString);
-        }
         
         response.put("status", status);
         response.put("id", id);

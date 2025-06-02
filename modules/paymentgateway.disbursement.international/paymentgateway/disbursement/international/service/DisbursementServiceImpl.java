@@ -11,6 +11,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -40,6 +41,12 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		String destination_country = (String) response.get("destination_country");
 		double amount_in_sender_currency = record.validateAmount(response.get("amount"));
 		String beneficiary_currency_code = (String) response.get("beneficiary_currency_code");
+		
+		String beneficiaryBankName = (String) response.get("bank");
+		String beneficiaryBankAccountNumber = (String) response.get("bank_account_number");
+
+		requestBody.put("bank_code", beneficiaryBankName);
+		requestBody.put("account_number", beneficiaryBankAccountNumber);
 
 		Disbursement internationalTransaction = DisbursementFactory.createDisbursement(
 			"paymentgateway.disbursement.international.InternationalImpl",
@@ -62,19 +69,8 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
         String vendorName = record.validateVendorName((String) requestBody.get("vendor_name"));
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-		record.validateRequiredStringField(requestBody, "destination_country");
-		record.validateRequiredStringField(requestBody, "source_country");
-		record.validateRequiredStringField(requestBody, "transaction_type");
-		record.validateRequiredStringField(requestBody, "beneficiary_account_number");
-		record.validateRequiredStringField(requestBody, "beneficiary_bank_id");
-		record.validateRequiredStringField(requestBody, "beneficiary_full_name");
-		record.validateRequiredStringField(requestBody, "sender_place_of_birth");
-		record.validateRequiredStringField(requestBody, "sender_date_of_birth");
-		record.validateRequiredStringField(requestBody, "sender_identity_type");
-		record.validateRequiredStringField(requestBody, "sender_identity_number");
-		record.validateRequiredStringField(requestBody, "sender_email");
-		record.validateRequiredStringField(requestBody, "sender_city");
-		record.validateRequiredStringField(requestBody, "sender_phone_number");
+
+		config.validateBaseInternationalDisbursementRequestBody(requestBody);
 		
 		String configUrl = config.getProductEnv("InternationalDisbursement");
 		HashMap<String, String> headerParams = config.getHeaderParams();
@@ -100,6 +96,16 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		}
 
 		return responseMap;
+	}
+
+	public List<HashMap<String, Object>> getAllDisbursement() {
+		return record.getAllDisbursement("international_impl");
+	}
+
+	public HashMap<String, Object> getDisbursement(String id) {
+		record.validateId(id);
+		List<HashMap<String, Object>> disbursements = getAllDisbursement();
+		return record.findById(disbursements, id);
 	}
 
 }

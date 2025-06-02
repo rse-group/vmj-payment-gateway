@@ -39,6 +39,10 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getPaymentDetailEndpoint(configUrl, paymentMap);
     }
 
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
+        return record.createPaymentDetailEndpointRequestObject(configUrl, paymentMap, tableName); 
+    }
+
     public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
         return record.getPaymentStatusResponse(rawResponse,id);
     }
@@ -76,8 +80,8 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getDisbursementRequestBody(requestBody);
     }
 
-    public Map<String, Object> getAgentDisbursementRequestBody(Map<String, Object> requestBody) {
-        return record.getAgentDisbursementRequestBody(requestBody);
+    public void validateBaseAgentDisbursementRequestBody(Map<String, Object> requestBody) {
+        record.validateBaseAgentDisbursementRequestBody(requestBody);
     }
 
     public Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody){
@@ -86,6 +90,10 @@ public abstract class ConfigDecorator extends ConfigComponent{
 
     public Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody){
         return record.getInternationalDisbursementRequestBody(requestBody);
+    }
+    
+    public void validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
+        record.validateBaseInternationalDisbursementRequestBody(requestBody);
     }
 
     // Payment Request Body

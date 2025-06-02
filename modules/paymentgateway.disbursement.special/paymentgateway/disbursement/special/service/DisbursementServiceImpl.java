@@ -18,6 +18,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -86,5 +87,15 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		}
 
 		return responseMap;
+	}
+
+	public List<HashMap<String, Object>> getAllDisbursement() {
+		return record.getAllDisbursement("special_impl");
+	}
+
+	public HashMap<String, Object> getDisbursement(String id) {
+		record.validateId(id);
+		List<HashMap<String, Object>> disbursements = getAllDisbursement();
+		return record.findById(disbursements, id);
 	}
 }

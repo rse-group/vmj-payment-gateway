@@ -36,10 +36,11 @@ public interface Config {
 
     // Disbursement Request
     Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody);
-    Map<String, Object> getAgentDisbursementRequestBody(Map<String, Object> requestBody);
+    void validateBaseAgentDisbursementRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody);
-
+    void validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody);
+    
     // Payment Request
     Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody);
@@ -53,6 +54,7 @@ public interface Config {
 
     String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap);
 
+    HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName);
     Map<String, Object> getPaymentStatusResponse(String rawResponse, String id);
 
     // Payment Response

@@ -11,6 +11,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -54,7 +55,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		String vendorName = record.validateVendorName((String) requestBody.get("vendor_name"));
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
-		config.getAgentDisbursementRequestBody(requestBody);
+		config.validateBaseAgentDisbursementRequestBody(requestBody);
 
 		String configUrl = config.getProductEnv("AgentDisbursement");
 		HashMap<String, String> headerParams = config.getHeaderParams();
@@ -80,5 +81,15 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		}
 
 		return responseMap;
+	}
+
+	public List<HashMap<String, Object>> getAllDisbursement() {
+		return record.getAllDisbursement("agent_impl");
+	}
+
+	public HashMap<String, Object> getDisbursement(String id) {
+		record.validateId(id);
+		List<HashMap<String, Object>> disbursements = getAllDisbursement();
+		return record.findById(disbursements, id);
 	}
 }

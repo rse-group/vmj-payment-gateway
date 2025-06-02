@@ -27,8 +27,12 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
         return record.getDisbursement(id);
     }
 
-    public List<HashMap<String, Object>> getAllDisbursement(Map<String, String> queryParams){
-        return record.getAllDisbursement(queryParams);
+    public List<HashMap<String, Object>> getAllDisbursement(){
+        return record.getAllDisbursement();
+    }
+
+    public List<HashMap<String, Object>> getAllDisbursement(String tableName) {
+        return record.getAllDisbursement(tableName);
     }
 
     public List<HashMap<String, Object>> deleteDisbursement(Map<String, Object> requestBody){
@@ -51,6 +55,10 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
         return record.getDisbursementById(id);
     }
 
+    public HashMap<String, Object> findById(List<HashMap<String, Object>> disbursements, String id) {
+        return record.findById(disbursements, id);
+    }
+
     public String validateVendorName(String vendorName) {
         return record.validateVendorName(vendorName);
     }
@@ -61,9 +69,5 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
     
     public String validateId(Object idObject) {
         return record.validateId(idObject);
-    }
-    
-    public String validateRequiredStringField(Map<String, Object> requestBody, String key) {
-        return record.validateRequiredStringField(requestBody, key);
     }
 }

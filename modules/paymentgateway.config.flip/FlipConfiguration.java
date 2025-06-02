@@ -7,6 +7,8 @@ import paymentgateway.config.core.RequestBodyValidator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.net.http.HttpRequest;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -87,7 +89,7 @@ public class FlipConfiguration extends ConfigDecorator{
             requestBody,
             new String[]{ "account_number", "beneficiary_account_number" }
         );
-        double amount = RequestBodyValidator.doubleRequestBodyValidator(requestBody, "amount");
+        double amount = RequestBodyValidator.nonNegativeDoubleRequestBodyValidator(requestBody, "amount");
 
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("vendor_name", vendor_name);
@@ -99,17 +101,8 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getAgentDisbursementRequestBody(Map<String, Object> requestBody) {
-        if (!requestBody.containsKey("agent_id")) {
-            throw new BadRequestException("agent_id tidak ditemukan pada payload.");
-        }
-
-        int agentId = RequestBodyValidator.intRequestBodyValidator(requestBody, "agent_id");
-
-        Map<String, Object> requestMap = getDisbursementRequestBody(requestBody);
-        requestMap.put("agent_id", agentId);
-
-        return requestMap;
+    public void validateBaseAgentDisbursementRequestBody(Map<String, Object> requestBody) {
+        RequestBodyValidator.intRequestBodyValidator(requestBody, "agent_id");
     }
 
     @Override
@@ -156,6 +149,33 @@ public class FlipConfiguration extends ConfigDecorator{
         requestMap.put("sender_job", senderJob);
 
         return requestMap;
+    }
+
+    @Override
+    public void validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "destination_country");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "source_country");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "transaction_type");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "beneficiary_account_number");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "beneficiary_bank_id");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "beneficiary_full_name");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_place_of_birth");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_date_of_birth");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_identity_type");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_identity_number");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_email");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_city");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_phone_number");
+    }
+
+    @Override
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
+        HttpRequest request = (this.getBuilder(HttpRequest.newBuilder(), this.getHeaderParams()))
+				.uri(URI.create(configUrl))
+				.GET()
+				.build();
+        
+        return request;
     }
 
     @Override
@@ -237,6 +257,12 @@ public class FlipConfiguration extends ConfigDecorator{
             throw new BadRequestException(errorMessageString);
         }
 
+        
+        if (rawResponseMap.containsKey("message")) {
+            String errorMessageString = (String) rawResponseMap.get("message");
+            throw new BadRequestException(errorMessageString);
+        }
+        
         int agentId = ((Double) rawResponseMap.get("agent_id")).intValue();
         String direction = (String) rawResponseMap.get("direction");
         int vendorGeneratedId = ((Double) rawResponseMap.get("id")).intValue();
@@ -297,12 +323,18 @@ public class FlipConfiguration extends ConfigDecorator{
         String destinationCountry = (String) rawResponseMap.get("destination_country");
         String beneficiaryCurrencyCode = (String) rawResponseMap.get("beneficiary_currency_code");
 
+        Map<String, Object> beneficiaryMap = (Map<String, Object>) rawResponseMap.get("beneficiary");
+        String beneficiaryBankName = (String) beneficiaryMap.get("bank");
+        String beneficiaryBankAccountNumber = (String) beneficiaryMap.get("bank_account_number");
+
         response.put("exchange_rate", exchangeRate);
         response.put("fee", fee);
         response.put("amount", amount);
         response.put("source_country", sourceCountry);
         response.put("destination_country", destinationCountry);
         response.put("beneficiary_currency_code", beneficiaryCurrencyCode);
+        response.put("bank", beneficiaryBankName);
+        response.put("bank_account_number", beneficiaryBankAccountNumber);
         return response;
     }
 

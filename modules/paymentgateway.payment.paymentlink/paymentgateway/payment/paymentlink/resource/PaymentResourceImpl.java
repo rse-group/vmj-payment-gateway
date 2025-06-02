@@ -51,10 +51,4 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		Map<String, String> queryParams = vmjExchange.queryToMap();
 		return paymentServiceImpl.getById(queryParams);
 	}
-
-	@Route(url = "call/paymentlink/delete", method = RequestMethod.DELETE)
-	public String deletePaymentLinkById(VMJExchange vmjExchange) {
-		Map<String, Object> requestBody = vmjExchange.getPayload();
-		return paymentServiceImpl.deletePaymentLinkById(requestBody);
-	}
 }

@@ -19,12 +19,14 @@ public abstract class ConfigComponent implements Config {
     public abstract Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange);
     public abstract Map<String, Object> getCallbackDisbursementRequestBody(Map<String, Object> requestBody);
 
+    public abstract HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName);
     public abstract Map<String, Object> getPaymentStatusResponse(String rawResponse, String id);
 
     public abstract Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody);
-    public abstract Map<String, Object> getAgentDisbursementRequestBody(Map<String, Object> requestBody);
+    public abstract void validateBaseAgentDisbursementRequestBody(Map<String, Object> requestBody);
     public abstract Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody);
     public abstract Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody);
+    public abstract void validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody);
 
     public abstract Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody);
     public abstract Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody);

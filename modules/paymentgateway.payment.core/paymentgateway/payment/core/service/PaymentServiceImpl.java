@@ -106,10 +106,7 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 			throw new BadRequestException("Payment detail URL is not configured");
 		}
         configUrl = config.getPaymentDetailEndpoint(configUrl, paymentMap);
-        HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),config.getHeaderParams()))
-				.uri(URI.create(configUrl))
-				.GET()
-				.build();
+        HttpRequest request = config.createPaymentDetailEndpointRequestObject(configUrl, paymentMap, tableName);
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();

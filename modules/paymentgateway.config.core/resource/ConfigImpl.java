@@ -66,6 +66,9 @@ public class ConfigImpl extends ConfigComponent {
     public String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap){
         // Reference: https://stackoverflow.com/a/12595052
         System.out.println(configUrl);
+        if (!configUrl.contains("[id]") && !configUrl.contains("[vendorGeneratedId]")) {
+            return configUrl;
+        }
         String idFormat = configUrl.substring(configUrl.indexOf("["));
         idFormat = idFormat.substring(0, idFormat.indexOf("]") + 1);
 
@@ -82,6 +85,10 @@ public class ConfigImpl extends ConfigComponent {
 
         configUrl = configUrl.replace(idFormat, id);
         return configUrl;
+    }
+
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
+        throw new UnsupportedOperationException();
     }
 
     public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
@@ -122,7 +129,7 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getAgentDisbursementRequestBody(Map<String, Object> requestBody) {
+    public void validateBaseAgentDisbursementRequestBody(Map<String, Object> requestBody) {
         throw new UnsupportedOperationException();
     }
 
@@ -131,6 +138,10 @@ public class ConfigImpl extends ConfigComponent {
     }
 
     public Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody){
+        throw new UnsupportedOperationException();
+    }
+
+    public void validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
         throw new UnsupportedOperationException();
     }
     
