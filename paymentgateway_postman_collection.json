@@ -15513,7 +15513,7 @@
 			"response": []
 		},
 		{
-			"name": "Oy Check Payment Status Success",
+			"name": "Oy Check Payment Link Status Success",
 			"event": [
 				{
 					"listen": "test",
@@ -15579,7 +15579,7 @@
 			"response": []
 		},
 		{
-			"name": "Oy Check Payment Status Error if ID is Not Specified",
+			"name": "Oy Check Payment Link Status Error if ID is Not Specified",
 			"event": [
 				{
 					"listen": "test",
@@ -15627,7 +15627,7 @@
 			"response": []
 		},
 		{
-			"name": "Oy Check Payment Status Error if ID is Invalid",
+			"name": "Oy Check Payment Link Status Error if ID is Invalid",
 			"event": [
 				{
 					"listen": "test",
