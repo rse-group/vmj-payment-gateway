@@ -53,11 +53,6 @@ public class MidtransConfiguration extends ConfigDecorator{
         	    ? (String) rawResponseMap.get("transaction_status")
         	    : (String) rawResponseMap.get("last_snap_transaction_status");
         
-        if (status == null){
-        	String errorMessageString = (String) rawResponseMap.get("status_message");
-        	throw new BadRequestException(errorMessageString);
-        }
-        
         response.put("status", status);
         response.put("id", id);
         return response;
