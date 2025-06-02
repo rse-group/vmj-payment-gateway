@@ -106,19 +106,4 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		}
 		throw new BadRequestException("Payment link dengan ID " + validatedId + " tidak ditemukan");
 	}
-	
-	public String deletePaymentLinkById(Map<String, Object> requestBody) {
-		String id = (String) requestBody.get("id");
-		String validatedId = record.validateId(id);
-		List<PaymentLinkImpl> paymentLinks = paymentLinkRepository.getAllObject("paymentlink_impl");
-		for(PaymentLinkImpl payment : paymentLinks){
-			if(payment.getId().toString().equals(validatedId)){
-				System.out.println(payment.getId());
-				paymentLinkRepository.deleteObject(payment.getId());
-				return "SUCCESS";
-			}
-		}
-
-		throw new BadRequestException("Payment link dengan ID " + validatedId + " tidak ditemukan");
-	}
 }
