@@ -6873,7 +6873,7 @@
 			"response": []
 		},
 		{
-			"name": "Flip Check Card Payment Status Error if ID is Not Specified",
+			"name": "Flip Check Virtual Account Payment Status Error if ID is Not Specified",
 			"event": [
 				{
 					"listen": "test",
@@ -6921,7 +6921,7 @@
 			"response": []
 		},
 		{
-			"name": "Flip Check Card Payment Status Error if ID is Invalid",
+			"name": "Flip Check Virtual Account Payment Status Error if ID is Invalid",
 			"event": [
 				{
 					"listen": "test",
