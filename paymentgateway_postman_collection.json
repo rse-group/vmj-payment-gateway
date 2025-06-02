@@ -8928,6 +8928,41 @@
 			"response": []
 		},
 		{
+			"name": "Flip Create Payment Link Error is Vendor Name is Not Specified",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should handle if vendor name is not specified', function() {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.response.to.have.status(400);\r",
+							"    pm.expect(responseJson.data.message).to.eql('Bad Request: vendor_name tidak ditemukan pada payload.');\r",
+							"    pm.expect(responseJson.data.vmjErrorCode).to.eql(4000);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\": \"10000\",\r\n    \"title\": \"Pembayaran\",\r\n    \"sender_name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/paymentlink"
+			},
+			"response": []
+		},
+		{
 			"name": "Flip Create Payment Link Error If Amount is Not Specified",
 			"event": [
 				{
