@@ -1,17 +1,20 @@
 namespace PaymentGateway
 
 imports
-	interfaces.Vendor as V
-	interfaces.Features as F
+    interfaces.Vendor as V
+    interfaces.Features as F
 
 features
-	PaymentGateway {abstract true}
-		optional
-			V.Vendor
-			F.Features
-
-constraints
-    V.Oy => F.PaymentLink | F.EWallet | F.VirtualAccount | F.RetailOutlet | F.Invoice | F.PaymentRouting
-    V.Midtrans => F.Card | F.VirtualAccount | F.RetailOutlet | F.PaymentLink | F.EWallet
-    V.Xendit => F.SpecifiedRecipient | F.VirtualAccount | F.RetailOutlet | F.DirectDebit | F.QRCode | F.EWallet
-    V.Flip => F.Agent | F.ExchangeRate | F.FixedCurrency |  F.PaymentLink | F.VirtualAccount | F.EWallet
+    PaymentGateway {abstract true}
+        optional
+            V.Vendor
+            F.Features
+            
+constraints    
+    F.PaymentLink => V.Oy | V.Midtrans | V.Flip
+    F.EWallet | F.VirtualAccount => V.Oy | V.Midtrans | V.Flip | V.Xendit
+    F.RetailOutlet => V.Oy | V.Midtrans | V.Xendit
+    F.Invoice | F.PaymentRouting => V.Oy 
+    F.Card => V.Midtrans
+    F.SpecifiedRecipient | F.QRCode | F.DirectDebit => V.Xendit
+    F.Agent | F.ExchangeRate | F.FixedCurrency => V.Flip

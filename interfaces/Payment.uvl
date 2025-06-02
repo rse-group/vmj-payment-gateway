@@ -9,6 +9,7 @@ features
 			EWallet
 			Invoice
 			PaymentRouting
-			CreditCard
-			DebitCard
+			Card
+			DirectDebit
+			QRCode
 
