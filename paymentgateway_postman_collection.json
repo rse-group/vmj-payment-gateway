@@ -19090,6 +19090,241 @@
 			"response": []
 		},
 		{
+			"name": "Xendit Create E-Wallet Payment Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    const responseJson = pm.response.json()\r",
+							"    pm.expect(responseJson.data).to.have.all.keys(\r",
+							"        'vendorGeneratedId',\r",
+							"        'createdAt',\r",
+							"        'amount',\r",
+							"        'phoneNumber',\r",
+							"        'eWalletType',\r",
+							"        'id',\r",
+							"        'vendorName',\r",
+							"        'eWalletUrl',\r",
+							"        'status'\r",
+							"    );\r",
+							"    pm.environment.set(\"id\", responseJson.data.id)\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.expect(responseJson.data.vendorName).to.eql(\"Xendit\");\r",
+							"    pm.expect(responseJson.data.amount).to.eql(20000.0);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"ewallet_type\": \"DANA\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"20000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+628123123123\",\r\n    \"success_return_url\": \"http://localhost:3001/success\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create E-Wallet Payment Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    const responseJson = pm.response.json()\r",
+							"    pm.expect(responseJson.data).to.have.all.keys(\r",
+							"        'vendorGeneratedId',\r",
+							"        'createdAt',\r",
+							"        'amount',\r",
+							"        'phoneNumber',\r",
+							"        'eWalletType',\r",
+							"        'id',\r",
+							"        'vendorName',\r",
+							"        'eWalletUrl',\r",
+							"        'status'\r",
+							"    );\r",
+							"    pm.environment.set(\"id\", responseJson.data.id)\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.expect(responseJson.data.vendorName).to.eql(\"Xendit\");\r",
+							"    pm.expect(responseJson.data.amount).to.eql(20000.0);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"ewallet_type\": \"LINKAJA\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"20000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+628123123123\",\r\n    \"success_return_url\": \"http://localhost:3001/success\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create E-Wallet Payment Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    const responseJson = pm.response.json()\r",
+							"    pm.expect(responseJson.data).to.have.all.keys(\r",
+							"        'vendorGeneratedId',\r",
+							"        'createdAt',\r",
+							"        'amount',\r",
+							"        'phoneNumber',\r",
+							"        'eWalletType',\r",
+							"        'id',\r",
+							"        'vendorName',\r",
+							"        'eWalletUrl',\r",
+							"        'status'\r",
+							"    );\r",
+							"    pm.environment.set(\"id\", responseJson.data.id)\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.expect(responseJson.data.vendorName).to.eql(\"Xendit\");\r",
+							"    pm.expect(responseJson.data.amount).to.eql(20000.0);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"ewallet_type\": \"SHOPEEPAY\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"20000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+628123123123\",\r\n    \"success_return_url\": \"http://localhost:3001/success\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create E-Wallet Payment Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    const responseJson = pm.response.json()\r",
+							"    pm.expect(responseJson.data).to.have.all.keys(\r",
+							"        'vendorGeneratedId',\r",
+							"        'createdAt',\r",
+							"        'amount',\r",
+							"        'phoneNumber',\r",
+							"        'eWalletType',\r",
+							"        'id',\r",
+							"        'vendorName',\r",
+							"        'eWalletUrl',\r",
+							"        'status'\r",
+							"    );\r",
+							"    pm.environment.set(\"id\", responseJson.data.id)\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.expect(responseJson.data.vendorName).to.eql(\"Xendit\");\r",
+							"    pm.expect(responseJson.data.amount).to.eql(20000.0);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"ewallet_type\": \"ASTRAPAY\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"20000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+628123123123\",\r\n    \"success_return_url\": \"http://localhost:3001/success\",\r\n    \"failure_return_url\": \"http://localhost:3001/fail\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create E-Wallet Payment Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    const responseJson = pm.response.json()\r",
+							"    pm.expect(responseJson.data).to.have.all.keys(\r",
+							"        'vendorGeneratedId',\r",
+							"        'createdAt',\r",
+							"        'amount',\r",
+							"        'phoneNumber',\r",
+							"        'eWalletType',\r",
+							"        'id',\r",
+							"        'vendorName',\r",
+							"        'eWalletUrl',\r",
+							"        'status'\r",
+							"    );\r",
+							"    pm.environment.set(\"id\", responseJson.data.id)\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.expect(responseJson.data.vendorName).to.eql(\"Xendit\");\r",
+							"    pm.expect(responseJson.data.amount).to.eql(20000.0);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"ewallet_type\": \"JENIUSPAY\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"20000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+628123123123\",\r\n    \"cashtag\": \"$test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
 			"name": "Xendit Check E-Wallet Payment Status Success",
 			"event": [
 				{
@@ -19617,6 +19852,216 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"ewallet_type\": \"OVO\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"20000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create E-Wallet Payment Error if Success Return URL is Needed in Request Body But Not Specified",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should handle if phone is not specified', function() {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.response.to.have.status(400);\r",
+							"    pm.expect(responseJson.data.message).to.eql('Bad Request: success_return_url tidak ditemukan pada payload.');\r",
+							"    pm.expect(responseJson.data.vmjErrorCode).to.eql(4000);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"ewallet_type\": \"DANA\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"20000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+628123123123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create E-Wallet Payment Error if Success Return URL is Needed in Request Body But Not Specified",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should handle if phone is not specified', function() {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.response.to.have.status(400);\r",
+							"    pm.expect(responseJson.data.message).to.eql('Bad Request: success_return_url tidak ditemukan pada payload.');\r",
+							"    pm.expect(responseJson.data.vmjErrorCode).to.eql(4000);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"ewallet_type\": \"LINKAJA\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"20000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+628123123123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create E-Wallet Payment Error if Success Return URL is Needed in Request Body But Not Specified",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should handle if phone is not specified', function() {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.response.to.have.status(400);\r",
+							"    pm.expect(responseJson.data.message).to.eql('Bad Request: success_return_url tidak ditemukan pada payload.');\r",
+							"    pm.expect(responseJson.data.vmjErrorCode).to.eql(4000);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"ewallet_type\": \"SHOPEEPAY\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"20000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+628123123123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create E-Wallet Payment Error if Success Return URL is Needed in Request Body But Not Specified",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should handle if phone is not specified', function() {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.response.to.have.status(400);\r",
+							"    pm.expect(responseJson.data.message).to.eql('Bad Request: success_return_url tidak ditemukan pada payload.');\r",
+							"    pm.expect(responseJson.data.vmjErrorCode).to.eql(4000);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"ewallet_type\": \"ASTRAPAY\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"20000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+628123123123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create E-Wallet Payment Error if Failure Return URL is Needed in Request Body But Not Specified",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should handle if phone is not specified', function() {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.response.to.have.status(400);\r",
+							"    pm.expect(responseJson.data.message).to.eql('Bad Request: failure_return_url tidak ditemukan pada payload.');\r",
+							"    pm.expect(responseJson.data.vmjErrorCode).to.eql(4000);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"ewallet_type\": \"ASTRAPAY\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"20000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+628123123123\",\r\n    \"success_return_url\": \"http://localhost:3001/success\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/ewallet"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create E-Wallet Payment Error if Cashtag is Needed in Request Body But Not Specified",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should handle if phone is not specified', function() {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.response.to.have.status(400);\r",
+							"    pm.expect(responseJson.data.message).to.eql('Bad Request: cashtag tidak ditemukan pada payload.');\r",
+							"    pm.expect(responseJson.data.vmjErrorCode).to.eql(4000);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"ewallet_type\": \"JENIUSPAY\",\r\n    \"title\": \"Pembayaran\",\r\n    \"amount\": \"20000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+628123123123\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -20540,7 +20985,7 @@
 			"response": []
 		},
 		{
-			"name": "Xendit Create Direct Debit Payment Error if Success Return URL is Not Specified",
+			"name": "Xendit Create Direct Debit Payment Error if Success Return URL is Needed in Request Body But is Not Specified",
 			"event": [
 				{
 					"listen": "test",
@@ -20575,7 +21020,7 @@
 			"response": []
 		},
 		{
-			"name": "Xendit Create Direct Debit Payment Error if Failure Return URL is Not Specified",
+			"name": "Xendit Create Direct Debit Payment Error if Failure Return URL is Needed in Request Body But is Not Specified",
 			"event": [
 				{
 					"listen": "test",
@@ -20599,6 +21044,41 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"bank\": \"MANDIRI\",\r\n    \"amount\": \"100000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+62812312312\",\r\n    \"success_return_url\": \"http://localhost:3001/done\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/directdebit"
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Create Direct Debit Payment Error if Card Last Four is Needed in Request Body But is Not Specified",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should handle if card last four is not specified', function() {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.response.to.have.status(400);\r",
+							"    pm.expect(responseJson.data.message).to.eql('Bad Request: card_last_four tidak ditemukan pada payload.');\r",
+							"    pm.expect(responseJson.data.vmjErrorCode).to.eql(4000);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"vendor_name\": \"Xendit\",\r\n    \"bank\": \"BRI\",\r\n    \"amount\": \"100000\",\r\n    \"name\": \"test sender\",\r\n    \"email\": \"testsender@gmail.com\",\r\n    \"phone\": \"+62812312312\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
