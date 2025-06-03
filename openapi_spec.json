@@ -619,6 +619,37 @@
         }
       }
     },
+    "/call/specified-recipient/detail": {
+      "get": {
+        "tags": ["Disbursement"],
+        "summary": "Get specified recipient disbursement detail",
+        "operationId": "getSpecifiedRecipientDisbursementDetail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get specified recipient disbursement detail",
+            "schema": {
+              "$ref": "#/definitions/GetSpecifiedRecipientDisbursementDetailResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid id in query parameter"
+          }
+        }
+      }
+    },
     "/call/payment": {
       "post": {
         "tags": ["Payment"],
@@ -3409,6 +3440,56 @@
       },
       "xml": {
         "name": "GetSpecifiedRecipientDisbursementListResponseBody"
+      }
+    },
+    "GetSpecifiedRecipientDisbursementDetailResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "bank_code": {
+              "type": "string"
+            },
+            "account_number": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "int64"
+            },
+            "user_id": {
+              "type": "number",
+              "format": "int64"
+            },
+            "account_holder_name": {
+              "type": "string"
+            },
+            "vendor_generated_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "currency": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetSpecifiedRecipientDisbursementDetailResponseBody"
       }
     },
     "CreatePaymentResponseBody": {
