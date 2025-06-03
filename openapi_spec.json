@@ -1829,85 +1829,112 @@
           "type": "string"
         },
         "destination_country": {
-          "type": "string"
+          "type": "string",
+          "example": "SGP"
         },
         "source_country": {
-          "type": "string"
+          "type": "string",
+          "example": "IDN"
         },
         "transaction_type": {
-          "type": "string"
+          "type": "string",
+          "example": "C2B"
         },
         "amount": {
-          "type": "string"
+          "type": "string",
+          "example": "200"
         },
         "beneficiary_account_number": {
-          "type": "string"
+          "type": "string",
+          "example": "12435236235"
         },
         "beneficiary_bank_id": {
-          "type": "string"
+          "type": "string",
+          "example": "859"
         },
         "beneficiary_full_name": {
-          "type": "string"
+          "type": "string",
+          "example": "Beneficiary Test User"
         },
         "beneficiary_bank_name": {
-          "type": "string"
+          "type": "string",
+          "example": "Master Card"
         },
         "beneficiary_nationality": {
-          "type": "string"
+          "type": "string",
+          "example": "UK"
         },
         "beneficiary_province": {
-          "type": "string"
+          "type": "string",
+          "example": "Manchester"
         },
         "beneficiary_city": {
-          "type": "string"
+          "type": "string",
+          "example": "Manchester"
         },
         "beneficiary_address": {
-          "type": "string"
+          "type": "string",
+          "example": "Manchester"
         },
         "beneficiary_relationship": {
-          "type": "string"
+          "type": "string",
+          "example": "FRIEND"
         },
         "beneficiary_source_of_funds": {
-          "type": "string"
+          "type": "string",
+          "example": "BUSINESS"
         },
         "beneficiary_remittance_purposes": {
-          "type": "string"
+          "type": "string",
+          "example": "TRAVEL"
         },
         "sender_name": {
-          "type": "string"
+          "type": "string",
+          "example": "SENDER TEST USER"
         },
         "sender_country": {
-          "type": "string"
+          "type": "string",
+          "example": "100252"
         },
         "sender_place_of_birth": {
-          "type": "string"
+          "type": "string",
+          "example": "100252"
         },
         "sender_date_of_birth": {
-          "type": "string"
+          "type": "string",
+          "example": "1989-03-17"
         },
         "sender_address": {
-          "type": "string"
+          "type": "string",
+          "example": "A Address"
         },
         "sender_identity_type": {
-          "type": "string"
+          "type": "string",
+          "example": "nat_id"
         },
         "sender_identity_number": {
-          "type": "string"
+          "type": "string",
+          "example": "124252634634634"
         },
         "sender_job": {
-          "type": "string"
+          "type": "string",
+          "example": "private_employee"
         },
         "sender_email": {
-          "type": "string"
+          "type": "string",
+          "example": "sendertestuser@gmail.com"
         },
         "sender_city": {
-          "type": "string"
+          "type": "string",
+          "example": "Jakarta"
         },
         "sender_phone_number": {
-          "type": "string"
+          "type": "string",
+          "example": "+628123456789"
         },
         "beneficiary_sort_code": {
-          "type": "string"
+          "type": "string",
+          "example": "506967"
         }
       },
       "xml": {
