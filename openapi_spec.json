@@ -1796,60 +1796,118 @@
       "type": "object",
       "required": [
         "vendor_name",
-        "amount",
-        "bank_code",
-        "beneficiary_bank_name",
-        "account_number",
-        "beneficiary_account_number",
-        "fee",
-        "exchange_rate",
-        "source_country",
         "destination_country",
-        "beneficiary_currency_code"
+        "source_country",
+        "transaction_type",
+        "amount",
+        "beneficiary_account_number",
+        "beneficiary_bank_id",
+        "beneficiary_full_name",
+        "beneficiary_bank_name",
+        "beneficiary_nationality",
+        "beneficiary_province",
+        "beneficiary_city",
+        "beneficiary_address",
+        "beneficiary_relationship",
+        "beneficiary_source_of_funds",
+        "beneficiary_remittance_purposes",
+        "sender_name",
+        "sender_country",
+        "sender_place_of_birth",
+        "sender_date_of_birth",
+        "sender_address",
+        "sender_identity_type",
+        "sender_identity_number",
+        "sender_job",
+        "sender_email",
+        "sender_city",
+        "sender_phone_number",
+        "beneficiary_sort_code"
       ],
       "properties": {
         "vendor_name": {
-          "type": "string",
-          "example": "Flip"
+          "type": "string"
+        },
+        "destination_country": {
+          "type": "string"
+        },
+        "source_country": {
+          "type": "string"
+        },
+        "transaction_type": {
+          "type": "string"
         },
         "amount": {
-          "type": "string",
-          "example": "10000"
+          "type": "string"
         },
-        "bank_code": {
+        "beneficiary_account_number": {
+          "type": "string"
+        },
+        "beneficiary_bank_id": {
+          "type": "string"
+        },
+        "beneficiary_full_name": {
           "type": "string"
         },
         "beneficiary_bank_name": {
-          "type": "string",
-          "example": "bca"
+          "type": "string"
         },
-        "account_number": {
-          "type": "string",
-          "example": "101010101010"
+        "beneficiary_nationality": {
+          "type": "string"
         },
-        "beneficiary_account_number": {
-          "type": "string",
-          "example": "1111111111"
+        "beneficiary_province": {
+          "type": "string"
         },
-        "fee": {
-          "type": "string",
-          "example": "10000"
+        "beneficiary_city": {
+          "type": "string"
         },
-        "exchange_rate": {
-          "type": "string",
-          "example": "2"
+        "beneficiary_address": {
+          "type": "string"
         },
-        "source_country": {
-          "type": "string",
-          "example": "Indonesia"
+        "beneficiary_relationship": {
+          "type": "string"
         },
-        "destination_country": {
-          "type": "string",
-          "example": "Malaysia"
+        "beneficiary_source_of_funds": {
+          "type": "string"
         },
-        "beneficiary_currency_code": {
-          "type": "string",
-          "example": "3"
+        "beneficiary_remittance_purposes": {
+          "type": "string"
+        },
+        "sender_name": {
+          "type": "string"
+        },
+        "sender_country": {
+          "type": "string"
+        },
+        "sender_place_of_birth": {
+          "type": "string"
+        },
+        "sender_date_of_birth": {
+          "type": "string"
+        },
+        "sender_address": {
+          "type": "string"
+        },
+        "sender_identity_type": {
+          "type": "string"
+        },
+        "sender_identity_number": {
+          "type": "string"
+        },
+        "sender_job": {
+          "type": "string"
+        },
+        "sender_email": {
+          "type": "string"
+        },
+        "sender_city": {
+          "type": "string"
+        },
+        "sender_phone_number": {
+          "type": "string"
+        },
+        "beneficiary_sort_code": {
+          "type": "string"
         }
       },
       "xml": {
