@@ -2242,6 +2242,50 @@
         "name": "CreateCardPaymentRequestBody"
       }
     },
+    "CreateDirectDebitPaymentRequestBody": {
+      "type": "object",
+      "required": [
+        "vendor_name",
+        "amount",
+        "bank",
+        "name",
+        "email",
+        "phone",
+        "success_return_url",
+        "failure_return_url"
+      ],
+      "properties": {
+        "vendor_name": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double",
+          "example": "10000"
+        },
+        "bank": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "success_return_url": {
+          "type": "string"
+        },
+        "failure_return_url": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "CreateDirectDebitPaymentRequestBody"
+      }
+    },
     "CreateRetailOutletPaymentRequestBody": {
       "type": "object",
       "required": ["vendor_name", "amount", "retail_outlet"],
