@@ -83,6 +83,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 	}
 
     public HashMap<String, Object> getDisbursement(String id) {
+        record.validateId(id);
 		List<HashMap<String, Object>> disbursements = getAllDisbursement();
 		return RESOURCE.findById(disbursements, id);
 	}
