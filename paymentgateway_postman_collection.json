@@ -5951,7 +5951,198 @@
 			"response": []
 		},
 		{
-			"name": "Get List of Payments",
+			"name": "Xendit Get Specified Recipient Disbursement Detail Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should receive success response', function() {\r",
+							"    const responseJson = pm.response.json()\r",
+							"    pm.expect(responseJson.data).to.have.all.keys(\r",
+							"        \"bank_code\",\r",
+							"        \"account_number\",\r",
+							"        \"amount\",\r",
+							"        \"vendor_generated_id\",\r",
+							"        \"sender_job\",\r",
+							"        \"sender_name\",\r",
+							"        \"vendorName\",\r",
+							"        \"createdAt\",\r",
+							"        \"sender_address\",\r",
+							"        \"sender_country\",\r",
+							"        \"user_id\",\r",
+							"        \"id\",\r",
+							"        \"status\",\r",
+							"        \"direction\"\r",
+							"    );\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.expect(responseJson.data.id).to.eql(pm.request.url.query.toObject().id)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/call/specified-recipient/detail?id={{id}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"specified-recipient",
+						"detail"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Get Specified Recipient Disbursement Detail Error if ID is Invalid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should handle if id is invalid', function() {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.response.to.have.status(400);\r",
+							"    pm.expect(responseJson.data.message).to.eql('Bad Request: id tidak valid.');\r",
+							"    pm.expect(responseJson.data.vmjErrorCode).to.eql(4000);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/call/specified-recipient/detail?id=invalid_id",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"call",
+						"specified-recipient",
+						"detail"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "invalid_id"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Xendit Get Specified Recipient Disbursement Detail Error if ID is Not Specified",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Should handle if id is not specified', function() {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.response.to.have.status(400);\r",
+							"    pm.expect(responseJson.data.message).to.eql('Bad Request: Parameter pada GET tidak ditemukan.');\r",
+							"    pm.expect(responseJson.data.vmjErrorCode).to.eql(4004);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"id\", pm.environment.get(\"id\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{BASE_URL}}/call/specified-recipient/detail"
+			},
+			"response": []
+		},
+		{
+			"name": "Get List of Payments Success",
 			"event": [
 				{
 					"listen": "test",
