@@ -45,26 +45,12 @@
         "operationId": "getDisbursementList",
         "consumes": ["application/json"],
         "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to get list of disbursements",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/GetDisbursementListRequestBody"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successfully get disbursement list",
             "schema": {
               "$ref": "#/definitions/GetDisbursementListResponseBody"
             }
-          },
-          "400": {
-            "description": "Invalid request body field"
           }
         }
       }
@@ -78,12 +64,12 @@
         "produces": ["application/json"],
         "parameters": [
           {
-            "description": "Request body to get disbursement detail",
-            "in": "body",
-            "name": "body",
+            "in": "query",
+            "name": "id",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/GetDisbursementDetailRequestBody"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -95,7 +81,7 @@
             }
           },
           "400": {
-            "description": "Invalid request body field"
+            "description": "Invalid id in query parameter"
           }
         }
       }
@@ -200,57 +186,12 @@
         "operationId": "getAgentDisbursementList",
         "consumes": ["application/json"],
         "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to get list of agent disbursement",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/GetAgentDisbursementListRequestBody"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successfully get list of agent disbursement",
             "schema": {
               "$ref": "#/definitions/GetAgentDisbursementListResponseBody"
             }
-          },
-          "400": {
-            "description": "Invalid request body field"
-          }
-        }
-      }
-    },
-    "/call/agent/callback": {
-      "post": {
-        "tags": ["Disbursement"],
-        "summary": "Receive agent disbursement callback",
-        "operationId": "agentDisbursementCallback",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to send data to the callback endpoint",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/AgentDisbursementCallbackRequestBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully received agent disbursement callback",
-            "schema": {
-              "$ref": "#/definitions/AgentDisbursementCallbackResponseBody"
-            }
-          },
-          "400": {
-            "description": "Invalid request body field"
           }
         }
       }
@@ -264,12 +205,12 @@
         "produces": ["application/json"],
         "parameters": [
           {
-            "description": "Request body to get agent disbursement detail",
-            "in": "body",
-            "name": "body",
+            "in": "query",
+            "name": "id",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/GetAgentDisbursementDetailRequestBody"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -281,7 +222,7 @@
             }
           },
           "400": {
-            "description": "Invalid request body field"
+            "description": "Invalid id in query parameter"
           }
         }
       }
@@ -379,37 +320,6 @@
         }
       }
     },
-    "/call/exchangerate/callback": {
-      "post": {
-        "tags": ["Disbursement"],
-        "summary": "Receive exchange rate disbursement callback",
-        "operationId": "exchangeRateDisbursementCallback",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to send data to the callback endpoint",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ExchangeRateDisbursementCallbackRequestBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully received exchange rate disbursement callback",
-            "schema": {
-              "$ref": "#/definitions/ExchangeRateDisbursementCallbackResponseBody"
-            }
-          },
-          "400": {
-            "description": "Invalid request body field"
-          }
-        }
-      }
-    },
     "/call/exchangerate/list": {
       "get": {
         "tags": ["Disbursement"],
@@ -417,26 +327,12 @@
         "operationId": "getExchangeRateDisbursementList",
         "consumes": ["application/json"],
         "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to get list of exchange rate disbursement",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/GetExchangeRateDisbursementListRequestBody"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successfully get list of exchange rate disbursement",
             "schema": {
               "$ref": "#/definitions/GetExchangeRateDisbursementListResponseBody"
             }
-          },
-          "400": {
-            "description": "Invalid request body field"
           }
         }
       }
@@ -450,12 +346,12 @@
         "produces": ["application/json"],
         "parameters": [
           {
-            "description": "Request body to get exchange rate disbursement detail",
-            "in": "body",
-            "name": "body",
+            "in": "query",
+            "name": "id",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/GetExchangeRateDisbursementDetailRequestBody"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -467,7 +363,7 @@
             }
           },
           "400": {
-            "description": "Invalid request body field"
+            "description": "Invalid id in query parameter"
           }
         }
       }
@@ -565,37 +461,6 @@
         }
       }
     },
-    "/call/fixedcurrency/callback": {
-      "post": {
-        "tags": ["Disbursement"],
-        "summary": "Receive fixed currency disbursement callback",
-        "operationId": "fixedCurrencyDisbursementCallback",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to send data to the callback endpoint",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/FixedCurrencyDisbursementCallbackRequestBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully received fixed currency disbursement callback",
-            "schema": {
-              "$ref": "#/definitions/FixedCurrencyDisbursementCallbackResponseBody"
-            }
-          },
-          "400": {
-            "description": "Invalid request body field"
-          }
-        }
-      }
-    },
     "/call/fixedcurrency/list": {
       "get": {
         "tags": ["Disbursement"],
@@ -603,26 +468,12 @@
         "operationId": "getFixedCurrencyDisbursementList",
         "consumes": ["application/json"],
         "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to get list of fixed currency disbursement",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/GetFixedCurrencyDisbursementListRequestBody"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successfully get list of fixed currency disbursement",
             "schema": {
               "$ref": "#/definitions/GetFixedCurrencyDisbursementListResponseBody"
             }
-          },
-          "400": {
-            "description": "Invalid request body field"
           }
         }
       }
@@ -636,12 +487,12 @@
         "produces": ["application/json"],
         "parameters": [
           {
-            "description": "Request body to get fixed currency disbursement detail",
-            "in": "body",
-            "name": "body",
+            "in": "query",
+            "name": "id",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/GetFixedCurrencyDisbursementDetailRequestBody"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -653,7 +504,7 @@
             }
           },
           "400": {
-            "description": "Invalid request body field"
+            "description": "Invalid id in query parameter"
           }
         }
       }
@@ -751,6 +602,23 @@
         }
       }
     },
+    "/call/specified-recipient/list": {
+      "get": {
+        "tags": ["Disbursement"],
+        "summary": "Create list of specified recipient disbursement",
+        "operationId": "getSpecifiedRecipientDisbursementList",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Successfully get list of fixed currency disbursement",
+            "schema": {
+              "$ref": "#/definitions/GetFixedCurrencyDisbursementListResponseBody"
+            }
+          }
+        }
+      }
+    },
     "/call/payment": {
       "post": {
         "tags": ["Payment"],
@@ -789,88 +657,12 @@
         "operationId": "getPaymentList",
         "consumes": ["application/json"],
         "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to get list of payments",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/GetPaymentListRequestBody"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successfully get list of payments",
             "schema": {
               "$ref": "#/definitions/GetPaymentListResponseBody"
             }
-          },
-          "400": {
-            "description": "Invalid request body"
-          }
-        }
-      }
-    },
-    "/call/paymentstatus": {
-      "post": {
-        "tags": ["Payment"],
-        "summary": "Check the status of a payment",
-        "operationId": "checkPaymentStatus",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to check the status of a payment",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CheckPaymentStatusRequestBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully get payment status",
-            "schema": {
-              "$ref": "#/definitions/CheckPaymentStatusResponseBody"
-            }
-          },
-          "400": {
-            "description": "Invalid request body"
-          }
-        }
-      }
-    },
-    "/call/payment/callback": {
-      "post": {
-        "tags": ["Payment"],
-        "summary": "Receive callback for a payment",
-        "operationId": "paymentCallback",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to receive callback of a payment",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/PaymentCallbackRequestBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully received payment callback",
-            "schema": {
-              "$ref": "#/definitions/PaymentCallbackResponseBody"
-            }
-          },
-          "400": {
-            "description": "Invalid request body"
           }
         }
       }
@@ -884,12 +676,12 @@
         "produces": ["application/json"],
         "parameters": [
           {
-            "description": "Request body to get payment detail",
-            "in": "body",
-            "name": "body",
+            "in": "query",
+            "name": "id",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/GetPaymentDetailRequestBody"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -898,6 +690,37 @@
             "description": "Successfully get payment detail",
             "schema": {
               "$ref": "#/definitions/GetPaymentDetailResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid id in query parameter"
+          }
+        }
+      }
+    },
+    "/call/payment/update": {
+      "put": {
+        "tags": ["Payment"],
+        "summary": "Update a payment record",
+        "operationId": "updatePayment",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "description": "Request body to update a payment record",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdatePaymentRequestBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully update payment",
+            "schema": {
+              "$ref": "#/definitions/UpdatePaymentResponseBody"
             }
           },
           "400": {
@@ -937,33 +760,33 @@
         }
       }
     },
-    "/call/payment/update": {
-      "put": {
+    "/call/paymentstatus": {
+      "get": {
         "tags": ["Payment"],
-        "summary": "Update a payment record",
-        "operationId": "updatePayment",
+        "summary": "Check the status of a payment",
+        "operationId": "checkPaymentStatus",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
           {
-            "description": "Request body to update a payment record",
-            "in": "body",
-            "name": "body",
+            "in": "query",
+            "name": "id",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UpdatePaymentRequestBody"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully update payment",
+            "description": "Successfully get payment status",
             "schema": {
-              "$ref": "#/definitions/UpdatePaymentResponseBody"
+              "$ref": "#/definitions/CheckPaymentStatusResponseBody"
             }
           },
           "400": {
-            "description": "Invalid request body"
+            "description": "Invalid id in query parameter"
           }
         }
       }
@@ -977,12 +800,11 @@
         "produces": ["application/json"],
         "parameters": [
           {
-            "description": "Request body to get payment link records by vendor name",
-            "in": "body",
-            "name": "body",
+            "in": "query",
+            "name": "vendor_name",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/GetPaymentLinksByVendorNameRequestBody"
+              "type": "string"
             }
           }
         ],
@@ -994,163 +816,7 @@
             }
           },
           "400": {
-            "description": "Invalid request body"
-          }
-        }
-      }
-    },
-    "/call/paymentlink/detail": {
-      "get": {
-        "tags": ["Payment"],
-        "summary": "Get payment link record detail",
-        "operationId": "getPaymentLinkDetail",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to get payment link record detail",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/GetPaymentLinkDetailRequestBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully get payment link detail",
-            "schema": {
-              "$ref": "#/definitions/GetPaymentLinkDetailResponseBody"
-            }
-          },
-          "400": {
-            "description": "Invalid request body"
-          }
-        }
-      }
-    },
-    "/call/paymentlink/delete": {
-      "delete": {
-        "tags": ["Payment"],
-        "summary": "Delete a payment link record",
-        "operationId": "deletePaymentLink",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to delete payment link record",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/DeletePaymentLinkRequestBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully delete payment link record",
-            "schema": {
-              "type": "string",
-              "example": "SUCCESS"
-            }
-          },
-          "400": {
-            "description": "Invalid request body"
-          }
-        }
-      }
-    },
-    "/call/paymentlink/deleted": {
-      "delete": {
-        "tags": ["Payment"],
-        "summary": "Delete a payment link record",
-        "operationId": "deletePaymentLink",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to delete payment link record",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/DeletePaymentLinkRequestBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully delete payment link record",
-            "schema": {
-              "$ref": "#/definitions/DeletePaymentLinkResponseBody"
-            }
-          },
-          "400": {
-            "description": "Invalid request body"
-          }
-        }
-      }
-    },
-    "/call/virtualaccount": {
-      "post": {
-        "tags": ["Payment"],
-        "summary": "Create a virtual account payment",
-        "operationId": "createVirtualAccountPayment",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to create virtual account payment",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CreateVirtualAccountPaymentRequestBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully create virtual account payment",
-            "schema": {
-              "$ref": "#/definitions/CreateVirtualAccountPaymentResponseBody"
-            }
-          },
-          "400": {
-            "description": "Invalid request body"
-          }
-        }
-      }
-    },
-    "/call/ewallet": {
-      "post": {
-        "tags": ["Payment"],
-        "summary": "Create an e-wallet payment",
-        "operationId": "createEWalletPayment",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "description": "Request body to create e-wallet payment",
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CreateEWalletPaymentRequestBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully create e-wallet payment",
-            "schema": {
-              "$ref": "#/definitions/CreateEWalletPaymentResponseBody"
-            }
-          },
-          "400": {
-            "description": "Invalid request body"
+            "description": "Invalid vendor name in query parameter"
           }
         }
       }
@@ -1186,33 +852,401 @@
         }
       }
     },
-    "/call/creditcard": {
-      "post": {
+    "/call/paymentlink/detail": {
+      "get": {
         "tags": ["Payment"],
-        "summary": "Create a credit card payment",
-        "operationId": "createCreditCardPayment",
+        "summary": "Get payment link record detail",
+        "operationId": "getPaymentLinkDetail",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
           {
-            "description": "Request body to create credit card payment",
-            "in": "body",
-            "name": "body",
+            "in": "query",
+            "name": "id",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/CreateCreditCardPaymentRequestBody"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully create credit card payment",
+            "description": "Successfully get payment link detail",
             "schema": {
-              "$ref": "#/definitions/CreateCreditCardPaymentResponseBody"
+              "$ref": "#/definitions/GetPaymentLinkDetailResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid id in query parameter"
+          }
+        }
+      }
+    },
+    "/call/virtualaccount": {
+      "post": {
+        "tags": ["Payment"],
+        "summary": "Create a virtual account payment",
+        "operationId": "createVirtualAccountPayment",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "description": "Request body to create virtual account payment",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateVirtualAccountPaymentRequestBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully create virtual account payment",
+            "schema": {
+              "$ref": "#/definitions/CreateVirtualAccountPaymentResponseBody"
             }
           },
           "400": {
             "description": "Invalid request body"
+          }
+        }
+      }
+    },
+    "/call/virtualaccount/vendorname": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get virtual account payments by vendor name",
+        "operationId": "getVirtualAcccountPaymentsByVendorName",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "vendor_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get virtual account payments by vendor name",
+            "schema": {
+              "$ref": "#/definitions/GetVirtualAccountPaymentsByVendorNameResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid vendor name is query parameter"
+          }
+        }
+      }
+    },
+    "/call/virtualaccount/detail": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get virtual account payment detail",
+        "operationId": "getVirtualAccountPaymentDetail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get virtual account payment detail",
+            "schema": {
+              "$ref": "#/definitions/GetVirtualAccountPaymentDetailResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid id in query parameter"
+          }
+        }
+      }
+    },
+    "/call/ewallet": {
+      "post": {
+        "tags": ["Payment"],
+        "summary": "Create an e-wallet payment",
+        "operationId": "createEWalletPayment",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "description": "Request body to create e-wallet payment",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateEWalletPaymentRequestBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully create e-wallet payment",
+            "schema": {
+              "$ref": "#/definitions/CreateEWalletPaymentResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid request body"
+          }
+        }
+      }
+    },
+    "/call/ewallet/vendorname": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get e-wallet payments by vendor name",
+        "operationId": "getEWalletPaymentsByVendorName",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "vendor_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get e-wallet payments by vendor name",
+            "schema": {
+              "$ref": "#/definitions/GetEWalletPaymentsByVendorNameResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid vendor name is query parameter"
+          }
+        }
+      }
+    },
+    "/call/ewallet/detail": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get e-wallet payment detail",
+        "operationId": "getEWalletPaymentDetail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get e-wallet payment detail",
+            "schema": {
+              "$ref": "#/definitions/GetEWalletPaymentDetailResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid id in query parameter"
+          }
+        }
+      }
+    },
+    "/call/card": {
+      "post": {
+        "tags": ["Payment"],
+        "summary": "Create a card payment",
+        "operationId": "createCardPayment",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "description": "Request body to create card payment",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateCardPaymentRequestBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully create card payment",
+            "schema": {
+              "$ref": "#/definitions/CreateCardPaymentResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid request body"
+          }
+        }
+      }
+    },
+    "/call/card/vendorname": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get card payments by vendor name",
+        "operationId": "getCardPaymentsByVendorName",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "vendor_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get card payments by vendor name",
+            "schema": {
+              "$ref": "#/definitions/GetCardPaymentsByVendorNameResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid vendor name is query parameter"
+          }
+        }
+      }
+    },
+    "/call/card/detail": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get card payment detail",
+        "operationId": "getCardPaymentDetail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get card payment detail",
+            "schema": {
+              "$ref": "#/definitions/GetCardPaymentDetailResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid id in query parameter"
+          }
+        }
+      }
+    },
+    "/call/directdebit": {
+      "post": {
+        "tags": ["Payment"],
+        "summary": "Create a direct debit payment",
+        "operationId": "createDirectDebitPayment",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "description": "Request body to create direct debit payment",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateDirectDebitPaymentRequestBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully create direct debit payment",
+            "schema": {
+              "$ref": "#/definitions/CreateDirectDebitPaymentResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid request body"
+          }
+        }
+      }
+    },
+    "/call/directdebit/vendorname": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get direct debit payments by vendor name",
+        "operationId": "getDirectDebitPaymentsByVendorName",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "vendor_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get direct debit payments by vendor name",
+            "schema": {
+              "$ref": "#/definitions/GetDirectDebitPaymentsByVendorNameResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid vendor name is query parameter"
+          }
+        }
+      }
+    },
+    "/call/directdebit/detail": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get direct debit payment detail",
+        "operationId": "getDirectDebitPaymentDetail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get direct debit payment detail",
+            "schema": {
+              "$ref": "#/definitions/GetDirectDebitPaymentDetailResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid id in query parameter"
           }
         }
       }
@@ -1248,33 +1282,63 @@
         }
       }
     },
-    "/call/debitcard": {
-      "post": {
+    "/call/retailoutlet/vendorname": {
+      "get": {
         "tags": ["Payment"],
-        "summary": "Create a debit card payment",
-        "operationId": "createDebitCardPayment",
+        "summary": "Get retail outlet payments by vendor name",
+        "operationId": "getRetailOutletPaymentsByVendorName",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
           {
-            "description": "Request body to create debit card payment",
-            "in": "body",
-            "name": "body",
+            "in": "query",
+            "name": "vendor_name",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/CreateDebitCardPaymentRequestBody"
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully create debit card payment",
+            "description": "Successfully get retail outlet payments by vendor name",
             "schema": {
-              "$ref": "#/definitions/CreateDebitCardPaymentResponseBody"
+              "$ref": "#/definitions/GetRetailOutletPaymentsByVendorNameResponseBody"
             }
           },
           "400": {
-            "description": "Invalid request body"
+            "description": "Invalid vendor name is query parameter"
+          }
+        }
+      }
+    },
+    "/call/retailoutlet/detail": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get retail outlet payment detail",
+        "operationId": "getRetailOutletPaymentDetail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get retail outlet payment detail",
+            "schema": {
+              "$ref": "#/definitions/GetRetailOutletPaymentDetailResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid id in query parameter"
           }
         }
       }
@@ -1310,6 +1374,67 @@
         }
       }
     },
+    "/call/invoice/vendorname": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get invoices by vendor name",
+        "operationId": "getInvoicesByVendorName",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "vendor_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get invoices by vendor name",
+            "schema": {
+              "$ref": "#/definitions/GetInvoicesByVendorNameResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid vendor name is query parameter"
+          }
+        }
+      }
+    },
+    "/call/invoice/detail": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get invoice detail",
+        "operationId": "getInvoiceDetail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get invoice detail",
+            "schema": {
+              "$ref": "#/definitions/GetInvoiceDetailResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid id in query parameter"
+          }
+        }
+      }
+    },
     "/call/paymentrouting": {
       "post": {
         "tags": ["Payment"],
@@ -1340,6 +1465,67 @@
           }
         }
       }
+    },
+    "/call/paymentrouting/vendorname": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get payment routings by vendor name",
+        "operationId": "getPaymentRoutingsByVendorName",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "vendor_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get payment routings by vendor name",
+            "schema": {
+              "$ref": "#/definitions/GetPaymentRoutingByVendorNameResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid vendor name is query parameter"
+          }
+        }
+      }
+    },
+    "/call/paymentrouting/detail": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get payment routings detail",
+        "operationId": "getPaymentRoutingDetail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get payment routings detail",
+            "schema": {
+              "$ref": "#/definitions/GetPaymentRoutingDetailResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid id in query parameter"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1348,8 +1534,7 @@
       "required": ["vendor_name", "amount", "bank_code", "account_number"],
       "properties": {
         "vendor_name": {
-          "type": "string",
-          "enum": ["Flip", "Midtrans", "Oy", "Xendit"]
+          "type": "string"
         },
         "amount": {
           "type": "number",
@@ -1368,41 +1553,13 @@
         "name": "CreateDisbursementRequestBody"
       }
     },
-    "GetDisbursementListRequestBody": {
-      "type": "object",
-      "required": ["table_name"],
-      "properties": {
-        "table_name": {
-          "type": "string",
-          "example": "disbursement_impl"
-        }
-      },
-      "xml": {
-        "name": "GetDisbursementListRequestBody"
-      }
-    },
-    "GetDisbursementDetailRequestBody": {
-      "type": "object",
-      "required": ["id"],
-      "properties": {
-        "id": {
-          "type": "number",
-          "format": "int64",
-          "example": "1"
-        }
-      },
-      "xml": {
-        "name": "GetDisbursementDetailRequestBody"
-      }
-    },
     "UpdateDisbursementDetailRequestBody": {
       "type": "object",
       "required": ["id", "amount", "account_number", "bank_code"],
       "properties": {
         "id": {
-          "type": "number",
-          "format": "int64",
-          "example": "1"
+          "type": "string",
+          "format": "uuid"
         },
         "amount": {
           "type": "string",
@@ -1423,16 +1580,11 @@
     },
     "DeleteDisbursementRequestBody": {
       "type": "object",
-      "required": ["id", "table_name"],
+      "required": ["id"],
       "properties": {
         "id": {
-          "type": "number",
-          "format": "int64",
-          "example": "1"
-        },
-        "table_name": {
           "type": "string",
-          "example": "disbursement_impl"
+          "format": "uuid"
         }
       },
       "xml": {
@@ -1456,8 +1608,7 @@
         },
         "agent_id": {
           "type": "number",
-          "format": "int64",
-          "example": "608"
+          "format": "int64"
         },
         "direction": {
           "type": "string",
@@ -1480,56 +1631,13 @@
         "name": "CreateAgentDisbursementRequestBody"
       }
     },
-    "GetAgentDisbursementListRequestBody": {
-      "type": "object",
-      "required": ["table_name"],
-      "properties": {
-        "table_name": {
-          "type": "string",
-          "example": "agent_impl"
-        }
-      },
-      "xml": {
-        "name": "GetAgentDisbursementListRequestBody"
-      }
-    },
-    "AgentDisbursementCallbackRequestBody": {
-      "type": "object",
-      "required": ["id", "status"],
-      "properties": {
-        "id": {
-          "type": "string",
-          "example": "1"
-        },
-        "status": {
-          "type": "string",
-          "example": "SUCCESS"
-        }
-      },
-      "xml": {
-        "name": "AgentDisbursementCallbackRequestBody"
-      }
-    },
-    "GetAgentDisbursementDetailRequestBody": {
-      "type": "object",
-      "required": ["id"],
-      "properties": {
-        "id": {
-          "type": "string",
-          "example": "1"
-        }
-      },
-      "xml": {
-        "name": "GetAgentDisbursementDetailRequestBody"
-      }
-    },
     "UpdateAgentDisbursementDetailRequestBody": {
       "type": "object",
       "required": ["id", "amount", "bank_code", "account_number"],
       "properties": {
         "id": {
           "type": "string",
-          "example": "1"
+          "format": "uuid"
         },
         "amount": {
           "type": "string",
@@ -1554,7 +1662,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "example": "1"
+          "format": "uuid"
         }
       },
       "xml": {
@@ -1586,8 +1694,7 @@
           "example": "10000"
         },
         "bank_code": {
-          "type": "string",
-          "example": "1"
+          "type": "string"
         },
         "beneficiary_bank_name": {
           "type": "string",
@@ -1626,56 +1733,13 @@
         "name": "CreateExchangeRateDisbursementRequestBody"
       }
     },
-    "ExchangeRateDisbursementCallbackRequestBody": {
-      "type": "object",
-      "required": ["id", "status"],
-      "properties": {
-        "id": {
-          "type": "string",
-          "example": "1"
-        },
-        "status": {
-          "type": "string",
-          "example": "SUCCESS"
-        }
-      },
-      "xml": {
-        "name": "ExchangeRateDisbursementCallbackRequestBody"
-      }
-    },
-    "GetExchangeRateDisbursementListRequestBody": {
-      "type": "object",
-      "required": ["table_name"],
-      "properties": {
-        "table_name": {
-          "type": "string",
-          "example": "exchangerate_impl"
-        }
-      },
-      "xml": {
-        "name": "GetExchangeRateDisbursementListRequestBody"
-      }
-    },
-    "GetExchangeRateDisbursementDetailRequestBody": {
-      "type": "object",
-      "required": ["id"],
-      "properties": {
-        "id": {
-          "type": "string",
-          "example": "1"
-        }
-      },
-      "xml": {
-        "name": "GetExchangeRateDisbursementDetailRequestBody"
-      }
-    },
     "UpdateExchangeRateDisbursementDetailRequestBody": {
       "type": "object",
       "required": ["id", "amount", "account_number", "bank_code"],
       "properties": {
         "id": {
           "type": "string",
-          "example": "1"
+          "format": "uuid"
         },
         "amount": {
           "type": "string",
@@ -1699,8 +1763,7 @@
       "required": ["id"],
       "properties": {
         "id": {
-          "type": "string",
-          "example": "1"
+          "type": "string"
         }
       },
       "xml": {
@@ -1713,14 +1776,11 @@
         "vendor_name",
         "amount",
         "bank_code",
-        "beneficiary_bank_name",
-        "account_number",
-        "beneficiary_account_number",
-        "direction",
-        "country",
-        "name",
-        "address",
-        "job"
+        "sender_name",
+        "sender_country",
+        "sender_address",
+        "sender_job",
+        "direction"
       ],
       "properties": {
         "vendor_name": {
@@ -1733,86 +1793,31 @@
         },
         "bank_code": {
           "type": "string",
-          "example": "1"
-        },
-        "beneficiary_bank_name": {
-          "type": "string",
           "example": "bca"
         },
-        "account_number": {
+        "sender_name": {
           "type": "string",
-          "example": "101010101010"
+          "example": "SENDER TEST USER"
         },
-        "beneficiary_account_number": {
+        "sender_country": {
           "type": "string",
-          "example": "1111111111"
+          "example": "100252"
+        },
+        "sender_address": {
+          "type": "string",
+          "example": "A Address"
+        },
+        "sender_job": {
+          "type": "string",
+          "example": "private_employee"
         },
         "direction": {
           "type": "string",
-          "example": "domestic_special_transfer"
-        },
-        "country": {
-          "type": "string",
-          "example": "Indonesia"
-        },
-        "name": {
-          "type": "string",
-          "example": "test"
-        },
-        "address": {
-          "type": "string",
-          "example": "test address"
-        },
-        "job": {
-          "type": "string",
-          "example": "pekerjaan"
+          "example": "DOMESTIC_SPECIAL_TRANSFER"
         }
       },
       "xml": {
         "name": "CreateFixedCurrencyDisbursementRequestBody"
-      }
-    },
-    "FixedCurrencyDisbursementCallbackRequestBody": {
-      "type": "object",
-      "required": ["id", "status"],
-      "properties": {
-        "id": {
-          "type": "string",
-          "example": "1"
-        },
-        "status": {
-          "type": "string",
-          "example": "SUCCESS"
-        }
-      },
-      "xml": {
-        "name": "FixedCurrencyDisbursementCallbackRequestBody"
-      }
-    },
-    "GetFixedCurrencyDisbursementListRequestBody": {
-      "type": "object",
-      "required": ["table_name"],
-      "properties": {
-        "table_name": {
-          "type": "string",
-          "example": "fixedcurrency_impl"
-        }
-      },
-      "xml": {
-        "name": "GetFixedCurrencyDisbursementListRequestBody"
-      }
-    },
-    "GetFixedCurrencyDisbursementDetailRequestBody": {
-      "type": "object",
-      "required": ["id"],
-      "properties": {
-        "id": {
-          "type": "string",
-          "example": "1"
-        }
-      },
-      "xml": {
-        "name": "GetFixedCurrencyDisbursementDetailRequestBody"
       }
     },
     "UpdateFixedCurrencyDisbursementDetailRequestBody": {
@@ -1821,7 +1826,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "example": "1"
+          "format": "uuid"
         },
         "amount": {
           "type": "string",
@@ -1846,7 +1851,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "example": "1"
+          "format": "uuid"
         }
       },
       "xml": {
@@ -1898,8 +1903,7 @@
       "required": ["vendor_name", "amount"],
       "properties": {
         "vendor_name": {
-          "type": "string",
-          "enum": ["Flip", "Midtrans", "Oy", "Xendit"]
+          "type": "string"
         },
         "amount": {
           "type": "number",
@@ -1911,64 +1915,17 @@
         "name": "CreatePaymentRequestBody"
       }
     },
-    "GetPaymentListRequestBody": {
-      "type": "object",
-      "required": ["table_name"],
-      "properties": {
-        "table_name": {
-          "type": "string",
-          "example": "payment_impl"
-        }
-      },
-      "xml": {
-        "name": "GetPaymentListRequestBody"
-      }
-    },
     "CheckPaymentStatusRequestBody": {
-      "type": "object",
-      "required": ["vendor_name", "id"],
-      "properties": {
-        "vendor_name": {
-          "type": "string",
-          "enum": ["Flip", "Midtrans", "Oy", "Xendit"]
-        },
-        "id": {
-          "type": "number",
-          "format": "int64"
-        }
-      },
-      "xml": {
-        "name": "CheckPaymentStatusRequestBody"
-      }
-    },
-    "PaymentCallbackRequestBody": {
-      "type": "object",
-      "required": ["id", "status"],
-      "properties": {
-        "id": {
-          "type": "number",
-          "format": "int64"
-        },
-        "status": {
-          "type": "string",
-          "example": "SUCCESS"
-        }
-      },
-      "xml": {
-        "name": "PaymentCallbackRequestBody"
-      }
-    },
-    "GetPaymentDetailRequestBody": {
       "type": "object",
       "required": ["id"],
       "properties": {
         "id": {
-          "type": "number",
-          "format": "int64"
+          "type": "string",
+          "format": "uuid"
         }
       },
       "xml": {
-        "name": "GetPaymentDetailRequestBody"
+        "name": "CheckPaymentStatusRequestBody"
       }
     },
     "DeletePaymentRequestBody": {
@@ -1976,8 +1933,8 @@
       "required": ["id"],
       "properties": {
         "id": {
-          "type": "number",
-          "format": "int64"
+          "type": "string",
+          "format": "uuid"
         }
       },
       "xml": {
@@ -1989,8 +1946,8 @@
       "required": ["id", "amount"],
       "properties": {
         "id": {
-          "type": "number",
-          "format": "int64"
+          "type": "string",
+          "format": "uuid"
         },
         "amount": {
           "type": "number",
@@ -1999,45 +1956,6 @@
       },
       "xml": {
         "name": "UpdatePaymentRequestBody"
-      }
-    },
-    "GetPaymentLinksByVendorNameRequestBody": {
-      "type": "object",
-      "required": ["vendor_name"],
-      "properties": {
-        "vendor_name": {
-          "type": "string",
-          "enum": ["Flip", "Midtrans", "Oy", "Xendit"]
-        }
-      },
-      "xml": {
-        "name": "GetPaymentLinksByVendorNameRequestBody"
-      }
-    },
-    "GetPaymentLinkDetailRequestBody": {
-      "type": "object",
-      "required": ["id"],
-      "properties": {
-        "id": {
-          "type": "number",
-          "format": "int64"
-        }
-      },
-      "xml": {
-        "name": "GetPaymentLinkDetailRequestBody"
-      }
-    },
-    "DeletePaymentLinkRequestBody": {
-      "type": "object",
-      "required": ["id"],
-      "properties": {
-        "id": {
-          "type": "number",
-          "format": "int64"
-        }
-      },
-      "xml": {
-        "name": "DeletePaymentLinkRequestBody"
       }
     },
     "CreateVirtualAccountPaymentRequestBody": {
@@ -2053,8 +1971,7 @@
       ],
       "properties": {
         "vendor_name": {
-          "type": "string",
-          "enum": ["Flip", "Midtrans", "Oy", "Xendit"]
+          "type": "string"
         },
         "amount": {
           "type": "number",
@@ -2100,8 +2017,7 @@
       ],
       "properties": {
         "vendor_name": {
-          "type": "string",
-          "enum": ["Flip", "Midtrans", "Oy", "Xendit"]
+          "type": "string"
         },
         "amount": {
           "type": "number",
@@ -2139,8 +2055,7 @@
       "required": ["vendor_name", "amount", "title", "sender_name", "email"],
       "properties": {
         "vendor_name": {
-          "type": "string",
-          "enum": ["Flip", "Midtrans", "Oy", "Xendit"]
+          "type": "string"
         },
         "amount": {
           "type": "number",
@@ -2164,7 +2079,7 @@
         "name": "CreatePaymentLinkRequestBody"
       }
     },
-    "CreateCreditCardPaymentRequestBody": {
+    "CreateCardPaymentRequestBody": {
       "type": "object",
       "required": [
         "vendor_name",
@@ -2176,8 +2091,7 @@
       ],
       "properties": {
         "vendor_name": {
-          "type": "string",
-          "enum": ["Flip", "Midtrans", "Oy", "Xendit"]
+          "type": "string"
         },
         "amount": {
           "type": "number",
@@ -2202,7 +2116,7 @@
         }
       },
       "xml": {
-        "name": "CreateCreditCardPaymentRequestBody"
+        "name": "CreateCardPaymentRequestBody"
       }
     },
     "CreateRetailOutletPaymentRequestBody": {
@@ -2210,8 +2124,7 @@
       "required": ["vendor_name", "amount", "retail_outlet"],
       "properties": {
         "vendor_name": {
-          "type": "string",
-          "enum": ["Flip", "Midtrans", "Oy", "Xendit"]
+          "type": "string"
         },
         "amount": {
           "type": "number",
@@ -2227,39 +2140,12 @@
         "name": "CreateRetailOutletPaymentRequestBody"
       }
     },
-    "CreateDebitCardPaymentRequestBody": {
-      "type": "object",
-      "required": ["vendor_name", "amount", "token_id", "payment_type"],
-      "properties": {
-        "vendor_name": {
-          "type": "string",
-          "enum": ["Flip", "Midtrans", "Oy", "Xendit"]
-        },
-        "amount": {
-          "type": "number",
-          "format": "double",
-          "example": "10000"
-        },
-        "token_id": {
-          "type": "string",
-          "example": "101010101010"
-        },
-        "payment_type": {
-          "type": "string",
-          "example": "credit_card"
-        }
-      },
-      "xml": {
-        "name": "CreateDebitCardPaymentRequestBody"
-      }
-    },
     "CreateInvoiceRequestBody": {
       "type": "object",
       "required": ["vendor_name", "amount", "quantity", "price_per_item"],
       "properties": {
         "vendor_name": {
           "type": "string",
-          "enum": ["Flip", "Midtrans", "Oy", "Xendit"],
           "example": "Oy"
         },
         "amount": {
@@ -2295,8 +2181,7 @@
       ],
       "properties": {
         "vendor_name": {
-          "type": "string",
-          "enum": ["Flip", "Midtrans", "Oy", "Xendit"]
+          "type": "string"
         },
         "amount": {
           "type": "number",
@@ -2336,27 +2221,34 @@
           "type": "object",
           "properties": {
             "bank_code": {
-              "type": "string",
-              "example": "bca"
+              "type": "string"
             },
             "account_number": {
-              "type": "string",
-              "example": "101010101010"
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
             },
             "amount": {
               "type": "number",
-              "format": "double",
-              "example": "1000"
+              "format": "double"
             },
             "user_id": {
               "type": "number",
-              "format": "int64",
-              "example": "9307076"
+              "format": "int64"
+            },
+            "vendor_generated_id": {
+              "type": "string"
             },
             "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "233841"
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
             }
           }
         }
@@ -2374,27 +2266,34 @@
             "type": "object",
             "properties": {
               "bank_code": {
-                "type": "string",
-                "example": "bca"
+                "type": "string"
               },
               "account_number": {
-                "type": "string",
-                "example": "101010101010"
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
               },
               "amount": {
                 "type": "number",
-                "format": "double",
-                "example": "1000"
+                "format": "double"
               },
               "user_id": {
                 "type": "number",
-                "format": "int64",
-                "example": "9307076"
+                "format": "int64"
+              },
+              "vendor_generated_id": {
+                "type": "string"
               },
               "id": {
-                "type": "number",
-                "format": "int64",
-                "example": "233841"
+                "type": "string",
+                "format": "uuid"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
               }
             }
           }
@@ -2411,27 +2310,34 @@
           "type": "object",
           "properties": {
             "bank_code": {
-              "type": "string",
-              "example": "bca"
+              "type": "string"
             },
             "account_number": {
-              "type": "string",
-              "example": "101010101010"
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
             },
             "amount": {
               "type": "number",
-              "format": "double",
-              "example": "1000"
+              "format": "double"
             },
             "user_id": {
               "type": "number",
-              "format": "int64",
-              "example": "9307076"
+              "format": "int64"
+            },
+            "vendor_generated_id": {
+              "type": "string"
             },
             "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "233841"
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
             }
           }
         }
@@ -2447,27 +2353,34 @@
           "type": "object",
           "properties": {
             "bank_code": {
-              "type": "string",
-              "example": "bca"
+              "type": "string"
             },
             "account_number": {
-              "type": "string",
-              "example": "101010101010"
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
             },
             "amount": {
               "type": "number",
-              "format": "double",
-              "example": "1000"
+              "format": "double"
             },
             "user_id": {
               "type": "number",
-              "format": "int64",
-              "example": "9307076"
+              "format": "int64"
+            },
+            "vendor_generated_id": {
+              "type": "string"
             },
             "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "233841"
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
             }
           }
         }
@@ -2485,27 +2398,34 @@
             "type": "object",
             "properties": {
               "bank_code": {
-                "type": "string",
-                "example": "bca"
+                "type": "string"
               },
               "account_number": {
-                "type": "string",
-                "example": "101010101010"
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
               },
               "amount": {
                 "type": "number",
-                "format": "double",
-                "example": "1000"
+                "format": "double"
               },
               "user_id": {
                 "type": "number",
-                "format": "int64",
-                "example": "9307076"
+                "format": "int64"
+              },
+              "vendor_generated_id": {
+                "type": "string"
               },
               "id": {
-                "type": "number",
-                "format": "int64",
-                "example": "233841"
+                "type": "string",
+                "format": "uuid"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
               }
             }
           }
@@ -2515,6 +2435,879 @@
         "name": "DeleteDisbursementResponseBody"
       }
     },
+    "CreateAgentDisbursementResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "bank_code": {
+              "type": "string"
+            },
+            "account_number": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "double"
+            },
+            "agent_id": {
+              "type": "number",
+              "format": "int64"
+            },
+            "user_id": {
+              "type": "number",
+              "format": "int64"
+            },
+            "vendor_generated_id": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "direction": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "CreateAgentDisbursementResponseBody"
+      }
+    },
+    "GetAgentDisbursementListResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "bank_code": {
+                "type": "string"
+              },
+              "account_number": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "amount": {
+                "type": "number",
+                "format": "double"
+              },
+              "agent_id": {
+                "type": "number",
+                "format": "int64"
+              },
+              "user_id": {
+                "type": "number",
+                "format": "int64"
+              },
+              "vendor_generated_id": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "direction": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetAgentDisbursementListResponseBody"
+      }
+    },
+    "GetAgentDisbursementDetailResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "bank_code": {
+              "type": "string"
+            },
+            "account_number": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "double"
+            },
+            "agent_id": {
+              "type": "number",
+              "format": "int64"
+            },
+            "user_id": {
+              "type": "number",
+              "format": "int64"
+            },
+            "vendor_generated_id": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "direction": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetAgentDisbursementDetailResponseBody"
+      }
+    },
+    "UpdateAgentDisbursementDetailResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "bank_code": {
+              "type": "string"
+            },
+            "account_number": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "double"
+            },
+            "agent_id": {
+              "type": "number",
+              "format": "int64"
+            },
+            "user_id": {
+              "type": "number",
+              "format": "int64"
+            },
+            "vendor_generated_id": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "direction": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "UpdateAgentDisbursementDetailResponseBody"
+      }
+    },
+    "DeleteAgentDisbursementResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "bank_code": {
+                "type": "string"
+              },
+              "account_number": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "amount": {
+                "type": "number",
+                "format": "double"
+              },
+              "agent_id": {
+                "type": "number",
+                "format": "int64"
+              },
+              "user_id": {
+                "type": "number",
+                "format": "int64"
+              },
+              "vendor_generated_id": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "direction": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "DeleteAgentDisbursementResponseBody"
+      }
+    },
+    "CreateExchangeRateDisbursementResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "bank_code": {
+              "type": "string"
+            },
+            "account_number": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "double"
+            },
+            "destination_country": {
+              "type": "string"
+            },
+            "exchange_rate": {
+              "type": "number",
+              "format": "double"
+            },
+            "beneficiary_currency_code": {
+              "type": "string"
+            },
+            "fee": {
+              "type": "number",
+              "format": "int64"
+            },
+            "vendor_generated_id": {
+              "type": "string"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "user_id": {
+              "type": "number",
+              "format": "int64"
+            },
+            "source_country": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "amount_in_sender_currency": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "CreateExchangeRateDisbursementResponseBody"
+      }
+    },
+    "GetExchangeRateDisbursementListResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "bank_code": {
+                "type": "string"
+              },
+              "account_number": {
+                "type": "string"
+              },
+              "amount": {
+                "type": "number",
+                "format": "double"
+              },
+              "destination_country": {
+                "type": "string"
+              },
+              "exchange_rate": {
+                "type": "number",
+                "format": "double"
+              },
+              "beneficiary_currency_code": {
+                "type": "string"
+              },
+              "fee": {
+                "type": "number",
+                "format": "int64"
+              },
+              "vendor_generated_id": {
+                "type": "string"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "user_id": {
+                "type": "number",
+                "format": "int64"
+              },
+              "source_country": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "amount_in_sender_currency": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetExchangeRateDisbursementListResponseBody"
+      }
+    },
+    "GetExchangeRateDisbursementDetailResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "bank_code": {
+              "type": "string"
+            },
+            "account_number": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "double"
+            },
+            "destination_country": {
+              "type": "string"
+            },
+            "exchange_rate": {
+              "type": "number",
+              "format": "double"
+            },
+            "beneficiary_currency_code": {
+              "type": "string"
+            },
+            "fee": {
+              "type": "number",
+              "format": "int64"
+            },
+            "vendor_generated_id": {
+              "type": "string"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "user_id": {
+              "type": "number",
+              "format": "int64"
+            },
+            "source_country": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "amount_in_sender_currency": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetExchangeRateDisbursementDetailResponseBody"
+      }
+    },
+    "UpdateExchangeRateDisbursementDetailResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "bank_code": {
+              "type": "string"
+            },
+            "account_number": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "double"
+            },
+            "destination_country": {
+              "type": "string"
+            },
+            "exchange_rate": {
+              "type": "number",
+              "format": "double"
+            },
+            "beneficiary_currency_code": {
+              "type": "string"
+            },
+            "fee": {
+              "type": "number",
+              "format": "int64"
+            },
+            "vendor_generated_id": {
+              "type": "string"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "user_id": {
+              "type": "number",
+              "format": "int64"
+            },
+            "source_country": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "amount_in_sender_currency": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "UpdateExchangeRateDisbursementDetailResponseBody"
+      }
+    },
+    "DeleteExchangeRateDisbursementResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "bank_code": {
+                "type": "string"
+              },
+              "account_number": {
+                "type": "string"
+              },
+              "amount": {
+                "type": "number",
+                "format": "double"
+              },
+              "destination_country": {
+                "type": "string"
+              },
+              "exchange_rate": {
+                "type": "number",
+                "format": "double"
+              },
+              "beneficiary_currency_code": {
+                "type": "string"
+              },
+              "fee": {
+                "type": "number",
+                "format": "int64"
+              },
+              "vendor_generated_id": {
+                "type": "string"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "user_id": {
+                "type": "number",
+                "format": "int64"
+              },
+              "source_country": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "amount_in_sender_currency": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "DeleteExchangeRateDisbursementResponseBody"
+      }
+    },
+    "CreateFixedCurrencyDisbursementResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "bank_code": {
+              "type": "string"
+            },
+            "account_number": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "double"
+            },
+            "vendor_generated_id": {
+              "type": "string"
+            },
+            "sender_job": {
+              "type": "string"
+            },
+            "sender_name": {
+              "type": "string"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "sender_address": {
+              "type": "string"
+            },
+            "sender_country": {
+              "type": "string"
+            },
+            "user_id": {
+              "type": "number",
+              "format": "int64"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "status": {
+              "type": "string"
+            },
+            "direction": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "CreateFixedCurrencyDisbursementResponseBody"
+      }
+    },
+    "GetFixedCurrencyDisbursementListResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "bank_code": {
+                "type": "string"
+              },
+              "account_number": {
+                "type": "string"
+              },
+              "amount": {
+                "type": "number",
+                "format": "double"
+              },
+              "vendor_generated_id": {
+                "type": "string"
+              },
+              "sender_job": {
+                "type": "string"
+              },
+              "sender_name": {
+                "type": "string"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "sender_address": {
+                "type": "string"
+              },
+              "sender_country": {
+                "type": "string"
+              },
+              "user_id": {
+                "type": "number",
+                "format": "int64"
+              },
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "status": {
+                "type": "string"
+              },
+              "direction": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetFixedCurrencyDisbursementListResponseBody"
+      }
+    },
+    "GetFixedCurrencyDisbursementDetailResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "bank_code": {
+              "type": "string"
+            },
+            "account_number": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "double"
+            },
+            "vendor_generated_id": {
+              "type": "string"
+            },
+            "sender_job": {
+              "type": "string"
+            },
+            "sender_name": {
+              "type": "string"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "sender_address": {
+              "type": "string"
+            },
+            "sender_country": {
+              "type": "string"
+            },
+            "user_id": {
+              "type": "number",
+              "format": "int64"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "status": {
+              "type": "string"
+            },
+            "direction": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetFixedCurrencyDisbursementDetailResponseBody"
+      }
+    },
+    "UpdateFixedCurrencyDisbursementDetailResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "bank_code": {
+              "type": "string"
+            },
+            "account_number": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "double"
+            },
+            "vendor_generated_id": {
+              "type": "string"
+            },
+            "sender_job": {
+              "type": "string"
+            },
+            "sender_name": {
+              "type": "string"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "sender_address": {
+              "type": "string"
+            },
+            "sender_country": {
+              "type": "string"
+            },
+            "user_id": {
+              "type": "number",
+              "format": "int64"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "status": {
+              "type": "string"
+            },
+            "direction": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "UpdateFixedCurrencyDisbursementDetailResponseBody"
+      }
+    },
+    "DeleteFixedCurrencyDisbursementResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "bank_code": {
+                "type": "string"
+              },
+              "account_number": {
+                "type": "string"
+              },
+              "amount": {
+                "type": "number",
+                "format": "double"
+              },
+              "vendor_generated_id": {
+                "type": "string"
+              },
+              "sender_job": {
+                "type": "string"
+              },
+              "sender_name": {
+                "type": "string"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "sender_address": {
+                "type": "string"
+              },
+              "sender_country": {
+                "type": "string"
+              },
+              "user_id": {
+                "type": "number",
+                "format": "int64"
+              },
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "status": {
+                "type": "string"
+              },
+              "direction": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "DeleteFixedCurrencyDisbursementResponseBody"
+      }
+    },
     "CreateSpecifiedRecipientDisbursementResponseBody": {
       "type": "object",
       "properties": {
@@ -2522,30 +3315,41 @@
           "type": "object",
           "properties": {
             "bank_code": {
-              "type": "string",
-              "example": "ID_OVO"
+              "type": "string"
             },
             "account_number": {
-              "type": "string",
-              "example": "1234567890"
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
             },
             "amount": {
               "type": "number",
-              "format": "double",
-              "example": "10000"
+              "format": "int64"
+            },
+            "user_id": {
+              "type": "number",
+              "format": "int64"
             },
             "account_holder_name": {
+              "type": "string"
+            },
+            "vendor_generated_id": {
               "type": "string",
-              "example": "test_name"
+              "format": "uuid"
             },
             "currency": {
-              "type": "string",
-              "example": "IDR"
+              "type": "string"
             },
             "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "34767"
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
             }
           }
         }
@@ -2554,26 +3358,84 @@
         "name": "CreateSpecifiedRecipientDisbursementResponseBody"
       }
     },
+    "GetSpecifiedRecipientDisbursementListResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "bank_code": {
+                "type": "string"
+              },
+              "account_number": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "amount": {
+                "type": "number",
+                "format": "int64"
+              },
+              "user_id": {
+                "type": "number",
+                "format": "int64"
+              },
+              "account_holder_name": {
+                "type": "string"
+              },
+              "vendor_generated_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetSpecifiedRecipientDisbursementListResponseBody"
+      }
+    },
     "CreatePaymentResponseBody": {
       "type": "object",
       "properties": {
         "data": {
           "type": "object",
           "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
             "amount": {
               "type": "number",
-              "format": "double",
-              "example": "1000"
+              "format": "int64"
             },
             "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "30211"
+              "type": "string",
+              "format": "uuid"
             },
             "vendorName": {
-              "type": "number",
-              "format": "string",
-              "example": "Flip"
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
             }
           }
         }
@@ -2590,19 +3452,25 @@
           "items": {
             "type": "object",
             "properties": {
+              "vendorGeneratedId": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
               "amount": {
                 "type": "number",
-                "format": "double",
-                "example": "1000"
+                "format": "int64"
               },
               "id": {
-                "type": "number",
-                "format": "int64",
-                "example": "233841"
+                "type": "string",
+                "format": "uuid"
               },
               "vendorName": {
-                "type": "string",
-                "example": "Flip"
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
               }
             }
           }
@@ -2619,13 +3487,11 @@
           "type": "object",
           "properties": {
             "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "30211"
+              "type": "string",
+              "format": "uuid"
             },
             "status": {
-              "type": "string",
-              "example": "PENDING"
+              "type": "string"
             }
           }
         }
@@ -2640,20 +3506,25 @@
         "data": {
           "type": "object",
           "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
             "amount": {
               "type": "number",
-              "format": "double",
-              "example": "1000"
+              "format": "int64"
             },
             "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "30211"
+              "type": "string",
+              "format": "uuid"
             },
             "vendorName": {
-              "type": "number",
-              "format": "string",
-              "example": "Flip"
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
             }
           }
         }
@@ -2670,27 +3541,32 @@
           "items": {
             "type": "object",
             "properties": {
+              "vendorGeneratedId": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
               "amount": {
                 "type": "number",
-                "format": "double",
-                "example": "1000"
+                "format": "int64"
               },
               "id": {
-                "type": "number",
-                "format": "int64",
-                "example": "30211"
+                "type": "string",
+                "format": "uuid"
               },
               "vendorName": {
-                "type": "number",
-                "format": "string",
-                "example": "Flip"
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
               }
             }
           }
         }
       },
       "xml": {
-        "name": "GetPaymentDetailResponseBody"
+        "name": "DeletePaymentResponseBody"
       }
     },
     "UpdatePaymentResponseBody": {
@@ -2699,25 +3575,67 @@
         "data": {
           "type": "object",
           "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
             "amount": {
               "type": "number",
-              "format": "double",
-              "example": "1000"
+              "format": "int64"
             },
             "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "30211"
+              "type": "string",
+              "format": "uuid"
             },
             "vendorName": {
-              "type": "string",
-              "example": "Flip"
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
             }
           }
         }
       },
       "xml": {
         "name": "UpdatePaymentResponseBody"
+      }
+    },
+    "CreatePaymentLinkResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "int64"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "paymentLink": {
+              "type": "string"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "CreatePaymentLinkResponseBody"
       }
     },
     "GetPaymentLinksByVendorNameResponseBody": {
@@ -2729,46 +3647,56 @@
             "type": "object",
             "properties": {
               "id": {
-                "type": "number",
-                "format": "int64",
-                "example": "188938"
+                "type": "string",
+                "format": "uuid"
               },
               "paymentLink": {
-                "type": "string",
-                "example": "<payment-link>"
+                "type": "string"
               },
               "record": {
                 "type": "object",
                 "properties": {
+                  "idTransaction": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
                   "amount": {
                     "type": "number",
-                    "format": "double",
-                    "example": "1000"
-                  },
-                  "idTransaction": {
-                    "type": "number",
-                    "format": "int64",
-                    "example": "19570"
+                    "format": "int64"
                   },
                   "vendorName": {
-                    "type": "string",
-                    "example": "Flip"
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "vendorGeneratedId": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
                   }
                 }
               },
               "idTransaction": {
-                "type": "number",
-                "format": "int64",
-                "example": "19570"
+                "type": "string",
+                "format": "uuid"
               },
               "amount": {
                 "type": "number",
-                "format": "double",
-                "example": "1000"
+                "format": "double"
               },
               "vendorName": {
-                "type": "string",
-                "example": "Flip"
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "vendorGeneratedId": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
               }
             }
           }
@@ -2784,23 +3712,28 @@
         "data": {
           "type": "object",
           "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
             "amount": {
               "type": "number",
-              "format": "double",
-              "example": "1000"
+              "format": "int64"
             },
             "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "188938"
+              "type": "string",
+              "format": "uuid"
             },
             "paymentLink": {
-              "type": "string",
-              "example": "<payment-link>"
+              "type": "string"
             },
             "vendorName": {
-              "type": "string",
-              "example": "Flip"
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
             }
           }
         }
@@ -2809,7 +3742,46 @@
         "name": "GetPaymentLinkDetailResponseBody"
       }
     },
-    "DeletePaymentLinkResponseBody": {
+    "CreateVirtualAccountPaymentResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "bankCode": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "int64"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "vaAccountNumber": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "CreateVirtualAccountPaymentResponseBody"
+      }
+    },
+    "GetVirtualAccountPaymentsByVendorNameResponseBody": {
       "type": "object",
       "properties": {
         "data": {
@@ -2817,61 +3789,102 @@
           "items": {
             "type": "object",
             "properties": {
-              "id": {
-                "type": "number",
-                "format": "int64",
-                "example": "188938"
+              "bankCode": {
+                "type": "string"
               },
-              "paymentLink": {
-                "type": "string",
-                "example": "<payment-link>"
+              "vaAccountNumber": {
+                "type": "string"
               },
               "record": {
                 "type": "object",
                 "properties": {
+                  "idTransaction": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
                   "amount": {
                     "type": "number",
-                    "format": "double",
-                    "example": "1000"
-                  },
-                  "idTransaction": {
-                    "type": "number",
-                    "format": "int64",
-                    "example": "19570"
+                    "format": "int64"
                   },
                   "vendorName": {
-                    "type": "string",
-                    "example": "Flip"
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "vendorGeneratedId": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
                   }
                 }
               },
               "idTransaction": {
-                "type": "number",
-                "format": "int64",
-                "example": "19570"
+                "type": "string",
+                "format": "uuid"
               },
               "amount": {
                 "type": "number",
-                "format": "double",
-                "example": "1000"
+                "format": "int64"
               },
               "vendorName": {
-                "type": "string",
-                "example": "Flip"
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "vendorGeneratedId": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
               }
             }
           }
         }
       },
       "xml": {
-        "name": "DeletePaymentLinkResponseBody"
+        "name": "GetPaymentLinksByVendorNameResponseBody"
       }
     },
-    "CreateVirtualAccountPaymentResponseBody": {
+    "GetVirtualAccountPaymentDetailResponseBody": {
       "type": "object",
-
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "bankCode": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "int64"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "vaAccountNumber": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "xml": {
-        "name": "CreateVirtualAccountPaymentResponseBody"
+        "name": "GetPaymentLinkDetailResponseBody"
       }
     },
     "CreateEWalletPaymentResponseBody": {
@@ -2880,31 +3893,34 @@
         "data": {
           "type": "object",
           "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
             "amount": {
               "type": "number",
-              "format": "double",
-              "example": "10000"
+              "format": "int64"
             },
             "phoneNumber": {
-              "type": "string",
-              "example": "08123123123"
+              "type": "string"
             },
-            "ewalletType": {
-              "type": "string",
-              "example": "ovo"
+            "eWalletType": {
+              "type": "string"
             },
             "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "196186"
+              "type": "string",
+              "format": "uuid"
             },
             "vendorName": {
-              "type": "string",
-              "example": "Flip"
+              "type": "string"
             },
             "eWalletUrl": {
-              "type": "string",
-              "example": "<ewallet-url>"
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
             }
           }
         }
@@ -2913,60 +3929,146 @@
         "name": "CreateEWalletPaymentResponseBody"
       }
     },
-    "CreatePaymentLinkResponseBody": {
+    "GetEWalletPaymentsByVendorNameResponseBody": {
       "type": "object",
       "properties": {
         "data": {
-          "type": "object",
-          "properties": {
-            "amount": {
-              "type": "number",
-              "format": "double",
-              "example": "10000"
-            },
-            "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "196186"
-            },
-            "paymentLink": {
-              "type": "string",
-              "example": "<payment-link>"
-            },
-            "vendorName": {
-              "type": "string",
-              "example": "Flip"
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "phoneNumber": {
+                "type": "string"
+              },
+              "eWalletType": {
+                "type": "string"
+              },
+              "eWalletUrl": {
+                "type": "string"
+              },
+              "record": {
+                "type": "object",
+                "properties": {
+                  "idTransaction": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "int64"
+                  },
+                  "vendorName": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "vendorGeneratedId": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  }
+                }
+              },
+              "idTransaction": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "amount": {
+                "type": "number",
+                "format": "int64"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "vendorGeneratedId": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              }
             }
           }
         }
       },
       "xml": {
-        "name": "CreatePaymentLinkResponseBody"
+        "name": "GetEWalletPaymentsByVendorNameResponseBody"
       }
     },
-    "CreateCreditCardPaymentResponseBody": {
+    "GetEWalletPaymentDetailResponseBody": {
       "type": "object",
       "properties": {
         "data": {
           "type": "object",
           "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
             "amount": {
               "type": "number",
-              "format": "double",
-              "example": "10000.0"
+              "format": "int64"
             },
-            "statusCreditPayment": {
-              "type": "string",
-              "example": "BERHASIL"
+            "phoneNumber": {
+              "type": "string"
+            },
+            "eWalletType": {
+              "type": "string"
             },
             "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "196186"
+              "type": "string",
+              "format": "uuid"
             },
             "vendorName": {
+              "type": "string"
+            },
+            "eWalletUrl": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetEWalletPaymentDetailResponseBody"
+      }
+    },
+    "CreateCardPaymentResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "int64"
+            },
+            "idToken": {
+              "type": "string"
+            },
+            "id": {
               "type": "string",
-              "example": "Midtrans"
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
             }
           }
         }
@@ -2975,33 +4077,273 @@
         "name": "CreateCreditCardPaymentResponseBody"
       }
     },
+    "GetCardPaymentsByVendorNameResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "idToken": {
+                "type": "string"
+              },
+              "record": {
+                "type": "object",
+                "properties": {
+                  "idTransaction": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "int64"
+                  },
+                  "vendorName": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "vendorGeneratedId": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  }
+                }
+              },
+              "idTransaction": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "amount": {
+                "type": "number",
+                "format": "int64"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "vendorGeneratedId": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetCardPaymentsByVendorNameResponseBody"
+      }
+    },
+    "GetCardPaymentDetailResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "int64"
+            },
+            "idToken": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetCardPaymentDetailResponseBody"
+      }
+    },
+    "CreateDirectDebitPaymentResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "directDebitUrl": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "int64"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "CreateDirectDebitPaymentResponseBody"
+      }
+    },
+    "GetDirectDebitPaymentsByVendorNameResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "directDebitUrl": {
+                "type": "string"
+              },
+              "record": {
+                "type": "object",
+                "properties": {
+                  "idTransaction": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "int64"
+                  },
+                  "vendorName": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "vendorGeneratedId": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  }
+                }
+              },
+              "idTransaction": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "amount": {
+                "type": "number",
+                "format": "int64"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "vendorGeneratedId": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetDirectDebitPaymentsByVendorNameResponseBody"
+      }
+    },
+    "GetDirectDebitPaymentDetailResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "directDebitUrl": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "int64"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetDirectDebitPaymentDetailResponseBody"
+      }
+    },
     "CreateRetailOutletPaymentResponseBody": {
       "type": "object",
       "properties": {
         "data": {
           "type": "object",
           "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
             "amount": {
               "type": "number",
-              "format": "double",
-              "example": "10000"
+              "format": "int64"
             },
             "retailPaymentCode": {
-              "type": "string",
-              "example": "990873459084"
+              "type": "string"
             },
             "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "21321"
+              "type": "string",
+              "format": "uuid"
             },
             "vendorName": {
-              "type": "string",
-              "example": "Midtrans"
+              "type": "string"
             },
             "retailOutlet": {
-              "type": "string",
-              "example": "Indomaret"
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
             }
           }
         }
@@ -3010,39 +4352,110 @@
         "name": "CreateRetailOutletPaymentResponseBody"
       }
     },
-    "CreateDebitCardPaymentResponseBody": {
+    "GetRetailOutletPaymentsByVendorNameResponseBody": {
       "type": "object",
       "properties": {
         "data": {
-          "type": "object",
-          "properties": {
-            "amount": {
-              "type": "number",
-              "format": "double",
-              "example": "10000"
-            },
-            "retailPaymentCode": {
-              "type": "string",
-              "example": "990873459084"
-            },
-            "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "21321"
-            },
-            "vendorName": {
-              "type": "string",
-              "example": "Midtrans"
-            },
-            "retailOutlet": {
-              "type": "string",
-              "example": "Indomaret"
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "retailOutlet": {
+                "type": "string"
+              },
+              "retailPaymentCode": {
+                "type": "string"
+              },
+              "record": {
+                "type": "object",
+                "properties": {
+                  "idTransaction": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "int64"
+                  },
+                  "vendorName": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "vendorGeneratedId": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  }
+                }
+              },
+              "idTransaction": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "amount": {
+                "type": "number",
+                "format": "int64"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "vendorGeneratedId": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              }
             }
           }
         }
       },
       "xml": {
-        "name": "CreateDebitCardPaymentResponseBody"
+        "name": "GetRetailOutletPaymentsByVendorNameResponseBody"
+      }
+    },
+    "GetRetailOutletPaymentDetailResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "int64"
+            },
+            "retailPaymentCode": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "retailOutlet": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetRetailOutletDetailResponseBody"
       }
     },
     "CreateInvoiceResponseBody": {
@@ -3051,23 +4464,28 @@
         "data": {
           "type": "object",
           "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
             "amount": {
               "type": "number",
-              "format": "double",
-              "example": "10000.0"
+              "format": "int64"
             },
             "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "30091"
+              "type": "string",
+              "format": "uuid"
             },
             "vendorName": {
-              "type": "string",
-              "example": "Oy"
+              "type": "string"
             },
             "transactionUrl": {
-              "type": "string",
-              "example": "<invoice-url>"
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
             }
           }
         }
@@ -3076,39 +4494,240 @@
         "name": "CreateInvoiceResponseBody"
       }
     },
+    "GetInvoicesByVendorNameResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "transactionUrl": {
+                "type": "string"
+              },
+              "record": {
+                "type": "object",
+                "properties": {
+                  "idTransaction": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "int64"
+                  },
+                  "vendorName": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "vendorGeneratedId": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  }
+                }
+              },
+              "idTransaction": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "amount": {
+                "type": "number",
+                "format": "int64"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "vendorGeneratedId": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetInvoicesByVendorNameResponseBody"
+      }
+    },
+    "GetInvoiceDetailResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "int64"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "transactionUrl": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetInvoiceDetailResponseBody"
+      }
+    },
     "CreatePaymentRoutingResponseBody": {
       "type": "object",
       "properties": {
         "data": {
           "type": "object",
           "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
             "amount": {
               "type": "number",
-              "format": "double",
-              "example": "10000"
+              "format": "int64"
             },
-            "retailPaymentCode": {
-              "type": "string",
-              "example": "990873459084"
+            "paymentCheckoutUrl": {
+              "type": "string"
             },
             "id": {
-              "type": "number",
-              "format": "int64",
-              "example": "21321"
+              "type": "string",
+              "format": "uuid"
             },
             "vendorName": {
-              "type": "string",
-              "example": "Midtrans"
+              "type": "string"
             },
-            "retailOutlet": {
-              "type": "string",
-              "example": "Indomaret"
+            "status": {
+              "type": "string"
             }
           }
         }
       },
       "xml": {
         "name": "CreatePaymentRoutingResponseBody"
+      }
+    },
+    "GetPaymentRoutingsByVendorNameResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "paymentCheckoutUrl": {
+                "type": "string"
+              },
+              "record": {
+                "type": "object",
+                "properties": {
+                  "idTransaction": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "int64"
+                  },
+                  "vendorName": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "vendorGeneratedId": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  }
+                }
+              },
+              "idTransaction": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "amount": {
+                "type": "number",
+                "format": "int64"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "vendorGeneratedId": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetPaymentRoutingsByVendorNameResponseBody"
+      }
+    },
+    "GetPaymentRoutingDetailResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "int64"
+            },
+            "paymentCheckoutUrl": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetPaymentRoutingDetailResponseBody"
       }
     }
   }
