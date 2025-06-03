@@ -970,7 +970,7 @@
             }
           },
           "400": {
-            "description": "Invalid vendor name is query parameter"
+            "description": "Invalid vendor name in query parameter"
           }
         }
       }
@@ -1062,7 +1062,7 @@
             }
           },
           "400": {
-            "description": "Invalid vendor name is query parameter"
+            "description": "Invalid vendor name in query parameter"
           }
         }
       }
@@ -1154,7 +1154,7 @@
             }
           },
           "400": {
-            "description": "Invalid vendor name is query parameter"
+            "description": "Invalid vendor name in query parameter"
           }
         }
       }
@@ -1246,7 +1246,7 @@
             }
           },
           "400": {
-            "description": "Invalid vendor name is query parameter"
+            "description": "Invalid vendor name in query parameter"
           }
         }
       }
@@ -1338,7 +1338,7 @@
             }
           },
           "400": {
-            "description": "Invalid vendor name is query parameter"
+            "description": "Invalid vendor name in query parameter"
           }
         }
       }
@@ -1430,7 +1430,7 @@
             }
           },
           "400": {
-            "description": "Invalid vendor name is query parameter"
+            "description": "Invalid vendor name in query parameter"
           }
         }
       }
@@ -1522,7 +1522,7 @@
             }
           },
           "400": {
-            "description": "Invalid vendor name is query parameter"
+            "description": "Invalid vendor name in query parameter"
           }
         }
       }
@@ -1550,6 +1550,98 @@
             "description": "Successfully get payment routings detail",
             "schema": {
               "$ref": "#/definitions/GetPaymentRoutingDetailResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid id in query parameter"
+          }
+        }
+      }
+    },
+    "/call/qrcode": {
+      "post": {
+        "tags": ["Payment"],
+        "summary": "Create a QR code payment",
+        "operationId": "createQRCodePayment",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "description": "Request body to create QR code payment",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateQRCodePaymentRequestBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully create QR code payment",
+            "schema": {
+              "$ref": "#/definitions/CreateQRCodePaymentResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid request body"
+          }
+        }
+      }
+    },
+    "/call/qrcode/vendorname": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get QR code payments by vendor name",
+        "operationId": "getQRCodePaymentsByVendorName",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "vendor_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get QR code payments by vendor name",
+            "schema": {
+              "$ref": "#/definitions/GetQRCodePaymentsByVendorNameResponseBody"
+            }
+          },
+          "400": {
+            "description": "Invalid vendor name in query parameter"
+          }
+        }
+      }
+    },
+    "/call/qrcode/detail": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get QR code payment detail",
+        "operationId": "getQRCodePaymentDetail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get QR code payment detail",
+            "schema": {
+              "$ref": "#/definitions/GetQRCodePaymentDetailResponseBody"
             }
           },
           "400": {
@@ -2243,6 +2335,23 @@
       },
       "xml": {
         "name": "CreatePaymentRoutingRequestBody"
+      }
+    },
+    "CreateQRCodePaymentRequestBody": {
+      "type": "object",
+      "required": ["vendor_name", "amount"],
+      "properties": {
+        "vendor_name": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double",
+          "example": "10000"
+        }
+      },
+      "xml": {
+        "name": "CreateQRCodePaymentRequestBody"
       }
     },
     "CreateDisbursementResponseBody": {
@@ -4809,6 +4918,160 @@
       },
       "xml": {
         "name": "GetPaymentRoutingDetailResponseBody"
+      }
+    },
+    "CreateQRCodePaymentResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "int64"
+            },
+            "qrCodeString": {
+              "type": "string"
+            },
+            "expiryDateString": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "channelCode": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "CreateQRCodePaymentResponseBody"
+      }
+    },
+    "GetQRCodePaymentsByVendorNameResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "qrCodeString": {
+                "type": "string"
+              },
+              "channelCode": {
+                "type": "string"
+              },
+              "expiryDateString": {
+                "type": "string"
+              },
+              "record": {
+                "type": "object",
+                "properties": {
+                  "idTransaction": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "int64"
+                  },
+                  "vendorName": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "vendorGeneratedId": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  }
+                }
+              },
+              "idTransaction": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "amount": {
+                "type": "number",
+                "format": "int64"
+              },
+              "vendorName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "vendorGeneratedId": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetQRCodePaymentsByVendorNameResponseBody"
+      }
+    },
+    "GetQRCodePaymentDetailResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "vendorGeneratedId": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "format": "int64"
+            },
+            "qrCodeString": {
+              "type": "string"
+            },
+            "expiryDateString": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "vendorName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "channelCode": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "GetQRCodePaymentDetailResponseBody"
       }
     }
   }
