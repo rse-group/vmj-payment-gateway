@@ -12,9 +12,15 @@ features
 
 constraints
     F.PaymentLink => V.Oy | V.Midtrans | V.Flip
-    F.EWallet | F.VirtualAccount => V.Oy | V.Midtrans | V.Flip | V.Xendit
+    F.EWallet => V.Oy | V.Midtrans | V.Flip | V.Xendit
+    F.VirtualAccount => V.Oy | V.Midtrans | V.Flip | V.Xendit
     F.RetailOutlet => V.Oy | V.Midtrans | V.Xendit
-    F.Invoice | F.PaymentRouting => V.Oy 
+    F.Invoice => V.Oy
+    F.PaymentRouting => V.Oy 
     F.Card => V.Midtrans
-    F.SpecifiedRecipient | F.QRCode | F.DirectDebit => V.Xendit
-    F.Agent | F.ExchangeRate | F.FixedCurrency => V.Flip
+    F.QRCode => V.Xendit
+    F.SpecifiedRecipient => V.Xendit
+    F.DirectDebit => V.Xendit
+    F.Agent => V.Flip
+    F.ExchangeRate => V.Flip
+    F.FixedCurrency => V.Flip
