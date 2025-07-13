@@ -4,8 +4,8 @@
 	<feature automatic="selected" manual="selected" name="V.Vendor"/>
 	<feature name="V.Flip"/>
 	<feature manual="selected" name="V.Midtrans"/>
-	<feature manual="selected" name="V.Oy"/>
-	<feature manual="selected" name="V.Xendit"/>
+	<feature automatic="selected" manual="selected" name="V.Oy"/>
+	<feature automatic="selected" manual="selected" name="V.Xendit"/>
 	<feature automatic="selected" manual="selected" name="F.Features"/>
 	<feature name="F.Disbursement"/>
 	<feature name="F.International"/>

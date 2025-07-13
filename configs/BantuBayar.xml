@@ -2,9 +2,9 @@
 <configuration>
 	<feature automatic="selected" name="PaymentGateway"/>
 	<feature automatic="selected" name="V.Vendor"/>
-	<feature manual="selected" name="V.Flip"/>
+	<feature automatic="selected" manual="selected" name="V.Flip"/>
 	<feature name="V.Midtrans"/>
-	<feature manual="selected" name="V.Oy"/>
+	<feature automatic="selected" manual="selected" name="V.Oy"/>
 	<feature name="V.Xendit"/>
 	<feature automatic="selected" name="F.Features"/>
 	<feature automatic="selected" name="F.Disbursement"/>
