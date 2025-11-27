@@ -1,2 +1,0 @@
-echo SELECT 'CREATE DATABASE paymentgateway_product_oy' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'paymentgateway_product_oy') \gexec | psql "postgresql://postgres:postgres@localhost"
-java -cp paymentgateway.product.oy --module-path paymentgateway.product.oy -m paymentgateway.product.oy

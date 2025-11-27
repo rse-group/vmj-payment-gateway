@@ -6,96 +6,70 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
+import vmj.routing.route.exceptions.*;
 
 import paymentgateway.payment.PaymentFactory;
+import paymentgateway.payment.PaymentResourceFactory;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
-import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentResourceComponent;
+import paymentgateway.payment.core.PaymentServiceComponent;
+
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
-	// implement this to work with authorization module
-	protected String apiKey;
-	protected String apiEndpoint;
-
-	public PaymentResourceImpl(PaymentResourceComponent record) {
+	private PaymentServiceImpl paymentServiceImpl;
+	
+	public PaymentResourceImpl(PaymentResourceComponent record, PaymentServiceComponent recordService) {
 		super(record);
-		this.apiKey = "SB-Mid-server-NVYFqUidEQUTaozWjW77fFWW";
-		this.apiEndpoint = "https://api.sandbox.midtrans.com/v1/payment-links";
+		paymentServiceImpl = new PaymentServiceImpl(recordService);
 	}
 
-	// public Payment createPayment(HashMap<String, Object> vmjExchange) {
-	// Payment transaction = record.createPayment(vmjExchange);
-	// String paymentLink = sendTransaction(vmjExchange);
-	// Payment paymentLinkTransaction =
-	// PaymentFactory.createPayment("paymentgateway.payment.paymentlink.PaymentImpl",
-	// transaction, paymentLink);
-	// return paymentLinkTransaction;
-	// }
 
-	// protected String sendTransaction(HashMap<String, Object> vmjExchange) {
-	// String idTransaction = (String) vmjExchange.get("idTransaction");
-	// int amount = (int) vmjExchange.get("amount");
+	@Route(url = "call/paymentlink")
+	public HashMap<String, Object> payment(VMJExchange vmjExchange) {
+		if (vmjExchange.getHttpMethod().equals("POST")){
+			Map<String, Object> requestBody = vmjExchange.getPayload(); 
+			Payment result = paymentServiceImpl.createPayment(requestBody);
+			return result.toHashMap();
+		}
+		throw new NotFoundException("Route tidak ditemukan");
+	}
 
-	// Gson gson = new Gson();
-	// Map<String, Object> transaction_details = new HashMap<String, Object>();
-	// transaction_details.put("order_id", idTransaction);
-	// transaction_details.put("gross_amount", amount);
-	// Map<String, Object> requestMap = new HashMap<String, Object>();
-	// requestMap.put("transaction_details", transaction_details);
 
-	// String requestString = gson.toJson(requestMap);
-	// System.out.println("this is request String: " + requestString);
-	// HttpClient client = HttpClient.newHttpClient();
-	// HttpRequest request = HttpRequest.newBuilder()
-	// .header("Authorization", getBasicAuthenticationHeader(apiKey, ""))
-	// .header("Content-Type", "application/json")
-	// .header("Accept", "application/json")
-	// .uri(URI.create(apiEndpoint))
-	// .POST(HttpRequest.BodyPublishers.ofString(requestString))
-	// .build();
-	// String paymentLink = "";
+	@Route(url = "call/paymentlink/vendorname")
+	public List<PaymentLinkImpl> getByVendorName(VMJExchange vmjExchange) {
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+		return paymentServiceImpl.getByVendorName(requestBody);
+	}
 
-	// try {
-	// HttpResponse response = client.send(request,
-	// HttpResponse.BodyHandlers.ofString());
-	// String rawResponse = response.body().toString();
-	// PaymentLinkResponse responseObj = gson.fromJson(rawResponse,
-	// PaymentLinkResponse.class);
-	// paymentLink = paymentLink + responseObj.getPayment_url();
-	// System.out.println("this is paymentlink: " + paymentLink);
-	// } catch (Exception e) {
-	// System.out.println(e);
-	// }
+	@Route(url = "call/paymentlink/detail")
+	public HashMap<String, Object> getById(VMJExchange vmjExchange) {
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+		return paymentServiceImpl.getById(requestBody);
+	}
 
-	// return paymentLink;
-	// }
 
-	// private static final String getBasicAuthenticationHeader(String username,
-	// String password) {
-	// String valueToEncode = username + ":" + password;
-	// return "Basic " +
-	// Base64.getEncoder().encodeToString(valueToEncode.getBytes());
-	// }
+	@Route(url = "call/paymentlink/delete")
+	public String deletePaymentLinkById(VMJExchange vmjExchange) {
+		if (vmjExchange.getHttpMethod().equals("OPTIONS"))
+			return null;
+		
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+		return paymentServiceImpl.deletePaymentLinkById(requestBody);
+	}
 
-	// @Route(url = "test/call/paymentlink")
-	// public HashMap<String, Object> paymentLink(VMJExchange vmjExchange) {
-	// if (vmjExchange.getHttpMethod().equals("OPTIONS"))
-	// return null;
-
-	// int amount = ((Double) vmjExchange.getRequestBodyForm("amount")).intValue();
-	// String idTransaction = (String)
-	// vmjExchange.getRequestBodyForm("idTransaction");
-
-	// testExchange.put("amount", amount);
-	// Payment result = this.createPayment(testExchange);
-	// return result.toHashMap();
-	// }
+	@Route(url = "call/paymentlink/deleted")
+	public List<HashMap<String, Object>> deletePaymentLinkByIdTransaction(VMJExchange vmjExchange) {
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+		return paymentServiceImpl.deletePaymentLinkByIdTransaction(requestBody);
+	}
 }

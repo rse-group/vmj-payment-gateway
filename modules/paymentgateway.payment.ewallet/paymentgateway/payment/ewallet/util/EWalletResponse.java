@@ -3,6 +3,8 @@ package paymentgateway.payment.ewallet;
 import java.util.*;
 
 public class EWalletResponse {
+
+	private int id;
 	private String status_code;
 	private String status_message;
 	private String transaction_id;
@@ -14,6 +16,76 @@ public class EWalletResponse {
 	private String transaction_status;
 	private String fraud_status;
 	private List<EWalletAction> actions;
+
+	// OY
+
+	private String ewallet_trx_status;
+	private String trx_id;
+	private String ewallet_code;
+	private String ewallet_url;
+	private String amount;
+	private String partner_trx_id;
+	private String customer_id;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getStatus(){
+		if (status_code == null){
+			return ewallet_trx_status;
+		}
+		return status_code;
+	}
+
+	public void setEwallet_trx_status(String ewallet_trx_status) {
+		this.ewallet_trx_status = ewallet_trx_status;
+	}
+
+	public String getTrx_id() {
+		return trx_id;
+	}
+
+	public void setTrx_id(String trx_id) {
+		this.trx_id = trx_id;
+	}
+
+	public String getAmount() {
+		if (gross_amount == null){
+			return amount;
+		}
+		return gross_amount;
+	}
+
+	public String getCustomer_id() {
+		return customer_id;
+	}
+
+	public String getPayment_type() {
+		if (payment_type == null){
+			return ewallet_code;
+		}
+		return payment_type;
+	}
+
+	public String getUrl() {
+		if (ewallet_url == null){
+			return actions.get(0).getUrl();
+		}
+		return ewallet_url;
+	}
+
+	public String getPartner_trx_id() {
+		return partner_trx_id;
+	}
+
+	public void setPartner_trx_id(String partner_trx_id) {
+		this.partner_trx_id = partner_trx_id;
+	}
 
 	public String getStatus_code() {
 		return status_code;
@@ -63,9 +135,6 @@ public class EWalletResponse {
 		this.currency = currency;
 	}
 
-	public String getPayment_type() {
-		return payment_type;
-	}
 
 	public void setPayment_type(String payment_type) {
 		this.payment_type = payment_type;

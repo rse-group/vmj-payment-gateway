@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature automatic="selected" name="PaymentGateway"/>
+	<feature automatic="selected" name="Disbursement"/>
+	<feature automatic="selected" name="International"/>
+	<feature automatic="selected" name="ExchangeRate"/>
+	<feature manual="selected" name="AutomaticExchangeRate"/>
+	<feature automatic="selected" name="FixedCurrency"/>
+	<feature manual="selected" name="IDR"/>
+	<feature manual="selected" name="Agent"/>
+	<feature manual="selected" name="SpecifiedRecipient"/>
+	<feature automatic="selected" name="Payment"/>
+	<feature automatic="selected" manual="selected" name="PaymentLink"/>
+	<feature manual="selected" name="FlipPaymentLink"/>
+	<feature manual="selected" name="MidtransPaymentLink"/>
+	<feature manual="selected" name="OyPaymentLink"/>
+	<feature automatic="selected" manual="selected" name="VirtualAccount"/>
+	<feature manual="selected" name="FlipVirtualAccount"/>
+	<feature manual="selected" name="MidtransVirtualAccount"/>
+	<feature manual="selected" name="OyVirtualAccount"/>
+	<feature automatic="selected" manual="selected" name="RetailOutlet"/>
+	<feature manual="selected" name="MidtransRetailOutlet"/>
+	<feature manual="selected" name="OyRetailOutlet"/>
+	<feature automatic="selected" name="EWallet"/>
+	<feature manual="selected" name="FlipEWallet"/>
+	<feature manual="selected" name="MidtransEWallet"/>
+	<feature manual="selected" name="OyEWallet"/>
+	<feature manual="selected" name="Invoice"/>
+	<feature automatic="selected" name="OyInvoice"/>
+	<feature manual="selected" name="PaymentRouting"/>
+	<feature automatic="selected" name="OyPaymentRouting"/>
+	<feature manual="selected" name="CreditCard"/>
+	<feature automatic="selected" name="MidtransCreditCard"/>
+	<feature manual="selected" name="DebitCard"/>
+	<feature automatic="selected" name="MidtransDebitCard"/>
+	<feature automatic="selected" name="Vendor"/>
+	<feature automatic="selected" manual="selected" name="Flip"/>
+	<feature automatic="selected" name="Midtrans"/>
+	<feature automatic="selected" name="Oy"/>
+</configuration>

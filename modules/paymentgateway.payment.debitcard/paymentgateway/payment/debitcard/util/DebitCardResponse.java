@@ -1,6 +1,8 @@
 package paymentgateway.payment.debitcard;
 
 public class DebitCardResponse {
+
+	private int id;
 	private String status_code;
 	private String status_message;
 	private String transaction_id;
@@ -38,12 +40,15 @@ public class DebitCardResponse {
 		return this.transaction_id;
 	}
 	
-	public void setOrder_id(String order_id) {
-		this.order_id = order_id;
+	public void setId(int order_id) {
+		this.id = order_id;
 	}
 	
-	public String getOrder_id() {
-		return this.order_id;
+	public int getId() {
+		if(id == 0) {
+			return Integer.parseInt(order_id);
+		}
+		return id;
 	}
 	
 	public void setRedirect_url(String redirect_url) {

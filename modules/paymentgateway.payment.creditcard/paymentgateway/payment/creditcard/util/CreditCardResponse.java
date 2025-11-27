@@ -1,6 +1,8 @@
 package paymentgateway.payment.creditcard;
 
 public class CreditCardResponse {
+
+	private int id;
 	private String status_code;
 	private String status_message;
 	private String transaction_id;
@@ -36,11 +38,12 @@ public class CreditCardResponse {
 	public void setTransaction_id(String transaction_id) {
 		this.transaction_id = transaction_id;
 	}
-	public String getOrder_id() {
-		return order_id;
+	public int getId() {
+
+		return Integer.parseInt(order_id);
 	}
-	public void setOrder_id(String order_id) {
-		this.order_id = order_id;
+	public void setId(int order_id) {
+		this.id = order_id;
 	}
 	public String getRedirect_url() {
 		return redirect_url;

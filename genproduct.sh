@@ -24,7 +24,7 @@ function copy_databaseproperties() {
 # }
 
 function validate_product() {
-    if [ $1 == "$plname.disbursement.core" ];then
+    if [ $1 == "$plname.config.core" ];then
       account=true
     fi
 }
@@ -67,7 +67,7 @@ function build_product_requirement() {
                 echo "library $reqprod was added"  
             else
                 echo "check requirement from another product line"
-                external_module $reqprod
+                # external_module $reqprod
             fi
         done
         build_product

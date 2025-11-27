@@ -3,6 +3,9 @@ package paymentgateway.payment.virtualaccount;
 import java.util.List;
 
 public class VirtualAccountResponse {
+
+	private int idDB;
+	private String id;
 	private String status_code;
 	private String status_message;
 	private String transaction_id;
@@ -13,8 +16,52 @@ public class VirtualAccountResponse {
 	private String payment_type;
 	private String transaction_time;
 	private String transaction_status;
+
+	private String va_number;
 	private List<VANumber> va_numbers;
+	private String virtual_account_number;
+
+	private String permata_va_number;
 	private String fraud_status;
+
+	public String getId() {
+		return id;
+	}
+
+
+	public void setVa_number(String va_number) {
+		this.va_number = va_number;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getVirtual_account_number() {
+		if (va_numbers == null && va_number == null){
+			return permata_va_number;
+		} else if (va_numbers == null && permata_va_number == null) {
+			return va_number;
+		}
+		return (va_numbers.get(0)).getVa_number();
+	}
+
+
+	public String getPermata_va_number() {
+		return permata_va_number;
+	}
+
+	public void setPermata_va_number(String permata_va_number) {
+		this.permata_va_number = permata_va_number;
+	}
+
+	public int getIdDB(){
+		return idDB;
+	}
+
+	public void setIdDB(int id) {
+		this.idDB = id;
+	}
 
 	public String getStatus_code() {
 		return status_code;
@@ -33,9 +80,6 @@ public class VirtualAccountResponse {
 	}
 	public void setTransaction_id(String transaction_id) {
 		this.transaction_id = transaction_id;
-	}
-	public String getOrder_id() {
-		return order_id;
 	}
 	public void setOrder_id(String order_id) {
 		this.order_id = order_id;

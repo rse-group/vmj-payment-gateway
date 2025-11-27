@@ -1,6 +1,8 @@
 package paymentgateway.payment.retailoutlet;
 
 public class RetailOutletResponse {
+
+	private int id;
 	private String status_code;
 	private String status_message;
 	private String transaction_id;
@@ -14,6 +16,17 @@ public class RetailOutletResponse {
 	private String fraud_status;
 	private String payment_code;
 	private String store;
+
+	private String code;
+
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getStatus_code() {
 		return status_code;
@@ -103,8 +116,15 @@ public class RetailOutletResponse {
 		this.fraud_status = fraud_status;
 	}
 
-	public String getPayment_code() {
+	public String getCode() {
+		if (code == null){
 		return payment_code;
+		}
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public void setPayment_code(String payment_code) {
