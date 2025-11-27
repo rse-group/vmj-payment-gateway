@@ -1,6 +1,7 @@
 package paymentgateway.payment.paymentlink;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -10,66 +11,44 @@ import java.util.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-
+import vmj.routing.route.RequestMethod;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
 
-import paymentgateway.payment.PaymentFactory;
-import paymentgateway.payment.PaymentResourceFactory;
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentResourceComponent;
 import paymentgateway.payment.core.PaymentServiceComponent;
-
-import paymentgateway.config.core.Config;
-import paymentgateway.config.ConfigFactory;
+import paymentgateway.payment.PaymentFactory;
+import paymentgateway.payment.PaymentResourceFactory;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	private PaymentServiceImpl paymentServiceImpl;
-	
+
 	public PaymentResourceImpl(PaymentResourceComponent record, PaymentServiceComponent recordService) {
 		super(record);
 		paymentServiceImpl = new PaymentServiceImpl(recordService);
 	}
 
-
-	@Route(url = "call/paymentlink")
+	@Route(url = "call/paymentlink", method = RequestMethod.POST)
 	public HashMap<String, Object> payment(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("POST")){
-			Map<String, Object> requestBody = vmjExchange.getPayload(); 
-			Payment result = paymentServiceImpl.createPayment(requestBody);
-			return result.toHashMap();
-		}
-		throw new NotFoundException("Route tidak ditemukan");
+		Map<String, Object> requestBody = vmjExchange.getPayload();
+		Payment result = paymentServiceImpl.createPayment(requestBody);
+		return result.toHashMap();
 	}
 
-
-	@Route(url = "call/paymentlink/vendorname")
+	@Route(url = "call/paymentlink/vendorname", method = RequestMethod.GET)
 	public List<PaymentLinkImpl> getByVendorName(VMJExchange vmjExchange) {
-		Map<String, Object> requestBody = vmjExchange.getPayload(); 
-		return paymentServiceImpl.getByVendorName(requestBody);
+		Map<String, String> queryParams = vmjExchange.queryToMap();
+		return paymentServiceImpl.getByVendorName(queryParams);
 	}
 
-	@Route(url = "call/paymentlink/detail")
+	@Route(url = "call/paymentlink/detail", method = RequestMethod.GET)
 	public HashMap<String, Object> getById(VMJExchange vmjExchange) {
-		Map<String, Object> requestBody = vmjExchange.getPayload(); 
-		return paymentServiceImpl.getById(requestBody);
-	}
-
-
-	@Route(url = "call/paymentlink/delete")
-	public String deletePaymentLinkById(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("OPTIONS"))
-			return null;
-		
-		Map<String, Object> requestBody = vmjExchange.getPayload(); 
-		return paymentServiceImpl.deletePaymentLinkById(requestBody);
-	}
-
-	@Route(url = "call/paymentlink/deleted")
-	public List<HashMap<String, Object>> deletePaymentLinkByIdTransaction(VMJExchange vmjExchange) {
-		Map<String, Object> requestBody = vmjExchange.getPayload(); 
-		return paymentServiceImpl.deletePaymentLinkByIdTransaction(requestBody);
+		Map<String, String> queryParams = vmjExchange.queryToMap();
+		return paymentServiceImpl.getById(queryParams);
 	}
 }

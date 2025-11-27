@@ -36,36 +36,41 @@ public interface Config {
 
     // Disbursement Request
     Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody);
+    void validateBaseAgentDisbursementRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody);
-
+    void validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody);
+    
     // Payment Request
     Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody);
-    Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody);
-    Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getCardRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getDirectDebitRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody);
     Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody);
+    Map<String, Object> getQRCodeRequestBody(Map<String, Object> requestBody);
 
-    String getPaymentDetailEndpoint(String configUrl,String id);
+    String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap);
 
+    HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName);
     Map<String, Object> getPaymentStatusResponse(String rawResponse, String id);
 
     // Payment Response
-    Map<String, Object> getPaymentLinkResponse(String rawResponse, int id);
-    Map<String, Object> getDebitCardResponse(String rawResponse, int id);
-    Map<String, Object> getCreditCardResponse(String rawResponse, int id);
-    Map<String, Object> getInvoiceResponse(String rawResponse, int id);
-    Map<String, Object> getEWalletResponse(String rawResponse, int id);
-    Map<String, Object> getPaymentRoutingResponse(String rawResponse, int id);
-    Map<String, Object> getRetailOutletResponse(String rawResponse, int id);
-    Map<String, Object> getVirtualAccountResponse(String rawResponse, int id);
+    Map<String, Object> getPaymentLinkResponse(String rawResponse, String id);
+    Map<String, Object> getCardResponse(String rawResponse, String id);
+    Map<String, Object> getDirectDebitResponse(String rawResponse, String id);
+    Map<String, Object> getInvoiceResponse(String rawResponse, String id);
+    Map<String, Object> getEWalletResponse(String rawResponse, String id);
+    Map<String, Object> getPaymentRoutingResponse(String rawResponse, String id);
+    Map<String, Object> getRetailOutletResponse(String rawResponse, String id);
+    Map<String, Object> getVirtualAccountResponse(String rawResponse, String id);
+    Map<String, Object> getQRCodeResponse(String rawResponse, String id);
 
     // Disbursement Response
-    Map<String, Object> getDisbursementResponse(String rawResponse);
-    Map<String, Object> getSpecialDisbursementResponse(String rawResponse);
-    Map<String, Object> getInternationalDisbursementResponse(String rawResponse);
-    Map<String, Object> getAgentDisbursementResponse(String rawResponse);
+    Map<String, Object> getDisbursementResponse(String rawResponse, String id);
+    Map<String, Object> getSpecialDisbursementResponse(String rawResponse, String id);
+    Map<String, Object> getInternationalDisbursementResponse(String rawResponse, String id);
+    Map<String, Object> getAgentDisbursementResponse(String rawResponse, String id);
 }

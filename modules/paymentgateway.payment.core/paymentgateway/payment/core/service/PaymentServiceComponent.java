@@ -13,14 +13,18 @@ public abstract class PaymentServiceComponent implements PaymentService{
         this.PaymentRepository = new RepositoryUtil<Payment>(paymentgateway.payment.core.PaymentComponent.class);
     }
     
-    public abstract Payment createPayment(Map<String, Object> requestBody, int id);
+    public abstract Payment createPayment(Map<String, Object> requestBody, String id, String status, String vendorGeneratedId);
     public abstract Payment createPayment(Map<String, Object> requestBody);
-    public abstract HashMap<String, Object> getPayment(Map<String, Object> requestBody);
-    public abstract List<HashMap<String, Object>> getAllPayment(Map<String, Object> requestBody);
+    public abstract HashMap<String, Object> getPayment(String id);
+    public abstract List<HashMap<String, Object>> getAllPayment();
     public abstract List<HashMap<String, Object>> deletePayment(Map<String, Object> requestBody);
     public abstract HashMap<String, Object> updatePayment(Map<String, Object> requestBody);
     public abstract List<HashMap<String, Object>> transformListToHashMap(List<Payment> List);
     public abstract Map<String, Object> sendTransaction(Map<String, Object> requestBody);
-    public abstract Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody);
-    public abstract HashMap<String, Object> getPaymentById(int id);
+    public abstract Map<String, Object> checkPaymentStatus(String id);
+    public abstract HashMap<String, Object> getPaymentById(String id);
+    public abstract String validateVendorName(String vendorName);
+    public abstract double validateAmount(Object amountObject);
+    public abstract String validateId(String id);
+    public abstract void callback(VMJExchange vmjExchange);
 }

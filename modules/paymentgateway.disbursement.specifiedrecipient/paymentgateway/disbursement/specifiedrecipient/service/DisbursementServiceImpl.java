@@ -3,6 +3,8 @@ package paymentgateway.disbursement.specifiedrecipient;
 import vmj.routing.route.VMJExchange;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -31,8 +33,9 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
         
         Map<String, Object> response = sendTransaction(validatedRequestBody);
         LOGGER.info("Transaction Response: " + response);
+		
+        Disbursement coreDisbursement = RESOURCE.createDisbursement(requestBody, response);
         
-        Disbursement coreDisbursement = RESOURCE.createDisbursement(requestBody);
         LOGGER.info("Core Disbursement - Account Number: " + coreDisbursement.getAccountNumber());
         LOGGER.info("Core Disbursement - Bank Code: " + coreDisbursement.getBankCode());
 
@@ -58,7 +61,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
     }
 
     private Map<String, Object> validateRequestBody(Map<String, Object> requestBody) {
-        String vendorName = (String) requestBody.get("vendor_name");
+        String vendorName = record.validateVendorName((String) requestBody.get("vendor_name"));
         Config config = ConfigFactory.createConfig(vendorName,
             ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
         Map<String, Object> validatedBody = config.getDisbursementRequestBody(requestBody);
@@ -74,4 +77,14 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
     public Map<String, Object> sendTransaction(Map<String, Object> validatedRequestBody) {
         return RESOURCE.sendTransaction(validatedRequestBody);
     }
+
+    public List<HashMap<String, Object>> getAllDisbursement() {
+		return RESOURCE.getAllDisbursement("specifiedrecipient_impl");
+	}
+
+    public HashMap<String, Object> getDisbursement(String id) {
+        record.validateId(id);
+		List<HashMap<String, Object>> disbursements = getAllDisbursement();
+		return RESOURCE.findById(disbursements, id);
+	}
 }

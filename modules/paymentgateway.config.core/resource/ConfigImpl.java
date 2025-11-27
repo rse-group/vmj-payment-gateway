@@ -38,6 +38,10 @@ public class ConfigImpl extends ConfigComponent {
         String baseUrl = (String) PropertiesReader.getProp(fileName, "base_url");
         String apiEndpoint = (String) PropertiesReader.getProp(fileName, serviceName);
 
+        if (apiEndpoint == null) {
+            return null;
+        }
+
         url = baseUrl + apiEndpoint;
 
         return url;
@@ -59,7 +63,31 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public String getPaymentDetailEndpoint(String configUrl,String id){
+    public String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap){
+        // Reference: https://stackoverflow.com/a/12595052
+        System.out.println(configUrl);
+        if (!configUrl.contains("[id]") && !configUrl.contains("[vendorGeneratedId]")) {
+            return configUrl;
+        }
+        String idFormat = configUrl.substring(configUrl.indexOf("["));
+        idFormat = idFormat.substring(0, idFormat.indexOf("]") + 1);
+
+        String id;
+
+        switch (idFormat) {
+            case "[vendorGeneratedId]":
+                id = (String) paymentMap.get("vendorGeneratedId");
+                break;
+            default:
+                id = (String) paymentMap.get("id");
+                break;
+        }
+
+        configUrl = configUrl.replace(idFormat, id);
+        return configUrl;
+    }
+
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
         throw new UnsupportedOperationException();
     }
 
@@ -95,7 +123,13 @@ public class ConfigImpl extends ConfigComponent {
         return vmjExchange.getPayload();
     }
 
+    // Disbursement Request Body
+
     public Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody){
+        throw new UnsupportedOperationException();
+    }
+
+    public void validateBaseAgentDisbursementRequestBody(Map<String, Object> requestBody) {
         throw new UnsupportedOperationException();
     }
 
@@ -106,7 +140,13 @@ public class ConfigImpl extends ConfigComponent {
     public Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
+
+    public void validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
+        throw new UnsupportedOperationException();
+    }
     
+    // Payment Request Body
+
     public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
@@ -123,11 +163,11 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getCardRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getDirectDebitRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
@@ -139,51 +179,63 @@ public class ConfigImpl extends ConfigComponent {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
+    public Map<String, Object> getQRCodeRequestBody(Map<String, Object> requestBody){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getDebitCardResponse(String rawResponse, int id){
+    // Payment Response
+
+    public Map<String, Object> getPaymentLinkResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getCreditCardResponse(String rawResponse, int id){
+    public Map<String, Object> getCardResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getInvoiceResponse(String rawResponse, int id){
+    public Map<String, Object> getDirectDebitResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getEWalletResponse(String rawResponse, int id){
+    public Map<String, Object> getInvoiceResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getPaymentRoutingResponse(String rawResponse, int id){
+    public Map<String, Object> getEWalletResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getRetailOutletResponse(String rawResponse, int id){
+    public Map<String, Object> getPaymentRoutingResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id){
+    public Map<String, Object> getRetailOutletResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getDisbursementResponse(String rawResponse){
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse){
+    public Map<String, Object> getQRCodeResponse(String rawResponse, String id) {
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse){
+    // Disbursement Response
+
+    public Map<String, Object> getDisbursementResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 
-    public Map<String, Object> getAgentDisbursementResponse(String rawResponse){
+    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse, String id){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse, String id){
+        throw new UnsupportedOperationException();
+    }
+
+    public Map<String, Object> getAgentDisbursementResponse(String rawResponse, String id){
         throw new UnsupportedOperationException();
     }
 }

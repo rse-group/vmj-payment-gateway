@@ -11,20 +11,20 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
         this.record = record;
     }
 
-    public Payment createPayment(Map<String, Object> requestBody, int id){
-		return record.createPayment(requestBody, id);
+    public Payment createPayment(Map<String, Object> requestBody, String id, String status, String vendorGeneratedId) {
+		return record.createPayment(requestBody, id, status, vendorGeneratedId);
 	}
     
     public Payment createPayment(Map<String, Object> requestBody){
         return record.createPayment(requestBody);
     }
 
-    public HashMap<String, Object> getPayment(Map<String, Object> requestBody){
-        return record.getPayment(requestBody);
+    public HashMap<String, Object> getPayment(String id){
+        return record.getPayment(id);
     }
 
-    public List<HashMap<String, Object>> getAllPayment(Map<String, Object> requestBody){
-        return record.getAllPayment(requestBody);
+    public List<HashMap<String, Object>> getAllPayment(){
+        return record.getAllPayment();
     }
 
     public List<HashMap<String, Object>> deletePayment(Map<String, Object> requestBody){
@@ -43,11 +43,27 @@ public abstract class PaymentServiceDecorator extends PaymentServiceComponent{
         return record.sendTransaction(requestBody);
     }
      
-    public Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody){
-        return record.checkPaymentStatus(requestBody);
+    public Map<String, Object> checkPaymentStatus(String id){
+        return record.checkPaymentStatus(id);
     }
 
-    public HashMap<String, Object> getPaymentById(int id){
+    public HashMap<String, Object> getPaymentById(String id){
         return record.getPaymentById(id);
+    }
+    
+    public String validateVendorName(String vendorName) {
+        return record.validateVendorName(vendorName);
+    }
+    
+    public double validateAmount(Object amountObject) {
+        return record.validateAmount(amountObject);
+    }
+    
+    public String validateId(String id) {
+        return record.validateId(id);
+    }
+
+    public void callback(VMJExchange vmjExchange) {
+        record.callback(vmjExchange);
     }
 }

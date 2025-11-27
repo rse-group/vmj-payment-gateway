@@ -10,6 +10,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -21,28 +22,39 @@ import vmj.routing.route.exceptions.*;
 
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import javax.persistence.PersistenceException;
 
 public class PaymentServiceImpl extends PaymentServiceComponent {
 	protected PaymentServiceComponent record;
 
-	public Payment createPayment(Map<String, Object> requestBody, int id) {
+	public Payment createPayment(Map<String, Object> requestBody, String id, String status, String vendorGeneratedId) {
 		String vendorName = (String) requestBody.get("vendor_name");
-		double amount = Double.parseDouble((String) requestBody.get("amount"));
+		double amount = ((Double) requestBody.get("amount")).doubleValue();
 		Payment transaction = PaymentFactory.createPayment("paymentgateway.payment.core.PaymentImpl",
-				id,
+				UUID.fromString(id),
 				vendorName,
-				amount);
+				amount,
+				status.toUpperCase(),
+				vendorGeneratedId);
 		sendTransaction(requestBody);
 		PaymentRepository.saveObject(transaction);
 		return transaction;
 	}
 	
 	public Payment createPayment(Map<String, Object> requestBody) {
-		String vendorName = (String) requestBody.get("vendor_name");
-		double amount = Double.parseDouble((String) requestBody.get("amount"));
+		String vendorName = this.validateVendorName((String) requestBody.get("vendor_name"));
+		double amount = this.validateAmount(requestBody.get("amount"));
+
+		UUID id = UUID.randomUUID();
+		String status = "MANUALLY_ADDED";
+		String vendorGeneratedId = "";
+
 		Payment transaction = PaymentFactory.createPayment("paymentgateway.payment.core.PaymentImpl",
+				id,		
 				vendorName,
-				amount);
+				amount,
+				status.toUpperCase(),
+				vendorGeneratedId);
 		sendTransaction(requestBody);
 		PaymentRepository.saveObject(transaction);
 		return transaction;
@@ -50,44 +62,57 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 
 	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
 		// to do implement this in deltas
-		return requestBody;
+		return null;
 	}
 	
-	public Map<String, Object> checkPaymentStatus(Map<String, Object> requestBody) {
-		String vendorName = (String) requestBody.get("vendor_name");
-		String Id = (String) requestBody.get("id");
+	public Map<String, Object> checkPaymentStatus(String id) {
+		String validatedId = this.validateId(id);
+		Payment payment = this.getObject(validatedId);
+		if (payment == null) {
+			throw new BadRequestException("Payment dengan ID " + validatedId + " tidak ditemukan");
+		}
+
+		String vendorName = payment.getVendorName();
 
 		Config config = ConfigFactory.createConfig(vendorName, ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
 		HttpClient client = HttpClient.newHttpClient();
 		final String[] paymentMethodHolder = {""};
 		
+		Map<String, Object> responseMap = new HashMap<>();
+		
 		PaymentRepository.executeQuery(session -> {
-			String sql = String.format("SELECT modulesequence FROM payment_comp WHERE idtransaction ='%s'", Id );
-			String result = (String) session.createNativeQuery(sql).getSingleResult();
-			
-			String[] modules = result.split(",");
-			paymentMethodHolder[0] = modules[modules.length - 1].trim();
+			String sql = String.format("SELECT modulesequence FROM payment_comp WHERE idtransaction ='%s'", validatedId );
+			try {
+                String result = (String) session.createNativeQuery(sql).getSingleResult();
+                String[] modules = result.split(",");
+                paymentMethodHolder[0] = modules[modules.length - 1].trim();
+            } catch (Exception  e) {
+                paymentMethodHolder[0] = "";
+            }
 		});
+
+		String tableName = paymentMethodHolder[0];
 		
-		String configUrl;
-		if (paymentMethodHolder[0].equals("paymentlink_impl") && vendorName.toLowerCase().equals("midtrans")){
-			configUrl = config.getProductEnv("PaymentStatus");
-		} else {
-			configUrl = config.getProductEnv("PaymentDetail");
+		System.out.println("paymentMethodHolder" + paymentMethodHolder);
+		Map<String, Object> paymentMap = new HashMap<>();
+		paymentMap.put("id", payment.getIdTransaction().toString());
+		paymentMap.put("vendorGeneratedId", payment.getVendorGeneratedId());
+
+		String featureName = tableName.replace("_impl", "");
+        String propertyName = String.format("%s_payment_detail", featureName);
+		
+		String configUrl = config.getProductEnv(propertyName);
+		if (configUrl == null) {
+			throw new BadRequestException("Payment detail URL is not configured");
 		}
-		
-		System.out.println(configUrl + paymentMethodHolder[0]);
-        configUrl = config.getPaymentDetailEndpoint(configUrl, Id);
-        HttpRequest request = (config.getBuilder(HttpRequest.newBuilder(),config.getHeaderParams()))
-				.uri(URI.create(configUrl))
-				.GET()
-				.build();
-        Map<String, Object> responseMap = new HashMap<>();
+        configUrl = config.getPaymentDetailEndpoint(configUrl, paymentMap);
+        HttpRequest request = config.createPaymentDetailEndpointRequestObject(configUrl, paymentMap, tableName);
 		try {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
-            responseMap = config.getPaymentStatusResponse(rawResponse, Id);
-		} catch (Exception e) {
+            responseMap = config.getPaymentStatusResponse(rawResponse, validatedId);
+            System.out.println("responseMap" + responseMap);
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
         return responseMap;
@@ -118,28 +143,28 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 		return resultList;
 	}
 	
-	public List<HashMap<String, Object>> getAllPayment(String tableName){
-		List<Payment> List = PaymentRepository.getAllObject(tableName);
+	public HashMap<String, Object> getPayment(String id){
+		String validatedId = this.validateId(id);
+		Payment paymentImpl = this.getObject(validatedId);
+		
+		HashMap<String, Object> paymentDataMap = new HashMap<>();
+		
+		if (paymentImpl == null) {
+	        throw new BadRequestException("Payment dengan ID " + validatedId + " tidak ditemukan");
+	    }
+		
+		return paymentImpl.toHashMap();
+	}
+	
+	public List<HashMap<String, Object>> getAllPayment() {
+		List<Payment> List = PaymentRepository.getAllObject("payment_impl");
 		return transformListToHashMap(List);
 	}
 	
-	public HashMap<String, Object> getPayment(Map<String, Object> requestBody){
-		int id = ((Double) requestBody.get("id")).intValue();
-		Payment paymentImpl = this.getObject(id);
-		HashMap<String, Object> paymentDataMap = paymentImpl.toHashMap();
-		return paymentDataMap;
-	}
-	
-	public List<HashMap<String, Object>> getAllPayment(Map<String, Object> requestBody){
-		String table = (String) requestBody.get("table_name");
-		List<Payment> List = PaymentRepository.getAllObject(table);
-		return transformListToHashMap(List);
-	}
-	
-	public HashMap<String, Object> getPaymentById(int id){
-		List<HashMap<String, Object>> paymentList = getAllPayment("payment_impl");
+	public HashMap<String, Object> getPaymentById(String id){
+		List<HashMap<String, Object>> paymentList = getAllPayment();
 		for (HashMap<String, Object> payment : paymentList){
-			int record_id = ((Double) payment.get("record_id")).intValue();
+			String record_id = (String) payment.get("record_id");
 			if (record_id == id){
 				return payment;
 			}
@@ -150,15 +175,15 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
 
 
 	public HashMap<String, Object> updatePayment(Map<String, Object> requestBody) {
+		String validatedId = this.validateId((String) requestBody.get("id"));
+		double amount = this.validateAmount(requestBody.get("amount"));
+		Payment payment = this.getObject(validatedId);
 
-		int id = ((Double) requestBody.get("id")).intValue();
-		Payment payment = this.getObject(id);
-
-		try {
-			//	Implement the update
-		} catch (Exception e){
-			e.printStackTrace();
+		if (payment == null) {
+			throw new BadRequestException("Payment dengan ID " + validatedId + " tidak ditemukan");
 		}
+
+		payment.setAmount(amount);
 
 		this.updateObject(payment);
 		
@@ -167,19 +192,48 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
     }
 	
 	public List<HashMap<String, Object>> deletePayment(Map<String, Object> requestBody){
-		int id = ((Double) requestBody.get("id")).intValue();
-		Payment payment = this.getObject(id);
-		this.deleteObject(id);
+		String validatedId = this.validateId((String) requestBody.get("id"));
+		Payment payment = this.getObject(validatedId);
+		
+		if (payment == null) {
+			throw new BadRequestException("Payment dengan ID " + validatedId + " tidak ditemukan");
+		}
 
-		return getAllPayment(requestBody);
+		final String[] paymentMethodHolder = {null};
+		PaymentRepository.executeQuery(session -> {
+			String sql = String.format("SELECT modulesequence FROM payment_comp WHERE idtransaction ='%s'", validatedId );
+			try {
+				String result = (String) session.createNativeQuery(sql).getSingleResult();
+				String[] modules = result.split(",");
+				paymentMethodHolder[0] = modules[modules.length - 1].trim();
+			} catch (Exception e) {
+				paymentMethodHolder[0] = "";
+			}
+		});
+
+		if (paymentMethodHolder[0].equals("payment_impl")) {
+			this.deleteObject(validatedId);
+			return getAllPayment();
+		}
+
+		final String[] targetId = {""};
+		PaymentRepository.executeQuery(session -> {
+			String sql = String.format("SELECT cast(idtransaction as varchar) FROM %s WHERE base_component_id = '%s'", paymentMethodHolder[0], validatedId );
+			targetId[0] = (String) session.createNativeQuery(sql).getSingleResult();
+		});
+
+		
+		this.deleteObject(targetId[0]);
+
+		return getAllPayment();
 	}
 	
-	public Payment getObject(int id) {
-        return PaymentRepository.getObject(id);
+	public Payment getObject(String id) {
+        return PaymentRepository.getObject(UUID.fromString(id));
     }
 
-    public void deleteObject(int id) {
-        PaymentRepository.deleteObject(id);
+    public void deleteObject(String id) {
+        PaymentRepository.deleteObject(UUID.fromString(id));
     }
 
     public void updateObject(Payment payment) {
@@ -189,4 +243,111 @@ public class PaymentServiceImpl extends PaymentServiceComponent {
     public List<Payment> getAllObject(String tableName) {
         return PaymentRepository.getAllObject(tableName);
     }
+
+	public void callback(VMJExchange vmjExchange) {
+		String workingDir = System.getProperty("user.dir");
+		List<File> propertyFiles = new ArrayList<>();
+
+		List<String> vendors = new ArrayList<>();
+
+		String[] targetFiles = { "oy.properties", "flip.properties", "midtrans.properties", "xendit.properties" };
+
+		// Iterate through target files
+		for (String targetFile : targetFiles) {
+			File file = new File(workingDir, targetFile);
+			if (file.exists()) {
+				String fileName = file.getName();
+				String nameBeforeDot = fileName.substring(0, fileName.indexOf('.'));
+				String capitalized = nameBeforeDot.substring(0, 1).toUpperCase() + nameBeforeDot.substring(1);
+				vendors.add(capitalized);
+			}
+		}
+
+		for (String vendor : vendors) {
+			try {
+				Config config = ConfigFactory.createConfig(vendor,
+						ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+				Map<String, Object> requestMap = config.getCallbackPaymentRequestBody(vmjExchange);
+
+				String idStr = (String) requestMap.get("id");
+				String vendorGeneratedIdStr = (String) requestMap.get("vendor_generated_id");
+				String status = (String) requestMap.get("status");
+
+				Payment payment = null;
+				if (idStr != null) {
+					payment = this.getObject(idStr);
+				} else {
+					List<Payment> payments = PaymentRepository.getAllObject("payment_impl");
+					for (Payment p : payments) {
+						if (p.getVendorGeneratedId().equals(vendorGeneratedIdStr)) {
+							payment = p;
+						}
+					}
+				}
+
+				if (payment == null) {
+					throw new BadRequestException("Payment record not found");
+				}
+
+				payment.setStatus(status.toUpperCase());
+		
+				this.updateObject(payment);
+			} catch (Exception e) {
+				System.err.println("Failed to process vendor: " + vendor);
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public String validateVendorName(String vendorName) {
+		if (vendorName == null) {
+			throw new BadRequestException("vendor_name tidak ditemukan pada payload.");
+		}
+		Set<String> vendorNames = new HashSet<>();
+		vendorNames.add("Flip");
+		vendorNames.add("Midtrans");
+		vendorNames.add("Xendit");
+		vendorNames.add("Oy");
+		
+		if (!vendorNames.contains(vendorName)) {
+			throw new BadRequestException("vendor_name tidak valid.");
+		}
+		return vendorName;	
+	}
+
+	public double validateAmount(Object amountObject) {
+		Double amount;
+		if (amountObject == null) {
+			throw new BadRequestException("amount tidak ditemukan pada payload.");
+		}
+		try {
+			amount = ((Double) amountObject);
+		} catch (Exception e) {
+			try {
+				String amountString = (String) amountObject;
+				amount = Double.valueOf(amountString);
+			} catch (Exception ex) {
+				throw new BadRequestException("amount tidak valid.");
+			}
+		}
+
+		if (amount < 0) {
+			throw new BadRequestException("amount tidak boleh negatif.");
+		}
+
+		return amount.doubleValue();
+	}
+
+	public String validateId(String id) {
+		if (id == null) {
+			throw new BadRequestException("id tidak ditemukan pada payload.");
+		}
+		try {
+			UUID.fromString(id);
+		} catch (Exception e) {
+			throw new BadRequestException("id tidak valid.");
+		}
+
+		return id;
+	}
 }

@@ -5,10 +5,16 @@ import paymentgateway.config.core.ConfigComponent;
 import paymentgateway.config.core.PropertiesReader;
 import paymentgateway.config.core.RequestBodyValidator;
 
+import java.net.http.HttpRequest;
+import java.net.URI;
 import java.util.*;
 import java.lang.reflect.Type;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import vmj.routing.route.VMJExchange;
+import vmj.routing.route.exceptions.BadRequestException;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -26,10 +32,14 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public String getPaymentDetailEndpoint(String configUrl,String Id){
-        configUrl = configUrl.replace("[id]", Id);
-        return configUrl;
-    }    
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
+        HttpRequest request = (this.getBuilder(HttpRequest.newBuilder(), this.getHeaderParams()))
+				.uri(URI.create(configUrl))
+				.GET()
+				.build();
+        
+        return request;
+    }
 
     @Override
     public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
@@ -38,22 +48,11 @@ public class MidtransConfiguration extends ConfigDecorator{
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         
+        System.out.println("rawResponseMap" + rawResponseMap);
         String status = rawResponseMap.get("transaction_status") != null
         	    ? (String) rawResponseMap.get("transaction_status")
         	    : (String) rawResponseMap.get("last_snap_transaction_status");
         
-        if (status.toLowerCase().equals(PaymentStatus.SETTLEMENT.getStatus()) || status.toLowerCase().equals(PaymentStatus.CAPTURE.getStatus())) {
-            status = PaymentStatus.SUCCESSFUL.getStatus();
-
-        }
-        else if (status.toLowerCase().equals(PaymentStatus.CANCEL.getStatus())){
-            status = PaymentStatus.CANCELLED.getStatus();
-
-        }
-        else if (status.toLowerCase().equals(PaymentStatus.FAIL.getStatus())){
-            status = PaymentStatus.FAILED.getStatus();
-        }
-
         response.put("status", status);
         response.put("id", id);
         return response;
@@ -62,22 +61,21 @@ public class MidtransConfiguration extends ConfigDecorator{
     @Override
     public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
         Map<String, Object> requestMap = new HashMap<>();
-        String id = (String) vmjExchange.getRequestBodyForm("order_id");
-        String status = (String) vmjExchange.getRequestBodyForm("transaction_status");
-        String[] parts = id.split("-");
-        String orderId = parts[0];
-  
-        if (status.equals(PaymentStatus.SETTLEMENT.getStatus()) || status.equals(PaymentStatus.CAPTURE.getStatus())) {
-            status = PaymentStatus.SUCCESSFUL.getStatus();
-        }
-        else if (status.equals(PaymentStatus.CANCEL.getStatus())){
-            status = PaymentStatus.CANCELLED.getStatus();
-        }
-        else if (status.equals(PaymentStatus.FAIL.getStatus())){
-            status = PaymentStatus.FAILED.getStatus();
+        Map<String, Object> requestBody = vmjExchange.getPayload();
+        String id = (String) requestBody.get("order_id");
+        String statusCode = (String) requestBody.get("status_code");
+        String grossAmount = String.valueOf(requestBody.get("gross_amount"));
+        String merchantServerKey = PropertiesReader.getProp(CONFIG_FILE, "serverKey");
+        String status = (String) requestBody.get("transaction_status");
+
+        String receivedSignatureKey = (String) requestBody.get("signature_key");
+        String signatureKey = encryptSHA512(String.format("%s%s%s%s", id, statusCode, grossAmount, merchantServerKey));
+
+        if (!receivedSignatureKey.equals(signatureKey)) {
+            throw new BadRequestException("Invalid signature key");
         }
 
-	    requestMap.put("id",orderId);
+	    requestMap.put("id", id);
 	    requestMap.put("status", status);
 	    return requestMap;
     }
@@ -89,21 +87,17 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> customer_details = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
         
-        int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        double amount = Double.parseDouble(amountStr);
+        String id = UUID.randomUUID().toString();
+
+        double amount = ((Double) requestBody.get("amount")).doubleValue();
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
         requestMap.put("transaction_details", transaction_details);
         requestMap.put( "customer_required",true);
 
-
-        String name = (String) requestBody.get("sender_name");
-        String email = (String) requestBody.get("email");
-        String title = (String) requestBody.get("title");
+        String name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_name");
+        String email = RequestBodyValidator.stringRequestBodyValidator(requestBody, "email");
+        String title = RequestBodyValidator.stringRequestBodyValidator(requestBody, "title");
         String[] arr = name.split(" ", 2);
         if(arr.length > 1){
             customer_details.put("first_name", arr[0]);
@@ -124,16 +118,9 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> cstore = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
-        int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        double amount = Double.parseDouble(amountStr);
-        String store = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "retail_outlet"
-        );
+        String id = UUID.randomUUID().toString();
+        double amount = ((Double) requestBody.get("amount")).doubleValue();
+        String store = RequestBodyValidator.stringRequestBodyValidator(requestBody, "retail_outlet");
 
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
@@ -153,17 +140,9 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> bank_transfer = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
-        int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        double amount = Double.parseDouble(amountStr);
-        String bank = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "bank"
-        );
-
+        String id = UUID.randomUUID().toString();
+        double amount = ((Double) requestBody.get("amount")).doubleValue();
+        String bank = RequestBodyValidator.stringRequestBodyValidator(requestBody, "bank");
 
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
@@ -183,23 +162,11 @@ public class MidtransConfiguration extends ConfigDecorator{
         Map<String, Object> customer_details = new HashMap<String, Object>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
-        int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-            
-        double amount = Double.parseDouble(amountStr);
-        String ewallet = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "ewallet_type"
-        );
- 
-        String phone = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "phone"
-        );
+        String id = UUID.randomUUID().toString();
 
+        double amount = ((Double) requestBody.get("amount")).doubleValue();
+        String ewallet = RequestBodyValidator.stringRequestBodyValidator(requestBody, "ewallet_type");
+        String phone = RequestBodyValidator.stringRequestBodyValidator(requestBody, "phone");
 
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
@@ -214,45 +181,15 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody){
-        Map<String, Object> requestMap = new HashMap<>();
-        Map<String, Object> item_details = new HashMap<>();
-        Map<String, Object> transaction_details = new HashMap<String, Object>();
-
-        int id = generateId();
-        double amount = Double.parseDouble((String) requestBody.get("amount"));
-        String type = (String) requestBody.get("payment_type");
-
-
-        transaction_details.put("order_id", String.valueOf(id));
-        transaction_details.put("gross_amount", amount);
-
-        item_details.put("name","test item");
-        item_details.put("quantity",1);
-        item_details.put("price",amount);
-        requestMap.put("item_details",item_details);
-
-        requestMap.put("payment_type", type);
-        requestMap.put("transaction_details", transaction_details);
-        requestMap.put("id",id);
-        return requestMap;
-    }
-
-    @Override
-    public Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody){
+    public Map<String, Object> getCardRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
         Map<String, Object> credit_card = new HashMap<>();
         Map<String, Object> transaction_details = new HashMap<String, Object>();
 
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
         
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        double amount = Double.parseDouble(amountStr);
+        double amount = ((Double) requestBody.get("amount")).doubleValue();
         String token = (String) requestBody.get("token_id");
-
 
         transaction_details.put("order_id", String.valueOf(id));
         transaction_details.put("gross_amount", amount);
@@ -269,26 +206,14 @@ public class MidtransConfiguration extends ConfigDecorator{
     public String constructUrlParam(String serviceName, Map<String, Object> requestBody) {
         String baseUrl = (String) PropertiesReader.getProp(CONFIG_FILE, "base_url");
         String apiEndpoint = "";
+
+        String cardNumber = RequestBodyValidator.stringRequestBodyValidator(requestBody, "card_number");
+        String cardExpMonth = RequestBodyValidator.stringRequestBodyValidator(requestBody, "card_exp_month");
+        String cardExpYear = RequestBodyValidator.stringRequestBodyValidator(requestBody, "card_exp_year");
+        String cardCVV = RequestBodyValidator.stringRequestBodyValidator(requestBody, "card_cvv");
     
         // Determine the appropriate endpoint based on the service name
-        if (serviceName.equals("CreditCardToken")){
-            String cardNumber = RequestBodyValidator.stringRequestBodyValidator(
-                requestBody,
-                "card_number"
-            );
-            String cardExpMonth = RequestBodyValidator.stringRequestBodyValidator(
-                requestBody,
-                "card_exp_month"
-            );
-            String cardExpYear = RequestBodyValidator.stringRequestBodyValidator(
-                requestBody,
-                "card_exp_year"
-            );
-            String cardCVV = RequestBodyValidator.stringRequestBodyValidator(
-                requestBody,
-                "card_cvv"
-            );
-
+        if (serviceName.equals("CardToken")){
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "token") 
                 + "?client_key=" + PropertiesReader.getProp(CONFIG_FILE, "clientKey") 
                 + "&card_number=" + cardNumber 
@@ -309,69 +234,88 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
     
     @Override
-    public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
+    public Map<String, Object> getPaymentLinkResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (rawResponseMap.containsKey("error_messages")) {
+            List<String> errorMessages = (List<String>) rawResponseMap.get("error_messages");
+			String errorMessageString = String.join(", ", errorMessages);
+        	throw new BadRequestException(errorMessageString);
+        }
+
         String url = (String) rawResponseMap.get("payment_url");
+        response.put("status", ""); // no status is provided in the request body
+        response.put("vendor_generated_id", ""); // no transaction id provided in the request body
         response.put("url", url);
         response.put("id", id);
         return response;
     }
 
     @Override
-    public Map<String, Object> getDebitCardResponse(String rawResponse, int id){
-        Map<String, Object> response = new HashMap<>();
-        Gson gson = new Gson();
-        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
-        Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
-        String url = (String) rawResponseMap.get("redirect_url");
-        String paymentType = (String) rawResponseMap.get("payment_type");
-        response.put("payment_type", paymentType);
-        response.put("redirect_url", url);
-        response.put("id", id);
-        return response;
-    }
-
-    @Override
-    public Map<String, Object> getCreditCardResponse(String rawResponse, int id){
+    public Map<String, Object> getCardResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         String status = "";
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String statusCode = (String) rawResponseMap.get("status_code");
-        if (statusCode.equals("200")) {
-        	status = "BERHASIL";
+        
+        if (!statusCode.equals("200") && !statusCode.equals("201")) {
+            String errorMessageString = (String) rawResponseMap.get("status_message");
+            throw new BadRequestException(errorMessageString);
         }
-        response.put("status", status);
+        
+        String transactionStatus = (String) rawResponseMap.get("transaction_status");
+        String vendorGeneratedId = (String) rawResponseMap.get("transaction_id");
+        response.put("status", transactionStatus);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("id", id);
         return response;
     }
 
     @Override
-    public Map<String, Object> getRetailOutletResponse(String rawResponse, int id){
+    public Map<String, Object> getRetailOutletResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String retailPaymentCode = (String) rawResponseMap.get("payment_code");
+        if (retailPaymentCode == null) {
+            String statusMessage = (String) rawResponseMap.get("status_message");
+            throw new BadRequestException(statusMessage);
+        }
+        String transactionStatus = (String) rawResponseMap.get("transaction_status");
+        String vendorGeneratedId = (String) rawResponseMap.get("transaction_id");
+        response.put("status", transactionStatus);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("retail_payment_code", retailPaymentCode);
         response.put("id", id);
         return response;
     }
-
+    
     @Override
-    public Map<String, Object> getEWalletResponse(String rawResponse, int id){
+    public Map<String, Object> getEWalletResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String paymentType = (String) rawResponseMap.get("payment_type");
+        if (paymentType == null) {
+            List<String> errorMessages = (List<String>) rawResponseMap.get("validation_messages");
+			String errorMessageString = String.join(", ", errorMessages);
+        	throw new BadRequestException(errorMessageString);
+        }
+        String transactionStatus = (String) rawResponseMap.get("transaction_status");
         List<Map<String, Object>> actions = (List<Map<String, Object>>) rawResponseMap.get("actions");
         String url = (String) actions.get(0).get("url");
 
+        String vendorGeneratedId = (String) rawResponseMap.get("transaction_id");
+
+        response.put("status", transactionStatus);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("payment_type", paymentType);
         response.put("url", url);
         response.put("id", id);
@@ -379,16 +323,28 @@ public class MidtransConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id){
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        String statusCode = (String) rawResponseMap.get("status_code");
+        if (!statusCode.equals("200") && !statusCode.equals("201")) {
+            String errorMessageString = (String) rawResponseMap.get("status_message");
+            throw new BadRequestException(errorMessageString);
+        }
+
         String vaNumber = (String) rawResponseMap.get("permata_va_number");
         if (vaNumber == null) {
             List<Map<String, Object>> vaNums = (List<Map<String, Object>>) rawResponseMap.get("va_numbers");
             vaNumber = (String) vaNums.get(0).get("va_number");
         }
+        String transactionStatus = (String) rawResponseMap.get("transaction_status");
+        String vendorGeneratedId = (String) rawResponseMap.get("transaction_id");
+
+        response.put("status", transactionStatus);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("va_number", vaNumber);
         response.put("id", id);
         return response;
@@ -408,8 +364,11 @@ public class MidtransConfiguration extends ConfigDecorator{
         else if (serviceName.equals("PaymentStatus")){
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "paymentstatus");
         }
-        else if (serviceName.equals("CreditCardToken")){
+        else if (serviceName.equals("CardToken")){
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "token") + "?client_key=" + PropertiesReader.getProp(CONFIG_FILE, "clientKey");
+        }
+        else if (serviceName.endsWith("payment_detail")) {
+            apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, serviceName);
         }
         else {
             apiEndpoint = (String) PropertiesReader.getProp(CONFIG_FILE, "apiendpoint");
@@ -430,5 +389,38 @@ public class MidtransConfiguration extends ConfigDecorator{
         headerParams.put("content-type",contentType);
         headerParams.put("accept", accept);
         return headerParams;
+    }
+
+    // Reference: https://www.geeksforgeeks.org/sha-512-hash-in-java/
+    public String encryptSHA512(String input)
+    {
+        try {
+            // getInstance() method is called with algorithm SHA-512
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+
+            // digest() method is called
+            // to calculate message digest of the input string
+            // returned as array of byte
+            byte[] messageDigest = md.digest(input.getBytes());
+
+            // Convert byte array into signum representation
+            BigInteger no = new BigInteger(1, messageDigest);
+
+            // Convert message digest into hex value
+            String hashtext = no.toString(16);
+
+            // Ensure the hash is padded to 128 characters
+            while (hashtext.length() < 128) {
+                hashtext = "0" + hashtext;
+            }
+
+            // return the HashText
+            return hashtext;
+        }
+
+        // For specifying wrong message digest algorithms
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

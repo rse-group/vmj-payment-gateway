@@ -13,33 +13,43 @@ import java.util.Map;
 import java.util.Random;
 
 import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
 import java.lang.reflect.Type;
 
+import vmj.hibernate.integrator.RepositoryUtil;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
 
-import paymentgateway.payment.PaymentFactory;
-import paymentgateway.payment.core.Payment;
-import paymentgateway.payment.core.PaymentServiceDecorator;
-import paymentgateway.payment.core.PaymentImpl;
-import paymentgateway.payment.core.PaymentServiceComponent;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
+import paymentgateway.payment.core.Payment;
+import paymentgateway.payment.core.PaymentServiceDecorator;
+import paymentgateway.payment.core.PaymentServiceComponent;
+import paymentgateway.payment.PaymentFactory;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
+	RepositoryUtil<PaymentImpl> paymentRoutingRepository;
 	
 	public PaymentServiceImpl (PaymentServiceComponent record) {
         super(record);
+		this.paymentRoutingRepository = new RepositoryUtil<PaymentImpl>(paymentgateway.payment.paymentrouting.PaymentImpl.class);
     }
 
 	public Payment createPayment(Map<String, Object> requestBody) {
+		record.validateVendorName((String) requestBody.get("vendor_name"));
+		double amount = record.validateAmount(requestBody.get("amount"));
+		requestBody.put("amount", amount);
+
 		Map<String, Object> response = sendTransaction(requestBody);
 
-		int id = (int) response.get("id");
+		String id = (String) response.get("id");
 		String paymentCheckoutUrl = (String) response.get("payment_checkout_url");
+		String status = (String) response.get("status");
+		String vendorGeneratedId = (String) response.get("vendor_generated_id");
 
-		Payment transaction = record.createPayment(requestBody, id);
+		Payment transaction = record.createPayment(requestBody, id, status, vendorGeneratedId);
 		Payment paymentRoutingTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.paymentrouting.PaymentImpl",
 				transaction,
@@ -57,7 +67,7 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		
 		Gson gson = new Gson();
 		Map<String, Object> requestMap = config.getPaymentRoutingRequestBody(requestBody);
-		int id = ((Integer) requestMap.get("id")).intValue();
+		String id = (String) requestMap.get("id");
 		requestMap.remove("id");
 		String requestString = config.getRequestString(requestMap);
 		String configUrl = config.getProductEnv("PaymentRouting");
@@ -76,12 +86,36 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 			String rawResponse = response.body().toString();
 			System.out.println("rawResponse " + rawResponse);
 			responseMap = config.getPaymentRoutingResponse(rawResponse, id);
-		} catch (Exception e) {
+		} catch (IOException | InterruptedException e) {
 			System.out.println(e);
 		}
 
 		return responseMap;
 	}
 
+	public List<PaymentImpl> getByVendorName(Map<String, String> queryParams) {
+		String vendorName = (String) queryParams.get("vendor_name");
+		record.validateVendorName(vendorName);
+		List<PaymentImpl> result = new ArrayList<>();
+		List<PaymentImpl> paymentRoutings = paymentRoutingRepository.getAllObject("paymentrouting_impl");
+		for(PaymentImpl paymentRouting : paymentRoutings){
+			if (paymentRouting.getVendorName().equals(vendorName)){
+				result.add(paymentRouting);
+			}
+		}
+		return result;
+	}
+
+	public HashMap<String, Object> getById(Map<String, String> queryParams) {
+		String id = (String) queryParams.get("id");
+		String validatedId = record.validateId(id);
+		List<PaymentImpl> paymentRoutings = paymentRoutingRepository.getAllObject("paymentrouting_impl");
+		for(PaymentImpl paymentRouting : paymentRoutings){
+			if (paymentRouting.getIdTransaction().toString().equals(validatedId)){
+				return paymentRouting.toHashMap();
+			}
+		}
+		throw new BadRequestException("Payment routing dengan ID " + validatedId + " tidak ditemukan");
+	}
 }
 

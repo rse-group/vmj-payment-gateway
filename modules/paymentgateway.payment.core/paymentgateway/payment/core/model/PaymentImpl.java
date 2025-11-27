@@ -19,20 +19,22 @@ import javax.persistence.OneToMany;
 @Table(name="payment_impl")
 public class PaymentImpl extends PaymentComponent {
 
-	public PaymentImpl(int idTransaction, String vendorName, double amount) {
+	public PaymentImpl(UUID idTransaction, String vendorName, double amount, String status, String vendorGeneratedId) {
 		this.idTransaction = idTransaction;
 		this.vendorName = vendorName;
 		this.amount = amount;
+		this.status = status;
+		this.vendorGeneratedId = vendorGeneratedId;
 	}
 
 	public  PaymentImpl(){
 
 	}
-	public int getId() {
+	public UUID getId() {
 		return idTransaction;
 	}
 
-	public void setId(int id) {
+	public void setId(UUID id) {
 		this.idTransaction = id;
 	}
 
@@ -52,11 +54,34 @@ public class PaymentImpl extends PaymentComponent {
 		this.vendorName = vendorName;
 	}
 
+	public String getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Date getCreatedAt() {
+		return this.createdAt;
+	}
+
+	public String getVendorGeneratedId() {
+		return this.vendorGeneratedId;
+	}
+
+	public void setVendorGeneratedId(String vendorGeneratedId) {
+		this.vendorGeneratedId = vendorGeneratedId;
+	}
+
 	public HashMap<String,Object> toHashMap() {
 		HashMap<String,Object> interfaceMap = new HashMap<String,Object>();
-		interfaceMap.put("id", getId());
+		interfaceMap.put("id", getId().toString());
+		interfaceMap.put("vendorGeneratedId", getVendorGeneratedId());
 		interfaceMap.put("vendorName", getVendorName());
 		interfaceMap.put("amount", getAmount());
+		interfaceMap.put("status", getStatus());
+		interfaceMap.put("createdAt", getCreatedAt().toString());
 		return interfaceMap;
 	}
 }

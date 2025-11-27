@@ -16,18 +16,16 @@ public abstract class PaymentDecorator extends PaymentComponent{
 	protected PaymentComponent record;
 		
 	public PaymentDecorator (PaymentComponent record) {
-		String generateUUIDNo = String.format("%010d",new BigInteger(UUID.randomUUID().toString().replace("-",""),16));
-		String unique_no = generateUUIDNo.substring(0,5);
 		this.record = record;
-		this.idTransaction = Integer.parseInt(unique_no);
+		this.idTransaction = UUID.randomUUID();
 	}
 
 	public PaymentDecorator () {
 	}
-	public int getIdTransaction() {
+	public UUID getIdTransaction() {
 		return record.getIdTransaction();
 	}
-	public void setIdTransaction(int idTransaction) {
+	public void setIdTransaction(UUID idTransaction) {
 		record.setIdTransaction(idTransaction);
 	}
 	public double getAmount() {
@@ -42,6 +40,26 @@ public abstract class PaymentDecorator extends PaymentComponent{
 	}
 	public void setVendorName(String vendorName){
 		record.setVendorName(vendorName);
+	}
+
+	public String getStatus() {
+		return record.getStatus();
+	}
+
+	public void setStatus(String status) {
+		record.setStatus(status);
+	}
+
+	public String getVendorGeneratedId() {
+		return record.getVendorGeneratedId();
+	}
+
+	public void setVendorGeneratedId(String vendorGeneratedId) {
+		record.setVendorGeneratedId(vendorGeneratedId);
+	}
+
+	public Date getCreatedAt() {
+		return record.getCreatedAt();
 	}
 }
 

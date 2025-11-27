@@ -62,5 +62,15 @@ The generated application is placed in directory `src-gen`
 4. Click Run
 5. If succeed, the product is ready and a list of avalaible endpoints is printed on the console, for example:
     ```
-    http://localhost:7776/call/disbursement/agent
+    http://localhost:7776/call/agent
     ```
+
+## Postman Collection Generation for a Product
+In the product composition flow in the [API for the Software as a Service web for product creation and deployment](https://gitlab.com/RSE-Lab-Fasilkom-UI/PricesIDE/payment-gateway/payment-gateway-saas-cli), the Postman collection of the product is generated and saved in the `postman-collections-gen` directory that is located in the root directory of the `vmj-payment-gateway` project. The name of the file is in the format `<product-name>_postman_collection.json`. The creation of the Postman collection of the product is done by filtering the collection items from the main Postman collection file (which is the `paymentgateway_postman_collection.json` file located in the root directory of the `vmj-payment-gateway` project) based on the endpoints that are in the product. The `paymentgateway_postman_collection.json` contains all of the positive and negative cases of the endpoints that are in the VMJ Payment Gateway product line (except the callback endpoints).
+
+If there are new endpoints in this product line, the `paymentgateway_postman_collection.json` file needs to be updated. This can be done by importing the file into Postman and adding the positive and negative case of the new endpoints.
+
+## Swagger UI Configuration Generation for a Product
+In this product composition flow in [API for the Software as a Service web for product creation and deployment](https://gitlab.com/RSE-Lab-Fasilkom-UI/PricesIDE/payment-gateway/payment-gateway-saas-cli), the Swagger UI configuration of the product is generated and saved in the `swagger-configs-gen` directory that is located in the root directory of the `vmj-payment-gateway` project. There are 2 files that are generated, which are `<product-name>-swagger-ui.html` and `<product-name>-swagger-ui-initializer.js`. These 2 files are needed to display the Swagger UI, which contains the endpoints that are in the product. The creation of the Swagger UI configuration for a product is done by filtering the endpoint configurations from the main OpenAPI specification file (which is the `openapi_spec.json` file located in the root directory of the `vmj-payment-gateway` project) based on the endpoints that are in the product. The `openapi_spec.json` contains all of the endpoints that are in the VMJ Payment Gateway product line (except the callback endpoints).
+
+If there are new endpoints in this product lline, the `openapi_spec.json` file needs to be updated. This can be done by manually modifying the file.

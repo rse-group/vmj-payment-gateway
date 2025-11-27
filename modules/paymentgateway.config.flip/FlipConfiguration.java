@@ -7,6 +7,8 @@ import paymentgateway.config.core.RequestBodyValidator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.net.http.HttpRequest;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -24,7 +26,7 @@ public class FlipConfiguration extends ConfigDecorator{
     public FlipConfiguration(ConfigComponent record) {
         super(record);
     }
-
+    
     @Override
     public String getVendorName(){
         return "Flip";
@@ -45,10 +47,11 @@ public class FlipConfiguration extends ConfigDecorator{
     	Map<String, Object> decodedData = gson.fromJson(data, Map.class);
     	status = (String) decodedData.get("status");
     	id = String.valueOf(((Double) decodedData.get("bill_link_id")).intValue());
-        if (token.equals(flipToken)) {
-            requestMap.put("id",id);
-            requestMap.put("status", status);
-        }     
+        if (!token.equals(flipToken)) {
+            throw new BadRequestException("Invalid callback token");
+        }
+        requestMap.put("vendor_generated_id",id);
+        requestMap.put("status", status);
         return requestMap;
     }
     
@@ -66,10 +69,11 @@ public class FlipConfiguration extends ConfigDecorator{
     	Map<String, Object> decodedData = gson.fromJson(data, Map.class);
     	status = (String) decodedData.get("status");
     	id = String.valueOf(((Double) decodedData.get("id")).intValue());
-        if (token.equals(flipToken)) {
-            requestMap.put("id",id);
-            requestMap.put("status", status);
+        if (!token.equals(flipToken)) {
+            throw new BadRequestException("Invalid callback token");
         }
+        requestMap.put("vendor_generated_id",id);
+            requestMap.put("status", status);
 
         return requestMap;
     }
@@ -85,7 +89,7 @@ public class FlipConfiguration extends ConfigDecorator{
             requestBody,
             new String[]{ "account_number", "beneficiary_account_number" }
         );
-        double amount = RequestBodyValidator.doubleRequestBodyValidator(requestBody, "amount");
+        double amount = RequestBodyValidator.nonNegativeDoubleRequestBodyValidator(requestBody, "amount");
 
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("vendor_name", vendor_name);
@@ -94,6 +98,11 @@ public class FlipConfiguration extends ConfigDecorator{
         requestMap.put("amount", amount);
 
         return requestMap;
+    }
+
+    @Override
+    public void validateBaseAgentDisbursementRequestBody(Map<String, Object> requestBody) {
+        RequestBodyValidator.intRequestBodyValidator(requestBody, "agent_id");
     }
 
     @Override
@@ -141,11 +150,32 @@ public class FlipConfiguration extends ConfigDecorator{
 
         return requestMap;
     }
-    
+
     @Override
-    public String getPaymentDetailEndpoint(String configUrl,String id){
-        configUrl = configUrl.replace("[id]", id);
-        return configUrl;
+    public void validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "destination_country");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "source_country");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "transaction_type");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "beneficiary_account_number");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "beneficiary_bank_id");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "beneficiary_full_name");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_place_of_birth");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_date_of_birth");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_identity_type");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_identity_number");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_email");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_city");
+        RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_phone_number");
+    }
+
+    @Override
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
+        HttpRequest request = (this.getBuilder(HttpRequest.newBuilder(), this.getHeaderParams()))
+				.uri(URI.create(configUrl))
+				.GET()
+				.build();
+        
+        return request;
     }
 
     @Override
@@ -159,20 +189,26 @@ public class FlipConfiguration extends ConfigDecorator{
             if (!errors.isEmpty()) {
                 Map<String, Object> firstError = errors.get(0);
                 String errorMessage = (String) firstError.get("message");
-                response.put("error", errorMessage);
-                return response;
+                throw new BadRequestException(errorMessage);
             }
         }
+        
         ArrayList<Object> dataList = (ArrayList<Object>) rawResponseMap.get("data");
-        if (!dataList.isEmpty()) {
-            Map<String, Object> dataObject = (Map<String, Object>) dataList.get(0);
-            String status = (String) dataObject.get("status");
+
+        if (dataList == null) {
+            String status = (String) rawResponseMap.get("status");
             response.put("status", status);
-            response.put("id", id);
         } else {
-            response.put("id", id);
-            response.put("status", PaymentStatus.PENDING.getStatus());
+            if (!dataList.isEmpty()) {
+                Map<String, Object> dataObject = (Map<String, Object>) dataList.get(0);
+                String status = (String) dataObject.get("status");
+                response.put("status", status);
+            } else {
+                throw new BadRequestException("Status not found");
+            }
         }
+
+        response.put("id", id);
         return response;
     }
 
@@ -187,32 +223,53 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getDisbursementResponse(String rawResponse){
+    public Map<String, Object> getDisbursementResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (rawResponseMap.containsKey("errors")) {
+            String errorMessageString = getErrorMessagesFromResponse(rawResponseMap);
+            throw new BadRequestException(errorMessageString);
+        }
         
-        int id = ((Double) rawResponseMap.get("id")).intValue();
+        int vendorGeneratedId = ((Double) rawResponseMap.get("id")).intValue();
+        String vendorGeneratedIdString = String.valueOf(vendorGeneratedId);
         int userId = ((Double) rawResponseMap.get("user_id")).intValue();
         String status = (String) rawResponseMap.get("status");
         response.put("status", status);
         response.put("user_id", userId);
+        response.put("vendor_generated_id", vendorGeneratedIdString);
         response.put("id", id);
         return response;
     }
 
     @Override
-    public Map<String, Object> getAgentDisbursementResponse(String rawResponse){
+    public Map<String, Object> getAgentDisbursementResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (rawResponseMap.containsKey("errors")) {
+            String errorMessageString = getErrorMessagesFromResponse(rawResponseMap);
+            throw new BadRequestException(errorMessageString);
+        }
+
+        
+        if (rawResponseMap.containsKey("message")) {
+            String errorMessageString = (String) rawResponseMap.get("message");
+            throw new BadRequestException(errorMessageString);
+        }
+        
         int agentId = ((Double) rawResponseMap.get("agent_id")).intValue();
         String direction = (String) rawResponseMap.get("direction");
-        int id = ((Double) rawResponseMap.get("id")).intValue();
+        int vendorGeneratedId = ((Double) rawResponseMap.get("id")).intValue();
+        String vendorGeneratedIdString = String.valueOf(vendorGeneratedId);
         String status = (String) rawResponseMap.get("status");
         response.put("status", status);
+        response.put("vendor_generated_id", vendorGeneratedIdString);
         response.put("id", id);
         response.put("agent_id", agentId);
         response.put("user_id", agentId);
@@ -221,11 +278,17 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse){
-        Map<String, Object> response = getDisbursementResponse(rawResponse);
+    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse, String id){
+        Map<String, Object> response = getDisbursementResponse(rawResponse, id);
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        
+        if (rawResponseMap.containsKey("errors")) {
+            String errorMessageString = getErrorMessagesFromResponse(rawResponseMap);
+            throw new BadRequestException(errorMessageString);
+        }
+        
         Map<String, Object> senderMap = (Map<String, Object>) rawResponseMap.get("sender");
         String senderName = (String) senderMap.get("sender_name");
         String senderAddress = (String) senderMap.get("sender_address");
@@ -242,11 +305,17 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse){
-        Map<String, Object> response = getDisbursementResponse(rawResponse);
+    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse, String id){
+        Map<String, Object> response = getDisbursementResponse(rawResponse, id);
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        
+        if (rawResponseMap.containsKey("errors")) {
+            String errorMessageString = getErrorMessagesFromResponse(rawResponseMap);
+            throw new BadRequestException(errorMessageString);
+        }
+        
         double exchangeRate = (double) rawResponseMap.get("exchange_rate");
         double fee = (double) rawResponseMap.get("fee");
         double amount = (double) rawResponseMap.get("amount");
@@ -254,32 +323,31 @@ public class FlipConfiguration extends ConfigDecorator{
         String destinationCountry = (String) rawResponseMap.get("destination_country");
         String beneficiaryCurrencyCode = (String) rawResponseMap.get("beneficiary_currency_code");
 
+        Map<String, Object> beneficiaryMap = (Map<String, Object>) rawResponseMap.get("beneficiary");
+        String beneficiaryBankName = (String) beneficiaryMap.get("bank");
+        String beneficiaryBankAccountNumber = (String) beneficiaryMap.get("bank_account_number");
+
         response.put("exchange_rate", exchangeRate);
         response.put("fee", fee);
         response.put("amount", amount);
         response.put("source_country", sourceCountry);
         response.put("destination_country", destinationCountry);
         response.put("beneficiary_currency_code", beneficiaryCurrencyCode);
+        response.put("bank", beneficiaryBankName);
+        response.put("bank_account_number", beneficiaryBankAccountNumber);
         return response;
     }
 
     @Override
     public Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody){
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
         Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) requestBody.get("title");
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
-        String senderName = (String) requestBody.get("name");
-        String senderEmail = (String) requestBody.get("email");
-        String senderBank = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "bank"
-        );
-
+        int amount = ((Double) requestBody.get("amount")).intValue();
+        String title = RequestBodyValidator.stringRequestBodyValidator(requestBody, "title");
+        String senderName = RequestBodyValidator.stringRequestBodyValidator(requestBody, "name");
+        String senderEmail = RequestBodyValidator.stringRequestBodyValidator(requestBody, "email");
+        String senderBank = RequestBodyValidator.stringRequestBodyValidator(requestBody, "bank");
+        
         requestMap.put("id",id);
         requestMap.put("title", title);
         requestMap.put("type", PaymentType.SINGLE.getValue());
@@ -294,17 +362,28 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id) {
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, String id) {
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (rawResponseMap.containsKey("errors")) {
+            String errorMessageString = getErrorMessagesFromResponse(rawResponseMap);
+            throw new BadRequestException(errorMessageString);
+        }
+
         Map<String, Object> billPayment = (Map<String, Object>) rawResponseMap.get("bill_payment");
         Map<String, Object> receiverBankAccount = (Map<String, Object>) billPayment.get("receiver_bank_account");
+        String status = (String) billPayment.get("status");
         String vaNumber = (String) receiverBankAccount.get("account_number");
-        int billId = (int) ((Double) rawResponseMap.get("link_id")).doubleValue();
+    	int linkId = ((Double) rawResponseMap.get("link_id")).intValue();
+        String linkIdString = String.valueOf(linkId);
+
         response.put("va_number", vaNumber);
-        response.put("id", billId);
+        response.put("status", status);
+        response.put("vendor_generated_id", linkIdString);
+        response.put("id", id);
         
         return response;
     }
@@ -312,26 +391,15 @@ public class FlipConfiguration extends ConfigDecorator{
 
     @Override
     public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
         Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) requestBody.get("title");
 
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
-
-        String senderName = (String) requestBody.get("name");
-        String senderEmail = (String) requestBody.get("email");
-        String senderBank = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "ewallet_type"
-        );
-        String senderPhoneNumber = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "phone"
-        );
+        int amount = ((Double) requestBody.get("amount")).intValue();
+        String title = RequestBodyValidator.stringRequestBodyValidator(requestBody, "title");
+        String senderName = RequestBodyValidator.stringRequestBodyValidator(requestBody, "name");
+        String senderEmail = RequestBodyValidator.stringRequestBodyValidator(requestBody, "email");
+        String senderBank = RequestBodyValidator.stringRequestBodyValidator(requestBody, "ewallet_type");
+        String senderPhoneNumber = RequestBodyValidator.stringRequestBodyValidator(requestBody, "phone");
 
         requestMap.put("id",id);
         requestMap.put("title", title);
@@ -349,38 +417,45 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getEWalletResponse(String rawResponse, int id){
+    public Map<String, Object> getEWalletResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (rawResponseMap.containsKey("errors")) {
+            String errorMessageString = getErrorMessagesFromResponse(rawResponseMap);
+            throw new BadRequestException(errorMessageString);
+        }
+
         String url = (String) rawResponseMap.get("payment_url");
 
         Map<String, Object> billPayment = (Map<String, Object>) rawResponseMap.get("bill_payment");
 
         String paymentType = (String) billPayment.get("sender_bank");
+        String status = (String) billPayment.get("status");
         String phoneNumber = (String) rawResponseMap.get("user_phone");
-        int billId = (int) ((Double) rawResponseMap.get("link_id")).doubleValue();
+    	int linkId = ((Double) rawResponseMap.get("link_id")).intValue();
+        String linkIdString = String.valueOf(linkId);
+
         response.put("phone_number",phoneNumber);
         response.put("url", url);
         response.put("payment_type",paymentType);
-        response.put("id", billId);
+        response.put("status", status);
+        response.put("vendor_generated_id", linkIdString);
+        response.put("id", id);
         return response;
     }
 
 
     @Override
     public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
-        int id = generateId();
+        String id = UUID.randomUUID().toString();
         Map<String, Object> requestMap = new HashMap<>();
-        String title = (String) requestBody.get("title");
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
-        String senderEmail = (String) requestBody.get("email");
-        String senderName = (String) requestBody.get("sender_name");
+        int amount = ((Double) requestBody.get("amount")).intValue();
+        String title = RequestBodyValidator.stringRequestBodyValidator(requestBody, "title");
+        String senderName = RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_name");
+        String senderEmail = RequestBodyValidator.stringRequestBodyValidator(requestBody, "email");
         
         requestMap.put("id",id);
         requestMap.put("title", title);
@@ -394,15 +469,26 @@ public class FlipConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
+    public Map<String, Object> getPaymentLinkResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (rawResponseMap.containsKey("errors")) {
+            String errorMessageString = getErrorMessagesFromResponse(rawResponseMap);
+            throw new BadRequestException(errorMessageString);
+        }
+        
         String url = (String) rawResponseMap.get("link_url");
-        int billId = (int) ((Double) rawResponseMap.get("link_id")).doubleValue();
+        String status = (String) rawResponseMap.get("status");
+    	int linkId = ((Double) rawResponseMap.get("link_id")).intValue();
+        String linkIdString = String.valueOf(linkId);
+
         response.put("url", url);
-        response.put("id", billId);
+        response.put("status", status);
+        response.put("vendor_generated_id", linkIdString);
+        response.put("id", id);
         return response;
     }
 
@@ -418,5 +504,15 @@ public class FlipConfiguration extends ConfigDecorator{
         flipHeaderParams.put("Authorization",authorization);
         flipHeaderParams.put("Cookie",cookie);
         return flipHeaderParams;
+    }
+
+    private String getErrorMessagesFromResponse(Map<String, Object> rawResponseMap) {
+        List<String> errorMessages = new ArrayList<>();
+        List<Map<String, Object>> errorsFromResponse = (List<Map<String, Object>>) rawResponseMap.get("errors");
+        errorsFromResponse.forEach(error -> {
+            errorMessages.add((String) error.get("message"));
+        });
+        String errorMessageString = String.join(", ", errorMessages);
+        return errorMessageString;
     }
 }

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import java.lang.reflect.*;
 
+import vmj.routing.route.RequestMethod;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
@@ -14,20 +15,21 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import paymentgateway.payment.PaymentFactory;
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentResourceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentResourceComponent;
 import paymentgateway.payment.core.PaymentServiceComponent;
-import paymentgateway.config.core.Config;
-import paymentgateway.config.ConfigFactory;
+import paymentgateway.payment.PaymentFactory;
 
 public class PaymentResourceImpl extends PaymentResourceDecorator {
 	private PaymentServiceImpl paymentServiceImpl;
@@ -37,14 +39,23 @@ public class PaymentResourceImpl extends PaymentResourceDecorator {
 		paymentServiceImpl = new PaymentServiceImpl(recordService);
 	}
 
-	@Route(url="call/ewallet")
+	@Route(url="call/ewallet", method = RequestMethod.POST)
 	public HashMap<String,Object> payment(VMJExchange vmjExchange) {
-		if (vmjExchange.getHttpMethod().equals("POST")){
-			Map<String, Object> requestBody = vmjExchange.getPayload(); 
-			Payment result = paymentServiceImpl.createPayment(requestBody);
-			return result.toHashMap();
-		}
-		throw new NotFoundException("Route tidak ditemukan");
+		Map<String, Object> requestBody = vmjExchange.getPayload(); 
+		Payment result = paymentServiceImpl.createPayment(requestBody);
+		return result.toHashMap();
+	}
+
+	@Route(url = "call/ewallet/vendorname", method = RequestMethod.GET)
+	public List<EWalletImpl> getByVendorName(VMJExchange vmjExchange) {
+		Map<String, String> queryParams = vmjExchange.queryToMap();
+		return paymentServiceImpl.getByVendorName(queryParams);
+	}
+
+	@Route(url = "call/ewallet/detail", method = RequestMethod.GET)
+	public HashMap<String, Object> getById(VMJExchange vmjExchange) {
+		Map<String, String> queryParams = vmjExchange.queryToMap();
+		return paymentServiceImpl.getById(queryParams);
 	}
 }
 

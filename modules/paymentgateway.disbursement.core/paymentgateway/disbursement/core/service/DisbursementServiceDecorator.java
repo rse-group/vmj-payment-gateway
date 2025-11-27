@@ -23,12 +23,16 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
         return record.createDisbursement(requestBody, response);
     }
 
-    public HashMap<String, Object> getDisbursement(Map<String, Object> requestBody){
-        return record.getDisbursement(requestBody);
+    public HashMap<String, Object> getDisbursement(String id){
+        return record.getDisbursement(id);
     }
 
-    public List<HashMap<String, Object>> getAllDisbursement(Map<String, Object> requestBody){
-        return record.getAllDisbursement(requestBody);
+    public List<HashMap<String, Object>> getAllDisbursement(){
+        return record.getAllDisbursement();
+    }
+
+    public List<HashMap<String, Object>> getAllDisbursement(String tableName) {
+        return record.getAllDisbursement(tableName);
     }
 
     public List<HashMap<String, Object>> deleteDisbursement(Map<String, Object> requestBody){
@@ -47,7 +51,23 @@ public abstract class DisbursementServiceDecorator extends DisbursementServiceCo
         return record.sendTransaction(requestBody);
     }
 
-    public HashMap<String, Object> getDisbursementById(int id){
+    public HashMap<String, Object> getDisbursementById(String id){
         return record.getDisbursementById(id);
+    }
+
+    public HashMap<String, Object> findById(List<HashMap<String, Object>> disbursements, String id) {
+        return record.findById(disbursements, id);
+    }
+
+    public String validateVendorName(String vendorName) {
+        return record.validateVendorName(vendorName);
+    }
+    
+    public double validateAmount(Object amountObject) {
+        return record.validateAmount(amountObject);
+    }
+    
+    public String validateId(Object idObject) {
+        return record.validateId(idObject);
     }
 }

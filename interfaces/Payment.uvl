@@ -1,0 +1,14 @@
+namespace Payment
+
+features
+	Payment {abstract true}
+		or
+			PaymentLink
+			VirtualAccount
+			RetailOutlet
+			EWallet
+			Invoice
+			PaymentRouting
+			CreditCard
+			DebitCard
+

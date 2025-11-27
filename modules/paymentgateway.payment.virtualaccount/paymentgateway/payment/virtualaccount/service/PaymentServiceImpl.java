@@ -2,10 +2,12 @@ package paymentgateway.payment.virtualaccount;
 
 import com.google.gson.Gson;
 
+import vmj.hibernate.integrator.RepositoryUtil;
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.exceptions.*;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -19,28 +21,36 @@ import java.util.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import paymentgateway.payment.PaymentFactory;
+import paymentgateway.config.core.Config;
+import paymentgateway.config.ConfigFactory;
 import paymentgateway.payment.core.Payment;
 import paymentgateway.payment.core.PaymentServiceDecorator;
 import paymentgateway.payment.core.PaymentImpl;
 import paymentgateway.payment.core.PaymentServiceComponent;
-import paymentgateway.config.core.Config;
-import paymentgateway.config.ConfigFactory;
+import paymentgateway.payment.PaymentFactory;
 
 public class PaymentServiceImpl extends PaymentServiceDecorator {
+	RepositoryUtil<VirtualAccountImpl> virtualAccountPaymentRepository;
 
 	public PaymentServiceImpl (PaymentServiceComponent record) {
         super(record);
+		this.virtualAccountPaymentRepository = new RepositoryUtil<VirtualAccountImpl>(paymentgateway.payment.virtualaccount.VirtualAccountImpl.class);
     }
     
 	public Payment createPayment(Map<String, Object> requestBody) {
+		record.validateVendorName((String) requestBody.get("vendor_name"));
+		double amount = record.validateAmount(requestBody.get("amount"));
+		requestBody.put("amount", amount);
+		
 		Map<String, Object> response = sendTransaction(requestBody);
 
 		String vaAccountNumber = (String) response.get("va_number");
-		int id = (int) response.get("id");
+		String id = (String) response.get("id");
+		String status = (String) response.get("status");
+		String vendorGeneratedId = (String) response.get("vendor_generated_id");
 
 		String bankCode = (String) requestBody.get("bank");
-		Payment transaction = record.createPayment(requestBody, id);
+		Payment transaction = record.createPayment(requestBody, id, status, vendorGeneratedId);
 		Payment virtualAccountTransaction = PaymentFactory.createPayment(
 				"paymentgateway.payment.virtualaccount.VirtualAccountImpl",
 				transaction,
@@ -57,8 +67,8 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 		
 		Gson gson = new Gson();
 		Map<String, Object> requestMap = config.getVirtualAccountRequestBody(requestBody);
-		int id = ((Integer) requestMap.get("id")).intValue();
-		System.out.println("id:" + Integer.toString(id));
+		String id = (String) requestMap.get("id");
+		System.out.println("id:" + id);
 		requestMap.remove("id");
 		String requestString = config.getRequestString(requestMap);
 		String configUrl = config.getProductEnv("VirtualAccount");
@@ -70,7 +80,6 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 				.POST(HttpRequest.BodyPublishers.ofString(requestString))
 				.build();
 
-
 		Map<String, Object> responseMap = new HashMap<>();
 		
 		try {
@@ -78,11 +87,36 @@ public class PaymentServiceImpl extends PaymentServiceDecorator {
 			String rawResponse = response.body().toString();
 			System.out.println("rawResponse " + rawResponse);
 			responseMap = config.getVirtualAccountResponse(rawResponse, id);
-		} catch (Exception e) {
+		} catch (IOException | InterruptedException e) {
 			System.out.println(e);
 		}
 		
 		return responseMap;
+	}
+
+	public List<VirtualAccountImpl> getByVendorName(Map<String, String> queryParams) {
+		String vendorName = (String) queryParams.get("vendor_name");
+		record.validateVendorName(vendorName);
+		List<VirtualAccountImpl> result = new ArrayList<>();
+		List<VirtualAccountImpl> virtualAccountPayments = virtualAccountPaymentRepository.getAllObject("virtualaccount_impl");
+		for(VirtualAccountImpl virtualAccount : virtualAccountPayments){
+			if (virtualAccount.getVendorName().equals(vendorName)){
+				result.add(virtualAccount);
+			}
+		}
+		return result;
+	}
+
+	public HashMap<String, Object> getById(Map<String, String> queryParams) {
+		String id = (String) queryParams.get("id");
+		String validatedId = record.validateId(id);
+		List<VirtualAccountImpl> virtualAccountPayments = virtualAccountPaymentRepository.getAllObject("virtualaccount_impl");
+		for(VirtualAccountImpl virtualAccount : virtualAccountPayments){
+			if (virtualAccount.getIdTransaction().toString().equals(validatedId)){
+				return virtualAccount.toHashMap();
+			}
+		}
+		throw new BadRequestException("Virtual account payment dengan ID " + validatedId + " tidak ditemukan");
 	}
 }
 

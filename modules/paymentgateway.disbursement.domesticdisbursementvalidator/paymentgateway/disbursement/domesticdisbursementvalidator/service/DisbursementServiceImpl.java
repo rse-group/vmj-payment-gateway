@@ -16,7 +16,7 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 	}
 
 	public Disbursement createDisbursement(Map<String, Object> requestBody) {
-		String vendorName = (String) requestBody.get("vendor_name");
+		String vendorName = record.validateVendorName((String) requestBody.get("vendor_name"));
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
         config.getDomesticDisbursementRequestBody(requestBody);

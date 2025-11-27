@@ -3,8 +3,8 @@ package paymentgateway.disbursement.core;
 import java.util.*;
 
 public interface Disbursement {
-	public int getId();
-	public void setId(int id);
+	public UUID getId();
+	public void setId(UUID id);
 
 	public int getUserId();
 	public void setUserId(int userId);
@@ -22,4 +22,12 @@ public interface Disbursement {
 	public void setStatus(String status);
 
 	public HashMap<String, Object> toHashMap();
+	
+	public String getVendorName();
+	public void setVendorName(String vendorName);
+
+	public String getVendorGeneratedId();
+	public void setVendorGeneratedId(String vendorGeneratedId);
+
+	public Date getCreatedAt();
 }

@@ -1,58 +1,26 @@
 namespace PaymentGateway
 
+imports
+	interfaces.Vendor as V
+	interfaces.Features as F
+
 features
 	PaymentGateway {abstract true}
 		optional
-			Vendor {abstract true}
-				or
-					Flip
-					Midtrans
-					Oy
-					Xendit
-			Disbursement
-				optional
-					International {abstract true}
-						optional
-							ExchangeRate
-							FixedCurrency
-					Agent
-					SpecifiedRecipient
-			Payment {abstract true}
-				or
-					PaymentLink
-						or
-							FlipPaymentLink
-							MidtransPaymentLink
-							OyPaymentLink
-					VirtualAccount
-						or
-							FlipVirtualAccount
-							MidtransVirtualAccount
-							OyVirtualAccount
-					RetailOutlet
-						or
-							MidtransRetailOutlet
-							OyRetailOutlet
-					EWallet
-						or
-							FlipEWallet
-							MidtransEWallet
-							OyEWallet
-					Invoice
-						mandatory
-							OyInvoice
-					PaymentRouting
-						mandatory
-							OyPaymentRouting
-					CreditCard
-						mandatory
-							MidtransCreditCard
-					DebitCard
-						mandatory
-							MidtransDebitCard
+			V.Vendor
+			F.Features
 
 constraints
-	OyInvoice | OyPaymentRouting | OyPaymentLink | OyRetailOutlet | OyVirtualAccount | OyEWallet => Oy
-	MidtransCreditCard | MidtransDebitCard | MidtransPaymentLink | MidtransVirtualAccount | MidtransEWallet | MidtransRetailOutlet => Midtrans
-	SpecifiedRecipient => Xendit
-	Agent | ExchangeRate | FixedCurrency => Flip
+    F.PaymentLink => V.Oy | V.Midtrans | V.Flip
+    F.EWallet => V.Oy | V.Midtrans | V.Flip | V.Xendit
+    F.VirtualAccount => V.Oy | V.Midtrans | V.Flip | V.Xendit
+    F.RetailOutlet => V.Oy | V.Midtrans | V.Xendit
+    F.Invoice => V.Oy
+    F.PaymentRouting => V.Oy 
+    F.Card => V.Midtrans
+    F.QRCode => V.Xendit
+    F.SpecifiedRecipient => V.Xendit
+    F.DirectDebit => V.Xendit
+    F.Agent => V.Flip
+    F.ExchangeRate => V.Flip
+    F.FixedCurrency => V.Flip

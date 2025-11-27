@@ -10,7 +10,7 @@ public class ConfigFactory{
 
     public ConfigFactory()
     {
-
+    
     }
 
     // public static Config createConfig(String fullyQualifiedName, Object ... base)
@@ -61,8 +61,22 @@ public class ConfigFactory{
         Config record = null;
         try {
             Class<?> clz = Class.forName(fullyQualifiedName);
-            Constructor<?> constructor = clz.getDeclaredConstructors()[0];
-            record = (Config) constructor.newInstance(base);
+            Constructor<?>[] constructorList = clz.getDeclaredConstructors();
+            Constructor<?> constructor = null;
+            for (int i = 0; i < constructorList.length; i++) {
+                try {
+                    constructor = constructorList[i];
+                    record = (Config) constructor.newInstance(base);
+                    i = constructorList.length;
+                } catch (IllegalArgumentException e) {
+                    if (i < constructorList.length - 1) {
+                        System.out.println("Trying other constructor");
+                        continue;
+                    } else {
+                        throw e;
+                    }
+                }
+            }
         } 
         catch (IllegalArgumentException e)
         {
@@ -103,8 +117,22 @@ public class ConfigFactory{
         Config record = null;
         try {
             Class<?> clz = Class.forName(fullyQualifiedName);
-            Constructor<?> constructor = clz.getDeclaredConstructors()[0];
-            record = (Config) constructor.newInstance();
+            Constructor<?>[] constructorList = clz.getDeclaredConstructors();
+            Constructor<?> constructor = null;
+            for (int i = 0; i < constructorList.length; i++) {
+                try {
+                    constructor = constructorList[i];
+                    record = (Config) constructor.newInstance();
+                    i = constructorList.length;
+                } catch (IllegalArgumentException e) {
+                    if (i < constructorList.length - 1) {
+                        System.out.println("Trying other constructor");
+                        continue;
+                    } else {
+                        throw e;
+                    }
+                }
+            }
         } 
         catch (IllegalArgumentException e)
         {

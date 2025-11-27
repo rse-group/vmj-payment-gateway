@@ -5,12 +5,15 @@ import vmj.routing.route.VMJExchange;
 import paymentgateway.config.core.Config;
 import paymentgateway.config.ConfigFactory;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import paymentgateway.disbursement.DisbursementFactory;
@@ -36,8 +39,14 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 		double fee = (double) response.get("fee");
 		String source_country = (String) response.get("source_country");
 		String destination_country = (String) response.get("destination_country");
-		double amount_in_sender_currency = (double) response.get("amount");
+		double amount_in_sender_currency = record.validateAmount(response.get("amount"));
 		String beneficiary_currency_code = (String) response.get("beneficiary_currency_code");
+		
+		String beneficiaryBankName = (String) response.get("bank");
+		String beneficiaryBankAccountNumber = (String) response.get("bank_account_number");
+
+		requestBody.put("bank_code", beneficiaryBankName);
+		requestBody.put("account_number", beneficiaryBankAccountNumber);
 
 		Disbursement internationalTransaction = DisbursementFactory.createDisbursement(
 			"paymentgateway.disbursement.international.InternationalImpl",
@@ -56,9 +65,12 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 	}
 
 	public Map<String, Object> sendTransaction(Map<String, Object> requestBody) {
-        String vendorName = (String) requestBody.get("vendor_name");
+		String id = UUID.randomUUID().toString();
+        String vendorName = record.validateVendorName((String) requestBody.get("vendor_name"));
 		Config config = ConfigFactory.createConfig(vendorName,
 				ConfigFactory.createConfig("paymentgateway.config.core.ConfigImpl"));
+
+		config.validateBaseInternationalDisbursementRequestBody(requestBody);
 		
 		String configUrl = config.getProductEnv("InternationalDisbursement");
 		HashMap<String, String> headerParams = config.getHeaderParams();
@@ -78,12 +90,22 @@ public class DisbursementServiceImpl extends DisbursementServiceDecorator {
 			HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			String rawResponse = response.body().toString();
 			LOGGER.info("Raw Response: " + rawResponse);
-			responseMap = config.getInternationalDisbursementResponse(rawResponse);
-		} catch (Exception e) {
+			responseMap = config.getInternationalDisbursementResponse(rawResponse, id);
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
 
 		return responseMap;
+	}
+
+	public List<HashMap<String, Object>> getAllDisbursement() {
+		return record.getAllDisbursement("international_impl");
+	}
+
+	public HashMap<String, Object> getDisbursement(String id) {
+		record.validateId(id);
+		List<HashMap<String, Object>> disbursements = getAllDisbursement();
+		return record.findById(disbursements, id);
 	}
 
 }

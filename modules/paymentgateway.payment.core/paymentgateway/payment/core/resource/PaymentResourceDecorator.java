@@ -1,11 +1,12 @@
 package paymentgateway.payment.core;
+
 import java.util.*;
 
 import vmj.routing.route.Route;
 import vmj.routing.route.VMJExchange;
 
-public abstract class PaymentResourceDecorator extends PaymentResourceComponent{
-	protected PaymentResourceComponent record;
+public abstract class PaymentResourceDecorator extends PaymentResourceComponent {
+    protected PaymentResourceComponent record;
 
     public PaymentResourceDecorator(PaymentResourceComponent record) {
         this.record = record;
@@ -14,7 +15,7 @@ public abstract class PaymentResourceDecorator extends PaymentResourceComponent{
     public int callback(VMJExchange vmjExchange) {
         return record.callback(vmjExchange);
     }
-    
+
     public HashMap<String, Object> getPayment(VMJExchange vmjExchange) {
         return record.getPayment(vmjExchange);
     }

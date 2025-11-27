@@ -1,0 +1,19 @@
+vendor_name = Flip
+base_url = https://bigflip.id/big_sandbox_api/v2
+Disbursement  = /disbursement
+SpecialDisbursement  = /special-disbursement
+AgentDisbursement = /agent-disbursements
+InternationalDisbursement = /international-disbursement
+PaymentLink = /pwf/bill
+paymentlink_payment_detail = /pwf/[vendorGeneratedId]/bill
+VirtualAccount = /pwf/bill
+virtualaccount_payment_detail = /pwf/[vendorGeneratedId]/payment
+EWallet = /pwf/bill
+ewallet_payment_detail = /pwf/[vendorGeneratedId]/payment
+PaymentDetail = /pwf/[id]/payment
+PaymentStatus = /pwf/[id]/bill
+token =
+
+content_type = application/x-www-form-urlencoded
+authorization =
+cookie =

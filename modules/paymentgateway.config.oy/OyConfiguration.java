@@ -6,6 +6,8 @@ import paymentgateway.config.core.PropertiesReader;
 import paymentgateway.config.core.RequestBodyValidator;
 import vmj.routing.route.exceptions.BadRequestException;
 
+import java.net.http.HttpRequest;
+import java.net.URI;
 import java.util.*;
 import java.lang.reflect.*;
 
@@ -32,12 +34,6 @@ public class OyConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public String getPaymentDetailEndpoint(String configUrl,String Id){
-        configUrl = configUrl.replace("[id]", Id);
-        return configUrl;
-    }
-     
-    @Override
     public Map<String, Object> getCallbackPaymentRequestBody(VMJExchange vmjExchange){
 	    Map<String, Object> requestMap = new HashMap<>();
 	    Map<String, Object> payload = vmjExchange.getPayload();
@@ -48,11 +44,7 @@ public class OyConfiguration extends ConfigDecorator{
 	        boolean successStatus = ((boolean) payload.get("success"));
 	        if (payload.get("partner_trx_id") != null) {
 	        	id = (String) payload.get("partner_trx_id");
-	        }
-	        else if (payload.get("customer_id") != null) {
-	        	id = (String) payload.get("customer_id");
-	        }
-	        else if (payload.get("partner_user_id")!=null) {
+	        } else if (payload.get("partner_user_id")!=null) {
 	        	id = (String) payload.get("partner_user_id");
 	        }
 	        status = successStatus ? PaymentStatus.SUCCESSFUL.getStatus() : PaymentStatus.FAILED.getStatus();
@@ -61,19 +53,36 @@ public class OyConfiguration extends ConfigDecorator{
 			status = (String) payload.get("status");
 		}
 
-		if(status.equals(PaymentStatus.COMPLETE.getStatus())){
-			status = PaymentStatus.SUCCESSFUL.getStatus();
-		}
-		else if (status.equals(PaymentStatus.CLOSED.getStatus())){
-			status = PaymentStatus.CANCELLED.getStatus();
-		}
-        else if (status.equals(PaymentStatus.FAIL.getStatus())){
-            status = PaymentStatus.FAILED.getStatus();
-        }
-
         requestMap.put("id",id);
         requestMap.put("status", status);
         return requestMap;
+    }
+
+    @Override
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
+        HttpRequest request = null;
+        
+        if (tableName.equals("ewallet_impl") || tableName.equals("retailoutlet_impl")) {
+            Map<String, Object> requestBodyMap = new HashMap<>(); 
+            requestBodyMap.put("partner_trx_id", (String) paymentMap.get("id"));
+            if (tableName.equals("retailoutlet_impl")) {
+                requestBodyMap.put("send_callback", "false");
+            }
+            
+            String requestString = this.getRequestString(requestBodyMap);
+            
+            request = (this.getBuilder(HttpRequest.newBuilder(), this.getHeaderParams()))
+                .uri(URI.create(configUrl))
+                .POST(HttpRequest.BodyPublishers.ofString(requestString))
+                .build();
+        } else {
+            request = (this.getBuilder(HttpRequest.newBuilder(), this.getHeaderParams()))
+                .uri(URI.create(configUrl))
+                .GET()
+                .build();
+        }
+        
+        return request;
     }
      
     @Override
@@ -82,17 +91,34 @@ public class OyConfiguration extends ConfigDecorator{
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        System.out.println("rawResponseMap" + rawResponseMap);
+
+        Boolean isSuccess = (Boolean) rawResponseMap.get("success");
+
+        if (Boolean.FALSE.equals(isSuccess)) {
+            Map<String, Object> error = (Map<String, Object>) rawResponseMap.get("error");
+            String errorMessage = error != null ? (String) error.get("message") : "Unknown error";
+            throw new BadRequestException(errorMessage);
+        }
+
         Map<String, Object> paymentData = (Map<String, Object>) rawResponseMap.get("data");
-        String status = (String) paymentData.get("status");
         
-        if(status.equals(PaymentStatus.COMPLETE.getStatus())){
-			status = PaymentStatus.SUCCESSFUL.getStatus();
-		}
-		else if (status.equals(PaymentStatus.CLOSED.getStatus())){
-			status = PaymentStatus.CANCELLED.getStatus();
-		}
-        else if (status.equals(PaymentStatus.FAIL.getStatus())){
-            status = PaymentStatus.FAILED.getStatus();
+        String status;
+        if (paymentData != null) {
+            // for payment link, invoice, payment routing
+            status = (String) paymentData.get("status");
+        } else {
+            // for ewallet payment
+            status = (String) rawResponseMap.get("ewallet_trx_status");
+            if (status == null) {
+                // for virtual account
+                status = (String) rawResponseMap.get("va_status");
+            }
+            if (status == null) {
+                // for retail outlet
+                Map<String, Object> statusMap = (Map<String, Object>) rawResponseMap.get("status");
+                status = (String) statusMap.get("message");
+            }
         }
 
         response.put("status", status);
@@ -105,7 +131,10 @@ public class OyConfiguration extends ConfigDecorator{
                 "bca", "014",
                 "mandiri", "008",
                 "bri", "002",
-                "permata", "013");
+                "permata", "013",
+                "cimb", "022",
+                "smbc", "213",
+                "bsi", "451");
         Map<String, String> bankCodes = new HashMap<>(immutableMap);
         return bankCodes;
     }
@@ -122,15 +151,12 @@ public class OyConfiguration extends ConfigDecorator{
     public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
 
-        int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
-        String name = (String) requestBody.get("name");
-        String email = (String) requestBody.get("email");
-        String description = (String) requestBody.get("title");
+        String id = UUID.randomUUID().toString();
+
+        int amount = ((Double) requestBody.get("amount")).intValue();
+        String name = RequestBodyValidator.stringRequestBodyValidator(requestBody, "sender_name");
+        String email = RequestBodyValidator.stringRequestBodyValidator(requestBody, "email");
+        String description = RequestBodyValidator.stringRequestBodyValidator(requestBody, "title");
 
         requestMap.put("partner_tx_id", String.valueOf(id));
         requestMap.put("amount", amount);
@@ -145,23 +171,16 @@ public class OyConfiguration extends ConfigDecorator{
     public Map<String, Object> getRetailOutletRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
 
-        int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
-        String store = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "retail_outlet"
-        );
+        String id = UUID.randomUUID().toString();
+        int amount = ((Double) requestBody.get("amount")).intValue();
+        String store = RequestBodyValidator.stringRequestBodyValidator(requestBody, "retail_outlet");
 
-        requestMap.put("partner_trx_id", String.valueOf(id));
-        requestMap.put("customer_id", String.valueOf(id));
+        requestMap.put("partner_trx_id", id);
+        requestMap.put("customer_id", String.join("", id.split("-"))); // this is done because if the raw uuid is used here, there will be error from vendor
         requestMap.put("amount", amount);
         requestMap.put("transaction_type", "CASH_IN");
 //		requestMap.put("offline_channel",store.toUpperCase());
-        requestMap.put("offline_channel","CRM");
+        requestMap.put("offline_channel", store);
         requestMap.put("id",id);
         return requestMap;
     }
@@ -169,18 +188,13 @@ public class OyConfiguration extends ConfigDecorator{
     @Override
     public Map<String, Object> getVirtualAccountRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
-        int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
-        String bank = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "bank"
-        );
+        String id = UUID.randomUUID().toString();
 
-        requestMap.put("partner_user_id", String.valueOf(id));
+        int amount = ((Double) requestBody.get("amount")).intValue();
+        String bank = RequestBodyValidator.stringRequestBodyValidator(requestBody, "bank");
+
+        requestMap.put("partner_trx_id", id);
+        requestMap.put("partner_user_id", id);
         requestMap.put("bank_code", getOyBankCode().get(bank));
         requestMap.put("amount", amount);
         requestMap.put("is_open", false);
@@ -192,32 +206,19 @@ public class OyConfiguration extends ConfigDecorator{
     public Map<String, Object> getEWalletRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
 
+        String id = UUID.randomUUID().toString();
 
-        int id = generateId();
-        String uuid = UUID.randomUUID().toString();
+        String ewallet = RequestBodyValidator.stringRequestBodyValidator(requestBody, "ewallet_type");
+        String phone = RequestBodyValidator.stringRequestBodyValidator(requestBody, "phone");
+        int amount = ((Double) requestBody.get("amount")).intValue();
+        String successRedirectUrl = RequestBodyValidator.stringRequestBodyValidator(requestBody, "success_redirect_url");
 
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-            
-        String ewallet = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "ewallet_type"
-        );
- 
-        String phone = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "phone"
-        );
-        int amount = (int) (Double.parseDouble(amountStr));
-
-        requestMap.put("partner_trx_id", String.valueOf(id));
-        requestMap.put("customer_id", String.valueOf(id));
+        requestMap.put("partner_trx_id", id);
+        requestMap.put("customer_id", id);
         requestMap.put("amount", amount);
         requestMap.put("mobile_number",phone);
         requestMap.put("ewallet_code", getOyEWalletCode().get(ewallet.toLowerCase()));
-        requestMap.put("success_redirect_url","https://myweb.com/usertx/" + uuid);
+        requestMap.put("success_redirect_url", successRedirectUrl);
         requestMap.put("id",id);
         return requestMap;
     }
@@ -225,24 +226,11 @@ public class OyConfiguration extends ConfigDecorator{
     @Override
     public Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
-        int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
-
-        String quantityStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "quantity"
-        );
-        int quantity = Integer.parseInt(quantityStr);
-        
-        String pricePerItemStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "price_per_item"
-        );
-        int pricePerItem = Integer.parseInt(pricePerItemStr);
+        String id = UUID.randomUUID().toString();
+       
+        int amount = ((Double) requestBody.get("amount")).intValue();
+        int quantity = RequestBodyValidator.intRequestBodyValidator(requestBody, "quantity");
+        int pricePerItem = RequestBodyValidator.intRequestBodyValidator(requestBody, "price_per_item");
 
         if (pricePerItem * quantity != amount) {
             throw new BadRequestException(
@@ -258,7 +246,7 @@ public class OyConfiguration extends ConfigDecorator{
         List<Map<String, Object>> invoicesItems = new ArrayList<>();
         invoicesItems.add(invoiceMap);
         
-        requestMap.put("partner_tx_id", String.valueOf(id));
+        requestMap.put("partner_tx_id", id);
         requestMap.put("amount", amount);
         requestMap.put("invoice_items",invoicesItems);
 
@@ -270,42 +258,24 @@ public class OyConfiguration extends ConfigDecorator{
     public Map<String, Object> getPaymentRoutingRequestBody(Map<String, Object> requestBody){
         Map<String, Object> requestMap = new HashMap<>();
 
-        int id = generateId();
-        String amountStr = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "amount"
-        );
-        int amount = Integer.parseInt(amountStr);
-        
-        String recipientAccount = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "recipient_account"
-        );
-        String recipientBank = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "recipient_bank"
-        );
-        String recipientAmount = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "recipient_amount"
-        );
-        String recipientEmail = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "recipient_email"
-        );
-        String recipientNote = RequestBodyValidator.stringRequestBodyValidator(
-            requestBody,
-            "recipient_note"
-        );
+        String id = UUID.randomUUID().toString();
+        int amount = ((Double) requestBody.get("amount")).intValue();
+        int recipientAmountInt = RequestBodyValidator.intRequestBodyValidator(requestBody, "recipient_amount");
+        String recipientAmount = String.valueOf(recipientAmountInt);
+        String recipientAccount = RequestBodyValidator.stringRequestBodyValidator(requestBody, "recipient_account");
+        String recipientBank = RequestBodyValidator.stringRequestBodyValidator(requestBody, "recipient_bank");
+        String recipientBankCode = getOyBankCode().get(recipientBank);
+        String recipientEmail = RequestBodyValidator.stringRequestBodyValidator(requestBody, "recipient_email");
+        String recipientNote = RequestBodyValidator.stringRequestBodyValidator(requestBody, "recipient_note");
 
-        requestMap.put("partner_trx_id", String.valueOf(id));
-        requestMap.put("partner_user_id", String.valueOf(id));
+        requestMap.put("partner_trx_id", id);
+        requestMap.put("partner_user_id", id);
         requestMap.put("need_frontend", true);
         
         Map<String, Object> routingMap = new HashMap<>();
         
         routingMap.put("recipient_account", recipientAccount);
-        routingMap.put("recipient_bank", recipientBank);
+        routingMap.put("recipient_bank", recipientBankCode);
         routingMap.put("recipient_amount", recipientAmount);
         routingMap.put("recipient_email", recipientEmail);
         routingMap.put("recipient_note", recipientNote);
@@ -324,76 +294,135 @@ public class OyConfiguration extends ConfigDecorator{
     }
 
     @Override
-    public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
+    public Map<String, Object> getPaymentLinkResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        
+        if (!rawResponseMap.containsKey("payment_link_id")) {
+            String errorMessageString = (String) rawResponseMap.get("message");
+            throw new BadRequestException(errorMessageString);
+        }
         String url = (String) rawResponseMap.get("url");
+        String paymentLinkId = (String) rawResponseMap.get("payment_link_id");
+        response.put("status", "CREATED");
         response.put("url", url);
+        response.put("vendor_generated_id", paymentLinkId);
         response.put("id", id);
         return response;
     }
 
     @Override
-    public Map<String, Object> getInvoiceResponse(String rawResponse, int id){
+    public Map<String, Object> getInvoiceResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
         String transactionUrl = (String) rawResponseMap.get("url");
+        String paymentLinkId = (String) rawResponseMap.get("payment_link_id");
+        
+        if (transactionUrl == null) {
+            Map<String, Object> statusObject = (Map<String, Object>) rawResponseMap.get("status");
+            String errorMessageString = (String) statusObject.get("message");
+            throw new BadRequestException(errorMessageString);
+        }
+
+        response.put("status", "CREATED"); 
         response.put("url", transactionUrl);
+        response.put("vendor_generated_id", paymentLinkId);
         response.put("id", id);
         return response;
     }
 
     @Override
-    public Map<String, Object> getPaymentRoutingResponse(String rawResponse, int id){
+    public Map<String, Object> getPaymentRoutingResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        
+        if (!rawResponseMap.containsKey("trx_id")) {
+            Map<String, Object> statusObject = (Map<String, Object>) rawResponseMap.get("status");
+            String errorMessageString = (String) statusObject.get("message");
+            throw new BadRequestException(errorMessageString);
+        }
+        
         Map<String, Object> paymentMap = (Map<String, Object>) rawResponseMap.get("payment_info");
         String url = (String) paymentMap.get("payment_checkout_url");
+        String vendorGeneratedId = (String) rawResponseMap.get("trx_id");
+        response.put("status", "CREATED");
         response.put("payment_checkout_url", url);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("id", id);
         return response;
     }
 
     @Override
-    public Map<String, Object> getRetailOutletResponse(String rawResponse, int id){
+    public Map<String, Object> getRetailOutletResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+        Map<String, Object> status = (Map<String, Object>) rawResponseMap.get("status");
+        String statusMessage = (String) status.get("message");
         String retailPaymentCode = (String) rawResponseMap.get("code");
+        if (retailPaymentCode == null) {
+            throw new BadRequestException(statusMessage);
+        }
+        String vendorGeneratedId = (String) rawResponseMap.get("tx_id");
+        response.put("status", statusMessage.toUpperCase());
         response.put("retail_payment_code", retailPaymentCode);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("id", id);
         return response;
     }
 
     @Override
-    public Map<String, Object> getEWalletResponse(String rawResponse, int id){
+    public Map<String, Object> getEWalletResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
+        if (!rawResponseMap.containsKey("trx_id")) {
+            Map<String, Object> statusObject = (Map<String, Object>) rawResponseMap.get("status");
+            String errorMessageString = (String) statusObject.get("message");
+            throw new BadRequestException(errorMessageString);
+        }
+
+        String ewalletTrxStatus = (String) rawResponseMap.get("ewallet_trx_status");
+        String vendorGeneratedId = (String) rawResponseMap.get("trx_id");
         String paymentType = (String) rawResponseMap.get("ewallet_code");
         String url = (String) rawResponseMap.get("ewallet_url");
+        response.put("status", ewalletTrxStatus);
         response.put("payment_type", paymentType);
         response.put("url", url);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("id", id);
         return response;
     }
 
     @Override
-    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id){
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, String id){
         Map<String, Object> response = new HashMap<>();
         Gson gson = new Gson();
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object> rawResponseMap = gson.fromJson(rawResponse, mapType);
+
         String vaNumber = (String) rawResponseMap.get("va_number");
+
+        if (vaNumber == null) {
+            Map<String, Object> statusObject = (Map<String, Object>) rawResponseMap.get("status");
+            String errorMessageString = (String) statusObject.get("message");
+            throw new BadRequestException(errorMessageString);
+        }
+
+        String vaStatus = (String) rawResponseMap.get("va_status");
+        String vendorGeneratedId = (String) rawResponseMap.get("id");
+        response.put("status", vaStatus);
         response.put("va_number", vaNumber);
+        response.put("vendor_generated_id", vendorGeneratedId);
         response.put("id", id);
         return response;
     }

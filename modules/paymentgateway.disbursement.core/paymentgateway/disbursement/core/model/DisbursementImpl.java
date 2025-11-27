@@ -13,13 +13,16 @@ import javax.persistence.Id;
 @Table(name = "disbursement_impl")
 public class DisbursementImpl extends DisbursementComponent {
 	public DisbursementImpl(
-		int id,
+		UUID id,
 		int userId,
 		String accountNumber,
 		double amount,
 		String bankCode,
-		String status) {
-		super(id, userId, accountNumber, amount, bankCode, status);
+		String status,
+		String vendorName,
+		String vendorGeneratedId
+		) {
+		super(id, userId, accountNumber, amount, bankCode, status, vendorName, vendorGeneratedId);
 	}
 
 	// read this for more information why default constructor needed
@@ -27,11 +30,11 @@ public class DisbursementImpl extends DisbursementComponent {
 	// https://stackoverflow.com/questions/25452018/hibernate-annotations-no-default-constructor-for-entity?rq=1
 	public DisbursementImpl() { }
 
-	public int getId(){
+	public UUID getId(){
 		return id;
 	}
 
-	public void setId(int id){
+	public void setId(UUID id){
 		this.id = id;
 	}
 
@@ -74,14 +77,38 @@ public class DisbursementImpl extends DisbursementComponent {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	
+	public String getVendorName() {
+		return vendorName;
+	}
+
+	public void setVendorName(String vendorName) {
+		this.vendorName = vendorName;
+	}
+
+	public String getVendorGeneratedId() {
+		return vendorGeneratedId;
+	}
+
+	public void setVendorGeneratedId(String vendorGeneratedId) {
+		this.vendorGeneratedId = vendorGeneratedId;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
 
 	public HashMap<String, Object> toHashMap() {
 		HashMap<String, Object> disbursementHashMap = new HashMap<>();
-		disbursementHashMap.put("id", getId());
+		disbursementHashMap.put("id", getId().toString());
 		disbursementHashMap.put("user_id", getUserId());
 		disbursementHashMap.put("bank_code", getBankCode());
 		disbursementHashMap.put("account_number", getAccountNumber());
 		disbursementHashMap.put("amount", getAmount());
+		disbursementHashMap.put("vendorName", getVendorName());
+		disbursementHashMap.put("status", getStatus());
+		disbursementHashMap.put("vendor_generated_id", getVendorGeneratedId());
+		disbursementHashMap.put("createdAt", getCreatedAt());
 		return disbursementHashMap;
 	}
 }

@@ -3,6 +3,8 @@ package paymentgateway.payment.paymentlink;
 import paymentgateway.payment.core.PaymentDecorator;
 
 import java.util.HashMap;
+import java.util.UUID;
+
 import javax.persistence.Id;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,9 +15,9 @@ import paymentgateway.payment.core.PaymentComponent;
 @Table(name = "paymentlink_impl")
 public class PaymentLinkImpl extends PaymentDecorator {
 
-	protected int id;
+	protected UUID id;
 	protected String paymentLink;
-	public PaymentLinkImpl(PaymentComponent record, int id, String paymentLink) {
+	public PaymentLinkImpl(PaymentComponent record, UUID id, String paymentLink) {
 		super(record);
 		this.id = id;
 		this.paymentLink = paymentLink;
@@ -25,11 +27,11 @@ public class PaymentLinkImpl extends PaymentDecorator {
 		super();
 	}
 
-	public int getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

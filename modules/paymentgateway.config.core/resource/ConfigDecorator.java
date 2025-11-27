@@ -35,8 +35,12 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getRequestString(requestMap);
     }
 
-    public String getPaymentDetailEndpoint(String configUrl,String id){
-        return record.getPaymentDetailEndpoint(configUrl,id);
+    public String getPaymentDetailEndpoint(String configUrl, Map<String, Object> paymentMap){
+        return record.getPaymentDetailEndpoint(configUrl, paymentMap);
+    }
+
+    public HttpRequest createPaymentDetailEndpointRequestObject(String configUrl, Map<String, Object> paymentMap, String tableName) {
+        return record.createPaymentDetailEndpointRequestObject(configUrl, paymentMap, tableName); 
     }
 
     public Map<String, Object> getPaymentStatusResponse(String rawResponse, String id){
@@ -71,8 +75,13 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.generateId();    
     }
 
+    // Disbursement Request Body
     public Map<String, Object> getDisbursementRequestBody(Map<String, Object> requestBody){
         return record.getDisbursementRequestBody(requestBody);
+    }
+
+    public void validateBaseAgentDisbursementRequestBody(Map<String, Object> requestBody) {
+        record.validateBaseAgentDisbursementRequestBody(requestBody);
     }
 
     public Map<String, Object> getDomesticDisbursementRequestBody(Map<String, Object> requestBody){
@@ -82,6 +91,12 @@ public abstract class ConfigDecorator extends ConfigComponent{
     public Map<String, Object> getInternationalDisbursementRequestBody(Map<String, Object> requestBody){
         return record.getInternationalDisbursementRequestBody(requestBody);
     }
+    
+    public void validateBaseInternationalDisbursementRequestBody(Map<String, Object> requestBody) {
+        record.validateBaseInternationalDisbursementRequestBody(requestBody);
+    }
+
+    // Payment Request Body
 
     public Map<String, Object> getPaymentLinkRequestBody(Map<String, Object> requestBody){
         return record.getPaymentLinkRequestBody(requestBody);
@@ -99,12 +114,12 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getEWalletRequestBody(requestBody);
     }
 
-    public Map<String, Object> getDebitCardRequestBody(Map<String, Object> requestBody){
-        return record.getDebitCardRequestBody(requestBody);
+    public Map<String, Object> getCardRequestBody(Map<String, Object> requestBody){
+        return record.getCardRequestBody(requestBody);
     }
 
-    public Map<String, Object> getCreditCardRequestBody(Map<String, Object> requestBody){
-        return record.getCreditCardRequestBody(requestBody);
+    public Map<String, Object> getDirectDebitRequestBody(Map<String, Object> requestBody){
+        return record.getDirectDebitRequestBody(requestBody);
     }
 
     public Map<String, Object> getInvoiceRequestBody(Map<String, Object> requestBody){
@@ -115,52 +130,63 @@ public abstract class ConfigDecorator extends ConfigComponent{
         return record.getPaymentRoutingRequestBody(requestBody);
     }
 
-    public Map<String, Object> getPaymentLinkResponse(String rawResponse, int id){
+    public Map<String, Object> getQRCodeRequestBody(Map<String, Object> requestBody) {
+        return record.getQRCodeRequestBody(requestBody);
+    }
+
+    // Payment Response
+    public Map<String, Object> getPaymentLinkResponse(String rawResponse, String id){
         return record.getPaymentLinkResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getDebitCardResponse(String rawResponse, int id){
-        return record.getDebitCardResponse(rawResponse, id);
+    public Map<String, Object> getCardResponse(String rawResponse, String id){
+        return record.getCardResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getCreditCardResponse(String rawResponse, int id){
-        return record.getCreditCardResponse(rawResponse, id);
+    public Map<String, Object> getDirectDebitResponse(String rawResponse, String id){
+        return record.getDirectDebitResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getInvoiceResponse(String rawResponse, int id){
+    public Map<String, Object> getInvoiceResponse(String rawResponse, String id){
         return record.getInvoiceResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getEWalletResponse(String rawResponse, int id){
+    public Map<String, Object> getEWalletResponse(String rawResponse, String id){
         return record.getEWalletResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getPaymentRoutingResponse(String rawResponse, int id){
+    public Map<String, Object> getPaymentRoutingResponse(String rawResponse, String id){
         return record.getPaymentRoutingResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getRetailOutletResponse(String rawResponse, int id){
+    public Map<String, Object> getRetailOutletResponse(String rawResponse, String id){
         return record.getRetailOutletResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getVirtualAccountResponse(String rawResponse, int id){
+    public Map<String, Object> getVirtualAccountResponse(String rawResponse, String id){
         return record.getVirtualAccountResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getDisbursementResponse(String rawResponse){
-        return record.getDisbursementResponse(rawResponse);
+    public Map<String, Object> getQRCodeResponse(String rawResponse, String id){
+        return record.getQRCodeResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse){
-        return record.getSpecialDisbursementResponse(rawResponse);
+    // Disbursement Response
+
+    public Map<String, Object> getDisbursementResponse(String rawResponse, String id){
+        return record.getDisbursementResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse){
-        return record.getInternationalDisbursementResponse(rawResponse);
+    public Map<String, Object> getSpecialDisbursementResponse(String rawResponse, String id){
+        return record.getSpecialDisbursementResponse(rawResponse, id);
     }
 
-    public Map<String, Object> getAgentDisbursementResponse(String rawResponse){
-        return record.getAgentDisbursementResponse(rawResponse);
+    public Map<String, Object> getInternationalDisbursementResponse(String rawResponse, String id){
+        return record.getInternationalDisbursementResponse(rawResponse, id);
+    }
+
+    public Map<String, Object> getAgentDisbursementResponse(String rawResponse, String id){
+        return record.getAgentDisbursementResponse(rawResponse, id);
     }
     
 }
